@@ -303,6 +303,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\VBO.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\core\Vec3.h"
 				>
 			</File>
