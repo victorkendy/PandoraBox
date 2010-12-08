@@ -5,35 +5,58 @@
 
 #include <vector>
 
+#include "pbge/core/core.h"
 #include "pbge/core/Vec3.h"
 
 namespace pbge {
 
-// Vertex Buffer Object Interface
-class VertexBuffer {
-public:
+    // Vertex Buffer Object Interface
+    class VertexBuffer {
+    public:
 
-    virtual void render() = 0;
+        virtual void render() = 0;
 
-    virtual void getDataPointer() = 0;
+        virtual void getDataPointer() = 0;
 
-    virtual void begin() = 0;
+        virtual void begin() = 0;
 
-    virtual void end() = 0;
+        virtual void end() = 0;
 
-};
+    };
 
-class VertexBufferBuilder {
-public:
+    class PBGE_EXPORT VertexBufferBuilder {
+    public:
+        VertexBufferBuilder() {
+            data = NULL;
+        }
 
-    void push_vertex(const Vec3 & v) {}
+        ~VertexBufferBuilder() {
+            if(data != NULL)
+                delete [] data;
+        }
 
-    void set_vertex_index(const std::vector<int> & indexes) {}
+        void push_vertex(const Vec3 & v) {
+            vertices.push_back(v);
+        }
 
-    void done() {}
+        void set_vertex_index(const std::vector<unsigned> & indexes) {
+            vertex_indexes = indexes;
+        }
 
-    float * get_data() { return new float [100]; }
-};
+        void done();
+
+        float * get_data() { 
+            return data; 
+        }
+
+    private:
+
+        std::vector<Vec3> vertices;
+
+        std::vector<unsigned> vertex_indexes;
+
+        float * data;
+    };
 
 }
 

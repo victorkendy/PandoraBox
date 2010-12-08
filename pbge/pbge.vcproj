@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\VertexBufferBuilder.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Win_Initialization.cpp"
 				>
 			</File>

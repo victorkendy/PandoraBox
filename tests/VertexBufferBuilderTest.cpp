@@ -13,7 +13,7 @@ public:
     pbge::VertexBufferBuilder builder;
 };
 TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
-    std::vector<int> indexes;
+    std::vector<unsigned> indexes;
     builder.push_vertex(pbge::Vec3(1,2,3));
     builder.push_vertex(pbge::Vec3(2,3,4));
     builder.push_vertex(pbge::Vec3(3,4,5));
@@ -37,4 +37,17 @@ TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
     EXPECT_FLOAT_EQ(4.0f, vertex_data[9]);
     EXPECT_FLOAT_EQ(5.0f, vertex_data[10]);
     EXPECT_FLOAT_EQ(0.0f, vertex_data[11]);
+}
+
+TEST_F(VertexBufferBuilderTest, ifTheIndexexVectorPointsToinvalidDataThrowsException) {
+    std::vector<unsigned> indexes;
+    builder.push_vertex(pbge::Vec3(1,2,3));
+    builder.push_vertex(pbge::Vec3(2,3,4));
+    indexes.push_back(1);
+    indexes.push_back(0);
+    indexes.push_back(2);
+    builder.set_vertex_index(indexes);
+    EXPECT_ANY_THROW({
+        builder.done();
+    });
 }
