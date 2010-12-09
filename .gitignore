@@ -5,3 +5,9 @@
 *.ncb
 *.suo
 *.user
+
+pbge.dll
+pbge.lib
+gmock*
+gtest*
+out/
