@@ -37,10 +37,11 @@ namespace pbge {
 
         /* Implements the singleton pattern */
         static Manager * getInstance();
+
+        static void init(bool test=false);
     private:
         Manager();
         ~Manager();
-        static Manager * instance;
         Log * pbgeLog;
         std::vector<std::string> shaderDirectories;
     };

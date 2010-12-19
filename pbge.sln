@@ -1,12 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pbge", ".\pbge\pbge.vcproj", "{A00997BD-6986-44D1-8A7A-61A68CC8BE24}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pbge", "pbge\pbge.vcproj", "{A00997BD-6986-44D1-8A7A-61A68CC8BE24}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", ".\tests\tests.vcproj", "{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\tests.vcproj", "{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24} = {A00997BD-6986-44D1-8A7A-61A68CC8BE24}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tester", "tester\tester.vcproj", "{12A78D53-E70E-420A-9365-494E98D36302}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,14 +20,13 @@ Global
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24}.Debug|Win32.Build.0 = Debug|Win32
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24}.Release|Win32.ActiveCfg = Release|Win32
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24}.Release|Win32.Build.0 = Release|Win32
-		{12A78D53-E70E-420A-9365-494E98D36302}.Debug|Win32.ActiveCfg = Debug|Win32
-		{12A78D53-E70E-420A-9365-494E98D36302}.Debug|Win32.Build.0 = Debug|Win32
-		{12A78D53-E70E-420A-9365-494E98D36302}.Release|Win32.ActiveCfg = Release|Win32
-		{12A78D53-E70E-420A-9365-494E98D36302}.Release|Win32.Build.0 = Release|Win32
 		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Debug|Win32.Build.0 = Debug|Win32
 		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Release|Win32.ActiveCfg = Release|Win32
 		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Release|Win32.Build.0 = Release|Win32
+		{12A78D53-E70E-420A-9365-494E98D36302}.Debug|Win32.ActiveCfg = Debug|Win32
+		{12A78D53-E70E-420A-9365-494E98D36302}.Release|Win32.ActiveCfg = Release|Win32
+		{12A78D53-E70E-420A-9365-494E98D36302}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

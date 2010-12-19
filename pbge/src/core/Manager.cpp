@@ -7,10 +7,13 @@
 
 #include "pbge/core/Manager.h"
 
-static SDL_Surface * screen = NULL;
+
+namespace {
+    pbge::Manager * manager = NULL;
+    SDL_Surface * screen = NULL;
+}
 
 namespace pbge {
-    Manager * Manager::instance = NULL;
 
     // This class should be instantiated ONLY by the initManager() function call
     Manager::Manager() {
@@ -79,11 +82,15 @@ namespace pbge {
         cleanUp();
         SDL_Quit();
     }
+
+    void Manager::init(bool test) {
+        manager = new Manager();
+    }
     
     Manager * Manager::getInstance() {
-        if(Manager::instance == NULL) {
-            instance = new Manager();
+        if(manager == NULL) {
+            manager = new Manager();
         }
-        return instance;
+        return manager;
     }
 }

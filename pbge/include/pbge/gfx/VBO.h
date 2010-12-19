@@ -12,7 +12,7 @@ namespace pbge {
 
     class PBGE_EXPORT VertexBufferBuilder {
     public:
-        VertexBufferBuilder(int _vertex_dim, int _normal_dim) {
+        VertexBufferBuilder(int _vertex_dim, int _normal_dim = 0) {
             data = NULL;
             normal_dim = _normal_dim;
             vertex_dim = _vertex_dim;
@@ -23,11 +23,12 @@ namespace pbge {
                 delete [] data;
         }
 
-        void push_vertex(const float x, const float y=0.0f, const float z=0.0f, const float w=1.0f) {
+        VertexBufferBuilder * push_vertex(const float x, const float y=0.0f, const float z=0.0f, const float w=1.0f) {
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
             vertices.push_back(w);
+            return this;
         }
 
         void push_normal(const float x, const float y=0.0f, const float z=0.0f, const float w=1.0f) {
