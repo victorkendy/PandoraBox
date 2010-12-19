@@ -56,6 +56,30 @@ namespace pbge {
             return (const char *)glGetString(name);
         }
 
+        inline void genBuffers(GLsizei n, GLuint * buffers) {
+            glGenBuffers(n, buffers);
+        }
+
+        inline void deleteBuffers(GLsizei n, GLuint * buffers) {
+            glDeleteBuffers(n, buffers);
+        }
+
+        inline void bufferData(GLenum target, GLsizeiptr size, GLvoid * data, GLenum usage) {
+            glBufferData(target, size, data, usage);
+        }
+
+        inline void bindBuffer(GLenum target, GLuint buffer) {
+            glBindBuffer(target, buffer);
+        }
+
+        inline void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid * data) {
+            glBufferSubData(target, offset, size, data);
+        }
+
+        inline void * mapBuffer(GLenum target, GLenum access) {
+            glMapBuffer(target, access);
+        }
+
         /* Extended OpenGL calls */
         inline void genFramebuffersEXT(GLsizei n, GLuint * buffers) {
             if(checkPointer(glGenFramebuffersEXT))

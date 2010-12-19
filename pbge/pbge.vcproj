@@ -235,6 +235,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\include\pbge\gfx\Buffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Camera.h"
 				>
 			</File>

@@ -4,6 +4,8 @@
 #include "pbge/core/Log.h"
 #include "pbge/core/core.h"
 #include "pbge/core/OpenGLParameters.h"
+#include "pbge/gfx/OpenGL.h"
+
 #include <string>
 #include <vector>
 
@@ -39,10 +41,15 @@ namespace pbge {
         static Manager * getInstance();
 
         static void init(bool test=false);
+
+        OpenGL * getOpenGL() {
+            return ogl;
+        }
     private:
         Manager();
         ~Manager();
         Log * pbgeLog;
+        OpenGL * ogl;
         std::vector<std::string> shaderDirectories;
     };
 }
