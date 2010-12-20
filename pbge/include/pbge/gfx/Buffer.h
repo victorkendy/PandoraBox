@@ -4,6 +4,7 @@
 #define gfxbuffer_h_
 
 #include <cstdlib>
+#include <iostream>
 
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/OpenGL.h"
@@ -19,7 +20,6 @@ namespace pbge {
             this->data = malloc(size);
             if(this->data == NULL) {
                 Manager::getInstance()->writeErrorLog("ERROR: Out Of Memory for Buffer");
-                throw std::bad_alloc;
             }
             this->glID = 0;
         }
@@ -38,11 +38,13 @@ namespace pbge {
 
         // Maps with an offset from the begining of the data buffer
         void * map(int _begin) {
-            return data + _begin;
+            return (char*)data + _begin;
         }
         
         // force call to glMapBuffer
         void * forceDirectMap(GLenum access) {
+            std::cout << "my id is " << glID << std::endl;
+            Manager::getInstance()->getOpenGL()->getApi()->bindBuffer(target, glID);
             return Manager::getInstance()->getOpenGL()->getApi()->mapBuffer(target, access);
         }
 
@@ -56,7 +58,7 @@ namespace pbge {
             if(begin_update >=0) {
                 OpenGL * ogl = Manager::getInstance()->getOpenGL();
                 ogl->getApi()->bindBuffer(target, glID);
-                ogl->getApi()->bufferSubData(target, begin_update, size - begin_update, data + begin_update);
+                ogl->getApi()->bufferSubData(target, begin_update, size - begin_update, (char*)data + begin_update);
                 ogl->getApi()->bindBuffer(target, 0);
             }
         }
@@ -81,6 +83,7 @@ namespace pbge {
 
         size_t size;
     };
+
 }
 
 #endif

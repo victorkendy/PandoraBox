@@ -4,80 +4,92 @@
 #define gfxvbo_h_
 
 #include <vector>
+#include <algorithm>
 
 #include "pbge/core/core.h"
 #include "pbge/core/Vec3.h"
 
 namespace pbge {
+    
+    class PBGE_EXPORT VertexBuffer {
+    public:
+        class VertexAttrib {
+        public:
+            typedef enum {
+                VERTEX,
+                NORMAL,
+                TERXCOORD,
+                COLOR,
+                SECONDARY_COLOR,
+                CUSTOM_ATTRIB
+            } Type;
+        };
+    };
 
     class PBGE_EXPORT VertexBufferBuilder {
     public:
-        VertexBufferBuilder(int _vertex_dim, int _normal_dim = 0) {
-            data = NULL;
-            normal_dim = _normal_dim;
-            vertex_dim = _vertex_dim;
+        class VertexAttribBuilder {
+        public:
+            VertexAttribBuilder(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type, int _index) {
+                nElements = _nElements;
+                type = _type;
+                index = _index;
+            }
+
+            VertexAttribBuilder(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type) {
+                nElements = _nElements;
+                type = _type;
+                index = -1;
+            }
+
+            void pushValue(const float x, const float y=0.0f, const float z=0.0f, const float w=1.0f) {
+                values.push_back(x);
+                values.push_back(y);
+                values.push_back(z);
+                values.push_back(w);
+            }
+
+        private:
+            unsigned nElements;
+            VertexBuffer::VertexAttrib::Type type;
+            int index;
+            std::vector<float> values;
+        };
+
+
+        VertexBufferBuilder(unsigned _nVertices) {
+            nVertices = _nVertices;
         }
 
-        ~VertexBufferBuilder() {
-            if(data != NULL)
-                delete [] data;
+        VertexAttribBuilder * addAttrib(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type, int _index) {
+            VertexAttribBuilder * attrib = new VertexAttribBuilder(_nElements, _type, _index);
+            attribs.push_back(attrib);
+            return attrib;
         }
 
-        VertexBufferBuilder * push_vertex(const float x, const float y=0.0f, const float z=0.0f, const float w=1.0f) {
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
-            vertices.push_back(w);
+        VertexBufferBuilder * pushValue(VertexAttribBuilder * attrib, const float &x, const float & y, const float & z, const float & w) {
+            std::vector<VertexAttribBuilder*>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
+            if(it == attribs.end())
+                attribs.push_back(attrib);
+            attrib->pushValue(x,y,z,w);
+            // allows chaining
             return this;
         }
 
-        void push_normal(const float x, const float y=0.0f, const float z=0.0f, const float w=1.0f) {
-            normals.push_back(x);
-            normals.push_back(y);
-            normals.push_back(z);
-            normals.push_back(w);
-        }
+        VertexBuffer * done();
 
-        void set_vertex_index(const std::vector<unsigned> & indexes) {
-            vertex_indexes = indexes;
-        }
-
-        void set_normal_index(const std::vector<unsigned> & indexes) {
-            normal_indexes = indexes;
-        }
-
-        void done();
-
-        float * get_data() { 
-            return data; 
+        ~VertexBufferBuilder() {
+            std::vector<VertexAttribBuilder*>::iterator it;
+            for(it = attribs.begin(); it != attribs.end(); it++) {
+                delete *it;
+            }
+            attribs.clear();
         }
 
     private:
-        int vertex_dim, normal_dim;
-
-        std::vector<float> vertices;
-
-        std::vector<unsigned> vertex_indexes;
-
-        std::vector<float> normals;
-
-        std::vector<unsigned> normal_indexes;
-
-        float * data;
-    };
-
-    // Vertex Buffer Object Interface
-    class VertexBuffer {
-    public:
-
-        virtual void render() = 0;
-
-        virtual void getDataPointer() = 0;
-
-        virtual void begin() = 0;
-
-        virtual void end() = 0;
-
+        size_t calculateSize();
+        unsigned nVertices;
+        std::vector<VertexAttribBuilder*> attribs;
     };
 }
 

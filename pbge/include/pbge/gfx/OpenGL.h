@@ -4,12 +4,14 @@
 #define gfxopengl_h_ 1
 #include <iostream>
 
-#include "pbge/core/Object.h"
+#include "pbge/core/core.h"
 #include "pbge/gfx/OpenGLAPI.h"
 
 namespace pbge {
+    
+    class Buffer;
 
-    class OpenGL : public Object{
+    class PBGE_EXPORT OpenGL{
     public:
         OpenGL() {
             GLint initialMatrixMode;
@@ -51,9 +53,12 @@ namespace pbge {
             api->viewport(x,y,w,h);
         }
 
+        virtual Buffer * createBuffer(size_t _size, GLenum _usage, GLenum _target);
+
         OpenGLAPI * getApi() { return api; }
     private:
         GLenum currentMatrixMode;
+
         math3d::matrix44 matrices[3];
 
         OpenGLAPI * api;

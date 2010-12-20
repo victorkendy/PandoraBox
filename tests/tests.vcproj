@@ -197,10 +197,6 @@
 				RelativePath=".\TextureRendererTest.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\VertexBufferObjectTest.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

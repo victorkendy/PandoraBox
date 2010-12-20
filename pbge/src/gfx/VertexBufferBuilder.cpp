@@ -1,34 +1,20 @@
 
+#include "pbge/core/Manager.h"
 #include "pbge/gfx/VBO.h"
+#include "pbge/gfx/OpenGl.h"
+#include "pbge/gfx/Buffer.h"
 
-namespace {
-    inline void copy_data(float * destination, int dim, int index, const std::vector<float> & source, int & data_index) {
-        if(index >= 0) {
-            if((source.size() / 4) > static_cast<unsigned>(index)) {
-                int begining_index = 4 * index;
-                for(int i = 0; i < dim; i++)
-                    destination[data_index++] = source[begining_index + i];
-            } else
-                throw 1;
-        }
-    }
+using namespace pbge;
+
+size_t VertexBufferBuilder::calculateSize() {
+    return 10000;
 }
 
-namespace pbge {
-
-    void VertexBufferBuilder::done() {
-        if(data != NULL)
-            delete [] data;
-        data = new float[(normal_indexes.size() + vertex_indexes.size()) * (vertex_dim + normal_dim)];
-        int data_index = 0;
-        
-        for(unsigned i = 0; i < vertex_indexes.size(); i++) {
-            int v_index = vertex_indexes[i];
-            int n_index = normal_dim > 0 ? normal_indexes[i]:-1;
-            
-            copy_data(data, vertex_dim, v_index, vertices, data_index);
-            copy_data(data, normal_dim, n_index, normals, data_index);
-        }
-    }
-
+VertexBuffer * VertexBufferBuilder::done() {
+    OpenGL * ogl = Manager::getInstance()->getOpenGL();
+    // Deixar uso como parametro?
+    Buffer * buffer = ogl->createBuffer(calculateSize(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
+    float * data = static_cast<float*>(buffer->map());
+    // fazer a mágica ...
+    return NULL;
 }

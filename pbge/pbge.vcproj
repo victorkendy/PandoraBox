@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\OpenGL.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Renderer.cpp"
 				>
 			</File>

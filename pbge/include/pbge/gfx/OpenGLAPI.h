@@ -77,7 +77,7 @@ namespace pbge {
         }
 
         inline void * mapBuffer(GLenum target, GLenum access) {
-            glMapBuffer(target, access);
+            return glMapBuffer(target, access);
         }
 
         /* Extended OpenGL calls */

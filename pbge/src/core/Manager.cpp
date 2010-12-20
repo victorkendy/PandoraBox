@@ -14,7 +14,8 @@ namespace {
 }
 
 namespace pbge {
-
+    
+    class OpenGL;
     // This class should be instantiated ONLY by the initManager() function call
     Manager::Manager() {
         pbgeLog = new LogTerminal();
@@ -31,6 +32,7 @@ namespace pbge {
         } else {
             pbgeLog->write("Environment Variable PBGE_HOME not found");
         }
+        this->ogl = new OpenGL;
         shaderDirectories.push_back(std::string("./shaders/"));
     }
 
