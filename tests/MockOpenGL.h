@@ -27,6 +27,12 @@ public:
     MOCK_METHOD2(bindTexture, void(GLenum target, GLuint texture));
     MOCK_METHOD4(bufferData, void(GLenum target, GLsizeiptr size, GLvoid * data, GLenum usage));
     MOCK_METHOD4(bufferSubData, void(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid * data));
+    MOCK_METHOD1(clear, void(GLbitfield mask));
+    MOCK_METHOD4(clearColor, void(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha));
+    MOCK_METHOD1(clearDepth, void(GLclampd depth));
+    MOCK_METHOD1(clearStencil, void(GLint s));
+    MOCK_METHOD1(clientActiveTexture, void(GLenum textureUnit));
+    MOCK_METHOD2(clipPlane, void(GLenum plane, const GLdouble * equation));
 
     MOCK_METHOD4(viewport, void(GLint x, GLint y, GLint w, GLint h));
     MOCK_METHOD1(matrixMode, void(GLenum mode));

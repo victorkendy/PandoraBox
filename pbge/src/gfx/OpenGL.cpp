@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Buffer.h"

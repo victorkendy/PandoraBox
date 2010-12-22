@@ -283,10 +283,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\gfx\OpenGLAPI.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\pbge\core\OpenGLParameters.h"
 				>
 			</File>

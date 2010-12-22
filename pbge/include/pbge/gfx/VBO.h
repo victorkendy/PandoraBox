@@ -10,62 +10,91 @@
 #include "pbge/core/Vec3.h"
 
 namespace pbge {
-    
+    class PBGE_EXPORT VertexAttrib {
+    public:
+        typedef enum {
+            VERTEX,
+            NORMAL,
+            TEXCOORD,
+            COLOR,
+            SECONDARY_COLOR,
+            CUSTOM_ATTRIB
+        } Type;
+    };
+
     class PBGE_EXPORT VertexBuffer {
     public:
-        class VertexAttrib {
-        public:
-            typedef enum {
-                VERTEX,
-                NORMAL,
-                TERXCOORD,
-                COLOR,
-                SECONDARY_COLOR,
-                CUSTOM_ATTRIB
-            } Type;
-        };
+        
     };
+
+    class PBGE_EXPORT VertexAttribBuilder {
+    public:
+        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, int _index) {
+            nCoord = _nCoord;
+            type = _type;
+            index = _index;
+            indexesAssigned = false;
+            currentElement = 0;
+        }
+
+        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type) {
+            nCoord = _nCoord;
+            type = _type;
+            index = -1;
+            indexesAssigned = false;
+            currentElement = 0;
+        }
+
+        void pushValue(const float x, const float y, const float z, const float w) {
+            values.push_back(x);
+            values.push_back(y);
+            values.push_back(z);
+            values.push_back(w);
+        }
+
+        bool operator == (const VertexAttribBuilder & other) {
+            return (this->type == other.type && this->index == other.index && this->nCoord == other.nCoord);
+        }
+
+        void setIndexes(const std::vector<unsigned short> & _indexes) {
+            indexesAssigned = true;
+            this->indexes = _indexes;
+        }
+
+        int numberOfCoordinates() {
+            return nCoord;
+        }
+
+        int numberOfElements() {
+            return indexes.size();
+        }
+
+        bool areIndexesAssigned() {
+            return this->indexesAssigned;
+        }
+
+        void getNextElement(float * elems);
+
+        bool isValid();
+
+    private:
+        unsigned nCoord;
+        VertexAttrib::Type type;
+        int index;
+        std::vector<float> values;
+        bool indexesAssigned;
+        std::vector<unsigned short> indexes;
+        int currentElement;
+    };
+
 
     class PBGE_EXPORT VertexBufferBuilder {
     public:
-        class VertexAttribBuilder {
-        public:
-            VertexAttribBuilder(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type, int _index) {
-                nElements = _nElements;
-                type = _type;
-                index = _index;
-            }
-
-            VertexAttribBuilder(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type) {
-                nElements = _nElements;
-                type = _type;
-                index = -1;
-            }
-
-            void pushValue(const float x, const float y, const float z, const float w) {
-                values.push_back(x);
-                values.push_back(y);
-                values.push_back(z);
-                values.push_back(w);
-            }
-
-            bool operator == (const VertexAttribBuilder & other) {
-                return (this->type == other.type && this->index == other.index && this->nElements == other.nElements);
-            }
-
-        private:
-            unsigned nElements;
-            VertexBuffer::VertexAttrib::Type type;
-            int index;
-            std::vector<float> values;
-        };
-
-
         VertexBufferBuilder(unsigned _nVertices) {
             nVertices = _nVertices;
         }
 
-        const VertexAttribBuilder addAttrib(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type, int _index=-1) {
+        const VertexAttribBuilder addAttrib(unsigned _nElements, VertexAttrib::Type _type, int _index=-1) {
             VertexAttribBuilder attrib(_nElements, _type, _index);
             attribs.push_back(attrib);
             return attrib;
@@ -80,15 +109,22 @@ namespace pbge {
             } else {
                 it->pushValue(x,y,z,w);
             }
-            // allows chaining
             return *this;
         }
 
-        VertexBufferBuilder & setAttribIndex(const VertexBufferBuilder::VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes) {
+        VertexBufferBuilder & setAttribIndex(const VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes) {
+            std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
+            if(it == attribs.end()) {
+                VertexAttribBuilder newAttrib(attrib);
+                newAttrib.setIndexes(indexes);
+                attribs.push_back(newAttrib);
+            } else {
+                it->setIndexes(indexes);
+            }
             return *this;
         }
 
-        VertexBuffer * done();
+        VertexBuffer * done(GLenum usage = GL_STATIC_DRAW);
 
     private:
         size_t calculateSize();

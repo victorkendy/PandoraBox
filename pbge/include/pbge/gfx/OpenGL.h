@@ -3,9 +3,12 @@
 #ifndef gfxopengl_h_
 #define gfxopengl_h_ 1
 #include <iostream>
+#include <GL/glew.h>
+
+#include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
-#include "pbge/gfx/OpenGLAPI.h"
+
 
 namespace pbge {
     
