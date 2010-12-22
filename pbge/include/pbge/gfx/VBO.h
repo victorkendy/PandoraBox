@@ -42,11 +42,15 @@ namespace pbge {
                 index = -1;
             }
 
-            void pushValue(const float x, const float y=0.0f, const float z=0.0f, const float w=1.0f) {
+            void pushValue(const float x, const float y, const float z, const float w) {
                 values.push_back(x);
                 values.push_back(y);
                 values.push_back(z);
                 values.push_back(w);
+            }
+
+            bool operator == (const VertexAttribBuilder & other) {
+                return (this->type == other.type && this->index == other.index && this->nElements == other.nElements);
             }
 
         private:
@@ -61,35 +65,35 @@ namespace pbge {
             nVertices = _nVertices;
         }
 
-        VertexAttribBuilder * addAttrib(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type, int _index) {
-            VertexAttribBuilder * attrib = new VertexAttribBuilder(_nElements, _type, _index);
+        const VertexAttribBuilder addAttrib(unsigned _nElements, VertexBuffer::VertexAttrib::Type _type, int _index=-1) {
+            VertexAttribBuilder attrib(_nElements, _type, _index);
             attribs.push_back(attrib);
             return attrib;
         }
 
-        VertexBufferBuilder * pushValue(VertexAttribBuilder * attrib, const float &x, const float & y, const float & z, const float & w) {
-            std::vector<VertexAttribBuilder*>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
-            if(it == attribs.end())
-                attribs.push_back(attrib);
-            attrib->pushValue(x,y,z,w);
+        VertexBufferBuilder & pushValue(const VertexAttribBuilder & attrib, const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f) {
+            std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
+            if(it == attribs.end()) {
+                VertexAttribBuilder newAttrib(attrib);
+                newAttrib.pushValue(x,y,z,w);
+                attribs.push_back(newAttrib);
+            } else {
+                it->pushValue(x,y,z,w);
+            }
             // allows chaining
-            return this;
+            return *this;
+        }
+
+        VertexBufferBuilder & setAttribIndex(const VertexBufferBuilder::VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes) {
+            return *this;
         }
 
         VertexBuffer * done();
 
-        ~VertexBufferBuilder() {
-            std::vector<VertexAttribBuilder*>::iterator it;
-            for(it = attribs.begin(); it != attribs.end(); it++) {
-                delete *it;
-            }
-            attribs.clear();
-        }
-
     private:
         size_t calculateSize();
         unsigned nVertices;
-        std::vector<VertexAttribBuilder*> attribs;
+        std::vector<VertexAttribBuilder> attribs;
     };
 }
 

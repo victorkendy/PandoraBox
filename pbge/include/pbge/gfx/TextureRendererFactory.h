@@ -17,13 +17,13 @@ namespace pbge {
         }
 
         ~EXTFBOTextureRenderer() {
-            ogl->getApi()->deleteFramebuffersEXT(1, &fbo);
+            ogl->deleteFramebuffersEXT(1, &fbo);
             fbo = 0;
             ogl = NULL;
         }
     private:
         void initialize() {
-            ogl->getApi()->genFramebuffersEXT(1, &fbo);
+            ogl->genFramebuffersEXT(1, &fbo);
         }
         OpenGL * ogl;
         GLuint fbo;

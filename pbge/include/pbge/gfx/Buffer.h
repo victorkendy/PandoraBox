@@ -12,6 +12,11 @@
 namespace pbge {
     class Buffer {
     public:
+        Buffer() {
+            this->data = NULL;
+            glID = 0;
+        }
+
         Buffer(size_t _size, GLenum _usage, GLenum _target) {
             this->size = _size;
             this->usage = _usage;
@@ -23,52 +28,51 @@ namespace pbge {
             }
             this->glID = 0;
         }
-
-        ~Buffer() {
+        
+        virtual ~Buffer() {
             if(glID) 
-                Manager::getInstance()->getOpenGL()->getApi()->deleteBuffers(1, &glID);
+                Manager::getInstance()->getOpenGL()->deleteBuffers(1, &glID);
             if(this->data)
                 free(this->data);
         }
         
         // returns the data buffer
-        void * map() {
+        virtual void * map() {
             return data;
         }
 
         // Maps with an offset from the begining of the data buffer
-        void * map(int _begin) {
+        virtual void * map(int _begin) {
             return (char*)data + _begin;
         }
         
         // force call to glMapBuffer
-        void * forceDirectMap(GLenum access) {
-            std::cout << "my id is " << glID << std::endl;
-            Manager::getInstance()->getOpenGL()->getApi()->bindBuffer(target, glID);
-            return Manager::getInstance()->getOpenGL()->getApi()->mapBuffer(target, access);
+        virtual void * forceDirectMap(GLenum access) {
+            Manager::getInstance()->getOpenGL()->bindBuffer(target, glID);
+            return Manager::getInstance()->getOpenGL()->mapBuffer(target, access);
         }
 
-        void setData(void * _data, size_t _size);
+        //virtual void setData(void * _data, size_t _size);
 
-        void setSubData(void * _data, size_t _size, int _begin, int _end);
+        //virtual void setSubData(void * _data, size_t _size, int _begin, int _end);
         
         // call this to update the OpenGL state
-        void flush() {
+        virtual void flush() {
             if(glID == 0) createBuffer();
             if(begin_update >=0) {
                 OpenGL * ogl = Manager::getInstance()->getOpenGL();
-                ogl->getApi()->bindBuffer(target, glID);
-                ogl->getApi()->bufferSubData(target, begin_update, size - begin_update, (char*)data + begin_update);
-                ogl->getApi()->bindBuffer(target, 0);
+                ogl->bindBuffer(target, glID);
+                ogl->bufferSubData(target, begin_update, size - begin_update, (char*)data + begin_update);
+                ogl->bindBuffer(target, 0);
             }
         }
     private:
         void createBuffer() {
             OpenGL * ogl = Manager::getInstance()->getOpenGL();
-            ogl->getApi()->genBuffers(1, &glID);
-            ogl->getApi()->bindBuffer(target, glID);
-            ogl->getApi()->bufferData(target, size, NULL, usage);
-            ogl->getApi()->bindBuffer(target, 0);
+            ogl->genBuffers(1, &glID);
+            ogl->bindBuffer(target, glID);
+            ogl->bufferData(target, size, NULL, usage);
+            ogl->bindBuffer(target, 0);
         }
 
         int begin_update;

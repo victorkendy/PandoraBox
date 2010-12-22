@@ -6,6 +6,7 @@
 #include <cstdio>
 
 #include "pbge/core/Manager.h"
+#include "pbge/gfx/OpenGL.h"
 
 
 namespace {
@@ -17,7 +18,7 @@ namespace pbge {
     
     class OpenGL;
     // This class should be instantiated ONLY by the initManager() function call
-    Manager::Manager() {
+    Manager::Manager(bool test) {
         pbgeLog = new LogTerminal();
         // Get the installation directory of the PBGE_HOME
         char * installDir = getenv("PBGE_HOME");
@@ -32,6 +33,7 @@ namespace pbge {
         } else {
             pbgeLog->write("Environment Variable PBGE_HOME not found");
         }
+        this->testConfiguration = test;
         this->ogl = new OpenGL;
         shaderDirectories.push_back(std::string("./shaders/"));
     }
@@ -86,7 +88,7 @@ namespace pbge {
     }
 
     void Manager::init(bool test) {
-        manager = new Manager();
+        manager = new Manager(test);
     }
     
     Manager * Manager::getInstance() {

@@ -4,12 +4,13 @@
 #include "pbge/core/Log.h"
 #include "pbge/core/core.h"
 #include "pbge/core/OpenGLParameters.h"
-#include "pbge/gfx/OpenGL.h"
 
 #include <string>
 #include <vector>
 
 namespace pbge {
+    class OpenGL;
+
     class PBGE_EXPORT Manager{
     public:
         /* Write a status or warning message */
@@ -45,12 +46,17 @@ namespace pbge {
         OpenGL * getOpenGL() {
             return ogl;
         }
+
+        void _setOpenGL(OpenGL * _ogl) {
+            this->ogl = _ogl;
+        }
     private:
-        Manager();
+        Manager(bool test = false);
         ~Manager();
         Log * pbgeLog;
         OpenGL * ogl;
         std::vector<std::string> shaderDirectories;
+        bool testConfiguration;
     };
 }
 

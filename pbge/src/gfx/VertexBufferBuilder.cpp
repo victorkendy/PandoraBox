@@ -1,3 +1,4 @@
+#include <iostream>
 
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/VBO.h"
@@ -14,7 +15,9 @@ VertexBuffer * VertexBufferBuilder::done() {
     OpenGL * ogl = Manager::getInstance()->getOpenGL();
     // Deixar uso como parametro?
     Buffer * buffer = ogl->createBuffer(calculateSize(), GL_STATIC_DRAW, GL_ARRAY_BUFFER);
-    float * data = static_cast<float*>(buffer->map());
+    std::cerr << "aaaahhhhh" << std::endl;
+    buffer->map();
+    //float * data = static_cast<float*>(buffer->map());
     // fazer a mágica ...
     return NULL;
 }

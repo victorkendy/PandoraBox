@@ -13,19 +13,9 @@ namespace pbge {
 
     class PBGE_EXPORT OpenGL{
     public:
-        OpenGL() {
-            GLint initialMatrixMode;
-            api->getIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
-            currentMatrixMode = initialMatrixMode;
-            api = new OpenGLAPI();
-            matrices[2] = math3d::identity44;
-        }
+        OpenGL();
 
-        virtual void setMatrixMode(GLenum mode) {
-            if(currentMatrixMode != mode)
-                api->matrixMode(mode);
-            currentMatrixMode = mode;
-        }
+        virtual void setMatrixMode(GLenum mode);
 
         virtual void loadViewMatrix(const math3d::matrix44 & m) {
             matrices[0] = m;
@@ -39,29 +29,72 @@ namespace pbge {
             matrices[2] = m;
         }
 
-        virtual void uploadModelview() {
-            api->matrixMode(GL_MODELVIEW);
-            api->loadMatrix((matrices[0]*matrices[2]).transpose());
-        }
+        virtual void uploadModelview();
 
-        virtual void uploadProjection() {
-            api->matrixMode(GL_PROJECTION);
-            api->loadMatrix(matrices[1].transpose());
-        }
-        
-        virtual void viewport(GLint x, GLint y, GLint w, GLint h) {
-            api->viewport(x,y,w,h);
-        }
+        virtual void uploadProjection();
 
         virtual Buffer * createBuffer(size_t _size, GLenum _usage, GLenum _target);
 
-        OpenGLAPI * getApi() { return api; }
+        // raw OpenGL calls
+        virtual void activeTexture(GLenum textureUnit);
+
+        virtual void alphaFunc(GLenum func, GLclampf ref);
+
+        virtual void attachShader(GLuint program, GLuint shader);
+
+        virtual void begin(GLenum mode);
+
+        virtual void beginQuery(GLenum target, GLuint id);
+
+        virtual void bindAttribLocation(GLuint program, GLuint index, const GLchar* name);
+
+        virtual void bindBuffer(GLenum target, GLuint buffer);
+
+        virtual void bindTexture(GLenum target, GLuint texture);
+
+        virtual void bufferData(GLenum target, GLsizeiptr size, GLvoid * data, GLenum usage);
+
+        virtual void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid * data);
+        
+        virtual void clear(GLbitfield mask);
+
+        virtual void clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+
+        virtual void clearDepth(GLclampd depth);
+
+        virtual void clearStencil(GLint s);
+
+        virtual void clientActiveTexture(GLenum textureUnit);
+
+        virtual void clipPlane(GLenum plane, const GLdouble * equation);
+
+        virtual void viewport(GLint x, GLint y, GLint w, GLint h);
+
+        virtual void matrixMode(GLenum mode);
+
+        virtual void loadMatrix(GLfloat * matrix);
+
+        virtual void getIntegerv(GLenum pname, GLint * params);
+
+        virtual void getFloatv(GLenum pname, GLfloat * params);
+
+        virtual const char * getString(GLenum name);
+
+        virtual void genBuffers(GLsizei n, GLuint * buffers);
+
+        virtual void deleteBuffers(GLsizei n, GLuint * buffers);
+
+        virtual void * mapBuffer(GLenum target, GLenum access);
+
+        virtual void genFramebuffersEXT(GLsizei n, GLuint * buffers);
+
+        virtual void deleteFramebuffersEXT(GLsizei n, GLuint * buffers);
+
     private:
         GLenum currentMatrixMode;
 
         math3d::matrix44 matrices[3];
 
-        OpenGLAPI * api;
     };
 
 }
