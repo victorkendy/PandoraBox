@@ -8,6 +8,8 @@
 
 pbge.dll
 pbge.lib
+
 gmock*
 gtest*
 out/
+bin/Debug/tester.lib

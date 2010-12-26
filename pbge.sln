@@ -8,10 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\tests.vcproj
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24} = {A00997BD-6986-44D1-8A7A-61A68CC8BE24}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tester", "tester\tester.vcproj", "{12A78D53-E70E-420A-9365-494E98D36302}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A00997BD-6986-44D1-8A7A-61A68CC8BE24} = {A00997BD-6986-44D1-8A7A-61A68CC8BE24}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vbo_rendering", "vbo_rendering\vbo_rendering.vcproj", "{12A78D53-E70E-420A-9365-494E98D36302}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
