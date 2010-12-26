@@ -232,3 +232,12 @@ TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
     pbge::VertexSecondaryColorAttrib attrib = pbge::VertexSecondaryColorAttrib(4, 10, 10);
     attrib.bindAttrib(&ogl, NULL);
 }
+
+
+//Integration Test
+
+TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
+    MockOpenGL ogl;
+    pbge::Manager::init(true);
+    pbge::Manager::getInstance()->_setOpenGL(&ogl);
+}

@@ -92,9 +92,7 @@ namespace pbge {
             attribs.push_back(attrib);
         }
 
-        void bindAllAttribs() {
-            
-        }
+        void bindAllAttribs() {}
     private:
         Buffer * buffer;
         std::vector<VertexAttrib*> attribs;
@@ -209,7 +207,8 @@ namespace pbge {
 
     private:
         void validateAttribs();
-        size_t calculateSize();
+        GLsizei calculateSize();
+        void createAttribs(VertexBuffer * vbo, GLsizei stride);
         unsigned nVertices;
         std::vector<VertexAttribBuilder> attribs;
     };

@@ -45,7 +45,7 @@ VertexAttrib * VertexAttribBuilder::createInstance(int offset, GLsizei stride) {
     }
 }
 
-size_t VertexBufferBuilder::calculateSize() {
+GLsizei VertexBufferBuilder::calculateSize() {
     unsigned size = 0;
     std::vector<VertexAttribBuilder>::iterator it;
     for(it = attribs.begin(); it != attribs.end(); it++)
@@ -62,11 +62,21 @@ void VertexBufferBuilder::validateAttribs() {
     }
 }
 
+void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, GLsizei stride) {
+    std::vector<VertexAttribBuilder>::iterator it;
+    int offset = 0;
+    for(it = attribs.begin(); it != attribs.end(); it++) {
+        vbo->addAttrib(it->createInstance(offset, stride));
+        offset += it->numberOfCoordinates() * sizeof(float);
+    }
+}
+
 VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
     validateAttribs();
     OpenGL * ogl = Manager::getInstance()->getOpenGL();
+    GLsizei stride = calculateSize();
     // Deixar uso como parametro?
-    Buffer * buffer = ogl->createBuffer(calculateSize(), usage, GL_ARRAY_BUFFER);
+    Buffer * buffer = ogl->createBuffer(stride, usage, GL_ARRAY_BUFFER);
     float * data = static_cast<float*>(buffer->map());
     std::vector<VertexAttribBuilder>::iterator it;
     int dataIndex = 0;
@@ -78,7 +88,9 @@ VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
                 data[dataIndex++] = buf[j];
         }
     }
-    return NULL;
+    VertexBuffer * vbo = new VertexBuffer(buffer);
+    createAttribs(vbo, stride);
+    return vbo;
 }
 
 #define ATTRIB_POINTER_OFFSET(offset) ((GLbyte *)NULL + (offset))
