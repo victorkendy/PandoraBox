@@ -82,6 +82,7 @@ namespace pbge {
         void bindAttrib(OpenGL * ogl) {}
     };
 
+
     class PBGE_EXPORT VertexBuffer {
     public:
         VertexBuffer(Buffer * _buffer) {
@@ -97,10 +98,11 @@ namespace pbge {
         void bindAllAttribs(OpenGL * ogl);
 
         void bind(OpenGL * ogl);
-    
-        Buffer * buffer;
 
+        void unbind(OpenGL * ogl);
+    
     private:
+        Buffer * buffer;
         std::vector<VertexAttrib*> attribs;
     };
 

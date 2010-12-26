@@ -38,9 +38,12 @@ namespace pbge {
     }
 
     void VertexBuffer::bind(OpenGL * ogl) {
-        this->buffer->flush();
-        
+        this->buffer->flush(ogl, true);
         bindAllAttribs(ogl);
+    }
+
+    void VertexBuffer::unbind(OpenGL * ogl) {
+        this->buffer->unbind(ogl);
     }
 
     #undef ATTRIB_POINTER_OFFSET

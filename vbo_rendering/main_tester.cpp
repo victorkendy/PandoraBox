@@ -31,11 +31,9 @@ public:
 
     void render(pbge::ModelInstance * instance, pbge::OpenGL * ogl) {
         glEnable(GL_VERTEX_ARRAY);
-        vbo->buffer->flush();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo->buffer->getID());
         vbo->bind(ogl);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDrawArrays(GL_QUADS, 0, 24);
+        vbo->unbind(ogl);
         glDisable(GL_VERTEX_ARRAY);
     }
 

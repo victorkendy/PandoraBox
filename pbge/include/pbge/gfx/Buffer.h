@@ -57,26 +57,37 @@ namespace pbge {
         //virtual void setSubData(void * _data, size_t _size, int _begin, int _end);
         
         // call this to update the OpenGL state
-        virtual void flush() {
-            if(glID == 0) createBuffer();
-            if(begin_update >=0) {
-                OpenGL * ogl = Manager::getInstance()->getOpenGL();
+        virtual void flush(OpenGL * ogl, bool keepBound=false) {
+            if(glID == 0) createBuffer(keepBound);
+            else if(begin_update >=0) {
                 ogl->bindBuffer(target, glID);
                 ogl->bufferSubData(target, begin_update, size - begin_update, (char*)data + begin_update);
-                ogl->bindBuffer(target, 0);
-            }
+                if(!keepBound) {
+                    ogl->bindBuffer(target, 0);
+                }
+            } else if(keepBound)
+                ogl->bindBuffer(target, glID);
+        }
+
+        void bind(OpenGL * ogl) {
+            ogl->bindBuffer(target, glID);
+        }
+
+        void unbind(OpenGL * ogl) {
+            ogl->bindBuffer(target, 0);
         }
 
         GLuint getID() {
             return glID;
         }
     private:
-        void createBuffer() {
+        void createBuffer(bool keepBound) {
             OpenGL * ogl = Manager::getInstance()->getOpenGL();
             ogl->genBuffers(1, &glID);
             ogl->bindBuffer(target, glID);
             ogl->bufferData(target, size, data, usage);
-            ogl->bindBuffer(target, 0);
+            if(!keepBound)
+                ogl->bindBuffer(target, 0);
         }
 
         int begin_update;
