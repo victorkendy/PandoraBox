@@ -71,24 +71,33 @@ namespace pbge {
 
         virtual void clipPlane(GLenum plane, const GLdouble * equation);
 
-        virtual void viewport(GLint x, GLint y, GLint w, GLint h);
+        virtual void deleteBuffers(GLsizei n, GLuint * buffers);
 
-        virtual void matrixMode(GLenum mode);
-
-        virtual void loadMatrix(GLfloat * matrix);
-
-        virtual void getIntegerv(GLenum pname, GLint * params);
-
-        virtual void getFloatv(GLenum pname, GLfloat * params);
-
-        virtual const char * getString(GLenum name);
+        virtual void enableClientState(GLenum cap);
 
         virtual void genBuffers(GLsizei n, GLuint * buffers);
 
-        virtual void deleteBuffers(GLsizei n, GLuint * buffers);
+        virtual void getFloatv(GLenum pname, GLfloat * params);
+
+        virtual void getIntegerv(GLenum pname, GLint * params);
+
+        virtual const char * getString(GLenum name);
+
+        virtual void loadMatrix(GLfloat * matrix);
 
         virtual void * mapBuffer(GLenum target, GLenum access);
 
+        virtual void matrixMode(GLenum mode);
+
+        virtual void normalPointer(GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void viewport(GLint x, GLint y, GLint w, GLint h);
+        
+        //Extensions to 2.1
         virtual void genFramebuffersEXT(GLsizei n, GLuint * buffers);
 
         virtual void deleteFramebuffersEXT(GLsizei n, GLuint * buffers);

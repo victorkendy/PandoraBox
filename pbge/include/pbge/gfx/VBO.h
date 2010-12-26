@@ -5,12 +5,15 @@
 
 #include <vector>
 #include <algorithm>
+#include <string>
 
 #include "pbge/core/core.h"
 #include "pbge/core/Vec3.h"
 
 namespace pbge {
-    class PBGE_EXPORT VertexAttrib {
+    class VertexBuffer;
+
+    class PBGE_EXPORT VertexAttrib{
     public:
         typedef enum {
             VERTEX,
@@ -20,6 +23,44 @@ namespace pbge {
             SECONDARY_COLOR,
             CUSTOM_ATTRIB
         } Type;
+
+        VertexAttrib(int _nCoord, int _offset, GLsizei _stride) {
+            nCoord = _nCoord;
+            offset = _offset;
+            stride = _stride;
+        }
+
+        int getOffset() {
+            return offset;
+        }
+        int getStride() {
+            return stride;
+        }
+        int getNCoord() {
+            return nCoord;
+        }
+        virtual void bindAttrib(OpenGL * ogl, VertexBuffer * vbo) = 0;
+    private:
+        int nCoord, offset;
+        GLsizei stride;
+    };
+
+    class PBGE_EXPORT VertexPositionAttrib : public VertexAttrib{
+    public:
+        VertexPositionAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+    };
+
+    class PBGE_EXPORT VertexNormalAttrib : public VertexAttrib{
+    public:
+        VertexNormalAttrib(int _offset, GLsizei _stride) : VertexAttrib(3, _offset, _stride) {}
+        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+    };
+
+    class PBGE_EXPORT VertexTexcoordAttrib : public VertexAttrib {
+    public:
+        VertexTexcoordAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
     };
 
     class PBGE_EXPORT VertexBuffer {
@@ -27,22 +68,29 @@ namespace pbge {
         
     };
 
+
+
+
+
+
     class PBGE_EXPORT VertexAttribBuilder {
     public:
-        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, int _index) {
+        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, int _index = -1) {
             nCoord = _nCoord;
             type = _type;
             index = _index;
             indexesAssigned = false;
             currentElement = 0;
+            name = "";
         }
 
-        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type) {
+        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, const std::string & _name) {
             nCoord = _nCoord;
             type = _type;
             index = -1;
             indexesAssigned = false;
             currentElement = 0;
+            name = _name;
         }
 
         void pushValue(const float x, const float y, const float z, const float w) {
@@ -52,9 +100,7 @@ namespace pbge {
             values.push_back(w);
         }
 
-        bool operator == (const VertexAttribBuilder & other) {
-            return (this->type == other.type && this->index == other.index && this->nCoord == other.nCoord);
-        }
+        bool operator == (const VertexAttribBuilder & other);
 
         void setIndexes(const std::vector<unsigned short> & _indexes) {
             indexesAssigned = true;
@@ -78,6 +124,7 @@ namespace pbge {
         bool isValid();
 
     private:
+        std::string name;
         unsigned nCoord;
         VertexAttrib::Type type;
         int index;
@@ -127,6 +174,7 @@ namespace pbge {
         VertexBuffer * done(GLenum usage = GL_STATIC_DRAW);
 
     private:
+        void validateAttribs();
         size_t calculateSize();
         unsigned nVertices;
         std::vector<VertexAttribBuilder> attribs;

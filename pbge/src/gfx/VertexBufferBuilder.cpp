@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "pbge/core/Manager.h"
+#include "pbge/exceptions/exceptions.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/OpenGl.h"
 #include "pbge/gfx/Buffer.h"
@@ -22,6 +23,16 @@ void VertexAttribBuilder::getNextElement(float * elems) {
     }
 }
 
+bool VertexAttribBuilder::operator == (const VertexAttribBuilder & other) {
+    if(type == VertexAttrib::CUSTOM_ATTRIB) {
+        if(other.type == type)
+            return (name == other.name && nCoord == other.nCoord);
+        else
+            return false;
+    }
+    return (this->type == other.type && this->index == other.index && this->nCoord == other.nCoord);
+}
+
 size_t VertexBufferBuilder::calculateSize() {
     unsigned size = 0;
     std::vector<VertexAttribBuilder>::iterator it;
@@ -30,7 +41,17 @@ size_t VertexBufferBuilder::calculateSize() {
     return size * nVertices;
 }
 
+void VertexBufferBuilder::validateAttribs() {
+    std::vector<VertexAttribBuilder>::iterator it;
+    for(it = attribs.begin(); it != attribs.end(); it++) {
+        if(!it->areIndexesAssigned()) {
+            throw BuilderValidationException("attrib has no index vector");
+        }
+    }
+}
+
 VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
+    validateAttribs();
     OpenGL * ogl = Manager::getInstance()->getOpenGL();
     // Deixar uso como parametro?
     Buffer * buffer = ogl->createBuffer(calculateSize(), usage, GL_ARRAY_BUFFER);
@@ -47,3 +68,22 @@ VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
     }
     return NULL;
 }
+
+#define ATTRIB_POINTER_OFFSET(offset) ((GLbyte *)NULL + (offset))
+
+void VertexPositionAttrib::bindAttrib(OpenGL * ogl, VertexBuffer * vbo) {
+    ogl->enableClientState(GL_VERTEX_ARRAY);
+    ogl->vertexPointer(this->getNCoord(), GL_FLOAT, this->getStride(), ATTRIB_POINTER_OFFSET(this->getOffset()));
+}
+
+void VertexNormalAttrib::bindAttrib(pbge::OpenGL *ogl, pbge::VertexBuffer *vbo) {
+    ogl->enableClientState(GL_NORMAL_ARRAY);
+    ogl->normalPointer(GL_FLOAT, getStride(), ATTRIB_POINTER_OFFSET(getOffset()));
+}
+
+void VertexTexcoordAttrib::bindAttrib(OpenGL * ogl, VertexBuffer * vbo) {
+    ogl->enableClientState(GL_TEXTURE_COORD_ARRAY);
+    ogl->texCoordPointer(getNCoord(), GL_FLOAT, getStride(), ATTRIB_POINTER_OFFSET(getOffset()));
+}
+
+#undef ATTRIB_POINTER_OFFSET

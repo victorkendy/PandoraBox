@@ -97,10 +97,28 @@ void OpenGL::clipPlane(GLenum plane, const GLdouble * equation) {
     glClipPlane(plane, equation);
 }
 
+void OpenGL::deleteBuffers(GLsizei n, GLuint * buffers) {
+    glDeleteBuffers(n, buffers);
+}
 
+void OpenGL::enableClientState(GLenum cap) {
+    glEnableClientState(cap);
+}
 
-void OpenGL::viewport(GLint x, GLint y, GLint w, GLint h) {
-    glViewport(x,y,w,h);
+void OpenGL::genBuffers(GLsizei n, GLuint * buffers) {
+    glGenBuffers(n, buffers);
+}
+
+void OpenGL::getFloatv(GLenum pname, GLfloat * params) {
+    glGetFloatv(pname, params);
+}
+
+void OpenGL::getIntegerv(GLenum pname, GLint * params) {
+    glGetIntegerv(pname, params);
+}
+
+const char * OpenGL::getString(GLenum name) {
+    return (const char *)glGetString(name);
 }
 
 void OpenGL::loadMatrix(GLfloat * matrix) {
@@ -115,25 +133,23 @@ void OpenGL::matrixMode(GLenum mode) {
     glMatrixMode(mode);
 }
 
-void OpenGL::getIntegerv(GLenum pname, GLint * params) {
-    glGetIntegerv(pname, params);
+void OpenGL::normalPointer(GLenum type, GLsizei stride, GLvoid * pointer) {
+    glNormalPointer(type, stride, pointer);
 }
 
-void OpenGL::getFloatv(GLenum pname, GLfloat * params) {
-    glGetFloatv(pname, params);
+void OpenGL::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
+    glTexCoordPointer(size, type, stride, pointer);
 }
 
-const char * OpenGL::getString(GLenum name) {
-    return (const char *)glGetString(name);
+void OpenGL::vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
+    glVertexPointer(size, type, stride, pointer);
 }
 
-void OpenGL::genBuffers(GLsizei n, GLuint * buffers) {
-    glGenBuffers(n, buffers);
+void OpenGL::viewport(GLint x, GLint y, GLint w, GLint h) {
+    glViewport(x,y,w,h);
 }
 
-void OpenGL::deleteBuffers(GLsizei n, GLuint * buffers) {
-    glDeleteBuffers(n, buffers);
-}
+
 
 void OpenGL::genFramebuffersEXT(GLsizei n, GLuint * buffers) {
     glGenFramebuffersEXT(n, buffers);
