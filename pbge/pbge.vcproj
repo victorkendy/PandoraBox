@@ -225,6 +225,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\VertexBuffer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\VertexBufferBuilder.cpp"
 				>
 			</File>

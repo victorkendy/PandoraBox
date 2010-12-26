@@ -40,7 +40,7 @@ namespace pbge {
         int getNCoord() {
             return nCoord;
         }
-        virtual void bindAttrib(OpenGL * ogl, VertexBuffer * vbo) = 0;
+        virtual void bindAttrib(OpenGL * ogl) = 0;
     private:
         int nCoord, offset;
         GLsizei stride;
@@ -49,37 +49,37 @@ namespace pbge {
     class PBGE_EXPORT VertexPositionAttrib : public VertexAttrib{
     public:
         VertexPositionAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+        void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexNormalAttrib : public VertexAttrib{
     public:
         VertexNormalAttrib(int _offset, GLsizei _stride) : VertexAttrib(3, _offset, _stride) {}
-        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+        void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexTexcoordAttrib : public VertexAttrib {
     public:
         VertexTexcoordAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+        void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexColorAttrib : public VertexAttrib {
     public:
         VertexColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+        void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexSecondaryColorAttrib : public VertexAttrib {
     public:
         VertexSecondaryColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+        void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexCustomAttrib : public VertexAttrib {
     public:
         VertexCustomAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo) {}
+        void bindAttrib(OpenGL * ogl) {}
     };
 
     class PBGE_EXPORT VertexBuffer {
@@ -87,6 +87,8 @@ namespace pbge {
         VertexBuffer(Buffer * _buffer) {
             buffer = _buffer;
         }
+
+        ~VertexBuffer();
 
         void addAttrib(VertexAttrib * attrib) {
             attribs.push_back(attrib);

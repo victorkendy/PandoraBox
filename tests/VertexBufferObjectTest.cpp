@@ -194,7 +194,7 @@ TEST(VertexPositionAttribTest, bindCallsOpenGLWithCorrectParameters) {
     EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY)).Times(1);
 
     pbge::VertexPositionAttrib attrib = pbge::VertexPositionAttrib(4, 10, 10);
-    attrib.bindAttrib(&ogl, NULL);
+    attrib.bindAttrib(&ogl);
 }
 
 TEST(VertexNormalAttribTest, bindCallsOpenGLWithCorrectParameters) {
@@ -203,7 +203,7 @@ TEST(VertexNormalAttribTest, bindCallsOpenGLWithCorrectParameters) {
     EXPECT_CALL(ogl, enableClientState(GL_NORMAL_ARRAY)).Times(1);
 
     pbge::VertexNormalAttrib attrib = pbge::VertexNormalAttrib(10, 10);
-    attrib.bindAttrib(&ogl, NULL);
+    attrib.bindAttrib(&ogl);
 }
 
 TEST(VertexTexcoordAttribTest, bindCallsOpenGLWithCorrectParameters) {
@@ -212,7 +212,7 @@ TEST(VertexTexcoordAttribTest, bindCallsOpenGLWithCorrectParameters) {
     EXPECT_CALL(ogl, enableClientState(GL_TEXTURE_COORD_ARRAY)).Times(1);
 
     pbge::VertexTexcoordAttrib attrib = pbge::VertexTexcoordAttrib(4, 10, 10);
-    attrib.bindAttrib(&ogl, NULL);
+    attrib.bindAttrib(&ogl);
 }
 
 TEST(VertexColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
@@ -221,7 +221,7 @@ TEST(VertexColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
     EXPECT_CALL(ogl, enableClientState(GL_COLOR_ARRAY)).Times(1);
 
     pbge::VertexColorAttrib attrib = pbge::VertexColorAttrib(4, 10, 10);
-    attrib.bindAttrib(&ogl, NULL);
+    attrib.bindAttrib(&ogl);
 }
 
 TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
@@ -230,7 +230,7 @@ TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
     EXPECT_CALL(ogl, enableClientState(GL_SECONDARY_COLOR_ARRAY)).Times(1);
 
     pbge::VertexSecondaryColorAttrib attrib = pbge::VertexSecondaryColorAttrib(4, 10, 10);
-    attrib.bindAttrib(&ogl, NULL);
+    attrib.bindAttrib(&ogl);
 }
 
 
