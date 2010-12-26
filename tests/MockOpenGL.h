@@ -33,6 +33,7 @@ public:
     MOCK_METHOD1(clearStencil, void(GLint s));
     MOCK_METHOD1(clientActiveTexture, void(GLenum textureUnit));
     MOCK_METHOD2(clipPlane, void(GLenum plane, const GLdouble * equation));
+    MOCK_METHOD4(colorPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
     MOCK_METHOD2(deleteBuffers, void(GLsizei n, GLuint * buffers));
     MOCK_METHOD1(enableClientState, void(GLenum cap));
     MOCK_METHOD2(genBuffers, void(GLsizei n, GLuint * buffers));
@@ -43,6 +44,7 @@ public:
     MOCK_METHOD2(mapBuffer, void*(GLenum target, GLenum access));
     MOCK_METHOD1(matrixMode, void(GLenum mode));
     MOCK_METHOD3(normalPointer, void(GLenum type, GLsizei stride, GLvoid * pointer));
+    MOCK_METHOD4(secondaryColorPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
     MOCK_METHOD4(texCoordPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
     MOCK_METHOD4(vertexPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
     MOCK_METHOD4(viewport, void(GLint x, GLint y, GLint w, GLint h));

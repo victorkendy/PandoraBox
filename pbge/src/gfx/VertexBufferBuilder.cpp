@@ -86,4 +86,15 @@ void VertexTexcoordAttrib::bindAttrib(OpenGL * ogl, VertexBuffer * vbo) {
     ogl->texCoordPointer(getNCoord(), GL_FLOAT, getStride(), ATTRIB_POINTER_OFFSET(getOffset()));
 }
 
+void VertexColorAttrib::bindAttrib(pbge::OpenGL *ogl, pbge::VertexBuffer *vbo) {
+    ogl->enableClientState(GL_COLOR_ARRAY);
+    ogl->colorPointer(getNCoord(),GL_FLOAT, getStride(), ATTRIB_POINTER_OFFSET(getOffset()));
+}
+
+void VertexSecondaryColorAttrib::bindAttrib(pbge::OpenGL *ogl, pbge::VertexBuffer *vbo) {
+    ogl->enableClientState(GL_SECONDARY_COLOR_ARRAY);
+    ogl->secondaryColorPointer(3,GL_FLOAT, getStride(), ATTRIB_POINTER_OFFSET(getOffset()));
+}
+
+
 #undef ATTRIB_POINTER_OFFSET

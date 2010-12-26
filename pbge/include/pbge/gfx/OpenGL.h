@@ -71,6 +71,8 @@ namespace pbge {
 
         virtual void clipPlane(GLenum plane, const GLdouble * equation);
 
+        virtual void colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
+
         virtual void deleteBuffers(GLsizei n, GLuint * buffers);
 
         virtual void enableClientState(GLenum cap);
@@ -90,6 +92,8 @@ namespace pbge {
         virtual void matrixMode(GLenum mode);
 
         virtual void normalPointer(GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
         virtual void texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 

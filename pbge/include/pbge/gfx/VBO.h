@@ -63,6 +63,18 @@ namespace pbge {
         void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
     };
 
+    class PBGE_EXPORT VertexColorAttrib : public VertexAttrib {
+    public:
+        VertexColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+    };
+
+    class PBGE_EXPORT VertexSecondaryColorAttrib : public VertexAttrib {
+    public:
+        VertexSecondaryColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
+    };
+
     class PBGE_EXPORT VertexBuffer {
     public:
         

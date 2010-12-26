@@ -97,6 +97,10 @@ void OpenGL::clipPlane(GLenum plane, const GLdouble * equation) {
     glClipPlane(plane, equation);
 }
 
+void OpenGL::colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
+    glColorPointer(size, type, stride, pointer);
+}
+
 void OpenGL::deleteBuffers(GLsizei n, GLuint * buffers) {
     glDeleteBuffers(n, buffers);
 }
@@ -135,6 +139,10 @@ void OpenGL::matrixMode(GLenum mode) {
 
 void OpenGL::normalPointer(GLenum type, GLsizei stride, GLvoid * pointer) {
     glNormalPointer(type, stride, pointer);
+}
+
+void OpenGL::secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
+    glSecondaryColorPointer(size, type, stride, pointer);
 }
 
 void OpenGL::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
