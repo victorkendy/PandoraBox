@@ -74,9 +74,10 @@ void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, GLsizei stride) {
 VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
     validateAttribs();
     OpenGL * ogl = Manager::getInstance()->getOpenGL();
-    GLsizei stride = calculateSize();
+    GLsizei size = calculateSize();
+    GLsizei stride = size / nVertices;
     // Deixar uso como parametro?
-    Buffer * buffer = ogl->createBuffer(stride, usage, GL_ARRAY_BUFFER);
+    Buffer * buffer = ogl->createBuffer(size, usage, GL_ARRAY_BUFFER);
     float * data = static_cast<float*>(buffer->map());
     std::vector<VertexAttribBuilder>::iterator it;
     int dataIndex = 0;
@@ -89,7 +90,7 @@ VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
         }
     }
     VertexBuffer * vbo = new VertexBuffer(buffer);
-    createAttribs(vbo, stride);
+    createAttribs(vbo, stride * sizeof(float));
     return vbo;
 }
 
@@ -120,5 +121,11 @@ void VertexSecondaryColorAttrib::bindAttrib(pbge::OpenGL *ogl, pbge::VertexBuffe
     ogl->secondaryColorPointer(3,GL_FLOAT, getStride(), ATTRIB_POINTER_OFFSET(getOffset()));
 }
 
+void VertexBuffer::bindAllAttribs(OpenGL * ogl) {
+    std::vector<VertexAttrib*>::iterator it;
+    for(it = attribs.begin(); it != attribs.end(); it++) {
+        (*it)->bindAttrib(ogl, this);
+    }
+}
 
 #undef ATTRIB_POINTER_OFFSET

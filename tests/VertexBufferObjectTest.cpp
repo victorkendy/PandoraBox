@@ -238,6 +238,66 @@ TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
 
 TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     MockOpenGL ogl;
+    MockBuffer buffer;
     pbge::Manager::init(true);
     pbge::Manager::getInstance()->_setOpenGL(&ogl);
+
+    float buf[9];
+
+    EXPECT_CALL(ogl, createBuffer(9,GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
+    
+    pbge::VertexBufferBuilder builder(3);
+    
+    pbge::VertexAttribBuilder vertex = builder.addAttrib(3, pbge::VertexAttrib::VERTEX);
+    std::vector<unsigned short> indexes;
+    builder.pushValue(vertex, 1,2,3).pushValue(vertex, 2,3,4).pushValue(vertex,3,4,5);
+    indexes.push_back(1);
+    indexes.push_back(0);
+    indexes.push_back(2);
+    builder.setAttribIndex(vertex, indexes);
+    pbge::VertexBuffer * vbo = builder.done();
+
+    EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY));
+    EXPECT_CALL(ogl, vertexPointer(3, GL_FLOAT, 3*sizeof(float), (GLbyte*)NULL));
+    vbo->bindAllAttribs(&ogl);
+}
+TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
+    MockOpenGL ogl;
+    MockBuffer buffer;
+    pbge::Manager::init(true);
+    pbge::Manager::getInstance()->_setOpenGL(&ogl);
+    float buf[20];
+
+    EXPECT_CALL(ogl, createBuffer(20,GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
+
+    pbge::VertexBufferBuilder builder(2);
+    pbge::VertexAttribBuilder vertex = builder.addAttrib(3, pbge::VertexAttrib::VERTEX);
+    pbge::VertexAttribBuilder normal = builder.addAttrib(3, pbge::VertexAttrib::NORMAL);
+    pbge::VertexAttribBuilder color = builder.addAttrib(4, pbge::VertexAttrib::COLOR);
+    builder.pushValue(vertex, 1,2,3);
+    builder.pushValue(vertex, 4,5,6);
+    builder.pushValue(normal, 1,0,1);
+    builder.pushValue(normal, 0,1,0);
+    builder.pushValue(color, 1,1,1);
+    builder.pushValue(color, 0,0,0);
+    std::vector<unsigned short> vertex_indexes;
+    std::vector<unsigned short> normal_indexes;
+    vertex_indexes.push_back(0);
+    vertex_indexes.push_back(1);
+    normal_indexes.push_back(1);
+    normal_indexes.push_back(0);
+    std::vector<unsigned short> color_indexes = normal_indexes;
+    builder.setAttribIndex(vertex, vertex_indexes);
+    builder.setAttribIndex(normal, normal_indexes);
+    builder.setAttribIndex(color, color_indexes);
+    pbge::VertexBuffer * vbo = builder.done(GL_DYNAMIC_DRAW);
+    EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY));
+    EXPECT_CALL(ogl, enableClientState(GL_NORMAL_ARRAY));
+    EXPECT_CALL(ogl, enableClientState(GL_COLOR_ARRAY));
+    EXPECT_CALL(ogl, vertexPointer(3, GL_FLOAT, 10*sizeof(float), (GLbyte*)NULL));
+    EXPECT_CALL(ogl, normalPointer(GL_FLOAT, 10*sizeof(float), (GLbyte*)NULL + 3*sizeof(float)));
+    EXPECT_CALL(ogl, colorPointer(4, GL_FLOAT, 10*sizeof(float), (GLbyte *)NULL + 6*sizeof(float)));
+    vbo->bindAllAttribs(&ogl);
 }

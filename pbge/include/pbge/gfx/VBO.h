@@ -92,7 +92,7 @@ namespace pbge {
             attribs.push_back(attrib);
         }
 
-        void bindAllAttribs() {}
+        void bindAllAttribs(OpenGL * ogl);
     private:
         Buffer * buffer;
         std::vector<VertexAttrib*> attribs;
