@@ -77,7 +77,7 @@ VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
     GLsizei size = calculateSize();
     GLsizei stride = size / nVertices;
     // Deixar uso como parametro?
-    Buffer * buffer = ogl->createBuffer(size, usage, GL_ARRAY_BUFFER);
+    Buffer * buffer = ogl->createBuffer(size*sizeof(float), usage, GL_ARRAY_BUFFER);
     float * data = static_cast<float*>(buffer->map());
     std::vector<VertexAttribBuilder>::iterator it;
     int dataIndex = 0;

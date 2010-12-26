@@ -122,7 +122,7 @@ TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
     float buf[9];
     float expected[] = {2.0f, 3.0f, 4.0f, 1.0f,2.0f,3.0f, 3.0f,4.0f,5.0f};
 
-    EXPECT_CALL(ogl, createBuffer(9,GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
     pbge::Manager::getInstance()->_setOpenGL(&ogl);
     
@@ -146,7 +146,7 @@ TEST_F(VertexBufferBuilderTest, builderBuildsCombinationVertexAndNormalIterleave
     float buf[12];
     float expected[] = {1.0f,2.0f,3.0f,0.0f,1.0f,0.0f, 4.0f,5.0f,6.0f,1.0f,0.0f,1.0f};
 
-    EXPECT_CALL(ogl, createBuffer(12,GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, createBuffer(12*sizeof(float),GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
     pbge::Manager::getInstance()->_setOpenGL(&ogl);
 
@@ -244,7 +244,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
 
     float buf[9];
 
-    EXPECT_CALL(ogl, createBuffer(9,GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
     
     pbge::VertexBufferBuilder builder(3);
@@ -269,7 +269,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     pbge::Manager::getInstance()->_setOpenGL(&ogl);
     float buf[20];
 
-    EXPECT_CALL(ogl, createBuffer(20,GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, createBuffer(20*sizeof(float),GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
 
     pbge::VertexBufferBuilder builder(2);
@@ -301,3 +301,4 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     EXPECT_CALL(ogl, colorPointer(4, GL_FLOAT, 10*sizeof(float), (GLbyte *)NULL + 6*sizeof(float)));
     vbo->bindAllAttribs(&ogl);
 }
+
