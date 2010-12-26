@@ -33,6 +33,18 @@ bool VertexAttribBuilder::operator == (const VertexAttribBuilder & other) {
     return (this->type == other.type && this->index == other.index && this->nCoord == other.nCoord);
 }
 
+VertexAttrib * VertexAttribBuilder::createInstance(int offset, GLsizei stride) {
+    switch(type) {
+        case VertexAttrib::VERTEX: return new VertexPositionAttrib(nCoord, offset, stride);
+        case VertexAttrib::NORMAL: return new VertexNormalAttrib(offset, stride);
+        case VertexAttrib::TEXCOORD: return new VertexTexcoordAttrib(nCoord, offset, stride);
+        case VertexAttrib::COLOR: return new VertexColorAttrib(nCoord, offset, stride);
+        case VertexAttrib::SECONDARY_COLOR: return new VertexSecondaryColorAttrib(nCoord, offset, stride);
+        case VertexAttrib::CUSTOM_ATTRIB: return new VertexColorAttrib(nCoord, offset, stride);
+        default: return NULL;
+    }
+}
+
 size_t VertexBufferBuilder::calculateSize() {
     unsigned size = 0;
     std::vector<VertexAttribBuilder>::iterator it;

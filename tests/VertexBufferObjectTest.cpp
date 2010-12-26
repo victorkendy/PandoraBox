@@ -105,7 +105,6 @@ TEST(VertexAttribBuilderTest, areIndexesAssignedReturnsTrueOnlyAfterTheIndexVect
     EXPECT_TRUE(attrib.areIndexesAssigned());
 }
 
-
 class VertexBufferBuilderTest : public testing::Test {
 public:
     MockOpenGL ogl;

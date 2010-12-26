@@ -12,6 +12,7 @@
 
 namespace pbge {
     class VertexBuffer;
+    class Buffer;
 
     class PBGE_EXPORT VertexAttrib{
     public:
@@ -75,9 +76,28 @@ namespace pbge {
         void bindAttrib(OpenGL * ogl, VertexBuffer * vbo);
     };
 
+    class PBGE_EXPORT VertexCustomAttrib : public VertexAttrib {
+    public:
+        VertexCustomAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+        void bindAttrib(OpenGL * ogl, VertexBuffer * vbo) {}
+    };
+
     class PBGE_EXPORT VertexBuffer {
     public:
-        
+        VertexBuffer(Buffer * _buffer) {
+            buffer = _buffer;
+        }
+
+        void addAttrib(VertexAttrib * attrib) {
+            attribs.push_back(attrib);
+        }
+
+        void bindAllAttribs() {
+            
+        }
+    private:
+        Buffer * buffer;
+        std::vector<VertexAttrib*> attribs;
     };
 
 
@@ -134,6 +154,8 @@ namespace pbge {
         void getNextElement(float * elems);
 
         bool isValid();
+
+        VertexAttrib * createInstance(int offset, GLsizei stride);
 
     private:
         std::string name;
