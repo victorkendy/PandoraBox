@@ -85,8 +85,9 @@ namespace pbge {
 
     class PBGE_EXPORT VertexBuffer {
     public:
-        VertexBuffer(Buffer * _buffer) {
+        VertexBuffer(Buffer * _buffer, unsigned _nVertices) {
             buffer = _buffer;
+            nVertices = _nVertices;
         }
 
         ~VertexBuffer();
@@ -100,9 +101,14 @@ namespace pbge {
         void bind(OpenGL * ogl);
 
         void unbind(OpenGL * ogl);
+
+        unsigned getNVertices() {
+            return nVertices;
+        }
     
     private:
         Buffer * buffer;
+        unsigned nVertices;
         std::vector<VertexAttrib*> attribs;
     };
 

@@ -76,7 +76,6 @@ VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
     OpenGL * ogl = Manager::getInstance()->getOpenGL();
     GLsizei size = calculateSize();
     GLsizei stride = size / nVertices;
-    // Deixar uso como parametro?
     Buffer * buffer = ogl->createBuffer(size*sizeof(float), usage, GL_ARRAY_BUFFER);
     float * data = static_cast<float*>(buffer->map());
     std::vector<VertexAttribBuilder>::iterator it;
@@ -89,7 +88,7 @@ VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
                 data[dataIndex++] = buf[j];
         }
     }
-    VertexBuffer * vbo = new VertexBuffer(buffer);
+    VertexBuffer * vbo = new VertexBuffer(buffer, nVertices);
     createAttribs(vbo, stride * sizeof(float));
     return vbo;
 }

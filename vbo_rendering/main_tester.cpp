@@ -25,29 +25,24 @@ pbge::OpenGL * gl;
 
 class UmModelo : public pbge::Model {
 public:
-    UmModelo(pbge::VertexBuffer * _vbo) {
+    UmModelo(pbge::VertexBuffer * _vbo, GLenum _primitive) {
         vbo = _vbo;
+        primitive = _primitive;
     }
 
     void render(pbge::ModelInstance * instance, pbge::OpenGL * ogl) {
         glEnable(GL_VERTEX_ARRAY);
         vbo->bind(ogl);
-        glDrawArrays(GL_QUADS, 0, 24);
+        glDrawArrays(primitive, 0, vbo->getNVertices());
         vbo->unbind(ogl);
         glDisable(GL_VERTEX_ARRAY);
     }
 
 private:
+    GLenum primitive;
     pbge::VertexBuffer * vbo;
 };
 
-class Teapot : public pbge::Model {
-    void render(pbge::ModelInstance * instance, pbge::OpenGL * ogl) {
-        glutSolidTeapot(1);
-    }
-};
-
-pbge::ModelInstance * instance = new pbge::ModelInstance(new Teapot);
 pbge::ModelInstance * vboModel = NULL;
 
 
@@ -94,7 +89,7 @@ void createVBOInstance() {
     builder.pushValue(vertex,v,v,-v).pushValue(vertex,v,v,v).pushValue(vertex,v,-v,v).pushValue(vertex,v,-v,-v);
     builder.setAttribIndex(normal, nIndexes).setAttribIndex(vertex, vIndexes);
     pbge::VertexBuffer * vbo = builder.done();
-    vboModel = new pbge::ModelInstance(new UmModelo(vbo));
+    vboModel = new pbge::ModelInstance(new UmModelo(vbo, GL_QUADS));
 }
 
 void setUp() {
@@ -114,7 +109,6 @@ void setUp() {
     node->setTransformationMatrix(&m);
     root->addChild(child);
     root->addChild(cam_node);
-    //child->addModelInstance(instance);
     child->addModelInstance(vboModel);
     
     math3d::matrix44 cam_matrix = math3d::identity44;
