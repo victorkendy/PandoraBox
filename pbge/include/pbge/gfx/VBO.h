@@ -97,8 +97,10 @@ namespace pbge {
         void bindAllAttribs(OpenGL * ogl);
 
         void bind(OpenGL * ogl);
-    private:
+    
         Buffer * buffer;
+
+    private:
         std::vector<VertexAttrib*> attribs;
     };
 

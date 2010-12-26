@@ -66,12 +66,16 @@ namespace pbge {
                 ogl->bindBuffer(target, 0);
             }
         }
+
+        GLuint getID() {
+            return glID;
+        }
     private:
         void createBuffer() {
             OpenGL * ogl = Manager::getInstance()->getOpenGL();
             ogl->genBuffers(1, &glID);
             ogl->bindBuffer(target, glID);
-            ogl->bufferData(target, size, NULL, usage);
+            ogl->bufferData(target, size, data, usage);
             ogl->bindBuffer(target, 0);
         }
 
