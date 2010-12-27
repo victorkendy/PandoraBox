@@ -2,12 +2,10 @@
 
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/core/Manager.h"
-
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/Renderer.h"
-#include "pbge/gfx/TextureRendererFactory.h"
 #include "pbge/gfx/VBO.h"
 
 #include <GL/glew.h>
@@ -15,13 +13,9 @@
 
 pbge::Node * root, * child;
 pbge::TransformationNode * cam_node;
-pbge::OpenGL * ogl = new pbge::OpenGL;
-pbge::Renderer renderer(ogl);
+pbge::Renderer * renderer;
 pbge::SceneManager manager;
-
 pbge::Camera camera;
-
-pbge::OpenGL * gl;
 
 class UmModelo : public pbge::Model {
 public:
@@ -45,10 +39,9 @@ private:
 
 pbge::ModelInstance * vboModel = NULL;
 
-
 void display() {
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
-    renderer.render();
+    renderer->render();
     GLenum error;
     while((error = glGetError()) != GL_NO_ERROR) {
         std::cout << gluErrorString(error) << std::endl;
@@ -95,6 +88,7 @@ void setUp() {
     glColor3f(1,0,0);
 
     createVBOInstance();
+    renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     pbge::TransformationNode * node = new pbge::TransformationNode;
 
     math3d::matrix44 m = math3d::identity44;
@@ -117,13 +111,9 @@ void setUp() {
     
     manager.setSceneGraph(root);
     manager.addCamera(&camera);
-
-    renderer.setScene(&manager);
-    gl = pbge::Manager::getInstance()->getOpenGL();
-    
+    renderer->setScene(&manager);
 }
 
-typedef unsigned short XXX;
 int main(int argc, char ** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA|GLUT_DEPTH|GLUT_DOUBLE);
@@ -131,7 +121,6 @@ int main(int argc, char ** argv) {
     glutCreateWindow("ahahah");
     setUp();
     glutDisplayFunc(display);
-
     glutMainLoop();
     return 0;
 }
