@@ -54,10 +54,6 @@ void createNormalIndexes(std::vector<unsigned short> & ni) {
     ni = std::vector<unsigned short>(indexes, indexes + 24);
 }
 
-std::vector<unsigned short> make(unsigned short * p, int n) {
-    return std::vector<unsigned short>(p, p + n);
-}
-
 void createVertexIndexes(std::vector<unsigned short> & vi) {
     unsigned short indexes[] = {0,1,2,3, 7,4,1,0, 6,5,4,7, 3,2,5,6, 5,2,1,4, 0,3,6,7};
     vi = std::vector<unsigned short>(indexes, indexes + 24);
