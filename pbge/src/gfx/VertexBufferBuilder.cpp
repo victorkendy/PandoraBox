@@ -1,4 +1,4 @@
-#include <iostream>
+#include <vector>
 
 #include "pbge/core/Manager.h"
 #include "pbge/exceptions/exceptions.h"
@@ -44,6 +44,35 @@ VertexAttrib * VertexAttribBuilder::createInstance(int offset, GLsizei stride) {
         default: return NULL;
     }
 }
+
+
+VertexBufferBuilder & VertexBufferBuilder::pushValue(const VertexAttribBuilder & attrib, const float &x, const float & y, const float & z, const float & w) {
+    if(curAttrib == NULL || !(*curAttrib == attrib)) {
+        std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
+        if(it == attribs.end())
+            throw BuilderException("Attribute not defined");
+        else {
+            curAttrib = &(*it);
+            curAttrib->pushValue(x,y,z,w);
+        }
+    } else {
+        curAttrib->pushValue(x,y,z,w);
+    }
+    return *this;
+}
+
+VertexBufferBuilder & VertexBufferBuilder::setAttribIndex(const VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes) {
+    std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
+    if(it == attribs.end()) {
+        VertexAttribBuilder newAttrib(attrib);
+        newAttrib.setIndexes(indexes);
+        attribs.push_back(newAttrib);
+    } else {
+        it->setIndexes(indexes);
+    }
+    return *this;
+}
+
 
 GLsizei VertexBufferBuilder::calculateSize() {
     unsigned size = 0;

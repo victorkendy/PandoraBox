@@ -71,10 +71,10 @@ void createVBOInstance() {
     pbge::VertexAttribBuilder color = builder.addAttrib(3, pbge::VertexAttrib::COLOR);
 
     builder.pushValue(normal,1,0,0).pushValue(0,1,0).pushValue(0,0,1).pushValue(-1,0,0).pushValue(0,-1,0).pushValue(0,0,-1);
-
-    builder.pushValue(vertex, -v,-v,-v).pushValue(-v,v,-v).pushValue(-v,v,v).pushValue(-v,-v,v);
-    builder.pushValue(v,v,-v).pushValue(v,v,v).pushValue(v,-v,v).pushValue(v,-v,-v);
     
+    builder.on(vertex).pushValue(-v,-v,-v).pushValue(-v,v,-v).pushValue(-v,v,v).pushValue(-v,-v,v)
+                      .pushValue(v,v,-v).pushValue(v,v,v).pushValue(v,-v,v).pushValue(v,-v,-v);
+
     builder.pushValue(color, 0,0,0).pushValue(0,1,0).pushValue(0,1,1).pushValue(0,0,1);
     builder.pushValue(1,1,0).pushValue(1,1,1).pushValue(1,0,1).pushValue(1,0,0);
 

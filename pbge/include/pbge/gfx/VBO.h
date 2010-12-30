@@ -195,46 +195,35 @@ namespace pbge {
             return attrib;
         }
 
-        VertexBufferBuilder & pushValue(const VertexAttribBuilder & attrib, const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f) {
-            if(curAttrib == NULL || !(*curAttrib == attrib)) {
-                std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
-                if(it == attribs.end())
-                    throw BuilderException("Attribute not defined");
-                else {
-                    curAttrib = &(*it);
-                    curAttrib->pushValue(x,y,z,w);
-                }
-            } else {
-                curAttrib->pushValue(x,y,z,w);
-            }
-            return *this;
-        }
+        VertexBufferBuilder & pushValue(const VertexAttribBuilder & attrib, const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f);
         
         VertexBufferBuilder & pushValue(const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f) {
             if(curAttrib != NULL) curAttrib->pushValue(x,y,z,w);
             return *this;
         }
 
-        VertexBufferBuilder & setAttribIndex(const VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes) {
+        VertexBufferBuilder & on(const VertexAttribBuilder & attrib) {
             std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
-            if(it == attribs.end()) {
-                VertexAttribBuilder newAttrib(attrib);
-                newAttrib.setIndexes(indexes);
-                attribs.push_back(newAttrib);
-            } else {
-                it->setIndexes(indexes);
-            }
+            if(it != attribs.end())
+                curAttrib = &(*it);
             return *this;
         }
+
+        VertexBufferBuilder & setAttribIndex(const VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes);
 
         VertexBuffer * done(GLenum usage = GL_STATIC_DRAW);
 
     private:
         void validateAttribs();
+
         GLsizei calculateSize();
+
         VertexAttribBuilder * curAttrib;
+
         void createAttribs(VertexBuffer * vbo, GLsizei stride);
+
         unsigned nVertices;
+
         std::vector<VertexAttribBuilder> attribs;
     };
 }
