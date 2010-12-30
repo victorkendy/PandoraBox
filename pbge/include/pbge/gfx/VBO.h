@@ -211,6 +211,8 @@ namespace pbge {
 
         VertexBufferBuilder & setAttribIndex(const VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes);
 
+        VertexBufferBuilder & setAttribIndex(const std::vector<unsigned short> & indexes);
+
         VertexBuffer * done(GLenum usage = GL_STATIC_DRAW);
 
     private:

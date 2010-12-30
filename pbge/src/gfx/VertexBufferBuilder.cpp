@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 
 #include "pbge/core/Manager.h"
 #include "pbge/exceptions/exceptions.h"
@@ -64,12 +65,17 @@ VertexBufferBuilder & VertexBufferBuilder::pushValue(const VertexAttribBuilder &
 VertexBufferBuilder & VertexBufferBuilder::setAttribIndex(const VertexAttribBuilder & attrib, const std::vector<unsigned short> & indexes) {
     std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
     if(it == attribs.end()) {
-        VertexAttribBuilder newAttrib(attrib);
-        newAttrib.setIndexes(indexes);
-        attribs.push_back(newAttrib);
+        throw BuilderException("Attribute not defined");
     } else {
-        it->setIndexes(indexes);
+        curAttrib = &(*it);
+        curAttrib->setIndexes(indexes);
     }
+    return *this;
+}
+
+VertexBufferBuilder & VertexBufferBuilder::setAttribIndex(const std::vector<unsigned short> & indexes) {
+    if(curAttrib != NULL)
+        curAttrib->setIndexes(indexes);
     return *this;
 }
 

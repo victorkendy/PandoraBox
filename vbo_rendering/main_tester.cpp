@@ -70,15 +70,14 @@ void createVBOInstance() {
     pbge::VertexAttribBuilder normal = builder.addAttrib(3, pbge::VertexAttrib::NORMAL);
     pbge::VertexAttribBuilder color = builder.addAttrib(3, pbge::VertexAttrib::COLOR);
 
-    builder.pushValue(normal,1,0,0).pushValue(0,1,0).pushValue(0,0,1).pushValue(-1,0,0).pushValue(0,-1,0).pushValue(0,0,-1);
+    builder.pushValue(normal,1,0,0).pushValue(0,1,0).pushValue(0,0,1).pushValue(-1,0,0).pushValue(0,-1,0).pushValue(0,0,-1).setAttribIndex(nIndexes);
     
     builder.on(vertex).pushValue(-v,-v,-v).pushValue(-v,v,-v).pushValue(-v,v,v).pushValue(-v,-v,v)
-                      .pushValue(v,v,-v).pushValue(v,v,v).pushValue(v,-v,v).pushValue(v,-v,-v);
+                      .pushValue(v,v,-v).pushValue(v,v,v).pushValue(v,-v,v).pushValue(v,-v,-v).setAttribIndex(vIndexes);
 
     builder.pushValue(color, 0,0,0).pushValue(0,1,0).pushValue(0,1,1).pushValue(0,0,1);
-    builder.pushValue(1,1,0).pushValue(1,1,1).pushValue(1,0,1).pushValue(1,0,0);
+    builder.pushValue(1,1,0).pushValue(1,1,1).pushValue(1,0,1).pushValue(1,0,0).setAttribIndex(vIndexes);
 
-    builder.setAttribIndex(normal, nIndexes).setAttribIndex(vertex, vIndexes).setAttribIndex(color, vIndexes);
     pbge::VertexBuffer * vbo = builder.done();
     vboModel = new pbge::ModelInstance(new UmModelo(vbo, GL_QUADS));
 }
