@@ -9,6 +9,7 @@
 
 #include "pbge/core/core.h"
 #include "pbge/core/Vec3.h"
+#include "pbge/exceptions/exceptions.h"
 
 namespace pbge {
     class VertexBuffer;
@@ -185,6 +186,7 @@ namespace pbge {
     public:
         VertexBufferBuilder(unsigned _nVertices) {
             nVertices = _nVertices;
+            curAttrib = NULL;
         }
 
         const VertexAttribBuilder addAttrib(unsigned _nElements, VertexAttrib::Type _type, int _index=-1) {
@@ -194,14 +196,22 @@ namespace pbge {
         }
 
         VertexBufferBuilder & pushValue(const VertexAttribBuilder & attrib, const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f) {
-            std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
-            if(it == attribs.end()) {
-                VertexAttribBuilder newAttrib(attrib);
-                newAttrib.pushValue(x,y,z,w);
-                attribs.push_back(newAttrib);
+            if(curAttrib == NULL || !(*curAttrib == attrib)) {
+                std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
+                if(it == attribs.end())
+                    throw BuilderException("Attribute not defined");
+                else {
+                    curAttrib = &(*it);
+                    curAttrib->pushValue(x,y,z,w);
+                }
             } else {
-                it->pushValue(x,y,z,w);
+                curAttrib->pushValue(x,y,z,w);
             }
+            return *this;
+        }
+        
+        VertexBufferBuilder & pushValue(const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f) {
+            if(curAttrib != NULL) curAttrib->pushValue(x,y,z,w);
             return *this;
         }
 
@@ -222,6 +232,7 @@ namespace pbge {
     private:
         void validateAttribs();
         GLsizei calculateSize();
+        VertexAttribBuilder * curAttrib;
         void createAttribs(VertexBuffer * vbo, GLsizei stride);
         unsigned nVertices;
         std::vector<VertexAttribBuilder> attribs;

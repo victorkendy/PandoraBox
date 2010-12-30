@@ -70,13 +70,13 @@ void createVBOInstance() {
     pbge::VertexAttribBuilder normal = builder.addAttrib(3, pbge::VertexAttrib::NORMAL);
     pbge::VertexAttribBuilder color = builder.addAttrib(3, pbge::VertexAttrib::COLOR);
 
-    builder.pushValue(normal,1,0,0).pushValue(normal,0,1,0).pushValue(normal,0,0,1).pushValue(normal,-1,0,0).pushValue(normal,0,-1,0).pushValue(normal,0,0,-1);
+    builder.pushValue(normal,1,0,0).pushValue(0,1,0).pushValue(0,0,1).pushValue(-1,0,0).pushValue(0,-1,0).pushValue(0,0,-1);
 
-    builder.pushValue(vertex,-v,-v,-v).pushValue(vertex,-v,v,-v).pushValue(vertex,-v,v,v).pushValue(vertex,-v,-v,v);
-    builder.pushValue(vertex,v,v,-v).pushValue(vertex,v,v,v).pushValue(vertex,v,-v,v).pushValue(vertex,v,-v,-v);
+    builder.pushValue(vertex, -v,-v,-v).pushValue(-v,v,-v).pushValue(-v,v,v).pushValue(-v,-v,v);
+    builder.pushValue(v,v,-v).pushValue(v,v,v).pushValue(v,-v,v).pushValue(v,-v,-v);
     
-    builder.pushValue(color, 0,0,0).pushValue(color, 0,1,0).pushValue(color, 0,1,1).pushValue(color, 0,0,1);
-    builder.pushValue(color, 1,1,0).pushValue(color, 1,1,1).pushValue(color, 1,0,1).pushValue(color, 1,0,0);
+    builder.pushValue(color, 0,0,0).pushValue(0,1,0).pushValue(0,1,1).pushValue(0,0,1);
+    builder.pushValue(1,1,0).pushValue(1,1,1).pushValue(1,0,1).pushValue(1,0,0);
 
     builder.setAttribIndex(normal, nIndexes).setAttribIndex(vertex, vIndexes).setAttribIndex(color, vIndexes);
     pbge::VertexBuffer * vbo = builder.done();
