@@ -68,11 +68,17 @@ void createVBOInstance() {
     pbge::VertexBufferBuilder builder(24);
     pbge::VertexAttribBuilder vertex = builder.addAttrib(3, pbge::VertexAttrib::VERTEX);
     pbge::VertexAttribBuilder normal = builder.addAttrib(3, pbge::VertexAttrib::NORMAL);
+    pbge::VertexAttribBuilder color = builder.addAttrib(3, pbge::VertexAttrib::COLOR);
 
     builder.pushValue(normal,1,0,0).pushValue(normal,0,1,0).pushValue(normal,0,0,1).pushValue(normal,-1,0,0).pushValue(normal,0,-1,0).pushValue(normal,0,0,-1);
+
     builder.pushValue(vertex,-v,-v,-v).pushValue(vertex,-v,v,-v).pushValue(vertex,-v,v,v).pushValue(vertex,-v,-v,v);
     builder.pushValue(vertex,v,v,-v).pushValue(vertex,v,v,v).pushValue(vertex,v,-v,v).pushValue(vertex,v,-v,-v);
-    builder.setAttribIndex(normal, nIndexes).setAttribIndex(vertex, vIndexes);
+    
+    builder.pushValue(color, 0,0,0).pushValue(color, 0,1,0).pushValue(color, 0,1,1).pushValue(color, 0,0,1);
+    builder.pushValue(color, 1,1,0).pushValue(color, 1,1,1).pushValue(color, 1,0,1).pushValue(color, 1,0,0);
+
+    builder.setAttribIndex(normal, nIndexes).setAttribIndex(vertex, vIndexes).setAttribIndex(color, vIndexes);
     pbge::VertexBuffer * vbo = builder.done();
     vboModel = new pbge::ModelInstance(new UmModelo(vbo, GL_QUADS));
 }
@@ -82,32 +88,36 @@ void setUp() {
     glEnable(GL_DEPTH_TEST);
     glClearColor(0,0,0,0);
     glColor3f(1,0,0);
-
     createVBOInstance();
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     pbge::TransformationNode * node = new pbge::TransformationNode;
-
     math3d::matrix44 m = math3d::identity44;
     root = new pbge::TransformationNode;
     cam_node = new pbge::TransformationNode;
-  
     child = node;
     node->setTransformationMatrix(&m);
     root->addChild(child);
     root->addChild(cam_node);
     child->addModelInstance(vboModel);
-    
     math3d::matrix44 cam_matrix = math3d::identity44;
-    cam_matrix[2][3] = 8.0f;
+    cam_matrix[2][3] = 3.0f; cam_matrix[1][3] = 1.0f;
     cam_node->setTransformationMatrix(&cam_matrix);
-
     camera.setParent(cam_node);
     camera.lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
-    camera.frustum.setPerspective(30, 1, 0.1f, 10);
-    
+    camera.frustum.setPerspective(45, 1, 1.0f, 10);
     manager.setSceneGraph(root);
     manager.addCamera(&camera);
     renderer->setScene(&manager);
+}
+
+void keyboard(unsigned char k, int x, int y) {
+    math3d::matrix44 * m = cam_node->getTransformationMatrix();
+    switch(k) {
+        case 'w': (*m)[1][3] += 0.1f; break;
+        case 's': (*m)[1][3] -= 0.1f; break;
+    }
+    cam_node->setTransformationMatrix(m);
+    glutPostRedisplay();
 }
 
 int main(int argc, char ** argv) {
@@ -117,6 +127,7 @@ int main(int argc, char ** argv) {
     glutCreateWindow("ahahah");
     setUp();
     glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
     return 0;
 }

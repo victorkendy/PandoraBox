@@ -12,28 +12,14 @@
 namespace pbge {
     class Buffer {
     public:
+        // allows factory method on OpenGL
+        friend OpenGL;
+
+        // Useless constructor
+        // but don't erase it
         Buffer() {
             this->data = NULL;
             glID = 0;
-        }
-
-        Buffer(size_t _size, GLenum _usage, GLenum _target) {
-            this->size = _size;
-            this->usage = _usage;
-            this->target = _target;
-            // malloc is used because raw data is needed
-            this->data = malloc(size);
-            if(this->data == NULL) {
-                Manager::getInstance()->writeErrorLog("ERROR: Out Of Memory for Buffer");
-            }
-            this->glID = 0;
-        }
-        
-        virtual ~Buffer() {
-            if(glID) 
-                Manager::getInstance()->getOpenGL()->deleteBuffers(1, &glID);
-            if(this->data)
-                free(this->data);
         }
         
         // returns the data buffer
@@ -58,7 +44,7 @@ namespace pbge {
         
         // call this to update the OpenGL state
         virtual void flush(OpenGL * ogl, bool keepBound=false) {
-            if(glID == 0) createBuffer(keepBound);
+            if(glID == 0) createBuffer(ogl, keepBound);
             else if(begin_update >=0) {
                 ogl->bindBuffer(target, glID);
                 ogl->bufferSubData(target, begin_update, size - begin_update, (char*)data + begin_update);
@@ -77,12 +63,34 @@ namespace pbge {
             ogl->bindBuffer(target, 0);
         }
 
+        void bindOn(GLenum _target, OpenGL * ogl) {
+            ogl->bindBuffer(_target, glID);
+        }
+
         GLuint getID() {
             return glID;
         }
     private:
-        void createBuffer(bool keepBound) {
-            OpenGL * ogl = Manager::getInstance()->getOpenGL();
+        Buffer(size_t _size, GLenum _usage, GLenum _target) {
+            this->size = _size;
+            this->usage = _usage;
+            this->target = _target;
+            // malloc is used because raw data is needed
+            this->data = malloc(size);
+            if(this->data == NULL) {
+                Manager::getInstance()->writeErrorLog("ERROR: Out Of Memory for Buffer");
+            }
+            this->glID = 0;
+        }
+        
+        void release() {
+            if(glID) 
+                Manager::getInstance()->getOpenGL()->deleteBuffers(1, &glID);
+            if(this->data)
+                free(this->data);
+        }
+
+        void createBuffer(OpenGL * ogl, bool keepBound) {
             ogl->genBuffers(1, &glID);
             ogl->bindBuffer(target, glID);
             ogl->bufferData(target, size, data, usage);
