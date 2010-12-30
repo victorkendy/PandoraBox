@@ -105,6 +105,14 @@ void OpenGL::deleteBuffers(GLsizei n, GLuint * buffers) {
     glDeleteBuffers(n, buffers);
 }
 
+void OpenGL::disable(GLenum mode) {
+    glDisable(mode);
+}
+
+void OpenGL::enable(GLenum mode) {
+    glEnable(mode);
+}
+
 void OpenGL::enableClientState(GLenum cap) {
     glEnableClientState(cap);
 }

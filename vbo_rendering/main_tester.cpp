@@ -25,11 +25,11 @@ public:
     }
 
     void render(pbge::ModelInstance * instance, pbge::OpenGL * ogl) {
-        glEnable(GL_VERTEX_ARRAY);
+        ogl->enable(GL_VERTEX_ARRAY);
         vbo->bind(ogl);
         glDrawArrays(primitive, 0, vbo->getNVertices());
         vbo->unbind(ogl);
-        glDisable(GL_VERTEX_ARRAY);
+        ogl->disable(GL_VERTEX_ARRAY);
     }
 
 private:
@@ -86,7 +86,6 @@ void setUp() {
     glewInit();
     glEnable(GL_DEPTH_TEST);
     glClearColor(0,0,0,0);
-    glColor3f(1,0,0);
     createVBOInstance();
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     pbge::TransformationNode * node = new pbge::TransformationNode;

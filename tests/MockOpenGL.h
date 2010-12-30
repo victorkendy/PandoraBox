@@ -35,6 +35,8 @@ public:
     MOCK_METHOD2(clipPlane, void(GLenum plane, const GLdouble * equation));
     MOCK_METHOD4(colorPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
     MOCK_METHOD2(deleteBuffers, void(GLsizei n, GLuint * buffers));
+    MOCK_METHOD1(disable, void(GLenum mode));
+    MOCK_METHOD1(enable, void(GLenum mode));
     MOCK_METHOD1(enableClientState, void(GLenum cap));
     MOCK_METHOD2(genBuffers, void(GLsizei n, GLuint * buffers));
     MOCK_METHOD2(getFloatv, void(GLenum pname, GLfloat * params));

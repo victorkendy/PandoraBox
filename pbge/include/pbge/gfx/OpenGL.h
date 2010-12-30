@@ -75,6 +75,10 @@ namespace pbge {
 
         virtual void deleteBuffers(GLsizei n, GLuint * buffers);
 
+        virtual void disable(GLenum mode);
+
+        virtual void enable(GLenum mode);
+
         virtual void enableClientState(GLenum cap);
 
         virtual void genBuffers(GLsizei n, GLuint * buffers);
