@@ -11,11 +11,31 @@
 
 
 namespace pbge {
-    
+    class StateSet;
     class Buffer;
 
     class PBGE_EXPORT OpenGL{
     public:
+
+        typedef enum {
+            DEPTH_TEST = 0,
+            STENCIL_TEST,
+            SCISSOR_TEST,
+            BLEND,
+            COLOR_LOGIC_OP,
+            CULL_FACE,
+            DEPTH_CLAMP,
+            DITHER,
+            LINE_SMOOTH,
+            MULTISAMPLE,
+            POLYGON_OFFSET_FILL,
+            POLYGON_OFFSET_LINE,
+            POLYGON_OFFSET_POINT,
+            POLYGON_SMOOTH,
+            PRIMITIVE_RESTART,
+            SAMPLE_ALPHA_TO_COVERAGE,
+            PROGRAM_POINT_SIZE
+        } Mode;
         OpenGL();
 
         virtual void setMatrixMode(GLenum mode);
@@ -32,11 +52,13 @@ namespace pbge {
             matrices[2] = m;
         }
 
-        virtual void uploadModelview();
+        virtual void updateState();
 
         virtual void uploadProjection();
 
         virtual Buffer * createBuffer(size_t _size, GLenum _usage, GLenum _target);
+
+        virtual StateSet & getState() { return *state; }
 
         // raw OpenGL calls
         virtual void activeTexture(GLenum textureUnit);
@@ -111,9 +133,13 @@ namespace pbge {
         virtual void deleteFramebuffersEXT(GLsizei n, GLuint * buffers);
 
     private:
+        void uploadModelview();
+
         GLenum currentMatrixMode;
 
         math3d::matrix44 matrices[3];
+
+        StateSet * state;
 
     };
 

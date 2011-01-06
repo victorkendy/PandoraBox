@@ -1,16 +1,20 @@
 #include <GL/glew.h>
+#include <iostream>
 
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Buffer.h"
-
+#include "pbge/gfx/StateSet.h"
 
 using namespace pbge;
 
 OpenGL::OpenGL() {
+    std::cout << "instancing GL" << std::endl;
     GLint initialMatrixMode;
     glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
     currentMatrixMode = initialMatrixMode;
     matrices[2] = math3d::identity44;
+    glewInit();
+    state = new StateSet(this);
 }
 
 void OpenGL::setMatrixMode(GLenum mode) {
@@ -27,6 +31,11 @@ void OpenGL::uploadModelview() {
 void OpenGL::uploadProjection() {
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(matrices[1].transpose());
+}
+
+void OpenGL::updateState() {
+    this->uploadModelview();
+    this->state->apply(this);
 }
 
 Buffer * OpenGL::createBuffer(size_t _size, GLenum _usage, GLenum _target) {

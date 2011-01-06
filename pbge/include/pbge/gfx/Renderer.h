@@ -29,7 +29,7 @@ namespace pbge {
             if(models != NULL && models->size() > 0) {
                 math3d::matrix44 * modelMatrix = node->getTransformationMatrix();
                 ogl->loadModelMatrix(*modelMatrix);
-                ogl->uploadModelview();
+                ogl->updateState();
                 for(cur_model = models->begin(); cur_model != models->end(); cur_model++) {
                     (*cur_model)->render(ogl);
                 }

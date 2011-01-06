@@ -14,7 +14,7 @@ public:
     MOCK_METHOD1(loadViewMatrix, void(const math3d::matrix44 & m));
     MOCK_METHOD1(loadProjectionMatrix, void(const math3d::matrix44 & m));
     MOCK_METHOD1(loadModelMatrix, void(const math3d::matrix44 & m));
-    MOCK_METHOD0(uploadModelview, void());
+    MOCK_METHOD0(updateState, void());
     MOCK_METHOD0(uploadProjection, void());
     MOCK_METHOD3(createBuffer, pbge::Buffer*(size_t _size, GLenum _usage, GLenum _target));
     MOCK_METHOD1(activeTexture, void(GLenum textureUnit));

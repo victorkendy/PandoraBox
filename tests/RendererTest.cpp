@@ -44,7 +44,7 @@ TEST_F(BasicRendererVisitorTest, visitorCallsTheRenderMethodOfTheModelsOfTheNode
     EXPECT_CALL(camera, unsetCamera(&ogl)).Times(1);
     EXPECT_CALL(instance1, render(&ogl)).Times(2);
     EXPECT_CALL(instance2, render(&ogl)).Times(1);
-    EXPECT_CALL(ogl, uploadModelview()).Times(2);
+    EXPECT_CALL(ogl, updateState()).Times(2);
     EXPECT_CALL(ogl, uploadProjection()).Times(1);
     EXPECT_CALL(ogl, loadModelMatrix(m)).Times(2);
     renderer.visit(&root);

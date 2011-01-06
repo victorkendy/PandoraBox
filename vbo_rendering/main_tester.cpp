@@ -7,6 +7,7 @@
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/VBO.h"
+#include "pbge/gfx/StateSet.h"
 
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -83,8 +84,9 @@ void createVBOInstance() {
 }
 
 void setUp() {
-    glewInit();
-    glEnable(GL_DEPTH_TEST);
+    pbge::Manager::init();
+    // FIXME: remove the state change line
+    pbge::Manager::getInstance()->getOpenGL()->getState().enable(pbge::OpenGL::DEPTH_TEST);
     glClearColor(0,0,0,0);
     createVBOInstance();
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
