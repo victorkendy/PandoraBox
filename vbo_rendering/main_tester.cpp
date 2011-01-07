@@ -1,12 +1,9 @@
 #include <iostream>
 
-#include "pbge/exceptions/exceptions.h"
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/Node.h"
-#include "pbge/gfx/Model.h"
 #include "pbge/gfx/Renderer.h"
-#include "pbge/gfx/VBO.h"
 #include "pbge/gfx/StateSet.h"
 
 #include <GL/glut.h>
