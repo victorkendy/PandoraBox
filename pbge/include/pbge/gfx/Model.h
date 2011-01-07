@@ -8,12 +8,24 @@
 #include "pbge/gfx/OpenGL.h"
 
 namespace pbge {
+    class VertexBuffer;
     class ModelInstance;
 
     class PBGE_EXPORT Model : public Object {
     public:
         virtual void render(ModelInstance * instance, OpenGL * ogl)=0;
     };
+
+    class PBGE_EXPORT VBOModel : public Model {
+    public:
+        VBOModel(VertexBuffer * vbo, GLenum primitive);
+
+        void render(ModelInstance * instance, OpenGL * ogl);
+    private:
+        VertexBuffer * vbo;
+        GLenum primitive;
+    };
+
 
     class PBGE_EXPORT ModelInstance : public Object {
     public:

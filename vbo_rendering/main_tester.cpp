@@ -18,26 +18,6 @@ pbge::Renderer * renderer;
 pbge::SceneManager manager;
 pbge::Camera camera;
 
-class UmModelo : public pbge::Model {
-public:
-    UmModelo(pbge::VertexBuffer * _vbo, GLenum _primitive) {
-        vbo = _vbo;
-        primitive = _primitive;
-    }
-
-    void render(pbge::ModelInstance * instance, pbge::OpenGL * ogl) {
-        ogl->enable(GL_VERTEX_ARRAY);
-        vbo->bind(ogl);
-        glDrawArrays(primitive, 0, vbo->getNVertices());
-        vbo->unbind(ogl);
-        ogl->disable(GL_VERTEX_ARRAY);
-    }
-
-private:
-    GLenum primitive;
-    pbge::VertexBuffer * vbo;
-};
-
 pbge::ModelInstance * vboModel = NULL;
 
 void display() {
@@ -79,7 +59,7 @@ void createVBOInstance() {
     builder.pushValue(1,1,0).pushValue(1,1,1).pushValue(1,0,1).pushValue(1,0,0).setAttribIndex(vIndexes);
 
     pbge::VertexBuffer * vbo = builder.done();
-    vboModel = new pbge::ModelInstance(new UmModelo(vbo, GL_QUADS));
+    vboModel = new pbge::ModelInstance(new pbge::VBOModel(vbo, GL_QUADS));
 }
 
 void setUp() {
