@@ -1,7 +1,7 @@
 
 
-#ifndef pbge_renderer
-#define pbge_renderer 1
+#ifndef PBGE_GFX_RENDERER_H_
+#define PBGE_GFX_RENDERER_H_
 
 #include <vector>
 #include <GL/glew.h>

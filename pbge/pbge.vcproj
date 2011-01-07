@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\internal\OpenGLStates.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Renderer.cpp"
 				>
 			</File>
@@ -218,6 +222,10 @@
 			</File>
 			<File
 				RelativePath=".\src\gfx\Shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\internal\StateProxy.cpp"
 				>
 			</File>
 			<File
@@ -303,6 +311,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\internal\OpenGLStates.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Renderer.h"
 				>
 			</File>
@@ -316,6 +328,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Shader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\internal\StateProxy.h"
 				>
 			</File>
 			<File

@@ -1,5 +1,5 @@
-#ifndef pbge_texture
-#define pbge_texture 1
+#ifndef PBGE_GFX_TEXTURE_H_
+#define PBGE_GFX_TEXTURE_H_
 
 #include <string>
 #include <vector>

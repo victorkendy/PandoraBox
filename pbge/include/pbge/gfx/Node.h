@@ -1,6 +1,6 @@
 
-#ifndef gfxnode_h_
-#define gfxnode_h_
+#ifndef PBGE_GFX_NODE_H_
+#define PBGE_GFX_NODE_H_
 
 #include <iostream>
 #include <string>

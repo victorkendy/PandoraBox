@@ -1,7 +1,7 @@
 
 
-#ifndef gfxvbo_h_
-#define gfxvbo_h_
+#ifndef PBGE_GFX_VBO_H_
+#define PBGE_GFX_VBO_H_
 
 #include <vector>
 #include <algorithm>

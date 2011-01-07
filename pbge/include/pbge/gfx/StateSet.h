@@ -11,34 +11,14 @@
 
 namespace pbge {
     class Texture;
+    class TextureUnit;
 
     class PBGE_EXPORT State {
     public: 
         virtual void applyChanges(OpenGL * ogl) = 0;
     };
 
-    class PBGE_EXPORT StateEnabler : public State {
-    public:
-        StateEnabler(GLenum _mode);
 
-        void applyChanges(OpenGL * ogl);
-
-        void enable();
-    private:
-        bool current, next;
-        GLenum mode;
-    };
-
-    class PBGE_EXPORT TextureUnit : public State{
-        TextureUnit(OpenGL * ogl, unsigned index);
-
-        void applyChanges(OpenGL * ogl);
-    private:
-        bool active;
-        Texture * nextTexture;
-        Texture * boundTexture;
-        unsigned index;
-    };
 
     class PBGE_EXPORT StateSet {
     public:
@@ -51,6 +31,8 @@ namespace pbge {
         void setTextureAt(unsigned texUnit, Texture * texture);
 
         void enable(OpenGL::Mode mode);
+
+        void disable(OpenGL::Mode mode);
 
     private:
         std::vector<State *> states;

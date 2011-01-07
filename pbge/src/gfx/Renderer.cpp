@@ -29,6 +29,7 @@ void Renderer::updateScene(){
 }
 
 void Renderer::render(){
+    ogl->clear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     if(this->getScene() == NULL) return;
     pbge::SceneManager::camera_map::iterator camera;
     pbge::SceneManager::camera_map * cameras = getScene()->getCameras();

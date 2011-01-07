@@ -1,7 +1,7 @@
 
 
-#ifndef mockopengl_h_
-#define mockopengl_h_
+#ifndef PBGE_TESTS_MOCKOPENGL_H_
+#define PBGE_TESTS_MOCKOPENGL_H_
 
 #include <gmock/gmock.h>
 
@@ -60,4 +60,4 @@ public:
     MOCK_METHOD0(map, void*());
 };
 
-#endif
+#endif //PBGE_TESTS_MOCKOPENGL_H_

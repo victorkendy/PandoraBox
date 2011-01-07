@@ -12,7 +12,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-pbge::Node * root, * child;
+pbge::Node * root, * child, * trueRoot;
 pbge::TransformationNode * cam_node;
 pbge::Renderer * renderer;
 pbge::SceneManager manager;
@@ -41,7 +41,6 @@ private:
 pbge::ModelInstance * vboModel = NULL;
 
 void display() {
-    glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
     renderer->render();
     GLenum error;
     while((error = glGetError()) != GL_NO_ERROR) {

@@ -1,7 +1,8 @@
 
 
-#ifndef gfxopengl_h_
-#define gfxopengl_h_ 1
+#ifndef PBGE_GFX_OPENGL_H_
+#define PBGE_GFX_OPENGL_H_
+
 #include <iostream>
 #include <GL/glew.h>
 
