@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #include <vector>
 
-#include "MockOpenGL.h"
+#include "mocks/MockOpenGL.h"
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/VBO.h"

@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 
 #include "pbge/gfx/RenderTarget.h"
-#include "MockOpenGL.h"
+#include "mocks/MockOpenGL.h"
 
 
 TEST(ViewportTest, setRenderTargetCallsOpenGLViewportCorrectly) {

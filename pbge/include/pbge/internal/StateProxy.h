@@ -25,6 +25,17 @@ namespace pbge {
     private:
         OpenGL::Mode mode;
     };
+
+    class DisableMode : public StateProxy{
+    public:
+        DisableMode(OpenGL::Mode mode);
+
+        void apply(OpenGL * ogl);
+
+        void unApply(OpenGL * ogl);
+    private:
+        OpenGL::Mode mode;
+    };
 }
 
 

@@ -4,9 +4,9 @@
 
 #include "pbge/gfx/Camera.h"
 
-#include "MockOpenGL.h"
-#include "MockTransformationNode.h"
-#include "MockRenderTarget.h"
+#include "mocks/MockOpenGL.h"
+#include "mocks/MockTransformationNode.h"
+#include "mocks/MockRenderTarget.h"
 
 #ifndef M_PI
 #define M_PI 3.1415f

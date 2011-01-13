@@ -6,6 +6,7 @@
 #include "pbge/core/core.h"
 #include "pbge/core/Object.h"
 #include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/Node.h"
 
 namespace pbge {
     class VertexBuffer;
@@ -27,13 +28,18 @@ namespace pbge {
     };
 
 
-    class PBGE_EXPORT ModelInstance : public Object {
+    class PBGE_EXPORT ModelInstance : public Node {
     public:
+        ModelInstance() : Node("") {
+            model = NULL;
+        }
+
         ModelInstance(Model * _model) {
             model = _model;
         }
         
         virtual void render(OpenGL * ogl) {
+            ogl->updateState();
             model->render(this, ogl);
         }
 

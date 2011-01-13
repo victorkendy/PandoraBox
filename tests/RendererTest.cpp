@@ -2,10 +2,10 @@
 
 #include "pbge/gfx/Renderer.h"
 
-#include "MockModel.h"
-#include "MockOpenGL.h"
-#include "MockTransformationNode.h"
-#include "MockRenderTarget.h"
+#include "mocks/MockModel.h"
+#include "mocks/MockOpenGL.h"
+#include "mocks/MockTransformationNode.h"
+#include "mocks/MockRenderTarget.h"
 
 using ::testing::_;
 

@@ -16,3 +16,15 @@ void EnableMode::apply(pbge::OpenGL *ogl) {
 void EnableMode::unApply(pbge::OpenGL *ogl) {
     ogl->getState().disable(mode);
 }
+
+DisableMode::DisableMode(pbge::OpenGL::Mode _mode) {
+    this->mode = _mode;
+}
+
+void DisableMode::apply(pbge::OpenGL *ogl) {
+    ogl->disable(mode);
+}
+
+void DisableMode::unApply(pbge::OpenGL *ogl) {
+    ogl->enable(mode);
+}

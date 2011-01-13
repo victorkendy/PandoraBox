@@ -208,19 +208,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\MockModel.h"
+				RelativePath=".\mocks\MockModel.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MockOpenGL.h"
+				RelativePath=".\mocks\MockOpenGL.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MockRenderTarget.h"
+				RelativePath=".\mocks\MockRenderTarget.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MockTransformationNode.h"
+				RelativePath=".\mocks\MockTransformationNode.h"
 				>
 			</File>
 		</Filter>

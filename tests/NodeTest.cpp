@@ -8,7 +8,7 @@
 
 #include "pbge/gfx/Node.h"
 
-#include "MockTransformationNode.h"
+#include "mocks/MockTransformationNode.h"
 
 class NodeTest : public testing::Test {
 public:

@@ -24,16 +24,7 @@ namespace pbge {
         }
 
         virtual void doVisit(Node * node) {
-            Node::model_list::iterator cur_model;
-            Node::model_list * models = node->getModelList();
-            if(models != NULL && models->size() > 0) {
-                math3d::matrix44 * modelMatrix = node->getTransformationMatrix();
-                ogl->loadModelMatrix(*modelMatrix);
-                ogl->updateState();
-                for(cur_model = models->begin(); cur_model != models->end(); cur_model++) {
-                    (*cur_model)->render(ogl);
-                }
-            }
+            node->render(ogl);
         }
 
         void setCamera(Camera * _camera) {

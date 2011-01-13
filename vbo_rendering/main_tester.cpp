@@ -42,7 +42,7 @@ void setUp() {
     node->setTransformationMatrix(&m);
     root->addChild(child);
     root->addChild(cam_node);
-    child->addModelInstance(vboModel);
+    child->addChild(vboModel);
     math3d::matrix44 cam_matrix = math3d::identity44;
     cam_matrix[2][3] = 3.0f; cam_matrix[1][3] = 1.0f;
     cam_node->setTransformationMatrix(&cam_matrix);
