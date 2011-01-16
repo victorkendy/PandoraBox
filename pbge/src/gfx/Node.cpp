@@ -16,4 +16,5 @@ void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) 
 
 void CameraNode::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
     viewTransformation = visitor->getCurrentTransformation();
+    visitor->addActiveCamera(this->camera);
 }

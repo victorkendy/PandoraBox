@@ -2,6 +2,8 @@
 
 #ifndef PBGE_GFX_NODEVISITORS_H_
 #define PBGE_GFX_NODEVISITORS_H_
+#include <vector>
+
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
@@ -11,6 +13,7 @@ namespace pbge {
 
     class Node;
     class OpenGL;
+    class Camera;
 
     class PBGE_EXPORT UpdaterVisitor {
     public:
@@ -29,12 +32,41 @@ namespace pbge {
 
         const math3d::matrix44 getCurrentTransformation();
 
+        void addActiveCamera(Camera * camera) {
+            activeCameras.push_back(camera);
+        }
+
+        std::vector<Camera *> & getActiveCameras() {
+            return activeCameras;
+        }
+
     protected:
         math3d::matrix44 transformationStack[UpdaterVisitor::MAX_STACK_DEPTH];
-
         int stackIndex;
+        std::vector<Camera *> activeCameras;
     };
+    /*
+    class PBGE_EXPORT BasicRendererVisitor : public NodeVisitor {
+    public:
+        BasicRendererVisitor(OpenGL * _ogl) : ogl(_ogl){}
+        virtual void visit(Node * node) {
+            camera->setCamera(ogl);
+            ogl->uploadProjection();
+            NodeVisitor::visit(node);
+            camera->unsetCamera(ogl);
+        }
 
+        virtual void doVisit(Node * node) {
+            node->render(ogl);
+        }
+
+        void setCamera(Camera * _camera) {
+            camera = _camera;
+        }
+    private:
+        OpenGL * ogl;
+        Camera * camera;
+    };*/
     class PBGE_EXPORT RenderVisitor {
     public:
         

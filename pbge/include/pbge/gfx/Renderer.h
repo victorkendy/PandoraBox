@@ -13,40 +13,27 @@
 #include "pbge/gfx/Camera.h"
 
 namespace pbge {
-    class PBGE_EXPORT BasicRendererVisitor : public NodeVisitor {
-    public:
-        BasicRendererVisitor(OpenGL * _ogl) : ogl(_ogl){}
-        virtual void visit(Node * node) {
-            camera->setCamera(ogl);
-            ogl->uploadProjection();
-            NodeVisitor::visit(node);
-            camera->unsetCamera(ogl);
-        }
-
-        virtual void doVisit(Node * node) {
-            node->render(ogl);
-        }
-
-        void setCamera(Camera * _camera) {
-            camera = _camera;
-        }
-    private:
-        OpenGL * ogl;
-        Camera * camera;
-    };
+    class UpdaterVisitor;
+    class RenderVisitor;
 
     class PBGE_EXPORT Renderer: public Object {
     public:
         Renderer(OpenGL * _ogl);
+
         void setScene(const SceneManager * scene_manager);
+
         SceneManager * getScene();
+
         void updateScene();
+
         void render();
     private:
         SceneManager * scene;
+
         UpdaterVisitor * updater;
-        BasicRendererVisitor * renderer;
-        //TextureRenderer * textureRenderer;
+
+        RenderVisitor * renderer;
+
         OpenGL * ogl;
     };
 }

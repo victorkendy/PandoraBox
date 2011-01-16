@@ -209,6 +209,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\Renderer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\RenderTarget.cpp"
 				>
 			</File>

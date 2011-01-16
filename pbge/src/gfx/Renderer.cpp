@@ -5,6 +5,7 @@
 
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/Node.h"
+#include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/core/Manager.h"
 
@@ -13,7 +14,7 @@ using namespace pbge;
 Renderer::Renderer(OpenGL * _ogl){
     this->ogl = _ogl;
     this->updater = new UpdaterVisitor;
-    renderer = new BasicRendererVisitor(ogl);
+    this->renderer = new RenderVisitor;
 }
 
 void Renderer::setScene(const SceneManager * scene_manager) {
@@ -25,20 +26,19 @@ SceneManager * Renderer::getScene() {
 }
 
 void Renderer::updateScene(){
-    scene->getSceneGraphRoot()->accept(updater);
+    updater->visit(scene->getSceneGraphRoot(), ogl);
 }
 
 void Renderer::render(){
     ogl->clear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
-    if(this->getScene() == NULL) return;
-    pbge::SceneManager::camera_map::iterator camera;
-    pbge::SceneManager::camera_map * cameras = getScene()->getCameras();
     Node * root = this->getScene()->getSceneGraphRoot();
-    if (root == NULL) return;
+    if(this->getScene() == NULL || root == NULL) return;
     updateScene();
-    for(camera = cameras->begin(); camera != cameras->end(); camera++) {
-        renderer->setCamera(camera->second);
-        root->accept(renderer);
+    std::vector<Camera*> & activeCameras = updater->getActiveCameras();
+    std::vector<Camera*>::iterator camera;
+    for(camera = activeCameras.begin(); camera != activeCameras.end(); camera++) {
+        //renderer->setCamera(*camera);
+        //root->accept(renderer);
     }
 }
 
