@@ -177,10 +177,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\gfx\Camera.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\gfx\Light.cpp"
 				>
 			</File>
@@ -193,11 +189,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\gfx\Model.cpp"
+				RelativePath=".\src\gfx\Node.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\gfx\Node.cpp"
+				RelativePath=".\src\gfx\NodeVisitors.cpp"
 				>
 			</File>
 			<File
@@ -206,10 +202,6 @@
 			</File>
 			<File
 				RelativePath=".\src\internal\OpenGLStates.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\gfx\Renderer.cpp"
 				>
 			</File>
 			<File
@@ -296,6 +288,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Node.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\NodeVisitors.h"
 				>
 			</File>
 			<File

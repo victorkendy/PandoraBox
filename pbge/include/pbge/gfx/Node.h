@@ -8,131 +8,70 @@
 
 #include "math3d/math3d.h"
 
-#include "pbge/gfx/OpenGL.h"
 #include "pbge/core/core.h"
 #include "pbge/core/Object.h"
 
 
 namespace pbge {
     
-    class Node;
     class OpenGL;
+    class UpdaterVisitor;
 
-    class PBGE_EXPORT NodeVisitor : public Object {
-    public:
-
-        // The function that will be called on the root of the subtree
-        virtual void visit(Node * root);
-    protected:
-
-        // This function is called for every node of the tree
-        virtual void _visit(Node * node);
-
-        // Do the visitation routine
-        virtual void doVisit(Node * node)=0;
-    };
-
-    class PBGE_EXPORT UpdaterVisitor : public NodeVisitor {
-    public:
-        void visit(Node * node) {
-            currentTransform = NULL;
-            NodeVisitor::visit(node);
-        }
-
-    protected:
-        void _visit(Node * node) {
-            math3d::matrix44 * _transform = currentTransform;
-            NodeVisitor::_visit(node);
-            currentTransform = _transform;
-        }
-
-        void doVisit(Node * node);
-    private:
-        math3d::matrix44 * currentTransform;
-    };
-
-
-
+    // The expected interface of the scene graph node
     class PBGE_EXPORT Node : public Object {
-
     public:
-        // A alias for the list of nodes
         typedef std::vector<Node *> node_list;
         
-        Node() {
-            this->name = new std::string("");
-            this->childs = new node_list;
-        }
+        virtual void updatePass(UpdaterVisitor * visitor, OpenGL * ogl) = 0;
 
-        Node(const std::string _name) { 
-            name = new std::string(_name);
-            childs = new node_list;
-        }
+        virtual void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) = 0;
 
-        // Updates the node information 
-        // Returns a pointer to the matrix transformation of the node
-        virtual math3d::matrix44 * update(math3d::matrix44 * current);
+        //virtual void renderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
 
-        virtual void render(OpenGL * ogl) = 0;
+        //virtual void postRenderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
 
-        virtual math3d::matrix44 * getTransformationMatrix() {
-            return &current;
-        }
+        virtual void addChild(Node * node) = 0;
         
-        // 
-        virtual void accept(NodeVisitor * visitor) {
-            visitor->visit(this);
-        }
-
-        /* Add a child to the node */
-        virtual void addChild(Node * node) {
-            childs->push_back(node);
-        }
-        
-        virtual node_list * getChilds() {
-            return childs;
-        }
-
-        // gets the name of the node
-        std::string getName(){ return * name; }
-    private:
-        node_list * childs;
-        std::string * name;
-    protected:
-        math3d::matrix44 current;
+        virtual node_list & getChilds() = 0;
     };
 
 
     class PBGE_EXPORT TransformationNode : public Node {
     public:
-                
-        TransformationNode() : Node(""){
-            transformation = current = math3d::identity44;
+        TransformationNode() {
+            this->transformation = math3d::identity44;
         }
 
-        TransformationNode(const std::string _name) : Node(_name) {
-            transformation = current = math3d::identity44;
+        void setTransformationMatrix(const math3d::matrix44 & m) {
+            transformation = m;
+        }
+
+        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+
+        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+
+        //void renderPass(NodeVisitor * visitor, OpenGL * ogl);
+
+        //void postRenderPass(NodeVisitor * visitor, OpenGL * ogl) {}
+
+        void addChild(Node * node) {
+            childs.push_back(node);
         }
         
-        void setTransformationMatrix(math3d::matrix44 * m) {
-            transformation = *m;
+        node_list & getChilds() {
+            return childs;
         }
 
-        void render(OpenGL * ogl);
-
-        math3d::matrix44 * update(math3d::matrix44 * m) {
-            if(m != NULL)
-                current = *m * transformation;
-            else 
-                current = transformation;
-            return &current;
-        }
     private:
+        node_list childs;
+
         math3d::matrix44 transformation;
+
+        math3d::matrix44 current;
     };
 
     class StateProxy;
-
+/*
     class PBGE_EXPORT StateChangeNode : public Node {
     public:
         void enable(OpenGL::Mode mode);
@@ -141,5 +80,6 @@ namespace pbge {
     private:
         std::vector<StateProxy*> changes;
     };
+*/
 }
 #endif
