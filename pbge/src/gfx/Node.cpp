@@ -14,3 +14,6 @@ void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) 
     visitor->popTransformation();
 }
 
+void CameraNode::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
+    viewTransformation = visitor->getCurrentTransformation();
+}

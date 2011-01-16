@@ -14,6 +14,8 @@
 //#include "pbge/gfx/Transformation.h"
 
 namespace pbge {
+    class CameraNode;
+
     class PBGE_EXPORT Frustum: public Object {
     public:
         // Sets the frustum for perspective viewing
@@ -69,10 +71,10 @@ namespace pbge {
         const std::string & getName() const { return name; }
         void setName(const std::string & newName) { name = newName; }
 
-        void setParent(Node * node) { parent = node; }
+        void setParent(CameraNode * node) { parent = node; }
         Node * getParent() { return parent; }
     protected:
-        Node * parent;
+        CameraNode * parent;
         RenderTarget * renderTarget;
         math3d::vector4 upVector;
         math3d::vector4 frontVector;

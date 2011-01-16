@@ -16,6 +16,7 @@ namespace pbge {
     
     class OpenGL;
     class UpdaterVisitor;
+    class Camera;
 
     // The expected interface of the scene graph node
     class PBGE_EXPORT Node : public Object {
@@ -70,8 +71,39 @@ namespace pbge {
         math3d::matrix44 current;
     };
 
-    class StateProxy;
+    class PBGE_EXPORT CameraNode : public Node {
+    public:
+        CameraNode(Camera * _camera) {
+            viewTransformation = math3d::identity44;
+            this->camera = _camera;
+        }
+        virtual void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+
+        virtual void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
+
+        //virtual void renderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
+
+        //virtual void postRenderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
+
+        void addChild(Node * node){
+            childs.push_back(node);
+        }
+        
+        node_list & getChilds() {
+            return childs;
+        }
+
+        math3d::matrix44 & getViewTransformation() {
+            return viewTransformation;
+        }
+
+    private:
+        math3d::matrix44 viewTransformation;
+        Camera * camera;
+        node_list childs;
+    };
 /*
+    class StateProxy;
     class PBGE_EXPORT StateChangeNode : public Node {
     public:
         void enable(OpenGL::Mode mode);

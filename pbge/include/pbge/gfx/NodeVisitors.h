@@ -40,7 +40,7 @@ namespace pbge {
         
     private:
 
-    }
+    };
 
 }
 

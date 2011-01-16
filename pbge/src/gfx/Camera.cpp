@@ -40,7 +40,7 @@ void Camera::setCamera(OpenGL * ogl) {
         setCameraTransformation();
     viewMatrix = cameraTransformation;
     if(this->parent != NULL) {
-        viewMatrix *= this->parent->getTransformationMatrix()->inverse();
+        viewMatrix *= this->parent->getViewTransformation().inverse();
     }
     ogl->loadViewMatrix(viewMatrix);
     
