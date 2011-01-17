@@ -45,6 +45,8 @@ namespace pbge {
         int stackIndex;
         std::vector<Camera *> activeCameras;
     };
+
+    
     /*
     class PBGE_EXPORT BasicRendererVisitor : public NodeVisitor {
     public:
@@ -60,18 +62,17 @@ namespace pbge {
             node->render(ogl);
         }
 
-        void setCamera(Camera * _camera) {
+    */
+    class PBGE_EXPORT RenderVisitor {
+    public:
+        void visit(Node * node, OpenGL * ogl);
+
+        void setCurrentCamera(Camera * _camera) {
             camera = _camera;
         }
     private:
-        OpenGL * ogl;
+        void _visit(Node * node, OpenGL * ogl);
         Camera * camera;
-    };*/
-    class PBGE_EXPORT RenderVisitor {
-    public:
-        
-    private:
-
     };
 
 }

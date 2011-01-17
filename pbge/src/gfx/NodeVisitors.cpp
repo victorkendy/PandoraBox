@@ -2,6 +2,7 @@
 
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
+#include "pbge/gfx/Camera.h"
 
 
 using namespace pbge;
@@ -27,16 +28,16 @@ const math3d::matrix44 UpdaterVisitor::getCurrentTransformation() {
     return transformationStack[stackIndex];
 }
 
-/*
-void NodeVisitor::visit(Node * node) {
-    _visit(node);
+void RenderVisitor::visit(Node *node, OpenGL *ogl) {
+    camera->setCamera(ogl);
+    _visit(node, ogl);
+    camera->unsetCamera(ogl);
 }
 
-void NodeVisitor::_visit(Node * node) {
-    Node::node_list & childs = node->getChilds();
-    Node::node_list::iterator child;
-    doVisit(node);
-    for(child = childs.begin(); child != childs.end(); child++)
-        _visit(*child);
+void RenderVisitor::_visit(Node *node, OpenGL *ogl) {
+    node->renderPass(this, ogl);
+    std::vector<Node*>::iterator child;
+    for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
+        this->_visit(*child, ogl);
+    node->postRenderPass(this, ogl);
 }
-*/

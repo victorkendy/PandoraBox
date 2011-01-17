@@ -16,6 +16,7 @@ namespace pbge {
     
     class OpenGL;
     class UpdaterVisitor;
+    class RenderVisitor;
     class Camera;
 
     // The expected interface of the scene graph node
@@ -27,9 +28,9 @@ namespace pbge {
 
         virtual void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) = 0;
 
-        //virtual void renderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void renderPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
 
-        //virtual void postRenderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void postRenderPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
 
         virtual void addChild(Node * node) = 0;
         
@@ -51,9 +52,9 @@ namespace pbge {
 
         void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl);
 
-        //void renderPass(NodeVisitor * visitor, OpenGL * ogl);
+        void renderPass(RenderVisitor * visitor, OpenGL * ogl);
 
-        //void postRenderPass(NodeVisitor * visitor, OpenGL * ogl) {}
+        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl) {}
 
         void addChild(Node * node) {
             childs.push_back(node);
@@ -77,13 +78,14 @@ namespace pbge {
             viewTransformation = math3d::identity44;
             this->camera = _camera;
         }
-        virtual void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
 
-        virtual void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
+        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
 
-        //virtual void renderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
+        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
 
-        //virtual void postRenderPass(NodeVisitor * visitor, OpenGL * ogl) = 0;
+        void renderPass(RenderVisitor * visitor, OpenGL * ogl){}
+
+        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
 
         void addChild(Node * node){
             childs.push_back(node);

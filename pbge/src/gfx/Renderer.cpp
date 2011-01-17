@@ -37,8 +37,8 @@ void Renderer::render(){
     std::vector<Camera*> & activeCameras = updater->getActiveCameras();
     std::vector<Camera*>::iterator camera;
     for(camera = activeCameras.begin(); camera != activeCameras.end(); camera++) {
-        //renderer->setCamera(*camera);
-        //root->accept(renderer);
+        renderer->setCurrentCamera(*camera);
+        renderer->visit(root, ogl);
     }
 }
 
