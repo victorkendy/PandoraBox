@@ -26,7 +26,9 @@ void display() {
     }
     glutSwapBuffers();
 }
-
+#ifndef M_PI
+#define M_PI 3.1415
+#endif
 void setUp() {
     pbge::Manager::init();
     // FIXME: remove the state change line
@@ -37,7 +39,7 @@ void setUp() {
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     root = new pbge::TransformationNode;
     cam_node = pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f);
-    child = pbge::TransformationNode::scaling(1.5f,0.5f,2.5f);
+    child = pbge::TransformationNode::rotation(M_PI/3, 0,0,20);
     root->addChild(child);
     root->addChild(cam_node);
     child->addChild(vboModel);

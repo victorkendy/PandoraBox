@@ -44,6 +44,8 @@ namespace pbge {
 
         static TransformationNode * scaling(const float & sx, const float & sy, const float & sz);
 
+        static TransformationNode * rotation(const float & radAngle, const float & x, const float & y, const float & z);
+
     public: // instance methods
         TransformationNode() {
             this->transformation = math3d::identity44;

@@ -1,4 +1,7 @@
 #include <vector>
+#include <cmath>
+
+#include "math3d/utils/matrix_utils.h" 
 
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Camera.h"
@@ -8,19 +11,15 @@
 using namespace pbge;
 
 TransformationNode * TransformationNode::translation(const float & x, const float & y, const float & z) {
-    math3d::matrix44 m = math3d::identity44;
-    m[0][3] = x;
-    m[1][3] = y;
-    m[2][3] = z;
-    return new TransformationNode(m); 
+    return new TransformationNode(math3d::translationMatrix(x,y,z)); 
 }
 
 TransformationNode * TransformationNode::scaling(const float & sx, const float & sy, const float & sz) {
-    math3d::matrix44 m = math3d::identity44;
-    m[0][0] *= sx;
-    m[1][1] *= sy;
-    m[2][2] *= sz;
-    return new TransformationNode(m);
+    return new TransformationNode(math3d::scaleMatrix(sx,sy,sz));
+}
+
+TransformationNode * TransformationNode::rotation(const float & angle, const float & x, const float & y, const float & z) {
+    return new TransformationNode(math3d::rotationMatrix(angle, x, y, z));
 }
 
 void TransformationNode::updatePass(UpdaterVisitor *visitor, OpenGL *ogl) {
