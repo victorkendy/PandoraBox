@@ -20,15 +20,15 @@ namespace pbge {
     public:
         Renderer(OpenGL * _ogl);
 
-        void setScene(const SceneManager * scene_manager);
+        void setScene(const SceneGraph * scene_manager);
 
-        SceneManager * getScene();
+        SceneGraph * getScene();
 
         void updateScene();
 
         void render();
     private:
-        SceneManager * scene;
+        SceneGraph * scene;
 
         UpdaterVisitor * updater;
 

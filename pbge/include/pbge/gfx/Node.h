@@ -22,6 +22,10 @@ namespace pbge {
     // The expected interface of the scene graph node
     class PBGE_EXPORT Node : public Object {
     public:
+        Node() {
+            sceneGraphIndex = -1;
+        }
+
         typedef std::vector<Node *> node_list;
         
         virtual void updatePass(UpdaterVisitor * visitor, OpenGL * ogl) = 0;
@@ -35,6 +39,16 @@ namespace pbge {
         virtual void addChild(Node * node) = 0;
         
         virtual node_list & getChilds() = 0;
+
+        int getSceneGraphIndex() {
+            return sceneGraphIndex;
+        }
+
+        void setSceneGraphIndex(int index) {
+            sceneGraphIndex = index;
+        }
+    private:
+        int sceneGraphIndex;
     };
 
 

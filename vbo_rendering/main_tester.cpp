@@ -10,10 +10,9 @@
 
 #include "vbo_setup.h"
 
-pbge::Node * root, * child;
 pbge::TransformationNode * cam_node;
 pbge::Renderer * renderer;
-pbge::SceneManager manager;
+pbge::SceneGraph * manager;
 pbge::Camera camera;
 
 pbge::ModelInstance * vboModel = NULL;
@@ -26,28 +25,29 @@ void display() {
     }
     glutSwapBuffers();
 }
+
 #ifndef M_PI
-#define M_PI 3.1415
+#define M_PI 3.1415f
 #endif
+
 void setUp() {
     pbge::Manager::init();
     // FIXME: remove the state change line
     pbge::Manager::getInstance()->getOpenGL()->getState().enable(pbge::OpenGL::DEPTH_TEST);
     glClearColor(0,0,0,0);
+
     vboModel = createVBOInstance();
     // TODO: find somewhere else to put the instantiation
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
-    root = new pbge::TransformationNode;
-    cam_node = pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f);
-    child = pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f);
-    root->addChild(child);
-    root->addChild(cam_node);
-    child->addChild(vboModel);
-    cam_node->addChild(new pbge::CameraNode(&camera));
+    manager = new pbge::SceneGraph(new pbge::TransformationNode);
+    pbge::Node * child = manager->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
+    cam_node = dynamic_cast<pbge::TransformationNode*>(manager->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f)));
+    manager->appendChildTo(child, vboModel);
+    manager->appendChildTo(cam_node, new pbge::CameraNode(&camera));
+
     camera.lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     camera.frustum.setPerspective(45, 1, 1.0f, 10);
-    manager.setSceneGraph(root);
-    renderer->setScene(&manager);
+    renderer->setScene(manager);
 }
 
 void keyboard(unsigned char k, int x, int y) {

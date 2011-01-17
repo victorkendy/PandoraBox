@@ -17,11 +17,11 @@ Renderer::Renderer(OpenGL * _ogl){
     this->renderer = new RenderVisitor;
 }
 
-void Renderer::setScene(const SceneManager * scene_manager) {
-    scene = const_cast<SceneManager *>(scene_manager);
+void Renderer::setScene(const SceneGraph * scene_graph) {
+    scene = const_cast<SceneGraph *>(scene_graph);
 }
 
-SceneManager * Renderer::getScene() {
+SceneGraph * Renderer::getScene() {
     return scene;
 }
 

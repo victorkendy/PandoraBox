@@ -3,31 +3,31 @@
 #define gfxsnode_h_
 
 #include <vector>
-#include <string>
-#include <map>
 
 #include "math3d/math3d.h"
 
+#include "pbge/core/core.h"
 #include "pbge/core/Object.h"
-#include "pbge/gfx/Camera.h"
-#include "pbge/gfx/Node.h"
 
 namespace pbge {
+    class Node;
 
-    class PBGE_EXPORT SceneManager: public Object{
+    class PBGE_EXPORT SceneGraph: public Object{
     public:
-        typedef std::map<std::string, Camera *> camera_map;
-        typedef std::map<std::string, Node *> node_map;
+        static const int ROOT = 0;
 
-        SceneManager();
-
-        void setSceneGraph(const Node * root) {
-            scene_graph = const_cast<Node *>(root);
+        SceneGraph(Node * node) {
+            nodes.push_back(node);
+            ambientLight = math3d::vector4(0,0,0,0);
         }
 
         Node * getSceneGraphRoot() {
-            return scene_graph;
+            return nodes.at(0);
         }
+
+        Node * appendChildTo(int index, Node * child);
+
+        Node * appendChildTo(Node * parent, Node * child);
 
         void setAmbientLightColor(const math3d::vector4 & color);
 
@@ -36,9 +36,7 @@ namespace pbge {
         const math3d::vector4 getAmbientLightColor() const;
     private:
         math3d::vector4 ambientLight;
-        Node * scene_graph;
-        camera_map cameras;
-        node_map nodes;
+        std::vector<Node*> nodes;
     };
 }
 #endif

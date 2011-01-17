@@ -5,22 +5,34 @@
 
 #include "math3d/math3d.h"
 
+#include "pbge/gfx/Node.h"
 #include "pbge/gfx/SceneGraph.h"
 
 namespace pbge {
-    SceneManager::SceneManager() {
-        ambientLight = math3d::vector4(0,0,0,0);
+
+    Node * SceneGraph::appendChildTo(int index, Node * child) {
+        Node * parent = nodes.at(index);
+        parent->addChild(child);
+        if(child->getSceneGraphIndex() < 0) {
+            nodes.push_back(child);
+            child->setSceneGraphIndex(nodes.size() - 1);
+        }
+        return child;
     }
 
-    void SceneManager::setAmbientLightColor(const math3d::vector4 & color) {
+    Node * SceneGraph::appendChildTo(Node * parent, Node * child) {
+        return appendChildTo(parent->getSceneGraphIndex(), child);
+    }
+
+    void SceneGraph::setAmbientLightColor(const math3d::vector4 & color) {
         ambientLight = color;
     }
 
-    void SceneManager::setAmbientLightColor(const float & red, const float & green, const float & blue, const float & alpha) {
+    void SceneGraph::setAmbientLightColor(const float & red, const float & green, const float & blue, const float & alpha) {
         ambientLight = math3d::vector4(red, green, blue, alpha);
     }
 
-    const math3d::vector4 SceneManager::getAmbientLightColor() const {
+    const math3d::vector4 SceneGraph::getAmbientLightColor() const {
         return ambientLight;
     }
 }
