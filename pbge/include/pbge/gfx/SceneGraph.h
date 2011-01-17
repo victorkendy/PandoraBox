@@ -21,26 +21,6 @@ namespace pbge {
 
         SceneManager();
 
-        // Node * getNodeByName(std::string name);
-
-        void addCamera(Camera * camera, const std::string & cameraName="");
-
-        /*
-        void removeCamera(const Camera * camera) {
-            cameras.erase(camera->getName());
-        }
-
-        void removeCamera(const std::string & cameraName) {
-            cameras.erase(cameraName);
-        }
-        */
-
-        Camera * getCamera(const std::string & name);
-        
-        camera_map * getCameras() {
-            return &cameras; 
-        }
-
         void setSceneGraph(const Node * root) {
             scene_graph = const_cast<Node *>(root);
         }
@@ -50,6 +30,7 @@ namespace pbge {
         }
 
         void setAmbientLightColor(const math3d::vector4 & color);
+
         void setAmbientLightColor(const float & red, const float & green, const float & blue, const float & alpha);
 
         const math3d::vector4 getAmbientLightColor() const;

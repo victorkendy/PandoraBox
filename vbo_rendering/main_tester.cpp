@@ -10,7 +10,7 @@
 
 #include "vbo_setup.h"
 
-pbge::Node * root, * child, * trueRoot;
+pbge::Node * root, * child;
 pbge::TransformationNode * cam_node;
 pbge::Renderer * renderer;
 pbge::SceneManager manager;
@@ -32,25 +32,19 @@ void setUp() {
     // FIXME: remove the state change line
     pbge::Manager::getInstance()->getOpenGL()->getState().enable(pbge::OpenGL::DEPTH_TEST);
     glClearColor(0,0,0,0);
-
     vboModel = createVBOInstance();
     // TODO: find somewhere else to put the instantiation
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
-
     root = new pbge::TransformationNode;
-
     cam_node = pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f);
     child = pbge::TransformationNode::scaling(1.5f,0.5f,2.5f);
     root->addChild(child);
     root->addChild(cam_node);
     child->addChild(vboModel);
-    
-    pbge::CameraNode * cNode = new pbge::CameraNode(&camera);
-    cam_node->addChild(cNode);
+    cam_node->addChild(new pbge::CameraNode(&camera));
     camera.lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     camera.frustum.setPerspective(45, 1, 1.0f, 10);
     manager.setSceneGraph(root);
-    manager.addCamera(&camera);
     renderer->setScene(&manager);
 }
 
@@ -68,7 +62,7 @@ int main(int argc, char ** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA|GLUT_DEPTH|GLUT_DOUBLE);
     glutInitWindowSize(500,500);
-    glutCreateWindow("ahahah");
+    glutCreateWindow("vbo_rendering");
     setUp();
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
