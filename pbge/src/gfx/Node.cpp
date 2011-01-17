@@ -34,6 +34,22 @@ void TransformationNode::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
     ogl->loadModelMatrix(transformation);
 }
 
+TransformationNode * TransformationNode::scale(const float & sx, const float & sy, const float & sz) {
+    transformation *= math3d::scaleMatrix(sx, sy, sz);
+    return this;
+}
+
+TransformationNode * TransformationNode::rotate(const float & radAngle, const float & x, const float & y, const float & z) {
+    transformation *= math3d::rotationMatrix(radAngle, x, y, z);
+    return this;
+}
+
+TransformationNode * TransformationNode::translate(const float & x, const float & y, const float & z) {
+    transformation *= math3d::translationMatrix(x,y,z);
+    return this;
+}
+
+
 CameraNode::CameraNode(Camera * _camera) {
     viewTransformation = math3d::identity44;
     this->camera = _camera;

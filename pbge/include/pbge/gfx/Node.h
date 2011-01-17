@@ -39,7 +39,7 @@ namespace pbge {
 
 
     class PBGE_EXPORT TransformationNode : public Node {
-    public: // class methods
+    public: // factory methods
         static TransformationNode * translation(const float & x, const float & y, const float & z);
 
         static TransformationNode * scaling(const float & sx, const float & sy, const float & sz);
@@ -78,6 +78,14 @@ namespace pbge {
         node_list & getChilds() {
             return childs;
         }
+        
+        // post multiply transformation composition
+
+        TransformationNode * scale(const float & sx, const float & sy, const float & sz);
+
+        TransformationNode * rotate(const float & radAngle, const float & x, const float & y, const float & z);
+
+        TransformationNode * translate(const float & x, const float & y, const float & z);
 
     private:
         node_list childs;

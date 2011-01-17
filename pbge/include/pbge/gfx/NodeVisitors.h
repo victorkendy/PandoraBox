@@ -47,22 +47,6 @@ namespace pbge {
     };
 
     
-    /*
-    class PBGE_EXPORT BasicRendererVisitor : public NodeVisitor {
-    public:
-        BasicRendererVisitor(OpenGL * _ogl) : ogl(_ogl){}
-        virtual void visit(Node * node) {
-            camera->setCamera(ogl);
-            ogl->uploadProjection();
-            NodeVisitor::visit(node);
-            camera->unsetCamera(ogl);
-        }
-
-        virtual void doVisit(Node * node) {
-            node->render(ogl);
-        }
-
-    */
     class PBGE_EXPORT RenderVisitor {
     public:
         void visit(Node * node, OpenGL * ogl);

@@ -39,7 +39,7 @@ void setUp() {
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     root = new pbge::TransformationNode;
     cam_node = pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f);
-    child = pbge::TransformationNode::rotation(M_PI/3, 0,0,20);
+    child = pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f);
     root->addChild(child);
     root->addChild(cam_node);
     child->addChild(vboModel);
