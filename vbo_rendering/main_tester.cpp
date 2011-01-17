@@ -32,20 +32,18 @@ void setUp() {
     // FIXME: remove the state change line
     pbge::Manager::getInstance()->getOpenGL()->getState().enable(pbge::OpenGL::DEPTH_TEST);
     glClearColor(0,0,0,0);
+
     vboModel = createVBOInstance();
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     pbge::TransformationNode * node = new pbge::TransformationNode;
-    math3d::matrix44 m = math3d::identity44;
     root = new pbge::TransformationNode;
-    cam_node = new pbge::TransformationNode;
+
+    cam_node = pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f);
+
     child = node;
-    node->setTransformationMatrix(m);
     root->addChild(child);
     root->addChild(cam_node);
     child->addChild(vboModel);
-    math3d::matrix44 cam_matrix = math3d::identity44;
-    cam_matrix[2][3] = 3.0f; cam_matrix[1][3] = 1.0f;
-    cam_node->setTransformationMatrix(cam_matrix);
     
     pbge::CameraNode * cNode = new pbge::CameraNode(&camera);
     cam_node->addChild(cNode);

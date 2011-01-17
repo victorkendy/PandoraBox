@@ -39,9 +39,16 @@ namespace pbge {
 
 
     class PBGE_EXPORT TransformationNode : public Node {
-    public:
+    public: // class methods
+        static TransformationNode * translation(const float & x, const float & y, const float & z);
+
+    public: // instance methods
         TransformationNode() {
             this->transformation = math3d::identity44;
+        }
+
+        TransformationNode(const math3d::matrix44 & matrix) {
+            this->transformation = matrix;
         }
 
         void setTransformationMatrix(const math3d::matrix44 & m) {
