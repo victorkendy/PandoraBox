@@ -34,13 +34,13 @@ void setUp() {
     glClearColor(0,0,0,0);
 
     vboModel = createVBOInstance();
+    // TODO: find somewhere else to put the instantiation
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
-    pbge::TransformationNode * node = new pbge::TransformationNode;
+
     root = new pbge::TransformationNode;
 
     cam_node = pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f);
-
-    child = node;
+    child = pbge::TransformationNode::scaling(1.5f,0.5f,2.5f);
     root->addChild(child);
     root->addChild(cam_node);
     child->addChild(vboModel);

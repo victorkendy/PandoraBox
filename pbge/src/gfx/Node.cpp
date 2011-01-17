@@ -15,6 +15,14 @@ TransformationNode * TransformationNode::translation(const float & x, const floa
     return new TransformationNode(m); 
 }
 
+TransformationNode * TransformationNode::scaling(const float & sx, const float & sy, const float & sz) {
+    math3d::matrix44 m = math3d::identity44;
+    m[0][0] *= sx;
+    m[1][1] *= sy;
+    m[2][2] *= sz;
+    return new TransformationNode(m);
+}
+
 void TransformationNode::updatePass(UpdaterVisitor *visitor, OpenGL *ogl) {
     visitor->pushTransformation(transformation);
 }
