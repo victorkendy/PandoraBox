@@ -8,7 +8,6 @@
 #include <string>
 
 #include "pbge/core/core.h"
-#include "pbge/core/Vec3.h"
 #include "pbge/exceptions/exceptions.h"
 
 namespace pbge {
