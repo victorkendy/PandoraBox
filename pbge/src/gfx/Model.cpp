@@ -19,5 +19,7 @@ void VBOModel::render(pbge::ModelInstance * instance, pbge::OpenGL * ogl) {
 
 
 void ModelInstance::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
+    ogl->updateState();
+    ogl->uploadProjection();
     model->render(this, ogl);
 }
