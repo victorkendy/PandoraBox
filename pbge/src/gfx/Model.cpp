@@ -16,3 +16,8 @@ void VBOModel::render(pbge::ModelInstance * instance, pbge::OpenGL * ogl) {
     vbo->unbind(ogl);
     ogl->disable(GL_VERTEX_ARRAY);
 }
+
+
+void ModelInstance::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
+    model->render(this, ogl);
+}

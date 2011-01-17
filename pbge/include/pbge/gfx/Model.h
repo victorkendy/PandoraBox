@@ -30,7 +30,7 @@ namespace pbge {
 
     class PBGE_EXPORT ModelInstance : public Node {
     public:
-        ModelInstance() : Node("") {
+        ModelInstance(){
             model = NULL;
         }
 
@@ -38,9 +38,20 @@ namespace pbge {
             model = _model;
         }
         
-        virtual void render(OpenGL * ogl) {
-            ogl->updateState();
-            model->render(this, ogl);
+        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
+
+        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
+
+        void renderPass(RenderVisitor * visitor, OpenGL * ogl);
+
+        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
+
+        void addChild(Node * node) {
+            childs.push_back(node);
+        }
+
+        node_list & getChilds() {
+            return childs;
         }
 
         Model * getModel() {
@@ -48,6 +59,8 @@ namespace pbge {
         }
     private:
         Model * model;
+
+        node_list childs;
     };
 }
 #endif

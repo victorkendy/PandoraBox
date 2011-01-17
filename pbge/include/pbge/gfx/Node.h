@@ -48,6 +48,10 @@ namespace pbge {
             transformation = m;
         }
 
+        const math3d::matrix44 & getTransformationMatrix() {
+            return transformation;
+        }
+
         void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
 
         void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl);
@@ -74,10 +78,7 @@ namespace pbge {
 
     class PBGE_EXPORT CameraNode : public Node {
     public:
-        CameraNode(Camera * _camera) {
-            viewTransformation = math3d::identity44;
-            this->camera = _camera;
-        }
+        CameraNode(Camera * _camera);
 
         void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
 

@@ -1,6 +1,7 @@
 #include <vector>
 
 #include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/Camera.h"
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
 
@@ -16,6 +17,12 @@ void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) 
 
 void TransformationNode::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
     ogl->loadModelMatrix(transformation);
+}
+
+CameraNode::CameraNode(Camera * _camera) {
+    viewTransformation = math3d::identity44;
+    this->camera = _camera;
+    camera->setParent(this);
 }
 
 void CameraNode::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {

@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\Model.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Node.cpp"
 				>
 			</File>

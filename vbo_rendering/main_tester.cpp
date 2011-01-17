@@ -39,14 +39,16 @@ void setUp() {
     root = new pbge::TransformationNode;
     cam_node = new pbge::TransformationNode;
     child = node;
-    node->setTransformationMatrix(&m);
+    node->setTransformationMatrix(m);
     root->addChild(child);
     root->addChild(cam_node);
     child->addChild(vboModel);
     math3d::matrix44 cam_matrix = math3d::identity44;
     cam_matrix[2][3] = 3.0f; cam_matrix[1][3] = 1.0f;
-    cam_node->setTransformationMatrix(&cam_matrix);
-    camera.setParent(cam_node);
+    cam_node->setTransformationMatrix(cam_matrix);
+    
+    pbge::CameraNode * cNode = new pbge::CameraNode(&camera);
+    cam_node->addChild(cNode);
     camera.lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     camera.frustum.setPerspective(45, 1, 1.0f, 10);
     manager.setSceneGraph(root);
@@ -55,10 +57,10 @@ void setUp() {
 }
 
 void keyboard(unsigned char k, int x, int y) {
-    math3d::matrix44 * m = cam_node->getTransformationMatrix();
+    math3d::matrix44 m = cam_node->getTransformationMatrix();
     switch(k) {
-        case 'w': (*m)[1][3] += 0.1f; break;
-        case 's': (*m)[1][3] -= 0.1f; break;
+        case 'w': m[1][3] += 0.1f; break;
+        case 's': m[1][3] -= 0.1f; break;
     }
     cam_node->setTransformationMatrix(m);
     glutPostRedisplay();
