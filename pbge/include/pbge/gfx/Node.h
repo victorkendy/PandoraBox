@@ -19,7 +19,11 @@ namespace pbge {
     class RenderVisitor;
     class Camera;
 
-    // The expected interface of the scene graph node
+    /* The expected interface of the scene graph node
+     * the post*Pass are called when the visitor is returning
+     * the purpose of those functions is to facilitate clean up
+     * after the respective pass
+    */
     class PBGE_EXPORT Node : public Object {
     public:
         Node() {
@@ -52,6 +56,9 @@ namespace pbge {
     };
 
 
+    /* The node that represents a affine linear transformation 
+       on the scene graph
+    */
     class PBGE_EXPORT TransformationNode : public Node {
     public: // factory methods
         static TransformationNode * translation(const float & x, const float & y, const float & z);
@@ -109,6 +116,9 @@ namespace pbge {
         math3d::matrix44 current;
     };
 
+    /* Node that holds a camera
+       it is used to inform the renderer about active cameras
+    */
     class PBGE_EXPORT CameraNode : public Node {
     public:
         CameraNode(Camera * _camera);
@@ -138,6 +148,7 @@ namespace pbge {
         Camera * camera;
         node_list childs;
     };
+
 /*
     class StateProxy;
     class PBGE_EXPORT StateChangeNode : public Node {
