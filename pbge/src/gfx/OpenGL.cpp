@@ -114,8 +114,20 @@ void OpenGL::deleteBuffers(GLsizei n, GLuint * buffers) {
     glDeleteBuffers(n, buffers);
 }
 
+void OpenGL::depthFunc(GLenum func) {
+    glDepthFunc(func);
+}
+
+void OpenGL::depthMask(GLboolean flag) {
+    glDepthMask(flag);
+}
+
 void OpenGL::disable(GLenum mode) {
     glDisable(mode);
+}
+
+void OpenGL::drawBuffer(GLenum mode) {
+    glDrawBuffer(mode);
 }
 
 void OpenGL::enable(GLenum mode) {
@@ -156,6 +168,10 @@ void OpenGL::matrixMode(GLenum mode) {
 
 void OpenGL::normalPointer(GLenum type, GLsizei stride, GLvoid * pointer) {
     glNormalPointer(type, stride, pointer);
+}
+
+void OpenGL::readBuffer(GLenum mode) {
+    glReadBuffer(mode);
 }
 
 void OpenGL::secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {

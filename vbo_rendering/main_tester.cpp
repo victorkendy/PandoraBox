@@ -2,7 +2,9 @@
 
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/Buffer.h"
+#include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/Node.h"
+#include "pbge/gfx/Camera.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/StateSet.h"
 

@@ -13,7 +13,6 @@ namespace pbge {
 
     class Node;
     class OpenGL;
-    class Camera;
 
     class PBGE_EXPORT UpdaterVisitor {
     public:
@@ -46,17 +45,19 @@ namespace pbge {
         std::vector<Camera *> activeCameras;
     };
 
-    
+    /* Interface for a visitor class that render something on some OpenGL buffer */
     class PBGE_EXPORT RenderVisitor {
     public:
-        void visit(Node * node, OpenGL * ogl);
+        virtual void visit(Node * node, OpenGL * ogl) = 0;
+    };
 
-        void setCurrentCamera(Camera * _camera) {
-            camera = _camera;
-        }
-    private:
-        void _visit(Node * node, OpenGL * ogl);
-        Camera * camera;
+    class PBGE_EXPORT ColorPassVisitor : public RenderVisitor {
+        void visit(Node * node, OpenGL * ogl);
+    };
+
+    class PBGE_EXPORT DepthPassVisitor : public RenderVisitor{
+    public:
+        void visit(Node * node, OpenGL * ogl);
     };
 
 }

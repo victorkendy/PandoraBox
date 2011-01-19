@@ -15,6 +15,8 @@ namespace pbge {
     class PBGE_EXPORT Model : public Object {
     public:
         virtual void render(ModelInstance * instance, OpenGL * ogl)=0;
+
+        virtual void renderDepth(ModelInstance * instance, OpenGL * ogl)=0;
     };
 
     class PBGE_EXPORT VBOModel : public Model {
@@ -22,6 +24,8 @@ namespace pbge {
         VBOModel(VertexBuffer * vbo, GLenum primitive);
 
         void render(ModelInstance * instance, OpenGL * ogl);
+
+        void renderDepth(ModelInstance * instance, OpenGL * ogl);
     private:
         VertexBuffer * vbo;
         GLenum primitive;
@@ -45,6 +49,10 @@ namespace pbge {
         void renderPass(RenderVisitor * visitor, OpenGL * ogl);
 
         void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
+
+        void depthPass(RenderVisitor * visitor, OpenGL * ogl);
+
+        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl){}
 
         void addChild(Node * node) {
             childs.push_back(node);

@@ -34,6 +34,10 @@ void TransformationNode::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
     ogl->loadModelMatrix(transformation);
 }
 
+void TransformationNode::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
+    ogl->loadModelMatrix(transformation);
+}
+
 TransformationNode * TransformationNode::scale(const float & sx, const float & sy, const float & sz) {
     transformation *= math3d::scaleMatrix(sx, sy, sz);
     return this;

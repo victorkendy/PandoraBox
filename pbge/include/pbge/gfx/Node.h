@@ -40,6 +40,10 @@ namespace pbge {
 
         virtual void postRenderPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
 
+        virtual void depthPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
+
+        virtual void postDepthPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
+
         virtual void addChild(Node * node) = 0;
         
         virtual node_list & getChilds() = 0;
@@ -92,6 +96,10 @@ namespace pbge {
 
         void postRenderPass(RenderVisitor * visitor, OpenGL * ogl) {}
 
+        void depthPass(RenderVisitor * visitor, OpenGL * ogl);
+
+        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl) {}
+
         void addChild(Node * node) {
             childs.push_back(node);
         }
@@ -130,6 +138,10 @@ namespace pbge {
         void renderPass(RenderVisitor * visitor, OpenGL * ogl){}
 
         void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
+
+        void depthPass(RenderVisitor * visitor, OpenGL * ogl){};
+
+        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl){};
 
         void addChild(Node * node){
             childs.push_back(node);

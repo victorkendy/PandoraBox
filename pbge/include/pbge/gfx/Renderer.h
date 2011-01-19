@@ -6,15 +6,16 @@
 #include <vector>
 #include <GL/glew.h>
 
+#include "pbge/core/core.h"
 #include "pbge/core/Object.h"
-#include "pbge/gfx/OpenGL.h"
-#include "pbge/gfx/SceneGraph.h"
-#include "pbge/gfx/Node.h"
-#include "pbge/gfx/Camera.h"
 
 namespace pbge {
     class UpdaterVisitor;
     class RenderVisitor;
+    class Camera;
+    class OpenGL;
+    class SceneGraph;
+    class Node;
 
     class PBGE_EXPORT Renderer: public Object {
     public:
@@ -28,11 +29,15 @@ namespace pbge {
 
         void render();
     private:
+        void renderWithCamera(Camera * camera, Node * root);
+
         SceneGraph * scene;
 
         UpdaterVisitor * updater;
 
         RenderVisitor * renderer;
+
+        RenderVisitor * depthRenderer;
 
         OpenGL * ogl;
     };

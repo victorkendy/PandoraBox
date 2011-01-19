@@ -98,7 +98,13 @@ namespace pbge {
 
         virtual void deleteBuffers(GLsizei n, GLuint * buffers);
 
+        virtual void depthFunc(GLenum func);
+
+        virtual void depthMask(GLboolean flag);
+
         virtual void disable(GLenum mode);
+
+        virtual void drawBuffer(GLenum mode);
 
         virtual void enable(GLenum mode);
 
@@ -119,6 +125,8 @@ namespace pbge {
         virtual void matrixMode(GLenum mode);
 
         virtual void normalPointer(GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void readBuffer(GLenum mode);
 
         virtual void secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
