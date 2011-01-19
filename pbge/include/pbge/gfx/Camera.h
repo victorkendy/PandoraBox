@@ -67,10 +67,6 @@ namespace pbge {
         // unset the render target
         virtual void unsetCamera (OpenGL * ogl);
         
-        // No comments
-        const std::string & getName() const { return name; }
-        void setName(const std::string & newName) { name = newName; }
-
         void setParent(CameraNode * node) { parent = node; }
         Node * getParent() { return parent; }
     protected:
@@ -82,8 +78,6 @@ namespace pbge {
         math3d::matrix44 cameraTransformation;
         void setCameraTransformation ();
         int is_valid;
-
-        std::string name;
     };
 }
 #endif

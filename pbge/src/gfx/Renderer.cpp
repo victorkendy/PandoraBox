@@ -36,7 +36,6 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     camera->setCamera(ogl);
     ogl->drawBuffer(GL_NONE);
     ogl->readBuffer(GL_NONE);
-    ogl->depthFunc(GL_LEQUAL);
     depthRenderer->visit(root, ogl);
     ogl->depthMask(GL_FALSE);
     ogl->drawBuffer(GL_BACK);
@@ -47,6 +46,7 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
 
 void Renderer::render(){
     ogl->depthMask(GL_TRUE);
+    ogl->depthFunc(GL_LEQUAL);
     ogl->clear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     Node * root = this->getScene()->getSceneGraphRoot();
     if(this->getScene() == NULL || root == NULL) return;

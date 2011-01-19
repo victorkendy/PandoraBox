@@ -14,7 +14,6 @@ using namespace pbge;
 #include <iostream>
 
 Camera::Camera(){
-    this->name = "";
     this->lookAt(math3d::vector4(0,1,0,0), math3d::vector4(0,0,-1,0));
     parent = NULL;
     renderTarget = NULL;
@@ -22,7 +21,6 @@ Camera::Camera(){
 
 Camera::Camera(const math3d::vector4 & up, const math3d::vector4 & front){
     lookAt(up, front);
-    this->name = "";
     parent = NULL;
     renderTarget = NULL;    
 }

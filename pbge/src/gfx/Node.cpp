@@ -54,6 +54,12 @@ TransformationNode * TransformationNode::translate(const float & x, const float 
 }
 
 
+CameraNode::CameraNode() {
+    viewTransformation = math3d::identity44;
+    this->camera = new Camera();
+    camera->setParent(this);
+}
+
 CameraNode::CameraNode(Camera * _camera) {
     viewTransformation = math3d::identity44;
     this->camera = _camera;
@@ -63,4 +69,13 @@ CameraNode::CameraNode(Camera * _camera) {
 void CameraNode::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
     viewTransformation = visitor->getCurrentTransformation();
     visitor->addActiveCamera(this->camera);
+}
+
+void CameraNode::lookAt(const math3d::vector4 & up, const math3d::vector4 & front) {
+    this->camera->lookAt(up, front);
+}
+
+void CameraNode::setPerspective(const float & fovy, const float & aspect,
+                                const float & near, const float & far) {
+    this->camera->frustum.setPerspective(fovy, aspect, near, far);
 }

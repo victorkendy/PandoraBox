@@ -4,7 +4,6 @@
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/Node.h"
-#include "pbge/gfx/Camera.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/StateSet.h"
 
@@ -15,7 +14,6 @@
 pbge::TransformationNode * cam_node;
 pbge::Renderer * renderer;
 pbge::SceneGraph * manager;
-pbge::Camera camera;
 
 pbge::ModelInstance * vboModel = NULL;
 
@@ -45,10 +43,10 @@ void setUp() {
     pbge::Node * child = manager->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
     cam_node = dynamic_cast<pbge::TransformationNode*>(manager->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f)));
     manager->appendChildTo(child, vboModel);
-    manager->appendChildTo(cam_node, new pbge::CameraNode(&camera));
+    pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(manager->appendChildTo(cam_node, new pbge::CameraNode()));
 
-    camera.lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
-    camera.frustum.setPerspective(45, 1, 1.0f, 10);
+    cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
+    cam->setPerspective(45, 1, 1.0f, 10);
     renderer->setScene(manager);
 }
 

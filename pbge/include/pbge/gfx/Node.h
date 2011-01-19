@@ -124,11 +124,14 @@ namespace pbge {
         math3d::matrix44 current;
     };
 
+
     /* Node that holds a camera
        it is used to inform the renderer about active cameras
     */
     class PBGE_EXPORT CameraNode : public Node {
     public:
+        CameraNode();
+
         CameraNode(Camera * _camera);
 
         void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
@@ -142,6 +145,11 @@ namespace pbge {
         void depthPass(RenderVisitor * visitor, OpenGL * ogl){};
 
         void postDepthPass(RenderVisitor * visitor, OpenGL * ogl){};
+
+        void lookAt(const math3d::vector4 & up, const math3d::vector4 & front);
+
+        void setPerspective(const float & fovy, const float & aspect,
+                             const float & near, const float & far);
 
         void addChild(Node * node){
             childs.push_back(node);
