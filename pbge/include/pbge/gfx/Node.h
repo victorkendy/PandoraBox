@@ -27,6 +27,7 @@ namespace pbge {
     class PBGE_EXPORT Node : public Object {
     public:
         Node() {
+            std::cout << "calling constructor" << std::endl;
             sceneGraphIndex = -1;
         }
 

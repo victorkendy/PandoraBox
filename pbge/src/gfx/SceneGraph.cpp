@@ -10,6 +10,12 @@
 
 namespace pbge {
 
+    SceneGraph::~SceneGraph() {
+        std::vector<Node*>::iterator it;
+        for(it = nodes.begin(); it != nodes.end(); it++)
+            delete *it;
+    }
+
     Node * SceneGraph::appendChildTo(int index, Node * child) {
         Node * parent = nodes.at(index);
         parent->addChild(child);
@@ -20,8 +26,16 @@ namespace pbge {
         return child;
     }
 
+
+
     Node * SceneGraph::appendChildTo(Node * parent, Node * child) {
         return appendChildTo(parent->getSceneGraphIndex(), child);
+    }
+
+    Node * SceneGraph::getGraphNode(int name) {
+        if (static_cast<int>(nodes.size()) > name && name >= 0)
+            return nodes.at(name);
+        return NULL;
     }
 
     void SceneGraph::setAmbientLightColor(const math3d::vector4 & color) {

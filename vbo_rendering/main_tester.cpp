@@ -11,9 +11,9 @@
 
 #include "vbo_setup.h"
 
-pbge::TransformationNode * cam_node;
+int cam_node_name;
 pbge::Renderer * renderer;
-pbge::SceneGraph * manager;
+pbge::SceneGraph * scene;
 
 pbge::ModelInstance * vboModel = NULL;
 
@@ -35,22 +35,22 @@ void setUp() {
     // FIXME: remove the state change line
     pbge::Manager::getInstance()->getOpenGL()->getState().enable(pbge::OpenGL::DEPTH_TEST);
     glClearColor(0,0,0,0);
-
     vboModel = createVBOInstance();
     // TODO: find somewhere else to put the instantiation
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
-    manager = new pbge::SceneGraph(new pbge::TransformationNode);
-    pbge::Node * child = manager->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
-    cam_node = dynamic_cast<pbge::TransformationNode*>(manager->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f)));
-    manager->appendChildTo(child, vboModel);
-    pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(manager->appendChildTo(cam_node, new pbge::CameraNode()));
-
+    scene = new pbge::SceneGraph(new pbge::TransformationNode);
+    pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
+    pbge::Node * cam_transform_node = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f));
+    cam_node_name = cam_transform_node->getSceneGraphIndex();
+    scene->appendChildTo(child, vboModel);
+    pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_transform_node, new pbge::CameraNode()));
     cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     cam->setPerspective(45, 1, 1.0f, 10);
-    renderer->setScene(manager);
+    renderer->setScene(scene);
 }
 
 void keyboard(unsigned char k, int x, int y) {
+    pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
     math3d::matrix44 m = cam_node->getTransformationMatrix();
     switch(k) {
         case 'w': m[1][3] += 0.1f; break;
@@ -69,5 +69,7 @@ int main(int argc, char ** argv) {
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutMainLoop();
+    delete scene;
+    delete renderer;
     return 0;
 }

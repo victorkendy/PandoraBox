@@ -21,6 +21,8 @@ namespace pbge {
             ambientLight = math3d::vector4(0,0,0,0);
         }
 
+        ~SceneGraph();
+
         Node * getSceneGraphRoot() {
             return nodes.at(0);
         }
@@ -28,6 +30,8 @@ namespace pbge {
         Node * appendChildTo(int index, Node * child);
 
         Node * appendChildTo(Node * parent, Node * child);
+
+        Node * getGraphNode(int index);
 
         void setAmbientLightColor(const math3d::vector4 & color);
 
