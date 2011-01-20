@@ -19,7 +19,7 @@ void VBOModel::render(ModelInstance * instance, OpenGL * ogl) {
 
 void VBOModel::renderDepth(ModelInstance* instance, OpenGL * ogl) {
     ogl->enable(GL_VERTEX_ARRAY);
-    vbo->bind(ogl);
+    vbo->bindOnly(VertexAttrib::VERTEX, ogl);
     glDrawArrays(primitive, 0, vbo->getNVertices());
     vbo->unbind(ogl);
     ogl->disable(GL_VERTEX_ARRAY);

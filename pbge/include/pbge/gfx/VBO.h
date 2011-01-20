@@ -31,6 +31,8 @@ namespace pbge {
             stride = _stride;
         }
 
+        virtual Type getType() = 0;
+
         int getOffset() {
             return offset;
         }
@@ -49,36 +51,54 @@ namespace pbge {
     class PBGE_EXPORT VertexPositionAttrib : public VertexAttrib{
     public:
         VertexPositionAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+
+        Type getType() { return VERTEX; }
+
         void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexNormalAttrib : public VertexAttrib{
     public:
         VertexNormalAttrib(int _offset, GLsizei _stride) : VertexAttrib(3, _offset, _stride) {}
+        
+        Type getType() { return NORMAL; }
+
         void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexTexcoordAttrib : public VertexAttrib {
     public:
         VertexTexcoordAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+
+        Type getType() { return TEXCOORD; }
+
         void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexColorAttrib : public VertexAttrib {
     public:
         VertexColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+
+        Type getType() { return COLOR; }
+
         void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexSecondaryColorAttrib : public VertexAttrib {
     public:
         VertexSecondaryColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+
+        Type getType() { return SECONDARY_COLOR; }
+
         void bindAttrib(OpenGL * ogl);
     };
 
     class PBGE_EXPORT VertexCustomAttrib : public VertexAttrib {
     public:
         VertexCustomAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
+
+        Type getType() { return CUSTOM_ATTRIB;}
+
         void bindAttrib(OpenGL * ogl) {}
     };
 
@@ -97,6 +117,8 @@ namespace pbge {
         }
 
         void bindAllAttribs(OpenGL * ogl);
+
+        void bindOnly(VertexAttrib::Type, OpenGL * ogl);
 
         void bind(OpenGL * ogl);
 

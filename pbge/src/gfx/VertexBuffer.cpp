@@ -1,3 +1,6 @@
+#include <vector>
+#include <algorithm>
+
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/VBO.h"
@@ -34,6 +37,15 @@ namespace pbge {
         std::vector<VertexAttrib*>::iterator it;
         for(it = attribs.begin(); it != attribs.end(); it++) {
             (*it)->bindAttrib(ogl);
+        }
+    }
+
+    void VertexBuffer::bindOnly(VertexAttrib::Type type, OpenGL * ogl) {
+        buffer->flush(ogl, true);
+        std::vector<VertexAttrib*>::iterator it;
+        for(it = attribs.begin(); it != attribs.end(); it++) {
+            if((*it)->getType() == type)
+                (*it)->bindAttrib(ogl);
         }
     }
 
