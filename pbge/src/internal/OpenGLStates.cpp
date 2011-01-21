@@ -1,5 +1,6 @@
 
 #include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/Shader.h"
 #include "pbge/internal/OpenGLStates.h"
 #include "pbge/gfx/Texture.h"
 
@@ -24,7 +25,6 @@ void TextureUnit::applyChanges(pbge::OpenGL *ogl) {
     }
 }
 
-
 StateEnabler::StateEnabler(GLenum _mode) {
     this->current = this->next = false;
     this->mode = _mode;
@@ -46,4 +46,14 @@ void StateEnabler::enable() {
 
 void StateEnabler::disable() {
     this->next = false;
+}
+
+void BoundProgram::applyChanges(OpenGL * ogl) {
+    if(this->current != this->next) {
+        if(this->next == NULL) 
+            ogl->useProgram(0);
+        else
+            next->bind(ogl);
+    }
+    current = next;
 }

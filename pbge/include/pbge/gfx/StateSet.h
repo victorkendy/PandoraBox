@@ -12,6 +12,8 @@
 namespace pbge {
     class Texture;
     class TextureUnit;
+    class BoundProgram;
+    class GPUProgram;
 
     class PBGE_EXPORT State {
     public: 
@@ -30,12 +32,17 @@ namespace pbge {
 
         void setTextureAt(unsigned texUnit, Texture * texture);
 
+        void useProgram(GPUProgram * program);
+
         void enable(OpenGL::Mode mode);
 
         void disable(OpenGL::Mode mode);
 
     private:
         std::vector<State *> states;
+
+        BoundProgram * boundProgram;
+
         std::vector<TextureUnit*> textureUnits;
     };
 }

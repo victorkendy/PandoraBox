@@ -7,6 +7,8 @@
 #include "pbge/gfx/StateSet.h"
 
 namespace pbge {
+    class OpenGL;
+
     class PBGE_EXPORT StateEnabler : public State {
     public:
         StateEnabler(GLenum _mode);
@@ -19,6 +21,23 @@ namespace pbge {
     private:
         bool current, next;
         GLenum mode;
+    };
+
+    class PBGE_EXPORT BoundProgram : public State {
+    public:
+        BoundProgram() {
+            this->current = NULL;
+        }
+
+        void applyChanges(OpenGL * ogl);
+
+        void changeProgram(GPUProgram * program) {
+            next = program;
+        }
+
+    private:
+        GPUProgram * current;
+        GPUProgram * next;
     };
 
     class PBGE_EXPORT TextureUnit : public State{

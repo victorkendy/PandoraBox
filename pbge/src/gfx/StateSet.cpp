@@ -22,7 +22,6 @@ private:
 };
 
 
-
 StateSet::StateSet(OpenGL * ogl) {
     states = std::vector<State*>(NUMBER_OF_STATES);
     states[OpenGL::BLEND] = new StateEnabler(GL_BLEND);
@@ -42,6 +41,8 @@ StateSet::StateSet(OpenGL * ogl) {
     states[OpenGL::PRIMITIVE_RESTART] = new StateEnabler(GL_PRIMITIVE_RESTART);
     states[OpenGL::SAMPLE_ALPHA_TO_COVERAGE] = new StateEnabler(GL_SAMPLE_ALPHA_TO_COVERAGE);
     states[OpenGL::PROGRAM_POINT_SIZE] = new StateEnabler(GL_PROGRAM_POINT_SIZE);
+
+    boundProgram = new BoundProgram;
 }
 
 StateSet::~StateSet() {
@@ -68,4 +69,8 @@ void StateSet::enable(OpenGL::Mode mode) {
 
 void StateSet::disable(OpenGL::Mode mode) {
     dynamic_cast<StateEnabler*>(states.at(mode))->disable();
+}
+
+void StateSet::useProgram(GPUProgram * program) {
+    this->boundProgram->changeProgram(program);
 }

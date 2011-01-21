@@ -50,8 +50,10 @@ namespace pbge {
 
 
     bool GLProgram::bind(OpenGL * ogl){
-        if(linked == false) {
-            return false;
+        if(!linked) {
+            link(ogl);
+            if(!linked)
+                return false;
         }
         ogl->useProgram(programID);
         return true;
