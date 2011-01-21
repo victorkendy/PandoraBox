@@ -2,11 +2,10 @@
 #include <cstring>
 #include <string>
 #include <vector>
-#include <GL/glew.h>
 
-#include "math3d/math3d.h"
 #include "pbge/core/Manager.h"
-#include "pbge/core/definitions.h"
+#include "pbge/core/File.h"
+#include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Shader.h"
 
 
@@ -14,121 +13,99 @@ using std::string;
 
 namespace pbge {
 
-    // TODO: Melhorar os tratamentos de erro
+    GLShader * GLShader::loadSourceFromFile(FileReader * file, const ShaderType _type) {
+        if(!file->is_open())
+            return false;
+        GLShader * shader = new GLShader;
+        shader->type = _type;
+        shader->source = new char[file->getSize() + 1];
+        strcpy(shader->source, file->getData());
+        file->close();
+        return shader;
+    }
 
-    static char _source[9*PBGE_KB];
+    GLShader * GLShader::loadSource(const std::string & source, const ShaderType _type) {
+        GLShader * shader = new GLShader;
+        shader->type = _type;
+        shader->source = new char[source.size() + 1];
+        strcpy(shader->source, source.c_str());
+        return shader;
+    }
+
+    bool GLShader::compile(OpenGL * ogl) {
+        GLint status;
+        if(type == VERTEX_SHADER)
+            shaderID = ogl->createShader(GL_VERTEX_SHADER);
+        else if(type == FRAGMENT_SHADER)
+            shaderID = ogl->createShader(GL_FRAGMENT_SHADER);
+        else 
+            return false;
+        const GLchar * strPtr = const_cast<GLchar*>(source);
+        ogl->shaderSource(shaderID, 1, &strPtr, NULL);
+        ogl->compileShader(shaderID);
+        ogl->getShaderiv(shaderID, GL_COMPILE_STATUS, &status);
+        compiled = (status == GL_TRUE);
+        return compiled;
+    }
 
 
-    int GLShader::loadSourceFromFile(string fileName, const int type) {
-        FILE *fp;
-        Manager * manager = Manager::getInstance();
-        std::vector<std::string> shaderDirectories = manager->getShaderDirs();
-        std::vector<std::string>::iterator currentDir;
-        for (currentDir = shaderDirectories.begin(); currentDir != shaderDirectories.end(); currentDir++) {
-            fp = fopen((*currentDir + fileName).c_str(), "rb");
-            if (fp != NULL)
-                break;
+    bool GLProgram::bind(OpenGL * ogl){
+        if(linked == false) {
+            return false;
         }
-        if(fp == NULL) {
-            fp = fopen(fileName.c_str(), "rb");
-            if (fp == NULL) {
-                manager->writeErrorLog("FILE NOT FOUND: " + fileName);
-                return PBGE_false;
+        ogl->useProgram(programID);
+        return true;
+    }
+
+    void GLProgram::unbind(OpenGL * ogl){
+        ogl->useProgram(0);
+    }
+
+    bool GLProgram::link(OpenGL * ogl){
+        GLint status;
+        std::vector<GLShader*>::iterator it;
+        for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
+            if(!(*it)->isCompiled()) {
+                if(!(*it)->compile(ogl))
+                    return false;
+                ogl->attachShader(programID, (*it)->getID());
             }
         }
-        memset(_source, 0, 9 * PBGE_KB);
-        if(fread(_source, 1, 9*PBGE_KB, fp) == 9*PBGE_KB){
-            fclose(fp);
-            return PBGE_false;
-        }else{
-            fclose(fp);
-        }
-        return this->shaderFromPointer(_source, type);
+        ogl->linkProgram(programID);
+        ogl->getProgramiv(programID, GL_LINK_STATUS, &status);
+        linked = (status == GL_TRUE);
+        return linked;
     }
 
-    int GLShader::loadSource(string source, const int type){
-        return this->shaderFromPointer(source.c_str(), type);
+    void GLProgram::attachShader(GLShader *shader){
+        attachedShaders.push_back(shader);
     }
 
-    int GLShader::shaderFromPointer(const char *ptr, const int type){
-        GLint status;
-        if(type == PBGE_vertex_shader)
-            shaderID = glCreateShader(GL_VERTEX_SHADER);
-        else if(type == PBGE_fragment_shader)
-            shaderID = glCreateShader(GL_FRAGMENT_SHADER);
-        else
-            return PBGE_false;
-        glShaderSource(shaderID, 1, &ptr, NULL);
-        glCompileShader(shaderID);
-        glGetShaderiv(shaderID, GL_COMPILE_STATUS, &status);
-        if(status == GL_FALSE){
-            glGetShaderInfoLog(shaderID, 9000, &status, _source);
-            puts(_source);
-        }
-        return PBGE_true;
-    }
-
-    int GLProgram::bind(){
-        if(_isCompiled == PBGE_false) {
-            return PBGE_false;
-        }
-        glUseProgram(programID);
-        return PBGE_true;
-    }
-    void GLProgram::unbind(){
-        glUseProgram(0);
-    }
-    int GLProgram::compile(){
-        GLint status;
-        glLinkProgram(programID);
-        glGetProgramiv(programID, GL_LINK_STATUS, &status);
-        if(status == GL_FALSE){
-            glGetProgramInfoLog(programID, 9000, &status, _source);
-            puts(_source);
-            return PBGE_false;
-        }
-        _isCompiled = PBGE_true;
-        return PBGE_true;
-    }
-
-    int GLProgram::attachShader(GLShader &shader){
-        if(!programID)
-            programID = glCreateProgram();
-        if(shader.getID()){
-            glAttachShader(programID, shader.getID());
-            return PBGE_true;
-        }
-        else
-            return PBGE_false;
-    }
-
-    int GLProgram::attachShader(GLShader *shader){
-        return attachShader(*shader);
-    }
-
-    int GLProgram::compileFromString(const string &vertexShader, const string &fragmentShader){
-        GLShader vs, fs;
+    GLProgram * GLProgram::fromString(const string &vertexShader, const string &fragmentShader){
+        GLShader * vs, * fs;
         if(vertexShader != ""){
-            vs.loadSource(vertexShader, PBGE_vertex_shader);
-            this->attachShader(vs);
+            vs = GLShader::loadSource(vertexShader, Shader::VERTEX_SHADER);
         }
         if(fragmentShader != ""){
-            fs.loadSource(fragmentShader, PBGE_fragment_shader);
-            this->attachShader(fs);
+            fs = GLShader::loadSource(fragmentShader, Shader::FRAGMENT_SHADER);
         }
-        return this->compile();
+        GLProgram * program = new GLProgram;
+        program->attachShader(vs);
+        program->attachShader(fs);
+        return program;
     }
 
-    int GLProgram::compileFromFile(const string &vertexShaderFile, const string &fragmentShaderFile){
-        GLShader vs, fs;
-        if(vertexShaderFile != ""){
-            vs.loadSourceFromFile(vertexShaderFile, PBGE_vertex_shader);
-            this->attachShader(vs);
+    GLProgram * GLProgram::fromFile(FileReader * filevs, FileReader * filefs){
+        GLShader *vs, *fs;
+        if(filevs != NULL){
+            vs = GLShader::loadSourceFromFile(filevs, Shader::VERTEX_SHADER);
         }
-        if(fragmentShaderFile != ""){
-            fs.loadSourceFromFile(fragmentShaderFile, PBGE_fragment_shader);
-            this->attachShader(fs);
+        if(filefs != NULL){
+            fs = GLShader::loadSourceFromFile(filefs, Shader::FRAGMENT_SHADER);
         }
-        return this->compile();
+        GLProgram * program = new GLProgram;
+        program->attachShader(vs);
+        program->attachShader(fs);
+        return program;
     }
 }

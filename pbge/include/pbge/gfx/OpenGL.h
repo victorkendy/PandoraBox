@@ -96,6 +96,10 @@ namespace pbge {
 
         virtual void colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
+        virtual void compileShader(GLuint shader);
+
+        virtual GLuint createShader(GLenum shaderType);
+
         virtual void deleteBuffers(GLsizei n, GLuint * buffers);
 
         virtual void depthFunc(GLenum func);
@@ -116,7 +120,13 @@ namespace pbge {
 
         virtual void getIntegerv(GLenum pname, GLint * params);
 
+        virtual void getProgramiv(GLuint program, GLenum pname, GLint * params);
+
+        virtual void getShaderiv(GLuint shader, GLenum pname, GLint * ptr);
+
         virtual const char * getString(GLenum name);
+
+        virtual void linkProgram(GLuint program);
 
         virtual void loadMatrix(GLfloat * matrix);
 
@@ -130,7 +140,11 @@ namespace pbge {
 
         virtual void secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
+        virtual void shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes);
+
         virtual void texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void useProgram(GLuint program);
 
         virtual void vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 

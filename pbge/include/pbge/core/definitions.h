@@ -15,10 +15,6 @@
 #define PBGE_pi 3.1415927
 #define PBGE_1_pi 0.3183099f   // 1/PBGE_pi
 
-// Tipos de shaders
-#define PBGE_vertex_shader 0
-#define PBGE_fragment_shader 1
-
 // Constantes para estabilidade de rotação
 #define PBGE_min_rotation 0.18f
 #define PBGE_max_rotation 3.125f

@@ -33,9 +33,9 @@ namespace pbge {
         }
         
         // force call to glMapBuffer
-        virtual void * forceDirectMap(GLenum access) {
-            Manager::getInstance()->getOpenGL()->bindBuffer(target, glID);
-            return Manager::getInstance()->getOpenGL()->mapBuffer(target, access);
+        virtual void * forceDirectMap(OpenGL * ogl, GLenum access) {
+            ogl->bindBuffer(target, glID);
+            return ogl->mapBuffer(target, access);
         }
 
         //virtual void setData(void * _data, size_t _size);

@@ -33,6 +33,8 @@ namespace pbge {
         ogl->secondaryColorPointer(3,GL_FLOAT, getStride(), ATTRIB_POINTER_OFFSET(getOffset()));
     }
 
+    #undef ATTRIB_POINTER_OFFSET
+
     void VertexBuffer::bindAllAttribs(OpenGL * ogl) {
         std::vector<VertexAttrib*>::iterator it;
         for(it = attribs.begin(); it != attribs.end(); it++) {
@@ -57,8 +59,6 @@ namespace pbge {
     void VertexBuffer::unbind(OpenGL * ogl) {
         this->buffer->unbind(ogl);
     }
-
-    #undef ATTRIB_POINTER_OFFSET
 
     VertexBuffer::~VertexBuffer() {
         delete buffer;

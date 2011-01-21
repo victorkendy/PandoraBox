@@ -5,13 +5,10 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/definitions.h"
+#include "pbge/gfx/Node.h"
 #include "pbge/gfx/Camera.h"
-//#include "pbge/gfx/Transformation.h"
-
 
 using namespace pbge;
-
-#include <iostream>
 
 Camera::Camera(){
     this->lookAt(math3d::vector4(0,1,0,0), math3d::vector4(0,0,-1,0));
@@ -125,6 +122,7 @@ void Frustum::loadProjection(OpenGL * ogl) const {
     ogl->loadProjectionMatrix(projectionMatrix);
 }
 
+// TODO: Implement the methods below
 void Frustum::updatePerspectivePoints() {
 
 }

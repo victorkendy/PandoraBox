@@ -8,7 +8,6 @@
 
 #include "pbge/core/core.h"
 #include "pbge/core/Object.h"
-#include "pbge/gfx/Node.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/RenderTarget.h"
 //#include "pbge/gfx/Transformation.h"
@@ -68,7 +67,7 @@ namespace pbge {
         virtual void unsetCamera (OpenGL * ogl);
         
         void setParent(CameraNode * node) { parent = node; }
-        Node * getParent() { return parent; }
+        CameraNode * getParent() { return parent; }
     protected:
         CameraNode * parent;
         RenderTarget * renderTarget;

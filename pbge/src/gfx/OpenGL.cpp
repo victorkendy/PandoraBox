@@ -110,6 +110,14 @@ void OpenGL::colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * poin
     glColorPointer(size, type, stride, pointer);
 }
 
+void OpenGL::compileShader(GLuint shader) {
+    glCompileShader(shader);
+}
+
+GLuint OpenGL::createShader(GLenum shaderType) {
+    return glCreateShader(shaderType);
+}
+
 void OpenGL::deleteBuffers(GLsizei n, GLuint * buffers) {
     glDeleteBuffers(n, buffers);
 }
@@ -150,8 +158,20 @@ void OpenGL::getIntegerv(GLenum pname, GLint * params) {
     glGetIntegerv(pname, params);
 }
 
+void OpenGL::getProgramiv(GLuint program, GLenum pname, GLint * params) {
+    glGetProgramiv(program, pname, params);
+}
+
+void OpenGL::getShaderiv(GLuint shader, GLenum pname, GLint * ptr) {
+    glGetShaderiv(shader, pname, ptr);
+}
+
 const char * OpenGL::getString(GLenum name) {
     return (const char *)glGetString(name);
+}
+
+void OpenGL::linkProgram(GLuint program) {
+    glLinkProgram(program);
 }
 
 void OpenGL::loadMatrix(GLfloat * matrix) {
@@ -178,8 +198,16 @@ void OpenGL::secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvo
     glSecondaryColorPointer(size, type, stride, pointer);
 }
 
+void OpenGL::shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes) {
+    glShaderSource(id, count, strings, sizes);
+}
+
 void OpenGL::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
     glTexCoordPointer(size, type, stride, pointer);
+}
+
+void OpenGL::useProgram(GLuint program) {
+    glUseProgram(program);
 }
 
 void OpenGL::vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {

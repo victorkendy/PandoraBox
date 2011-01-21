@@ -17,7 +17,7 @@ namespace pbge {
     }
 
     Node * SceneGraph::appendChildTo(int index, Node * child) {
-        Node * parent = nodes.at(index);
+        Node * parent = getGraphNode(index);
         parent->addChild(child);
         if(child->getSceneGraphIndex() < 0) {
             nodes.push_back(child);
@@ -25,8 +25,6 @@ namespace pbge {
         }
         return child;
     }
-
-
 
     Node * SceneGraph::appendChildTo(Node * parent, Node * child) {
         return appendChildTo(parent->getSceneGraphIndex(), child);

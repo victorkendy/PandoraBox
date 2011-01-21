@@ -60,9 +60,10 @@ namespace pbge {
     };
 
 
-    /* The node that represents a affine linear transformation 
-       on the scene graph
-    */
+    /* 
+     * The node that represents a affine linear transformation 
+     * on the scene graph
+     */
     class PBGE_EXPORT TransformationNode : public Node {
     public: // factory methods
         static TransformationNode * translation(const float & x, const float & y, const float & z);
@@ -125,9 +126,10 @@ namespace pbge {
     };
 
 
-    /* Node that holds a camera
-       it is used to inform the renderer about active cameras
-    */
+    /* 
+     * Node that holds a camera
+     * it is used to inform the renderer about active cameras
+     */
     class PBGE_EXPORT CameraNode : public Node {
     public:
         CameraNode();
