@@ -27,6 +27,7 @@ namespace pbge {
     public:
         BoundProgram() {
             this->current = NULL;
+            this->next = NULL;
         }
 
         void applyChanges(OpenGL * ogl);

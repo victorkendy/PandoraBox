@@ -4,6 +4,8 @@
 #ifndef gfxstateset_h_
 #define gfxstateset_h_
 
+#include <set>
+
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/core/core.h"
 
@@ -30,8 +32,6 @@ namespace pbge {
 
         void apply(OpenGL * ogl);
 
-        void setTextureAt(unsigned texUnit, Texture * texture);
-
         void useProgram(GPUProgram * program);
 
         void enable(OpenGL::Mode mode);
@@ -44,6 +44,8 @@ namespace pbge {
         BoundProgram * boundProgram;
 
         std::vector<TextureUnit*> textureUnits;
+
+        std::set<State*> changes;
     };
 }
 

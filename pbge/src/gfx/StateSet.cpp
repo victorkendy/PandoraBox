@@ -54,23 +54,27 @@ StateSet::~StateSet() {
     for(texIt = textureUnits.begin(); texIt != textureUnits.end(); texIt++) {
         delete *texIt;
     }
+
+    delete boundProgram;
 }
 
 void StateSet::apply(OpenGL * ogl) {
     ChangeApplier applier(ogl);
-
-    std::for_each(states.begin(), states.end(), applier);
-    std::for_each(textureUnits.begin(), textureUnits.end(), applier);
+    std::for_each(changes.begin(), changes.end(), applier);
+    changes.clear();
 }
 
 void StateSet::enable(OpenGL::Mode mode) {
     dynamic_cast<StateEnabler*>(states.at(mode))->enable();
+    changes.insert(states.at(mode));
 }
 
 void StateSet::disable(OpenGL::Mode mode) {
     dynamic_cast<StateEnabler*>(states.at(mode))->disable();
+    changes.insert(states.at(mode));
 }
 
 void StateSet::useProgram(GPUProgram * program) {
     this->boundProgram->changeProgram(program);
+    changes.insert(boundProgram);
 }
