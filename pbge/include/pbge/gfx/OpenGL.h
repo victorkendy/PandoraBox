@@ -98,6 +98,8 @@ namespace pbge {
 
         virtual void compileShader(GLuint shader);
 
+        virtual GLuint createProgram();
+
         virtual GLuint createShader(GLenum shaderType);
 
         virtual void deleteBuffers(GLsizei n, GLuint * buffers);
@@ -119,6 +121,8 @@ namespace pbge {
         virtual void getFloatv(GLenum pname, GLfloat * params);
 
         virtual void getIntegerv(GLenum pname, GLint * params);
+
+        virtual void getProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei * length, GLchar * infoLog);
 
         virtual void getProgramiv(GLuint program, GLenum pname, GLint * params);
 

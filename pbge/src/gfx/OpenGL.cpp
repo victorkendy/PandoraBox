@@ -114,6 +114,10 @@ void OpenGL::compileShader(GLuint shader) {
     glCompileShader(shader);
 }
 
+GLuint OpenGL::createProgram(){
+    return glCreateProgram();
+}
+
 GLuint OpenGL::createShader(GLenum shaderType) {
     return glCreateShader(shaderType);
 }
@@ -156,6 +160,10 @@ void OpenGL::getFloatv(GLenum pname, GLfloat * params) {
 
 void OpenGL::getIntegerv(GLenum pname, GLint * params) {
     glGetIntegerv(pname, params);
+}
+
+void OpenGL::getProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei * length, GLchar * infoLog) {
+    glGetProgramInfoLog(program, maxLength, length, infoLog);
 }
 
 void OpenGL::getProgramiv(GLuint program, GLenum pname, GLint * params) {

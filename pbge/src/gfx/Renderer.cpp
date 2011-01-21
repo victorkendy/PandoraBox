@@ -1,8 +1,8 @@
 #include <GL/glew.h>
 #include <string>
-#include <cstdio>
 #include <cstring>
 
+#include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Camera.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/Renderer.h"
@@ -12,6 +12,9 @@
 #include "pbge/core/Manager.h"
 
 using namespace pbge;
+
+
+
 
 Renderer::Renderer(OpenGL * _ogl){
     this->ogl = _ogl;

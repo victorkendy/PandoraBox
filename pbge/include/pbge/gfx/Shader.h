@@ -1,5 +1,5 @@
-#ifndef gfxshader_h_
-#define gfxshader_h_ 1
+#ifndef PBGE_GFX_SHADER_H_
+#define PBGE_GFX_SHADER_H_ 1
 
 #include <string>
 #include <vector>
@@ -28,6 +28,8 @@ namespace pbge {
         virtual void unbind(OpenGL * ogl) = 0;
 
         virtual bool link(OpenGL * ogl) = 0;
+
+        virtual const std::string getInfoLog() = 0;
 
         virtual GLuint getId() = 0;
     };
@@ -68,6 +70,7 @@ namespace pbge {
     class PBGE_EXPORT GLProgram : public GPUProgram{
     public:
         GLProgram() {
+            programID = 0;
             linked = false;
         }
 
@@ -79,17 +82,25 @@ namespace pbge {
 
         bool link(OpenGL * ogl);
 
+        const std::string getInfoLog() {
+            return infoLog;
+        }
+
         static GLProgram * fromString(const std::string &vertexShader, const std::string &fragmentShader);
 
         static GLProgram * fromFile(FileReader * vertexShaderFile, FileReader *  fragmentShaderFile);
 
         GLuint getId() { return programID; }
-    protected:
+    private:
+        void extractInfoLog(OpenGL * ogl);
+
         bool linked;
 
         GLuint programID;
 
         std::vector<GLShader*> attachedShaders;
+
+        std::string infoLog;
     };
 }
 

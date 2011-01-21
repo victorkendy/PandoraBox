@@ -66,6 +66,7 @@ namespace pbge {
     bool GLProgram::link(OpenGL * ogl){
         GLint status;
         std::vector<GLShader*>::iterator it;
+        if(programID == 0) programID = ogl->createProgram();
         for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
             if(!(*it)->isCompiled()) {
                 if(!(*it)->compile(ogl))
@@ -74,9 +75,21 @@ namespace pbge {
             }
         }
         ogl->linkProgram(programID);
+        extractInfoLog(ogl);
         ogl->getProgramiv(programID, GL_LINK_STATUS, &status);
         linked = (status == GL_TRUE);
         return linked;
+    }
+
+    void GLProgram::extractInfoLog(OpenGL * ogl) {
+        GLint infoLogLength;
+        GLsizei lixo;
+        GLchar * _infoLog;
+        ogl->getProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+        _infoLog = new GLchar[infoLogLength];
+        ogl->getProgramInfoLog(programID, infoLogLength, &lixo, _infoLog);
+        this->infoLog = std::string(_infoLog, infoLogLength);
+        delete [] _infoLog;
     }
 
     void GLProgram::attachShader(GLShader *shader){
@@ -85,15 +98,16 @@ namespace pbge {
 
     GLProgram * GLProgram::fromString(const string &vertexShader, const string &fragmentShader){
         GLShader * vs, * fs;
+        GLProgram * program = new GLProgram;
         if(vertexShader != ""){
             vs = GLShader::loadSource(vertexShader, Shader::VERTEX_SHADER);
+            program->attachShader(vs);
         }
         if(fragmentShader != ""){
             fs = GLShader::loadSource(fragmentShader, Shader::FRAGMENT_SHADER);
+            program->attachShader(fs);
         }
-        GLProgram * program = new GLProgram;
-        program->attachShader(vs);
-        program->attachShader(fs);
+        
         return program;
     }
 
