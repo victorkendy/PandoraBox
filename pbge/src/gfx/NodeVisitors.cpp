@@ -58,6 +58,7 @@ namespace {
         "varying vec4 position;\n"
         "void main() {\n"
         "   normal = gl_NormalMatrix * gl_Normal;\n"
+        "   gl_FrontColor = gl_Color;"
         "   gl_Position = ftransform();\n"
         "}\n";
 
@@ -66,13 +67,12 @@ namespace {
         "varying vec4 position;\n"
         "void main() {\n"
         "   float ndotd;\n"
-        "   vec3 lightPosition = vec3(0,2,1);\n"
+        "   vec3 lightPosition = vec3(0,2,10);\n"
         "   vec4 lightColor = vec4(1,1,1,1);\n"
         "   vec3 dirVector = lightPosition - position.xyz;\n"
         "   dirVector = normalize(dirVector);\n"
         "   ndotd = max(0.0, dot(normal, dirVector));\n"
-        "   gl_FragColor = lightColor * ndotd;\n"
-        //"   gl_FragColor = lightColor;\n"
+        "   gl_FragColor = lightColor * ndotd * gl_Color;\n"
         "}\n";
 }
 

@@ -47,10 +47,7 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     ogl->drawBuffer(GL_BACK);
     lightPassVisitor->visit(root, ogl);
     
-    ogl->getState().enable(OpenGL::BLEND);
-    glBlendFunc(GL_ONE, GL_ONE);
     renderer->visit(root, ogl);
-    ogl->getState().disable(OpenGL::BLEND);
     camera->unsetCamera(ogl);
 }
 
