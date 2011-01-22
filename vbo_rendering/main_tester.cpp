@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "pbge/core/Manager.h"
+#include "pbge/gfx/Light.h"
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/Node.h"
@@ -41,6 +42,7 @@ void setUp() {
     cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
     scene->appendChildTo(child, vboModel);
     pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
+    scene->appendChildTo(cam_node_name, new pbge::PointLight);
     cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     cam->setPerspective(45, 1, 1.0f, 10);
     renderer->setScene(scene);
