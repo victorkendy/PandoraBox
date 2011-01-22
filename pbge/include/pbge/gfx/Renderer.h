@@ -14,6 +14,7 @@ namespace pbge {
     class RenderVisitor;
     class Camera;
     class OpenGL;
+    class LightPassVisitor;
     class SceneGraph;
     class Node;
 
@@ -38,6 +39,8 @@ namespace pbge {
         RenderVisitor * renderer;
 
         RenderVisitor * depthRenderer;
+
+        LightPassVisitor * lightPassVisitor;
 
         OpenGL * ogl;
     };

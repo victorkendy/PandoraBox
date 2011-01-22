@@ -13,6 +13,8 @@ namespace pbge {
 
     class Node;
     class OpenGL;
+    class Shader;
+    class GPUProgram;
 
     class PBGE_EXPORT UpdaterVisitor {
     public:
@@ -60,6 +62,47 @@ namespace pbge {
         void visit(Node * node, OpenGL * ogl);
     };
 
+    class PBGE_EXPORT LightPassVisitor : public RenderVisitor {
+    public:
+        static Shader * getDefaultVertexShader();
+
+        static Shader * getDefaultFragmentShader();
+
+        static GPUProgram * getDefaultProgram();
+    public:
+
+        LightPassVisitor () {
+            vertexShader = NULL;
+            fragmentShader = NULL;
+            gpuProgram = NULL;
+        }
+
+        Shader * getLightPassVertexShader() {
+            if(vertexShader != NULL)
+                return vertexShader;
+            return LightPassVisitor::getDefaultVertexShader();
+        }
+
+        Shader * getLightPassFragmentShader() {
+            if(fragmentShader != NULL)
+                return fragmentShader;
+            return LightPassVisitor::getDefaultFragmentShader();
+        }
+
+        GPUProgram * getLightPassProgram() {
+            if(gpuProgram != NULL)
+                return gpuProgram;
+            return LightPassVisitor::getDefaultProgram();
+        }
+
+        void visit(Node * node, OpenGL * ogl);
+    private:
+        Shader * vertexShader;
+
+        Shader * fragmentShader;
+
+        GPUProgram * gpuProgram;
+    };
 }
 
 

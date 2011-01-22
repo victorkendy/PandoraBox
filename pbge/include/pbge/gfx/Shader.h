@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
+#include "pbge/gfx/OpenGL.h"
 #include "pbge/core/core.h"
 #include "pbge/core/Object.h"
 
 namespace pbge {
     class FileReader;
-    class OpenGL;
 
     class PBGE_EXPORT Shader {
     public:
@@ -28,6 +28,8 @@ namespace pbge {
         virtual void unbind(OpenGL * ogl) = 0;
 
         virtual bool link(OpenGL * ogl) = 0;
+
+        virtual bool isLinked() = 0;
 
         virtual const std::string getInfoLog() = 0;
 
@@ -84,6 +86,10 @@ namespace pbge {
 
         const std::string getInfoLog() {
             return infoLog;
+        }
+
+        bool isLinked() {
+            return linked;
         }
 
         static GLProgram * fromString(const std::string &vertexShader, const std::string &fragmentShader);

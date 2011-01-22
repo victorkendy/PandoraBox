@@ -61,7 +61,9 @@ namespace pbge {
 
         virtual StateSet & getState() { return *state; }
 
-        // raw OpenGL calls
+        
+        
+        // raw OpenGL API calls
         virtual void activeTexture(GLenum textureUnit);
 
         virtual void alphaFunc(GLenum func, GLclampf ref);

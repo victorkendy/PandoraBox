@@ -8,6 +8,7 @@
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
+#include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/core/Manager.h"
 
@@ -21,6 +22,7 @@ Renderer::Renderer(OpenGL * _ogl){
     this->updater = new UpdaterVisitor;
     this->renderer = new ColorPassVisitor;
     this->depthRenderer = new DepthPassVisitor;
+    this->lightPassVisitor = new LightPassVisitor;
 }
 
 void Renderer::setScene(const SceneGraph * scene_graph) {
@@ -43,7 +45,12 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     ogl->depthMask(GL_FALSE);
     ogl->drawBuffer(GL_BACK);
     ogl->drawBuffer(GL_BACK);
+    lightPassVisitor->visit(root, ogl);
+    
+    ogl->getState().enable(OpenGL::BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
     renderer->visit(root, ogl);
+    ogl->getState().disable(OpenGL::BLEND);
     camera->unsetCamera(ogl);
 }
 
