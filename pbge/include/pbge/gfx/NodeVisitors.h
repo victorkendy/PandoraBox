@@ -12,6 +12,8 @@
 namespace pbge {
 
     class Node;
+    class Light;
+    class Camera;
     class OpenGL;
     class Shader;
     class GPUProgram;
@@ -24,7 +26,7 @@ namespace pbge {
             transformationStack[0] = math3d::identity44;
             stackIndex = 0;
         }
-        
+
         void visit(Node * node, OpenGL * ogl);
 
         void pushTransformation(const math3d::matrix44 & m);
@@ -37,14 +39,24 @@ namespace pbge {
             activeCameras.push_back(camera);
         }
 
+        void addActiveLight(Light * light) {
+            activeLights.push_back(light);
+        }
+
         std::vector<Camera *> & getActiveCameras() {
             return activeCameras;
         }
 
-    protected:
+    private:
+        void _visit(Node * node, OpenGL * ogl);
+
         math3d::matrix44 transformationStack[UpdaterVisitor::MAX_STACK_DEPTH];
+
         int stackIndex;
+
         std::vector<Camera *> activeCameras;
+
+        std::vector<Light*> activeLights;
     };
 
     /* Interface for a visitor class that render something on some OpenGL buffer */

@@ -9,12 +9,20 @@
 
 using namespace pbge;
 
-
 void UpdaterVisitor::visit(Node * node, OpenGL * ogl) {
+    // reset the visitor state
+    activeCameras.clear();
+    activeLights.clear();
+    stackIndex = 0;
+    transformationStack[0] = math3d::identity44;
+    _visit(node, ogl);
+}
+
+void UpdaterVisitor::_visit(Node * node, OpenGL * ogl) {
     node->updatePass(this, ogl);
     std::vector<Node*>::iterator child;
     for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
-        this->visit(*child, ogl);
+        this->_visit(*child, ogl);
     node->postUpdatePass(this, ogl);
 }
 

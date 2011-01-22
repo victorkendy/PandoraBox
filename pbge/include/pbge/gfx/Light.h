@@ -1,50 +1,77 @@
-#ifndef gfx_light_h
-#define gfx_light_h
 
-#include "math3d/math3d.h"
+#ifndef PBGE_GFX_LIGHT_H_
+#define PBGE_GFX_LIGHT_H_
 
 #include "pbge/gfx/Node.h"
-#include "pbge/gfx/Shader.h"
-//
-//
-//class PBGE_EXPORT Light: public Attachable {
-//public:
-//    gfxLight();
-////    gfxLight(const vector4 & diffuseColor, const vector4 & specularColor, const int & specularSponent, const int & isOn);
-//
-//    void turnOn();
-//    void turnOff();
-//
-//    int  isLightOn();
-//
-//    void setSpecularColor(const math3d::vector4 & color);
-//    void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha);
-//    void setDiffuseColor(const math3d::vector4 & color);
-//    void setDiffuseColor(const float & red, const float & green, const float & blue, const float & alpha);
-//
-//    void setSpecularSponent(const int & exponent);
-//
-//    void setLinearAttenuation(const float & factor);
-//    void setQuadraticAttenuation(const float & factor);
-//    void setConstantAttenuation(const float & factor);
-//    
-//    virtual const gfxGPUProgram * getLightShader()=0;
-//protected:
-//    int isOn;
-//    math3d::vector4 diffuse, specular;
-//    float   constantAttenuation, linearAttenuation, quadraticAttenuation;
-//    int     specularExponent;
-//};
 
+namespace pbge {
+    
+    class Shader;
+    class GPUProgram;
+    class UpdaterVisitor;
+    class RenderVisitor;
 
-/*
-class gfxSpotLight : public gfxLight {
-public:
-    gfxSpotLight();
-    gfxSpotLight(const vector4 & diffuseColor, const vector4 & specularColor, const int & specularSponent, const int & isOn);
-private:
-    math3d::vector4 direction;
-    gfxGPUProgram lightShader;
-}*/
+    class PBGE_EXPORT Light : public Node {
+    public:
+        virtual void turnOn() = 0;
+
+        virtual void turnOff() = 0;
+
+        virtual bool isLightOn() = 0;
+
+        virtual void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) = 0;
+
+        virtual void setDiffuseColor(const float & red, const float & green, const float & blue, const float & alpha) = 0;
+    };
+
+    class PBGE_EXPORT PointLight : public Light {
+    public: // the node interface methods
+        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+
+        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {}
+
+        void renderPass(RenderVisitor * visitor, OpenGL * ogl);
+
+        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl);
+
+        void depthPass(RenderVisitor * visitor, OpenGL * ogl) {}
+
+        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl) {}
+
+        void addChild(Node * node) {
+            childs.push_back(node);
+        }
+        
+        node_list & getChilds() {
+            return childs;
+        }
+
+    public:
+        // Light specific methods
+        PointLight() {
+            on = true;
+        }
+
+        void turnOn() {
+            on = true;
+        }
+
+        void turnOff() {
+            on = false;
+        }
+
+        bool isLightOn() {
+            return on;
+        }
+
+        void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) {}
+
+        void setDiffuseColor(const float & red, const float & green, const float & blue, const float & alpha) {}
+    private:
+        node_list childs;
+
+        bool on;
+    };
+}
 
 #endif
