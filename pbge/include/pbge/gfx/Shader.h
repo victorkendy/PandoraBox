@@ -6,7 +6,6 @@
 
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
 
 namespace pbge {
     class FileReader;

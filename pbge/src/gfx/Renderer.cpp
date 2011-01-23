@@ -45,7 +45,7 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     ogl->depthMask(GL_FALSE);
     ogl->drawBuffer(GL_BACK);
     ogl->drawBuffer(GL_BACK);
-    lightPassVisitor->visit(root, ogl);
+    //lightPassVisitor->visit(root, ogl);
     
     renderer->visit(root, ogl);
     camera->unsetCamera(ogl);

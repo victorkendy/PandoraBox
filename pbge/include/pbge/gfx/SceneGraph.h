@@ -7,12 +7,11 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
 
 namespace pbge {
     class Node;
 
-    class PBGE_EXPORT SceneGraph: public Object{
+    class PBGE_EXPORT SceneGraph{
     public:
         static const int ROOT = 0;
 

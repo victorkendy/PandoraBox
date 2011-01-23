@@ -9,7 +9,6 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
 
 
 namespace pbge {
@@ -24,7 +23,7 @@ namespace pbge {
      * the purpose of those functions is to facilitate clean up
      * after the respective pass
     */
-    class PBGE_EXPORT Node : public Object {
+    class PBGE_EXPORT Node {
     public:
         Node() {
             sceneGraphIndex = -1;

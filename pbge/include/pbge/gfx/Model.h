@@ -4,7 +4,6 @@
 #define gfxmodel_h_
 
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Node.h"
 
@@ -12,7 +11,7 @@ namespace pbge {
     class VertexBuffer;
     class ModelInstance;
 
-    class PBGE_EXPORT Model : public Object {
+    class PBGE_EXPORT Model{
     public:
         virtual void render(ModelInstance * instance, OpenGL * ogl)=0;
 

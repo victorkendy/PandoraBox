@@ -7,7 +7,6 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
 
 namespace pbge {
 

@@ -7,7 +7,6 @@
 #include <GL/glew.h>
 
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
 
 namespace pbge {
     class UpdaterVisitor;
@@ -18,7 +17,7 @@ namespace pbge {
     class SceneGraph;
     class Node;
 
-    class PBGE_EXPORT Renderer: public Object {
+    class PBGE_EXPORT Renderer{
     public:
         Renderer(OpenGL * _ogl);
 

@@ -102,13 +102,13 @@ void Frustum::setOrtho(const float &left, const float &right,
           top_bottom = top - bottom,
           far_near = far - near;
     projectionMatrix->loadIdentity();
-    *projectionMatrix[0][0] = 2 / right_left;
-    *projectionMatrix[1][1] = 2 / top_bottom;
-    *projectionMatrix[2][2] = -2.0f / far_near;
+    (*projectionMatrix)[0][0] = 2 / right_left;
+    (*projectionMatrix)[1][1] = 2 / top_bottom;
+    (*projectionMatrix)[2][2] = -2.0f / far_near;
     
-    *projectionMatrix[0][3] = -(right + left) / right_left;
-    *projectionMatrix[1][3] = -(top + bottom) / top_bottom;
-    *projectionMatrix[2][3] = -(far + near) / far_near;
+    (*projectionMatrix)[0][3] = -(right + left) / right_left;
+    (*projectionMatrix)[1][3] = -(top + bottom) / top_bottom;
+    (*projectionMatrix)[2][3] = -(far + near) / far_near;
     
     updateFrustumPlanes();
 }
@@ -117,12 +117,12 @@ void Frustum::setOrtho(const float &left, const float &right,
 void Frustum::setPerspective(const float &fovy, const float &aspect, const float &near, const float &far) {
     float cotan = 1.0f / static_cast<float>(tan (degToRad(fovy/2.0f)));
     float near_far = near - far;
-    *projectionMatrix = math3d::zeroMatrix44;
-    *projectionMatrix[0][0] = cotan / aspect;
-    *projectionMatrix[1][1] = cotan;
-    *projectionMatrix[2][2] = (near + far) / near_far;
-    *projectionMatrix[3][2] = -1.0f;
-    *projectionMatrix[2][3] = 2 * near * far / near_far;
+    (*projectionMatrix) = math3d::zeroMatrix44;
+    (*projectionMatrix)[0][0] = cotan / aspect;
+    (*projectionMatrix)[1][1] = cotan;
+    (*projectionMatrix)[2][2] = (near + far) / near_far;
+    (*projectionMatrix)[3][2] = -1.0f;
+    (*projectionMatrix)[2][3] = 2 * near * far / near_far;
     updateFrustumPlanes();
 }
 

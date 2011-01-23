@@ -7,15 +7,13 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/RenderTarget.h"
-//#include "pbge/gfx/Transformation.h"
 
 namespace pbge {
     class CameraNode;
 
-    class PBGE_EXPORT Frustum: public Object {
+    class PBGE_EXPORT Frustum {
     public:
         Frustum() {
             this->frustumPlanes = new math3d::vector4[6];

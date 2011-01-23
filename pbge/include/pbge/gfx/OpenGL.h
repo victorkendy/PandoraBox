@@ -9,14 +9,12 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
-#include "pbge/core/Object.h"
-
 
 namespace pbge {
     class StateSet;
     class Buffer;
 
-    class PBGE_EXPORT OpenGL : public Object{
+    class PBGE_EXPORT OpenGL {
     public:
 
         typedef enum {

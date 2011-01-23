@@ -1,6 +1,5 @@
 #include <vector>
 
-#include "pbge/core/Object.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Node.h"

@@ -307,10 +307,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\core\Object.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\pbge\gfx\OpenGL.h"
 				>
 			</File>

@@ -46,6 +46,7 @@ void setUp() {
     cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     cam->setPerspective(45, 1, 1.0f, 10);
     renderer->setScene(scene);
+    math3d::print_internal_memory_page_info();
 }
 
 void keyboard(unsigned char k, int x, int y) {
