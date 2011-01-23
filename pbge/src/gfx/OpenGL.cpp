@@ -12,6 +12,7 @@ OpenGL::OpenGL() {
     GLint initialMatrixMode;
     glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
     currentMatrixMode = initialMatrixMode;
+    matrices = new math3d::matrix44[3];
     matrices[2] = math3d::identity44;
     glewInit();
     state = new StateSet(this);

@@ -74,19 +74,21 @@ namespace pbge {
 
     public: // instance methods
         TransformationNode() {
-            this->transformation = math3d::identity44;
+            this->transformation = new math3d::matrix44(math3d::identity44);
+            this->current = new math3d::matrix44(math3d::identity44);
         }
 
         TransformationNode(const math3d::matrix44 & matrix) {
-            this->transformation = matrix;
+            this->transformation = new math3d::matrix44(matrix);
+            this->current = new math3d::matrix44(math3d::identity44);
         }
 
         void setTransformationMatrix(const math3d::matrix44 & m) {
-            transformation = m;
+            *transformation = m;
         }
 
         const math3d::matrix44 & getTransformationMatrix() {
-            return transformation;
+            return *transformation;
         }
 
         void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
@@ -118,9 +120,9 @@ namespace pbge {
         TransformationNode * translate(const float & x, const float & y, const float & z);
 
     private:
-        math3d::matrix44 transformation;
+        math3d::matrix44 * transformation;
 
-        math3d::matrix44 current;
+        math3d::matrix44 * current;
 
         node_list childs;
     };
@@ -162,11 +164,11 @@ namespace pbge {
         }
 
         math3d::matrix44 & getViewTransformation() {
-            return viewTransformation;
+            return *viewTransformation;
         }
 
     private:
-        math3d::matrix44 viewTransformation;
+        math3d::matrix44 * viewTransformation;
         Camera * camera;
         node_list childs;
     };

@@ -23,7 +23,7 @@ TransformationNode * TransformationNode::rotation(const float & angle, const flo
 }
 
 void TransformationNode::updatePass(UpdaterVisitor *visitor, OpenGL *ogl) {
-    visitor->pushTransformation(transformation);
+    visitor->pushTransformation(*transformation);
 }
 
 void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
@@ -31,43 +31,43 @@ void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) 
 }
 
 void TransformationNode::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
-    ogl->loadModelMatrix(transformation);
+    ogl->loadModelMatrix(*transformation);
 }
 
 void TransformationNode::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
-    ogl->loadModelMatrix(transformation);
+    ogl->loadModelMatrix(*transformation);
 }
 
 TransformationNode * TransformationNode::scale(const float & sx, const float & sy, const float & sz) {
-    transformation *= math3d::scaleMatrix(sx, sy, sz);
+    *transformation *= math3d::scaleMatrix(sx, sy, sz);
     return this;
 }
 
 TransformationNode * TransformationNode::rotate(const float & radAngle, const float & x, const float & y, const float & z) {
-    transformation *= math3d::rotationMatrix(radAngle, x, y, z);
+    *transformation *= math3d::rotationMatrix(radAngle, x, y, z);
     return this;
 }
 
 TransformationNode * TransformationNode::translate(const float & x, const float & y, const float & z) {
-    transformation *= math3d::translationMatrix(x,y,z);
+    *transformation *= math3d::translationMatrix(x,y,z);
     return this;
 }
 
 
 CameraNode::CameraNode() {
-    viewTransformation = math3d::identity44;
+    viewTransformation = new math3d::matrix44(math3d::identity44);
     this->camera = new Camera();
     camera->setParent(this);
 }
 
 CameraNode::CameraNode(Camera * _camera) {
-    viewTransformation = math3d::identity44;
+    *viewTransformation = math3d::identity44;
     this->camera = _camera;
     camera->setParent(this);
 }
 
 void CameraNode::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
-    viewTransformation = visitor->getCurrentTransformation();
+    *viewTransformation = visitor->getCurrentTransformation();
     visitor->addActiveCamera(this->camera);
 }
 

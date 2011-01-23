@@ -165,7 +165,7 @@ namespace pbge {
     private:
         void uploadModelview();
 
-        math3d::matrix44 matrices[3];
+        math3d::matrix44 * matrices;
 
         GLenum currentMatrixMode;
 

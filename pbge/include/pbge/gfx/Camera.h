@@ -17,6 +17,11 @@ namespace pbge {
 
     class PBGE_EXPORT Frustum: public Object {
     public:
+        Frustum() {
+            this->frustumPlanes = new math3d::vector4[6];
+            this->frustumPoints = new math3d::vector4[8];
+            this->projectionMatrix = new math3d::matrix44;
+        }
         // Sets the frustum for perspective viewing
         void setPerspective (const float & fovy, const float & aspect,
                              const float & near, const float & far);
@@ -38,9 +43,9 @@ namespace pbge {
         void updatePerspectivePoints();
         void updateOrthoPoints();
         void updateFrustumPoints();
-        math3d::vector4  frustumPlanes[6];
-        math3d::vector4  frustumPoints[8];
-        math3d::matrix44 projectionMatrix;
+        math3d::vector4  * frustumPlanes;
+        math3d::vector4  * frustumPoints;
+        math3d::matrix44 * projectionMatrix;
     };
 
 
@@ -71,10 +76,10 @@ namespace pbge {
     protected:
         CameraNode * parent;
         RenderTarget * renderTarget;
-        math3d::vector4 upVector;
-        math3d::vector4 frontVector;
-        math3d::vector4 sideVector;
-        math3d::matrix44 cameraTransformation;
+        math3d::vector4 * upVector;
+        math3d::vector4 * frontVector;
+        math3d::vector4 * sideVector;
+        math3d::matrix44 * cameraTransformation;
         void setCameraTransformation ();
         int is_valid;
     };

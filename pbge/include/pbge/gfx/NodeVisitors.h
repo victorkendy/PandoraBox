@@ -23,6 +23,7 @@ namespace pbge {
         static const int MAX_STACK_DEPTH = 16;
 
         UpdaterVisitor() {
+            transformationStack = new math3d::matrix44[UpdaterVisitor::MAX_STACK_DEPTH];
             transformationStack[0] = math3d::identity44;
             stackIndex = 0;
         }
@@ -50,7 +51,7 @@ namespace pbge {
     private:
         void _visit(Node * node, OpenGL * ogl);
 
-        math3d::matrix44 transformationStack[UpdaterVisitor::MAX_STACK_DEPTH];
+        math3d::matrix44 * transformationStack;
 
         int stackIndex;
 
