@@ -21,7 +21,7 @@ extern "C" {
                 ilInit();
                 //iluInit();
                 //ilutInit();
-                //math3d::getBestImplementation();
+                math3d::getBestImplementation();
                 break;
             case DLL_THREAD_ATTACH:
                 break;

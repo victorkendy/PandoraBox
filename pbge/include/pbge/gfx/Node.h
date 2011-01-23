@@ -118,11 +118,11 @@ namespace pbge {
         TransformationNode * translate(const float & x, const float & y, const float & z);
 
     private:
-        node_list childs;
-
         math3d::matrix44 transformation;
 
         math3d::matrix44 current;
+
+        node_list childs;
     };
 
 

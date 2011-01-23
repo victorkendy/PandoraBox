@@ -18,6 +18,14 @@ namespace math3d {
         EXPORT void * aligned_malloc(size_t size, size_t align);
         EXPORT void aligned_free(void * ptr);
         EXPORT void printCPUInfo();
+
+        // these functions are for internal use
+        // they works with pointers that are managed internally
+        
+        // the alignment parameter must be a power of two
+        EXPORT void * internal_malloc(size_t size, size_t alignment);
+        EXPORT void internal_free(void *);
+        EXPORT void print_internal_memory_page_info();
     }
 }
 #endif

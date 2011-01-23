@@ -9,13 +9,14 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
+#include "pbge/core/Object.h"
 
 
 namespace pbge {
     class StateSet;
     class Buffer;
 
-    class PBGE_EXPORT OpenGL{
+    class PBGE_EXPORT OpenGL : public Object{
     public:
 
         typedef enum {
@@ -164,9 +165,9 @@ namespace pbge {
     private:
         void uploadModelview();
 
-        GLenum currentMatrixMode;
-
         math3d::matrix44 matrices[3];
+
+        GLenum currentMatrixMode;
 
         StateSet * state;
 
