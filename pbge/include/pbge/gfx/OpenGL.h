@@ -119,6 +119,8 @@ namespace pbge {
 
         virtual void genBuffers(GLsizei n, GLuint * buffers);
 
+        virtual void getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
+
         virtual void getFloatv(GLenum pname, GLfloat * params);
 
         virtual void getIntegerv(GLenum pname, GLint * params);
@@ -130,6 +132,8 @@ namespace pbge {
         virtual void getShaderiv(GLuint shader, GLenum pname, GLint * ptr);
 
         virtual const char * getString(GLenum name);
+
+        virtual GLint getUniformLocation(GLuint program, const char * name);
 
         virtual void linkProgram(GLuint program);
 
@@ -148,6 +152,14 @@ namespace pbge {
         virtual void shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes);
 
         virtual void texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void uniform1f(GLint location, GLfloat v);
+
+        virtual void uniform2f(GLint location, GLfloat v1, GLfloat v2);
+
+        virtual void uniform3f(GLint location, GLfloat v, GLfloat v2, GLfloat v3);
+
+        virtual void uniform4f(GLint location, GLfloat v, GLfloat v2, GLfloat v3, GLfloat v4);
 
         virtual void useProgram(GLuint program);
 

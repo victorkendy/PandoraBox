@@ -43,6 +43,10 @@ namespace pbge {
             activeLights.push_back(light);
         }
 
+        std::vector<Light*> & getActiveLights() {
+            return activeLights;
+        }
+
         std::vector<Camera *> & getActiveCameras() {
             return activeCameras;
         }

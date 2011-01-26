@@ -19,6 +19,8 @@ namespace pbge {
 
         virtual bool isLightOn() = 0;
 
+        virtual GPUProgram * getLightPassProgram() = 0;
+
         virtual void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) = 0;
 
         virtual void setDiffuseColor(const float & red, const float & green, const float & blue, const float & alpha) = 0;
@@ -30,9 +32,9 @@ namespace pbge {
 
         void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {}
 
-        void renderPass(RenderVisitor * visitor, OpenGL * ogl);
+        void renderPass(RenderVisitor * visitor, OpenGL * ogl){}
 
-        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl);
+        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
 
         void depthPass(RenderVisitor * visitor, OpenGL * ogl) {}
 
@@ -50,6 +52,7 @@ namespace pbge {
         // Light specific methods
         PointLight() {
             on = true;
+            program = NULL;
         }
 
         void turnOn() {
@@ -64,10 +67,26 @@ namespace pbge {
             return on;
         }
 
+        GPUProgram * getLightPassProgram() {
+            if(program == NULL)
+                return PointLight::getDefaultLightPassProgram();
+            return program;
+        }
+
         void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) {}
 
         void setDiffuseColor(const float & red, const float & green, const float & blue, const float & alpha) {}
+
+    public:
+        static Shader * getDefaultLightPassVS();
+
+        static Shader * getDefaultLightPassFS();
+
+        static GPUProgram * getDefaultLightPassProgram();
+
     private:
+        GPUProgram * program;
+
         node_list childs;
 
         bool on;

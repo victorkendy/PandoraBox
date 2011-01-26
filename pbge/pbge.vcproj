@@ -229,6 +229,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\ShaderUniform.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\internal\StateProxy.cpp"
 				>
 			</File>
@@ -332,6 +336,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Shader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\ShaderUniform.h"
 				>
 			</File>
 			<File

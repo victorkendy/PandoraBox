@@ -62,11 +62,12 @@ namespace {
     GPUProgram * defaultLightPassProgram = NULL;
 
     const std::string defaultLightPassVSSource = 
+        "uniform vec4 aha[2];\n"
         "varying vec3 normal;\n"
         "varying vec4 position;\n"
         "void main() {\n"
         "   normal = gl_NormalMatrix * gl_Normal;\n"
-        "   gl_FrontColor = gl_Color;"
+        "   gl_FrontColor = gl_Color + aha[0] + aha[1];"
         "   gl_Position = ftransform();\n"
         "}\n";
 

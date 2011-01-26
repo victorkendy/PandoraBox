@@ -14,9 +14,6 @@
 
 using namespace pbge;
 
-
-
-
 Renderer::Renderer(OpenGL * _ogl){
     this->ogl = _ogl;
     this->updater = new UpdaterVisitor;
@@ -44,10 +41,10 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     depthRenderer->visit(root, ogl);
     ogl->depthMask(GL_FALSE);
     ogl->drawBuffer(GL_BACK);
-    ogl->drawBuffer(GL_BACK);
-    //lightPassVisitor->visit(root, ogl);
+    ogl->readBuffer(GL_BACK);
+    lightPassVisitor->visit(root, ogl);
     
-    renderer->visit(root, ogl);
+    //renderer->visit(root, ogl);
     camera->unsetCamera(ogl);
 }
 

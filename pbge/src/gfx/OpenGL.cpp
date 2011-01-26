@@ -155,6 +155,10 @@ void OpenGL::genBuffers(GLsizei n, GLuint * buffers) {
     glGenBuffers(n, buffers);
 }
 
+void OpenGL::getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name) {
+    glGetActiveUniform(program, index, bufSize, length, size, type, name);
+}
+
 void OpenGL::getFloatv(GLenum pname, GLfloat * params) {
     glGetFloatv(pname, params);
 }
@@ -177,6 +181,10 @@ void OpenGL::getShaderiv(GLuint shader, GLenum pname, GLint * ptr) {
 
 const char * OpenGL::getString(GLenum name) {
     return (const char *)glGetString(name);
+}
+
+GLint OpenGL::getUniformLocation(GLuint program, const char * name) {
+    return glGetUniformLocation(program, name);
 }
 
 void OpenGL::linkProgram(GLuint program) {
@@ -213,6 +221,22 @@ void OpenGL::shaderSource(GLuint id, GLsizei count, const GLchar ** strings, con
 
 void OpenGL::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
     glTexCoordPointer(size, type, stride, pointer);
+}
+
+void OpenGL::uniform1f(GLint location, GLfloat v) {
+    glUniform1f(location, v);
+}
+
+void OpenGL::uniform2f(GLint location, GLfloat v1, GLfloat v2) {
+    glUniform2f(location, v1, v2);
+}
+
+void OpenGL::uniform3f(GLint location, GLfloat v1, GLfloat v2, GLfloat v3) {
+    glUniform3f(location, v1, v2, v3);
+}
+
+void OpenGL::uniform4f(GLint location, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) {
+    glUniform4f(location, v1, v2, v3, v4);
 }
 
 void OpenGL::useProgram(GLuint program) {

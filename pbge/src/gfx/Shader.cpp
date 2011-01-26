@@ -49,14 +49,13 @@ namespace pbge {
     }
 
 
-    bool GLProgram::bind(OpenGL * ogl){
+    void GLProgram::bind(OpenGL * ogl){
         if(!linked) {
             link(ogl);
             if(!linked)
-                return false;
+                return;
         }
         ogl->useProgram(programID);
-        return true;
     }
 
     void GLProgram::unbind(OpenGL * ogl){
@@ -78,6 +77,8 @@ namespace pbge {
         extractInfoLog(ogl);
         ogl->getProgramiv(programID, GL_LINK_STATUS, &status);
         linked = (status == GL_TRUE);
+        if(linked)
+            extractUniformInformation(ogl);
         return linked;
     }
 
@@ -90,6 +91,26 @@ namespace pbge {
         ogl->getProgramInfoLog(programID, infoLogLength, &lixo, _infoLog);
         this->infoLog = std::string(_infoLog, infoLogLength);
         delete [] _infoLog;
+    }
+
+    void GLProgram::extractUniformInformation(OpenGL * ogl) {
+        GLint numberOfActiveUniforms;
+        GLint maxUniformNameSize;
+        GLint uniformSize;
+        GLenum uniformType;
+        GLchar * name;
+        ogl->useProgram(programID);
+        ogl->getProgramiv(programID, GL_ACTIVE_UNIFORMS, &numberOfActiveUniforms);
+        ogl->getProgramiv(programID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameSize);
+        name = new GLchar [maxUniformNameSize];
+        for(int uniformIndex = 0; uniformIndex < numberOfActiveUniforms; ++uniformIndex) {
+            ogl->getActiveUniform(programID, uniformIndex, maxUniformNameSize, NULL, &uniformSize, &uniformType, name);
+            std::string uniformName = name;
+            // don't include reserved names
+            if(static_cast<int>(uniformName.find("gl_")) != 0)
+                uniforms[uniformName] = UniformInfo(uniformName, uniformType, ogl->getUniformLocation(programID, name));
+        }
+        delete [] name;
     }
 
     void GLProgram::attachShader(GLShader *shader){
@@ -123,5 +144,25 @@ namespace pbge {
         program->attachShader(vs);
         program->attachShader(fs);
         return program;
+    }
+
+    void GLProgram::bindFloat(const std::string & name, OpenGL * ogl, const float & valor) {
+        GLint location = this->uniforms[name].getLocation();
+        ogl->uniform1f(location, valor);
+    }
+
+    void GLProgram::bindFloatVec2(const std::string & name, OpenGL * ogl, const float & v1, const float & v2) {
+        GLint location = this->uniforms[name].getLocation();
+        ogl->uniform2f(location, v1, v2);
+    }
+
+    void GLProgram::bindFloatVec3(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3) {
+        GLint location = this->uniforms[name].getLocation();
+        ogl->uniform3f(location, v1, v2, v3);
+    }
+
+    void GLProgram::bindFloatVec4(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
+        GLint location = this->uniforms[name].getLocation();
+        ogl->uniform4f(location, v1, v2, v3, v4);
     }
 }

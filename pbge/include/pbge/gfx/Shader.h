@@ -3,11 +3,14 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
+#include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/core/core.h"
 
 namespace pbge {
+
     class FileReader;
 
     class PBGE_EXPORT Shader {
@@ -22,7 +25,7 @@ namespace pbge {
 
     class PBGE_EXPORT GPUProgram {
     public:
-        virtual bool bind(OpenGL * ogl) = 0;
+        virtual void bind(OpenGL * ogl) = 0;
 
         virtual void unbind(OpenGL * ogl) = 0;
 
@@ -33,6 +36,12 @@ namespace pbge {
         virtual const std::string getInfoLog() = 0;
 
         virtual GLuint getId() = 0;
+
+    public: // Uniform binding
+        virtual void bindFloat(const std::string & name, OpenGL * ogl, const float & valor) = 0;
+        virtual void bindFloatVec2(const std::string & name, OpenGL * ogl, const float & v1, const float & v2) = 0;
+        virtual void bindFloatVec3(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3) = 0;
+        virtual void bindFloatVec4(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) = 0;
     };
 
 
@@ -75,7 +84,7 @@ namespace pbge {
             linked = false;
         }
 
-        bool bind(OpenGL * ogl);
+        void bind(OpenGL * ogl);
 
         void unbind(OpenGL * ogl);
 
@@ -96,8 +105,16 @@ namespace pbge {
         static GLProgram * fromFile(FileReader * vertexShaderFile, FileReader *  fragmentShaderFile);
 
         GLuint getId() { return programID; }
+
+    public: // Uniform binding
+        void bindFloat(const std::string & name, OpenGL * ogl, const float & valor);
+        void bindFloatVec2(const std::string & name, OpenGL * ogl, const float & v1, const float & v2);
+        void bindFloatVec3(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3);
+        void bindFloatVec4(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4);
     private:
         void extractInfoLog(OpenGL * ogl);
+
+        void extractUniformInformation(OpenGL * ogl);
 
         bool linked;
 
@@ -106,6 +123,8 @@ namespace pbge {
         std::vector<GLShader*> attachedShaders;
 
         std::string infoLog;
+
+        std::map<std::string, UniformInfo> uniforms;
     };
 }
 
