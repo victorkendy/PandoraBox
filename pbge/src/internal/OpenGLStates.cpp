@@ -14,15 +14,17 @@ TextureUnit::TextureUnit(OpenGL * ogl, unsigned _index) {
     this->index = _index;
 }
 
-void TextureUnit::applyChanges(pbge::OpenGL *ogl) {
-    if(boundTexture != nextTexture) {
-        ogl->activeTexture(GL_TEXTURE0 + index);
-        if(nextTexture == NULL)
-            ogl->bindTexture(boundTexture->getTarget(), 0);
-        else
-            ogl->bindTexture(nextTexture->getTarget(), nextTexture->getGLID());
-        boundTexture = nextTexture;
-    }
+bool TextureUnit::shouldChange(OpenGL * ogl) {
+    return boundTexture != nextTexture;
+}
+
+void TextureUnit::makeChange(OpenGL * ogl) {
+    ogl->activeTexture(GL_TEXTURE0 + index);
+    if(nextTexture == NULL)
+        ogl->bindTexture(boundTexture->getTarget(), 0);
+    else
+        ogl->bindTexture(boundTexture->getTarget(), nextTexture->getGLID());
+    boundTexture = nextTexture;
 }
 
 StateEnabler::StateEnabler(GLenum _mode) {
@@ -30,14 +32,16 @@ StateEnabler::StateEnabler(GLenum _mode) {
     this->mode = _mode;
 }
 
-void StateEnabler::applyChanges(pbge::OpenGL * ogl) {
-    if(current != next) {
-        if(next == true)
-            ogl->enable(mode);
-        else
-            ogl->disable(mode);
-        current = next;
-    }
+bool StateEnabler::shouldChange(OpenGL * ogl) {
+    return current != next;
+}
+
+void StateEnabler::makeChange(OpenGL * ogl) {
+    if(next == true)
+        ogl->enable(mode);
+    else
+        ogl->disable(mode);
+    current = next;
 }
 
 void StateEnabler::enable() {
@@ -48,12 +52,15 @@ void StateEnabler::disable() {
     this->next = false;
 }
 
-void BoundProgram::applyChanges(OpenGL * ogl) {
-    if(this->current != this->next) {
-        if(this->next == NULL) 
-            ogl->useProgram(0);
-        else
-            next->bind(ogl);
-    }
+bool BoundProgram::shouldChange(OpenGL * ogl) {
+    return this->current != this->next;
+}
+
+void BoundProgram::makeChange(OpenGL * ogl) {
+    if(this->next == NULL)
+        ogl->useProgram(0);
+    else
+        next->bind(ogl);
     current = next;
 }
+

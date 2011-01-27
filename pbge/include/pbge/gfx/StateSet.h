@@ -19,7 +19,15 @@ namespace pbge {
 
     class PBGE_EXPORT State {
     public: 
-        virtual void applyChanges(OpenGL * ogl) = 0;
+        void applyChanges(OpenGL * ogl) {
+            if(shouldChange(ogl)) {
+                makeChange(ogl);
+            }
+        }
+
+        virtual void makeChange(OpenGL * ogl) = 0;
+
+        virtual bool shouldChange(OpenGL * ogl) = 0;
     };
 
 

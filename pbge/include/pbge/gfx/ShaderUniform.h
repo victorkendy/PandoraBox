@@ -108,7 +108,42 @@ namespace pbge {
 
     class UniformValue {
     public:
+        virtual UniformType getType() = 0;
+
         virtual void bindValueOn(GPUProgram * program, const std::string & name, OpenGL * ogl) = 0;
+    };
+
+    class UniformFloatVec4 : UniformValue {
+    public:
+        UniformFloatVec4() {
+            values[0] = 0.0f;
+            values[1] = 0.0f;
+            values[2] = 0.0f;
+            values[3] = 0.0f;
+        }
+
+        UniformFloatVec4(const float & x, const float & y, const float & z, const float & w) {
+            values[0] = x;
+            values[1] = y;
+            values[2] = z;
+            values[3] = w;
+        }
+
+        UniformType getType() {
+            return FLOAT_VEC4;
+        }
+        
+        void setValue(const float & x, const float & y, const float & z, const float & w) {
+            values[0] = x;
+            values[1] = y;
+            values[2] = z;
+            values[3] = w;
+        }
+
+        void bindValueOn(GPUProgram * program, const std::string & name, OpenGL * ogl);
+
+    private:
+        GLfloat values[4];
     };
 
     

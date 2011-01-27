@@ -13,7 +13,9 @@ namespace pbge {
     public:
         StateEnabler(GLenum _mode);
 
-        void applyChanges(OpenGL * ogl);
+        void makeChange(OpenGL * ogl);
+
+        bool shouldChange(OpenGL * ogl);
 
         void enable();
 
@@ -30,7 +32,9 @@ namespace pbge {
             this->next = NULL;
         }
 
-        void applyChanges(OpenGL * ogl);
+        void makeChange(OpenGL * ogl);
+
+        bool shouldChange(OpenGL * ogl);
 
         void changeProgram(GPUProgram * program) {
             next = program;
@@ -44,7 +48,10 @@ namespace pbge {
     class PBGE_EXPORT TextureUnit : public State{
         TextureUnit(OpenGL * ogl, unsigned index);
 
-        void applyChanges(OpenGL * ogl);
+        void makeChange(OpenGL * ogl);
+
+        bool shouldChange(OpenGL * ogl);
+
     private:
         bool active;
         Texture * nextTexture;

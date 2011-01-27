@@ -239,6 +239,22 @@ void OpenGL::uniform4f(GLint location, GLfloat v1, GLfloat v2, GLfloat v3, GLflo
     glUniform4f(location, v1, v2, v3, v4);
 }
 
+void OpenGL::uniform1i(GLint location, GLint v) {
+    glUniform1i(location, v);
+}
+
+void OpenGL::uniform2i(GLint location, GLint v1, GLint v2) {
+    glUniform2i(location, v1, v2);
+}
+
+void OpenGL::uniform3i(GLint location, GLint v1, GLint v2, GLint v3) {
+    glUniform3i(location, v1, v2, v3);
+}
+
+void OpenGL::uniform4i(GLint location, GLint v1, GLint v2, GLint v3, GLint v4) {
+    glUniform4i(location, v1, v2, v3, v4);
+}
+
 void OpenGL::useProgram(GLuint program) {
     glUseProgram(program);
 }

@@ -161,6 +161,14 @@ namespace pbge {
 
         virtual void uniform4f(GLint location, GLfloat v, GLfloat v2, GLfloat v3, GLfloat v4);
 
+        virtual void uniform1i(GLint location, GLint v);
+
+        virtual void uniform2i(GLint location, GLint v1, GLint v2);
+
+        virtual void uniform3i(GLint location, GLint v1, GLint v2, GLint v3);
+
+        virtual void uniform4i(GLint location, GLint v1, GLint v2, GLint v3, GLint v4);
+
         virtual void useProgram(GLuint program);
 
         virtual void vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
