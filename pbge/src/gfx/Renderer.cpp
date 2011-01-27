@@ -42,7 +42,11 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     ogl->depthMask(GL_FALSE);
     ogl->drawBuffer(GL_BACK);
     ogl->readBuffer(GL_BACK);
-    lightPassVisitor->visit(root, ogl);
+    std::vector<Light*>::iterator it;
+    for(it = updater->getActiveLights().begin(); it != updater->getActiveLights().end(); it++) {
+        lightPassVisitor->setCurrentLight(*it);
+        lightPassVisitor->visit(root, ogl);
+    }
     
     //renderer->visit(root, ogl);
     camera->unsetCamera(ogl);

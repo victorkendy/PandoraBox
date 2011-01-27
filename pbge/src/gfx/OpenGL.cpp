@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <iostream>
 
+#include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/StateSet.h"
@@ -41,6 +42,10 @@ void OpenGL::updateState() {
 
 Buffer * OpenGL::createBuffer(size_t _size, GLenum _usage, GLenum _target) {
     return new Buffer(_size, _usage, _target);
+}
+
+UniformValue * OpenGL::getUniformValue(const UniformInfo & info) {
+    return this->state->getUniformValue(info);
 }
 
 void OpenGL::activeTexture(GLenum textureUnit) {

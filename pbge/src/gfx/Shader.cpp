@@ -2,6 +2,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <set>
 
 #include "pbge/core/Manager.h"
 #include "pbge/core/File.h"
@@ -56,10 +57,18 @@ namespace pbge {
                 return;
         }
         ogl->useProgram(programID);
+        updateUniforms(ogl);
     }
 
     void GLProgram::unbind(OpenGL * ogl){
         ogl->useProgram(0);
+    }
+
+    void GLProgram::updateUniforms(OpenGL * ogl) {
+        std::set<UniformInfo>::iterator it;
+        for(it = uniforms.begin(); it != uniforms.end(); it++) {
+            ogl->getUniformValue(*it)->bindValueOn(this, *it, ogl);
+        }
     }
 
     bool GLProgram::link(OpenGL * ogl){
@@ -108,7 +117,7 @@ namespace pbge {
             std::string uniformName = name;
             // don't include reserved names
             if(static_cast<int>(uniformName.find("gl_")) != 0)
-                uniforms[uniformName] = UniformInfo(uniformName, uniformType, ogl->getUniformLocation(programID, name));
+                uniforms.insert(UniformInfo(uniformName, uniformType, ogl->getUniformLocation(programID, name)));
         }
         delete [] name;
     }
@@ -146,23 +155,19 @@ namespace pbge {
         return program;
     }
 
-    void GLProgram::bindFloat(const std::string & name, OpenGL * ogl, const float & valor) {
-        GLint location = this->uniforms[name].getLocation();
-        ogl->uniform1f(location, valor);
+    void GLProgram::bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor) {
+        ogl->uniform1f(info.getLocation(), valor);
     }
 
-    void GLProgram::bindFloatVec2(const std::string & name, OpenGL * ogl, const float & v1, const float & v2) {
-        GLint location = this->uniforms[name].getLocation();
-        ogl->uniform2f(location, v1, v2);
+    void GLProgram::bindFloatVec2(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2) {
+        ogl->uniform2f(info.getLocation(), v1, v2);
     }
 
-    void GLProgram::bindFloatVec3(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3) {
-        GLint location = this->uniforms[name].getLocation();
-        ogl->uniform3f(location, v1, v2, v3);
+    void GLProgram::bindFloatVec3(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3) {
+        ogl->uniform3f(info.getLocation(), v1, v2, v3);
     }
 
-    void GLProgram::bindFloatVec4(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
-        GLint location = this->uniforms[name].getLocation();
-        ogl->uniform4f(location, v1, v2, v3, v4);
+    void GLProgram::bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
+        ogl->uniform4f(info.getLocation(), v1, v2, v3, v4);
     }
 }

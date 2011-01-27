@@ -5,7 +5,9 @@
 #define gfxstateset_h_
 
 #include <set>
+#include <map>
 
+#include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/core/core.h"
 
@@ -45,11 +47,15 @@ namespace pbge {
         void enable(OpenGL::Mode mode);
 
         void disable(OpenGL::Mode mode);
+        
+        UniformValue * getUniformValue(const UniformInfo & info);
 
     private:
         std::vector<State *> states;
 
         BoundProgram * boundProgram;
+
+        std::map<UniformInfo, UniformValue *> uniformValues;
 
         std::vector<TextureUnit*> textureUnits;
 

@@ -8,6 +8,7 @@
 
 #include "pbge/gfx/OpenGL.h"
 
+
 namespace pbge {
 
     class GPUProgram;
@@ -54,17 +55,23 @@ namespace pbge {
 
         UniformInfo(){}
 
-        UniformType getType() {
+        UniformType getType() const{
             return type;
         }
 
-        const std::string getName() {
+        const std::string getName() const{
             return name;
         }
 
-        const int getLocation() {
+        const int getLocation() const{
             return location;
         }
+        
+        bool operator < (const UniformInfo other) const {
+            if(this->getType() < other.getType()) return true;
+            return this->getName() < other.getName();
+        }
+
         std::string toString() { 
             std::ostringstream os(std::ostringstream::out);
             os << name << " " << location << " " << type << std::endl;
@@ -110,10 +117,10 @@ namespace pbge {
     public:
         virtual UniformType getType() = 0;
 
-        virtual void bindValueOn(GPUProgram * program, const std::string & name, OpenGL * ogl) = 0;
+        virtual void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl) = 0;
     };
 
-    class UniformFloatVec4 : UniformValue {
+    class UniformFloatVec4 : public UniformValue {
     public:
         UniformFloatVec4() {
             values[0] = 0.0f;
@@ -140,7 +147,7 @@ namespace pbge {
             values[3] = w;
         }
 
-        void bindValueOn(GPUProgram * program, const std::string & name, OpenGL * ogl);
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
 
     private:
         GLfloat values[4];

@@ -4,6 +4,6 @@
 
 using namespace pbge;
 
-void UniformFloatVec4::bindValueOn(GPUProgram *program, const std::string &name, OpenGL *ogl) {
-    program->bindFloatVec4(name, ogl, values[0], values[1], values[2], values[3]);
+void UniformFloatVec4::bindValueOn(GPUProgram *program, const UniformInfo & info, OpenGL *ogl) {
+    program->bindFloatVec4(info, ogl, values[0], values[1], values[2], values[3]);
 }

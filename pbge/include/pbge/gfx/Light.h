@@ -2,6 +2,7 @@
 #ifndef PBGE_GFX_LIGHT_H_
 #define PBGE_GFX_LIGHT_H_
 
+#include "math3d/vector4.h"
 #include "pbge/gfx/Node.h"
 
 namespace pbge {
@@ -20,6 +21,8 @@ namespace pbge {
         virtual bool isLightOn() = 0;
 
         virtual GPUProgram * getLightPassProgram() = 0;
+
+        virtual void setNecessaryUniforms(OpenGL * ogl) = 0;
 
         virtual void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) = 0;
 
@@ -53,6 +56,7 @@ namespace pbge {
         PointLight() {
             on = true;
             program = NULL;
+            position = new math3d::vector4;
         }
 
         void turnOn() {
@@ -67,11 +71,17 @@ namespace pbge {
             return on;
         }
 
+        math3d::vector4 & getPosition() {
+            return *position;
+        }
+
         GPUProgram * getLightPassProgram() {
             if(program == NULL)
                 return PointLight::getDefaultLightPassProgram();
             return program;
         }
+
+        void setNecessaryUniforms(OpenGL * ogl);
 
         void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) {}
 
@@ -85,6 +95,8 @@ namespace pbge {
         static GPUProgram * getDefaultLightPassProgram();
 
     private:
+        math3d::vector4 * position;
+
         GPUProgram * program;
 
         node_list childs;

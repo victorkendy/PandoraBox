@@ -1,6 +1,8 @@
 #include <vector>
 
+#include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/Light.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/Shader.h"
@@ -56,59 +58,10 @@ void DepthPassVisitor::visit(Node *node, OpenGL *ogl) {
 }
 
 
-namespace {
-    Shader * defaultLightPassFS = NULL;
-    Shader * defaultLightPassVS = NULL;
-    GPUProgram * defaultLightPassProgram = NULL;
-
-    const std::string defaultLightPassVSSource = 
-        "uniform vec4 aha[2];\n"
-        "varying vec3 normal;\n"
-        "varying vec4 position;\n"
-        "void main() {\n"
-        "   normal = gl_NormalMatrix * gl_Normal;\n"
-        "   gl_FrontColor = gl_Color + aha[0] + aha[1];"
-        "   gl_Position = ftransform();\n"
-        "}\n";
-
-    const std::string defaultLightPassFSSource = 
-        "varying vec3 normal;\n"
-        "varying vec4 position;\n"
-        "void main() {\n"
-        "   float ndotd;\n"
-        "   vec3 lightPosition = vec3(0,2,10);\n"
-        "   vec4 lightColor = vec4(1,1,1,1);\n"
-        "   vec3 dirVector = lightPosition - position.xyz;\n"
-        "   dirVector = normalize(dirVector);\n"
-        "   ndotd = max(0.0, dot(normal, dirVector));\n"
-        "   gl_FragColor = lightColor * ndotd * gl_Color;\n"
-        "}\n";
-}
-
-Shader * LightPassVisitor::getDefaultFragmentShader() {
-    if(defaultLightPassFS == NULL)
-        defaultLightPassFS = GLShader::loadSource(defaultLightPassFSSource, Shader::FRAGMENT_SHADER);
-    return defaultLightPassFS;
-}
-
-Shader * LightPassVisitor::getDefaultVertexShader() {
-    if(defaultLightPassVS == NULL) 
-        defaultLightPassVS = GLShader::loadSource(defaultLightPassVSSource, Shader::VERTEX_SHADER);
-    return defaultLightPassVS;
-}
-
-GPUProgram * LightPassVisitor::getDefaultProgram() {
-    if(defaultLightPassProgram == NULL) {
-        GLProgram * program = new GLProgram();
-        program->attachShader(dynamic_cast<GLShader*>(LightPassVisitor::getDefaultVertexShader()));
-        program->attachShader(dynamic_cast<GLShader*>(LightPassVisitor::getDefaultFragmentShader()));
-        defaultLightPassProgram = program;
-    }
-    return defaultLightPassProgram;
-}
-
 void LightPassVisitor::visit(Node * node, pbge::OpenGL * ogl) {
-    ogl->getState().useProgram(getLightPassProgram());
+    ogl->getState().useProgram(currentLight->getLightPassProgram());
+    currentLight->setNecessaryUniforms(ogl);
+    
     node->renderPass(this, ogl);
     std::vector<Node*>::iterator child;
     for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)

@@ -17,7 +17,6 @@ namespace pbge {
 
         SceneGraph(Node * node) {
             nodes.push_back(node);
-            ambientLight = math3d::vector4(0,0,0,0);
         }
 
         ~SceneGraph();

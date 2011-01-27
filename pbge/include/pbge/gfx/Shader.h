@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <set>
 
 #include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/OpenGL.h"
@@ -38,10 +38,10 @@ namespace pbge {
         virtual GLuint getId() = 0;
 
     public: // Uniform binding
-        virtual void bindFloat(const std::string & name, OpenGL * ogl, const float & valor) = 0;
-        virtual void bindFloatVec2(const std::string & name, OpenGL * ogl, const float & v1, const float & v2) = 0;
-        virtual void bindFloatVec3(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3) = 0;
-        virtual void bindFloatVec4(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) = 0;
+        virtual void bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor) = 0;
+        virtual void bindFloatVec2(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2) = 0;
+        virtual void bindFloatVec3(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3) = 0;
+        virtual void bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) = 0;
     };
 
 
@@ -107,11 +107,13 @@ namespace pbge {
         GLuint getId() { return programID; }
 
     public: // Uniform binding
-        void bindFloat(const std::string & name, OpenGL * ogl, const float & valor);
-        void bindFloatVec2(const std::string & name, OpenGL * ogl, const float & v1, const float & v2);
-        void bindFloatVec3(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3);
-        void bindFloatVec4(const std::string & name, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4);
+        void bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor);
+        void bindFloatVec2(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2);
+        void bindFloatVec3(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3);
+        void bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4);
     private:
+        void updateUniforms(OpenGL * ogl);
+
         void extractInfoLog(OpenGL * ogl);
 
         void extractUniformInformation(OpenGL * ogl);
@@ -124,7 +126,7 @@ namespace pbge {
 
         std::string infoLog;
 
-        std::map<std::string, UniformInfo> uniforms;
+        std::set<UniformInfo> uniforms;
     };
 }
 

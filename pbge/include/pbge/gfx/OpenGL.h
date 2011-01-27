@@ -13,6 +13,8 @@
 namespace pbge {
     class StateSet;
     class Buffer;
+    class UniformInfo;
+    class UniformValue;
 
     class PBGE_EXPORT OpenGL {
     public:
@@ -57,6 +59,8 @@ namespace pbge {
         virtual void uploadProjection();
 
         virtual Buffer * createBuffer(size_t _size, GLenum _usage, GLenum _target);
+
+        virtual UniformValue * getUniformValue(const UniformInfo & info);
 
         virtual StateSet & getState() { return *state; }
 
@@ -188,7 +192,6 @@ namespace pbge {
         GLenum currentMatrixMode;
 
         StateSet * state;
-
     };
 
 }
