@@ -91,6 +91,8 @@ namespace pbge {
         virtual void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl) = 0;
     };
 
+    // Declaration of the UniformValues
+
     class UniformFloatVec4 : public UniformValue {
     public:
         UniformFloatVec4() {
@@ -124,6 +126,85 @@ namespace pbge {
         float values[4];
     };
 
-    
+    class UniformFloatVec3 : public UniformValue {
+    public:
+        UniformFloatVec3() {
+            values[0] = 0.0f;
+            values[1] = 0.0f;
+            values[2] = 0.0f;
+        }
+
+        UniformFloatVec3(const float & x, const float & y, const float & z) {
+            values[0] = x;
+            values[1] = y;
+            values[2] = z;
+        }
+
+        UniformType getType() {
+            return FLOAT_VEC3;
+        }
+        
+        void setValue(const float & x, const float & y, const float & z) {
+            values[0] = x;
+            values[1] = y;
+            values[2] = z;
+        }
+
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+
+    private:
+        float values[3];
+    };
+
+    class UniformFloatVec2 : public UniformValue {
+    public:
+        UniformFloatVec2() {
+            values[0] = 0.0f;
+            values[1] = 0.0f;
+        }
+
+        UniformFloatVec2(const float & x, const float & y) {
+            values[0] = x;
+            values[1] = y;
+        }
+
+        UniformType getType() {
+            return FLOAT_VEC2;
+        }
+        
+        void setValue(const float & x, const float & y) {
+            values[0] = x;
+            values[1] = y;
+        }
+
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+
+    private:
+        float values[2];
+    };
+
+    class UniformFloat : public UniformValue {
+    public:
+        UniformFloat() {
+            value = 0.0f;
+        }
+
+        UniformFloat(const float & v) {
+            value = v;
+        }
+
+        UniformType getType() {
+            return FLOAT;
+        }
+        
+        void setValue(const float & v) {
+            value = v;
+        }
+
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+
+    private:
+        float value;
+    };
 }
 #endif
