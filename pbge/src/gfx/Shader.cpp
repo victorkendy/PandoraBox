@@ -117,8 +117,10 @@ namespace pbge {
             ogl->getActiveUniform(programID, uniformIndex, maxUniformNameSize, NULL, &uniformSize, &uniformType, name);
             std::string uniformName = name;
             // don't include reserved names
-            if(static_cast<int>(uniformName.find("gl_")) != 0)
+            if(static_cast<int>(uniformName.find("gl_")) != 0) {
                 uniforms.insert(UniformInfo(uniformName, uniformType, ogl->getUniformLocation(programID, name)));
+                std::cout << "found uniform: " << uniformName << std::endl;
+            }
         }
         delete [] name;
     }

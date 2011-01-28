@@ -53,11 +53,7 @@ namespace pbge {
 
     public:
         // Light specific methods
-        PointLight() {
-            on = true;
-            program = NULL;
-            position = new math3d::vector4;
-        }
+        PointLight();
 
         void turnOn() {
             on = true;
@@ -85,7 +81,12 @@ namespace pbge {
 
         void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) {}
 
-        void setDiffuseColor(const float & red, const float & green, const float & blue, const float & alpha) {}
+        void setDiffuseColor(const float & red, const float & green, const float & blue, const float & alpha) {
+            diffuseColor[0] = red;
+            diffuseColor[1] = green;
+            diffuseColor[2] = blue;
+            diffuseColor[3] = alpha;
+        }
 
     public:
         static Shader * getDefaultLightPassVS();
@@ -96,6 +97,8 @@ namespace pbge {
 
     private:
         math3d::vector4 * position;
+
+        float diffuseColor[4];
 
         GPUProgram * program;
 
