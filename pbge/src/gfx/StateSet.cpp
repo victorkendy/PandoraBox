@@ -62,6 +62,7 @@ void StateSet::apply(OpenGL * ogl) {
     ChangeApplier applier(ogl);
     std::for_each(changes.begin(), changes.end(), applier);
     changes.clear();
+    this->boundProgram->updateUniforms(ogl);
 }
 
 void StateSet::enable(OpenGL::Mode mode) {

@@ -70,7 +70,12 @@ namespace pbge {
         virtual void unsetCamera (OpenGL * ogl);
         
         void setParent(CameraNode * node) { parent = node; }
+
         CameraNode * getParent() { return parent; }
+
+        const math3d::matrix44 & getViewTransform() {
+            return *viewTransform;
+        }
     protected:
         CameraNode * parent;
         RenderTarget * renderTarget;
@@ -78,6 +83,7 @@ namespace pbge {
         math3d::vector4 * frontVector;
         math3d::vector4 * sideVector;
         math3d::matrix44 * cameraTransformation;
+        math3d::matrix44 * viewTransform;
         void setCameraTransformation ();
         int is_valid;
     };

@@ -64,3 +64,9 @@ void BoundProgram::makeChange(OpenGL * ogl) {
     current = next;
 }
 
+void BoundProgram::updateUniforms(OpenGL * ogl) {
+    if(this->current != NULL) {
+        this->current->updateUniforms(ogl);
+    }
+}
+

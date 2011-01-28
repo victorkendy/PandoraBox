@@ -2,6 +2,7 @@
 
 #include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/Camera.h"
 #include "pbge/gfx/Light.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Node.h"
@@ -60,8 +61,7 @@ void DepthPassVisitor::visit(Node *node, OpenGL *ogl) {
 
 void LightPassVisitor::visit(Node * node, pbge::OpenGL * ogl) {
     ogl->getState().useProgram(currentLight->getLightPassProgram());
-    currentLight->setNecessaryUniforms(ogl);
-    
+    currentLight->setNecessaryUniforms(ogl, currentCamera->getViewTransform());
     node->renderPass(this, ogl);
     std::vector<Node*>::iterator child;
     for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)

@@ -87,8 +87,13 @@ namespace pbge {
             currentLight = light;
         }
 
+        void setCurrentCamera(Camera * camera) {
+            currentCamera = camera;
+        }
+
         void visit(Node * node, OpenGL * ogl);
     private:
+        Camera * currentCamera;
 
         Light * currentLight;
     };

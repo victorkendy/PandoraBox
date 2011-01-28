@@ -40,6 +40,8 @@ namespace pbge {
             next = program;
         }
 
+        void updateUniforms(OpenGL * ogl);
+
     private:
         GPUProgram * current;
         GPUProgram * next;

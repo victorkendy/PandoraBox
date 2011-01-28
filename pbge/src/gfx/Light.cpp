@@ -1,3 +1,4 @@
+#include <iostream>
 
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/StateSet.h"
@@ -6,27 +7,28 @@
 #include "pbge/gfx/Light.h"
 
 namespace {
-    const std::string pointLightVSSource = 
-        "uniform vec4 aha;\n"
+    const std::string pointLightVSSource =
+        "uniform vec4 light_position;\n"
         "varying vec3 normal;\n"
-        "varying vec4 position;\n"
+        "varying vec3 lightDir;\n"
+
         "void main() {\n"
-        "   normal = gl_NormalMatrix * gl_Normal;\n"
-        "   gl_FrontColor = gl_Color + aha;"
         "   gl_Position = ftransform();\n"
+        "   vec4 position = gl_ModelViewMatrix * gl_Vertex;\n"
+        "   normal = gl_NormalMatrix * gl_Normal;\n"
+        "   lightDir = (light_position - position).xyz;\n"
+        "   gl_FrontColor = gl_Color;\n"
         "}\n";
 
     const std::string pointLightFSSource = 
         "varying vec3 normal;\n"
-        "varying vec4 position;\n"
-        "uniform vec4 light_position;"
+        "varying vec3 lightDir;\n"
+
         "void main() {\n"
         "   float ndotd;\n"
-        "   vec4 lightPosition = light_position;\n"
         "   vec4 lightColor = vec4(1,1,1,1);\n"
-        "   vec3 dirVector = lightPosition.xyz - position.xyz;\n"
-        "   dirVector = normalize(dirVector);\n"
-        "   ndotd = max(0.0, dot(normal, dirVector));\n"
+        "   vec3 dirVector = normalize(lightDir);\n"
+        "   ndotd = max(0.0, dot(normalize(normal), dirVector));\n"
         "   gl_FragColor = lightColor * ndotd * gl_Color;\n"
         "}\n";
 
@@ -68,8 +70,9 @@ GPUProgram * PointLight::getDefaultLightPassProgram() {
     return defaultPointLightProgram;
 }
 
-void PointLight::setNecessaryUniforms(OpenGL * ogl) {
+void PointLight::setNecessaryUniforms(OpenGL * ogl, const math3d::matrix44 & viewTransform) {
     UniformFloatVec4 * position = dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("light_position", GL_FLOAT_VEC4, -1)));
-    math3d::vector4 p = this->getPosition();
+    math3d::vector4 p = viewTransform * (this->getPosition());
+
     position->setValue(p[0],p[1],p[2],p[3]);
 }

@@ -88,6 +88,7 @@ namespace pbge {
         linked = (status == GL_TRUE);
         if(linked)
             extractUniformInformation(ogl);
+        std::cout << this->getInfoLog();
         return linked;
     }
 

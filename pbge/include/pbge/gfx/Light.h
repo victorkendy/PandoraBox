@@ -22,7 +22,7 @@ namespace pbge {
 
         virtual GPUProgram * getLightPassProgram() = 0;
 
-        virtual void setNecessaryUniforms(OpenGL * ogl) = 0;
+        virtual void setNecessaryUniforms(OpenGL * ogl, const math3d::matrix44 & viewTransform) = 0;
 
         virtual void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) = 0;
 
@@ -81,7 +81,7 @@ namespace pbge {
             return program;
         }
 
-        void setNecessaryUniforms(OpenGL * ogl);
+        void setNecessaryUniforms(OpenGL * ogl, const math3d::matrix44 & viewTransform);
 
         void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) {}
 

@@ -15,6 +15,7 @@ Camera::Camera(){
     this->sideVector = new math3d::vector4;
     this->frontVector = new math3d::vector4;
     this->cameraTransformation = new math3d::matrix44;
+    this->viewTransform = new math3d::matrix44;
     this->lookAt(math3d::vector4(0,1,0,0), math3d::vector4(0,0,-1,0));
     parent = NULL;
     renderTarget = NULL;
@@ -25,6 +26,7 @@ Camera::Camera(const math3d::vector4 & up, const math3d::vector4 & front){
     this->sideVector = new math3d::vector4;
     this->frontVector = new math3d::vector4(front);
     this->cameraTransformation = new math3d::matrix44;
+    this->viewTransform = new math3d::matrix44;
     lookAt(up, front);
     parent = NULL;
     renderTarget = NULL;    
@@ -38,14 +40,13 @@ void Camera::lookAt(const math3d::vector4 & up, const math3d::vector4 & front){
 }
 
 void Camera::setCamera(OpenGL * ogl) {
-    math3d::matrix44 viewMatrix;
     if(is_valid == 0) 
         setCameraTransformation();
-    viewMatrix = *cameraTransformation;
+    *viewTransform = *cameraTransformation;
     if(this->parent != NULL) {
-        viewMatrix *= this->parent->getViewTransformation().inverse();
+        *viewTransform *= this->parent->getViewTransformation().inverse();
     }
-    ogl->loadViewMatrix(viewMatrix);
+    ogl->loadViewMatrix(*viewTransform);
     
     this->frustum.loadProjection(ogl);
     if(this->renderTarget)

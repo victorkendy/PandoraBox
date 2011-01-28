@@ -39,10 +39,12 @@ void setUp() {
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     scene = new pbge::SceneGraph(new pbge::TransformationNode);
     pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
+    pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 5.0f, 0.0f));
+    scene->appendChildTo(light_parent, new pbge::PointLight);
     cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
+    scene->appendChildTo(cam_node_name, new pbge::PointLight);
     scene->appendChildTo(child, vboModel);
     pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
-    scene->appendChildTo(cam_node_name, new pbge::PointLight);
     cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     cam->setPerspective(45, 1, 1.0f, 10);
     renderer->setScene(scene);
