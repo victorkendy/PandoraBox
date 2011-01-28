@@ -83,6 +83,8 @@ namespace pbge {
 
         virtual void bindTexture(GLenum target, GLuint texture);
 
+        virtual void blendFunc(GLenum sfactor, GLenum dfactor);
+
         virtual void bufferData(GLenum target, GLsizeiptr size, GLvoid * data, GLenum usage);
 
         virtual void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid * data);

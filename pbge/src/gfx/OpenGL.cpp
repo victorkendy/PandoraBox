@@ -80,6 +80,10 @@ void OpenGL::bindTexture(GLenum target, GLuint texture) {
     glBindTexture(target, texture);
 }
 
+void OpenGL::blendFunc(GLenum sfactor, GLenum dfactor) {
+    glBlendFunc(sfactor, dfactor);
+}
+
 void OpenGL::bufferData(GLenum target, GLsizeiptr size, GLvoid * data, GLenum usage) {
     glBufferData(target, size, data, usage);
 }

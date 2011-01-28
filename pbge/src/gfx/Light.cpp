@@ -17,7 +17,6 @@ namespace {
         "   vec4 position = gl_ModelViewMatrix * gl_Vertex;\n"
         "   normal = gl_NormalMatrix * gl_Normal;\n"
         "   lightDir = (light_position - position).xyz;\n"
-        "   gl_FrontColor = gl_Color;\n"
         "}\n";
 
     const std::string pointLightFSSource = 
@@ -29,7 +28,7 @@ namespace {
         "   vec4 lightColor = vec4(1,1,1,1);\n"
         "   vec3 dirVector = normalize(lightDir);\n"
         "   ndotd = max(0.0, dot(normalize(normal), dirVector));\n"
-        "   gl_FragColor = lightColor * ndotd * gl_Color;\n"
+        "   gl_FragColor = lightColor * ndotd;\n"
         "}\n";
 
     pbge::GLShader * defaultPointLightVS = NULL;
