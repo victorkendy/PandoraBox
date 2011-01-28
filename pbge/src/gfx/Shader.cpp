@@ -12,6 +12,36 @@
 
 using std::string;
 
+namespace {
+    pbge::UniformType translateGLType(GLenum type) {
+        switch(type) {
+            case GL_FLOAT: return pbge::FLOAT; break;
+            case GL_FLOAT_VEC2: return pbge::FLOAT_VEC2; break;
+            case GL_FLOAT_VEC3: return pbge::FLOAT_VEC3; break;
+            case GL_FLOAT_VEC4: return pbge::FLOAT_VEC4; break;
+            case GL_INT: return pbge::INT; break;
+            case GL_INT_VEC2: return pbge::INT_VEC2; break;
+            case GL_INT_VEC3: return pbge::INT_VEC3; break;
+            case GL_INT_VEC4: return pbge::INT_VEC4; break;
+            case GL_BOOL: return pbge::BOOL; break;
+            case GL_BOOL_VEC2: return pbge::BOOL_VEC2; break;
+            case GL_BOOL_VEC3: return pbge::BOOL_VEC3; break;
+            case GL_BOOL_VEC4: return pbge::BOOL_VEC4; break;
+            case GL_FLOAT_MAT2: return pbge::FLOAT_MAT2; break;
+            case GL_FLOAT_MAT3: return pbge::FLOAT_MAT3; break;
+            case GL_FLOAT_MAT4: return pbge::FLOAT_MAT4; break;
+            case GL_FLOAT_MAT2x3: return pbge::FLOAT_MAT23; break;
+            case GL_FLOAT_MAT2x4: return pbge::FLOAT_MAT24; break;
+            case GL_SAMPLER_2D: return pbge::SAMPLER_2D; break;
+            case GL_SAMPLER_3D: return pbge::SAMPLER_3D; break;
+            case GL_SAMPLER_CUBE: return pbge::SAMPLER_CUBE; break;
+            case GL_SAMPLER_1D_SHADOW: return pbge::SAMPLER_1D_SHADOW; break;
+            case GL_SAMPLER_2D_SHADOW: return pbge::SAMPLER_2D_SHADOW; break;
+            default: return pbge::INVALID; break;
+        }
+    }
+}
+
 namespace pbge {
 
     GLShader * GLShader::loadSourceFromFile(FileReader * file, const ShaderType _type) {
@@ -118,7 +148,7 @@ namespace pbge {
             std::string uniformName = name;
             // don't include reserved names
             if(static_cast<int>(uniformName.find("gl_")) != 0) {
-                uniforms.insert(UniformInfo(uniformName, uniformType, ogl->getUniformLocation(programID, name)));
+                uniforms.insert(UniformInfo(uniformName, translateGLType(uniformType), ogl->getUniformLocation(programID, name)));
                 std::cout << "found uniform: " << uniformName << std::endl;
             }
         }

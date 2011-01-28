@@ -6,9 +6,6 @@
 #include <string>
 #include <sstream>
 
-#include "pbge/gfx/OpenGL.h"
-
-
 namespace pbge {
 
     class GPUProgram;
@@ -47,9 +44,9 @@ namespace pbge {
 
     class UniformInfo {
     public:
-        UniformInfo(const std::string & _name, const GLenum _type, const int & _location) {
+        UniformInfo(const std::string & _name, const UniformType _type, const int & _location) {
             name = _name;
-            type = translateGLType(_type);
+            type = _type;
             location = _location;
         }
 
@@ -77,34 +74,8 @@ namespace pbge {
             os << name << " " << location << " " << type << std::endl;
             return os.str();
         }
+
     private:
-        UniformType translateGLType(GLenum type) {
-            switch(type) {
-                case GL_FLOAT: return FLOAT; break;
-                case GL_FLOAT_VEC2: return FLOAT_VEC2; break;
-                case GL_FLOAT_VEC3: return FLOAT_VEC3; break;
-                case GL_FLOAT_VEC4: return FLOAT_VEC4; break;
-                case GL_INT: return INT; break;
-                case GL_INT_VEC2: return INT_VEC2; break;
-                case GL_INT_VEC3: return INT_VEC3; break;
-                case GL_INT_VEC4: return INT_VEC4; break;
-                case GL_BOOL: return INT; break;
-                case GL_BOOL_VEC2: return INT_VEC2; break;
-                case GL_BOOL_VEC3: return INT_VEC3; break;
-                case GL_BOOL_VEC4: return INT_VEC4; break;
-                case GL_FLOAT_MAT2: return FLOAT_MAT2; break;
-                case GL_FLOAT_MAT3: return FLOAT_MAT3; break;
-                case GL_FLOAT_MAT4: return FLOAT_MAT4; break;
-                case GL_FLOAT_MAT2x3: return FLOAT_MAT23; break;
-                case GL_FLOAT_MAT2x4: return FLOAT_MAT24; break;
-                case GL_SAMPLER_2D: return SAMPLER_2D; break;
-                case GL_SAMPLER_3D: return SAMPLER_3D; break;
-                case GL_SAMPLER_CUBE: return SAMPLER_CUBE; break;
-                case GL_SAMPLER_1D_SHADOW: return SAMPLER_1D_SHADOW; break;
-                case GL_SAMPLER_2D_SHADOW: return SAMPLER_2D_SHADOW; break;
-                default: return INVALID; break;
-            }
-        }
 
         int location;        
 
@@ -150,7 +121,7 @@ namespace pbge {
         void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
 
     private:
-        GLfloat values[4];
+        float values[4];
     };
 
     

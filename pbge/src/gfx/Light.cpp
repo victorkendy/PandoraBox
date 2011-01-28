@@ -74,12 +74,13 @@ PointLight::PointLight() {
     on = true;
     program = NULL;
     position = new math3d::vector4;
-    this->setDiffuseColor(1.0f, 0.5f, 0.5f, 1.0f);
+    this->setDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
 }
 
 void PointLight::setNecessaryUniforms(OpenGL * ogl, const math3d::matrix44 & viewTransform) {
-    UniformFloatVec4 * position = dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("light_position", GL_FLOAT_VEC4, -1)));
+    UniformFloatVec4 * position = dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("light_position", FLOAT_VEC4, -1)));
     math3d::vector4 p = viewTransform * (this->getPosition());
     position->setValue(p[0],p[1],p[2],p[3]);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("light_diffuseColor", GL_FLOAT_VEC4, -1)))->setValue(diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
+    UniformFloatVec4 * color = dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("light_diffuseColor", FLOAT_VEC4, -1)));
+    color->setValue(diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
 }
