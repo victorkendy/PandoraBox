@@ -80,16 +80,33 @@ void StateSet::useProgram(GPUProgram * program) {
     changes.insert(boundProgram);
 }
 
+UniformValue * StateSet::createUniform(const UniformInfo &info) {
+    UniformType type = info.getType();
+    UniformValue * newValue = NULL;
+    if(type == FLOAT_VEC4) {
+        newValue = new UniformFloatVec4;
+    }
+    else if(type == FLOAT_VEC3) {
+        newValue = new UniformFloatVec3;
+    }
+    else if(type == FLOAT_VEC2) {
+        newValue = new UniformFloatVec2;
+    }
+    else if(type == FLOAT) {
+        newValue = new UniformFloat;
+    }
+    if(newValue != NULL) {
+        uniformValues[info] = newValue;
+        return newValue;
+    } else {
+        return NULL;
+    }
+}
+
 UniformValue * StateSet::getUniformValue(const UniformInfo & info) {
     std::map<UniformInfo, UniformValue*>::iterator value = this->uniformValues.find(info);
     if(value == this->uniformValues.end()) {
-        UniformType type = info.getType();
-        UniformValue * newValue = NULL;
-        if(type == FLOAT_VEC4) {
-            newValue = new UniformFloatVec4;
-            uniformValues[info] = newValue;
-        }
-        return newValue;
+        return createUniform(info);       
     }
     return value->second;
 }

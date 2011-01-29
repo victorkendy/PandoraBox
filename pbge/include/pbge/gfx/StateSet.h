@@ -51,6 +51,8 @@ namespace pbge {
         UniformValue * getUniformValue(const UniformInfo & info);
 
     private:
+        UniformValue * createUniform(const UniformInfo & info);
+
         std::vector<State *> states;
 
         BoundProgram * boundProgram;
