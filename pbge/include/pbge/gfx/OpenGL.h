@@ -62,6 +62,8 @@ namespace pbge {
 
         virtual UniformValue * getUniformValue(const UniformInfo & info);
 
+        virtual void enableMode(Mode mode);
+
         virtual StateSet & getState() { return *state; }
 
         
@@ -136,6 +138,8 @@ namespace pbge {
         virtual void getProgramiv(GLuint program, GLenum pname, GLint * params);
 
         virtual void getShaderiv(GLuint shader, GLenum pname, GLint * ptr);
+
+        virtual void getShaderInfoLog(GLuint shader, GLsizei maxLength, GLsizei * length, GLchar * infoLog);
 
         virtual const char * getString(GLenum name);
 

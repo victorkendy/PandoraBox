@@ -19,6 +19,8 @@ namespace pbge {
             VERTEX_SHADER,
             FRAGMENT_SHADER
         } ShaderType;
+        
+        virtual const std::string & getInfoLog()=0;
 
         virtual bool compile(OpenGL * ogl) = 0;
     };
@@ -65,11 +67,20 @@ namespace pbge {
 
         bool compile(OpenGL * ogl);
 
+        const std::string & getInfoLog() {
+            return infoLog;
+        }
+
         GLuint getID() { 
             return shaderID; 
         }
 
     private:
+
+        void extractInfolog(OpenGL * ogl);
+
+        std::string infoLog;
+
         GLuint shaderID;
 
         ShaderType type;
@@ -95,7 +106,12 @@ namespace pbge {
         bool link(OpenGL * ogl);
 
         const std::string getInfoLog() {
-            return infoLog;
+            std::string shadersInfoLog = "";
+            std::vector<GLShader*>::iterator it;
+            for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
+                shadersInfoLog += (*it)->getInfoLog();
+            }
+            return shadersInfoLog + "\n" + infoLog;
         }
 
         bool isLinked() {

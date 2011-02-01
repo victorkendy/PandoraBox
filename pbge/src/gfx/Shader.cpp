@@ -76,8 +76,20 @@ namespace pbge {
         ogl->compileShader(shaderID);
         ogl->getShaderiv(shaderID, GL_COMPILE_STATUS, &status);
         compiled = (status == GL_TRUE);
+        extractInfolog(ogl);
         return compiled;
     }
+    
+    void GLShader::extractInfolog(OpenGL * ogl) {
+        GLint infoLogLength;
+        GLchar * _infolog;
+        ogl->getShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+        _infolog = new GLchar[infoLogLength];
+        ogl->getShaderInfoLog(shaderID, infoLogLength, NULL, _infolog);
+        this->infoLog = std::string(_infolog);
+        delete [] _infolog;
+    }
+
 
 
     void GLProgram::bind(OpenGL * ogl){
@@ -107,8 +119,10 @@ namespace pbge {
         if(programID == 0) programID = ogl->createProgram();
         for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
             if(!(*it)->isCompiled()) {
-                if(!(*it)->compile(ogl))
+                if(!(*it)->compile(ogl)) {
+                    //std::cout << this->getInfoLog();
                     return false;
+                }
                 ogl->attachShader(programID, (*it)->getID());
             }
         }
@@ -118,7 +132,6 @@ namespace pbge {
         linked = (status == GL_TRUE);
         if(linked)
             extractUniformInformation(ogl);
-        std::cout << this->getInfoLog();
         return linked;
     }
 

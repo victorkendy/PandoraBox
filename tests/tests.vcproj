@@ -181,26 +181,6 @@
 				RelativePath=".\CameraTest.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\NodeTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\RendererTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderTargetTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TextureRendererTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VertexBufferObjectTest.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

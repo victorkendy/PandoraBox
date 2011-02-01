@@ -32,7 +32,7 @@ void display() {
 void setUp() {
     pbge::Manager::init();
     // FIXME: remove the state change line
-    pbge::Manager::getInstance()->getOpenGL()->getState().enable(pbge::OpenGL::DEPTH_TEST);
+    pbge::Manager::getInstance()->getOpenGL()->enableMode(pbge::OpenGL::DEPTH_TEST);
     glClearColor(0,0,0,0);
     pbge::ModelInstance * vboModel = createVBOInstance();
     // TODO: find somewhere else to put the instantiation
@@ -40,9 +40,9 @@ void setUp() {
     scene = new pbge::SceneGraph(new pbge::TransformationNode);
     pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
     pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 5.0f, 0.0f));
-    scene->appendChildTo(light_parent, new pbge::PointLight);
+    dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
     cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
-    scene->appendChildTo(cam_node_name, new pbge::PointLight);
+    dynamic_cast<pbge::Light*>(scene->appendChildTo(cam_node_name, new pbge::PointLight))->setDiffuseColor(0,1,1,1);
     scene->appendChildTo(child, vboModel);
     pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
     cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));

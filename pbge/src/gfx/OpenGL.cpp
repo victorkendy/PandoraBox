@@ -48,6 +48,10 @@ UniformValue * OpenGL::getUniformValue(const UniformInfo & info) {
     return this->state->getUniformValue(info);
 }
 
+void OpenGL::enableMode(Mode mode) {
+    this->state->enable(mode);
+}
+
 void OpenGL::activeTexture(GLenum textureUnit) {
     glActiveTexture(textureUnit);
 }
@@ -186,6 +190,10 @@ void OpenGL::getProgramiv(GLuint program, GLenum pname, GLint * params) {
 
 void OpenGL::getShaderiv(GLuint shader, GLenum pname, GLint * ptr) {
     glGetShaderiv(shader, pname, ptr);
+}
+
+void OpenGL::getShaderInfoLog(GLuint shader, GLsizei maxLength, GLsizei * length, GLchar * infoLog) {
+    glGetShaderInfoLog(shader, maxLength, length, infoLog);
 }
 
 const char * OpenGL::getString(GLenum name) {
