@@ -20,6 +20,8 @@ public:
     MockOpenGL ogl;
 
     void SetUp() {
+        math3d::print_internal_memory_page_info();
+
         transformationNode = new pbge::TransformationNode;
         m = new math3d::matrix44(1.0f, 1.1f, 1.2f, 1.3f, 2.0f, 2.1f, 2.2f, 2.3f,
                              3.0f, 3.1f, 3.2f, 3.3f, 4.0f, 4.1f, 4.2f, 4.3f);
@@ -36,18 +38,38 @@ public:
         delete m;
         delete t;
         delete updater;
+
+        math3d::print_internal_memory_page_info();
     }
 };
 
-
-TEST_F(NodeTest, transformationNodeUpdaterComposesTransformations) {
+TEST_F(NodeTest, postRenderPassRestauresThePreviousTransformation) {
     updater->pushTransformation(*m);
     transformationNode->updatePass(updater, NULL);
+    EXPECT_TRUE((*m * *t) == updater->getCurrentTransformation());
+    transformationNode->postUpdatePass(updater, NULL);
+    EXPECT_TRUE(*m == updater->getCurrentTransformation());
+}
+
+TEST_F(NodeTest, transformationNodeUpdaterComposesTransformationsForRenderPass) {
+    updater->pushTransformation(*m);
+    transformationNode->updatePass(updater, NULL);
+    transformationNode->postUpdatePass(updater, NULL);
     EXPECT_CALL(ogl, loadModelMatrix(::testing::Eq(::testing::ByRef((*m) * (*t)))));
     MockRenderVisitor renderVisitor;
     transformationNode->renderPass(&renderVisitor, &ogl);
 }
 
+TEST_F(NodeTest, transformationNodeUpdaterComposesTransformationsForDepthPass) {
+    updater->pushTransformation(*m);
+    transformationNode->updatePass(updater, NULL);
+    transformationNode->postUpdatePass(updater, NULL);
+    EXPECT_CALL(ogl, loadModelMatrix(::testing::Eq(::testing::ByRef((*m) * (*t)))));
+    MockRenderVisitor renderVisitor;
+    transformationNode->depthPass(&renderVisitor, &ogl);
+
+    
+}
 
 //////////////////////////////////////////////////////////////////////////
 //

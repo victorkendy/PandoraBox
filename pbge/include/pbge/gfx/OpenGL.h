@@ -38,7 +38,10 @@ namespace pbge {
             SAMPLE_ALPHA_TO_COVERAGE,
             PROGRAM_POINT_SIZE
         } Mode;
+
         OpenGL();
+
+        ~OpenGL();
 
         virtual void setMatrixMode(GLenum mode);
 

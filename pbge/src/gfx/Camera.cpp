@@ -32,6 +32,14 @@ Camera::Camera(const math3d::vector4 & up, const math3d::vector4 & front){
     renderTarget = NULL;    
 }
 
+Camera::~Camera() {
+    delete upVector;
+    delete sideVector;
+    delete frontVector;
+    delete cameraTransformation;
+    delete viewTransform;
+}
+
 void Camera::lookAt(const math3d::vector4 & up, const math3d::vector4 & front){
     *frontVector = front;
     *sideVector = math3d::cross(*frontVector, up);
@@ -68,6 +76,12 @@ void Camera::setCameraTransformation(){
 
 
 /****************************************************************************/
+
+Frustum::~Frustum() {
+    delete [] frustumPlanes;
+    delete [] frustumPoints;
+    delete projectionMatrix;
+}
 
 void Frustum::setProjectionMatrix(const math3d::matrix44 &newProjection) {
     *(this->projectionMatrix) = newProjection;

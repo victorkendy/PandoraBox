@@ -20,6 +20,9 @@ namespace pbge {
             this->frustumPoints = new math3d::vector4[8];
             this->projectionMatrix = new math3d::matrix44;
         }
+
+        ~Frustum();
+
         // Sets the frustum for perspective viewing
         void setPerspective (const float & fovy, const float & aspect,
                              const float & near, const float & far);
@@ -56,6 +59,8 @@ namespace pbge {
         // Sets the camera with the required view transformation
         Camera (const math3d::vector4 & up, const math3d::vector4 & front);
         
+        ~Camera();
+
         // Changes the camera view transformation
         void lookAt (const math3d::vector4 & up, const math3d::vector4 & front);
 

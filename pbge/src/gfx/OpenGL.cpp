@@ -19,6 +19,12 @@ OpenGL::OpenGL() {
     state = new StateSet(this);
 }
 
+OpenGL::~OpenGL() {
+    delete [] matrices;
+    delete state;
+    std::cout << "hahahahahaha" << std::endl;
+}
+
 void OpenGL::setMatrixMode(GLenum mode) {
     if(currentMatrixMode != mode)
         glMatrixMode(mode);

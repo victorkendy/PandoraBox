@@ -18,11 +18,20 @@ using ::testing::_;
 
 class FrustumTest : public testing::Test {
 public:
-    MockOpenGL ogl;
-    pbge::Frustum frustum;
+    MockOpenGL * ogl;
+    
+    pbge::Frustum * frustum;
+    
+    FrustumTest() {
+        ogl = new MockOpenGL;
+        frustum = new pbge::Frustum;
+    }
 
-    FrustumTest() {}
-    ~FrustumTest() {}
+    ~FrustumTest() {
+        delete ogl;
+        delete frustum;
+        math3d::print_internal_memory_page_info();
+    }
 };
 
 TEST_F(FrustumTest, orthogonalProjectionIsCalculatedCorrectly) {
@@ -32,9 +41,9 @@ TEST_F(FrustumTest, orthogonalProjectionIsCalculatedCorrectly) {
                          0.0f, 1.0f/3.0f, 0.0f, -2.0f/3.0f,
                          0.0f, 0.0f, -2.0f/100.0f, -8.0f/10.0f,
                          0.0f, 0.0f, 0.0f, 1.0f);
-    frustum.setOrtho(-3, 4, -1, 5, -10, 90);
-    EXPECT_CALL(ogl, loadProjectionMatrix(Is(m))).Times(1);
-    frustum.loadProjection(&ogl);
+    frustum->setOrtho(-3, 4, -1, 5, -10, 90);
+    EXPECT_CALL(*ogl, loadProjectionMatrix(Is(m))).Times(1);
+    frustum->loadProjection(ogl);
 }
 
 TEST_F(FrustumTest, perspectiveProjectionIsCalculatedCorrectly) {
@@ -47,9 +56,9 @@ TEST_F(FrustumTest, perspectiveProjectionIsCalculatedCorrectly) {
                          0.0f,     0.0f, (far+near)/(near-far), 2.0f * far * near/(near - far),
                          0.0f,     0.0f, -1.0f,                 0.0f);
 
-    frustum.setPerspective(angled, aspect, near, far);
-    EXPECT_CALL(ogl, loadProjectionMatrix(Is(m))).Times(1);
-    frustum.loadProjection(&ogl);
+    frustum->setPerspective(angled, aspect, near, far);
+    EXPECT_CALL(*ogl, loadProjectionMatrix(Is(m))).Times(1);
+    frustum->loadProjection(ogl);
 }
 
 TEST_F(FrustumTest, frustumIsCalculatedCorrectly) {
@@ -62,9 +71,9 @@ TEST_F(FrustumTest, frustumIsCalculatedCorrectly) {
                          0.0f,         0.0f,         C,     D,
                          0.0f,         0.0f,         -1.0f, 0.0f);
 
-    frustum.setFrustum(l,r,b,t,n,f);
-    EXPECT_CALL(ogl, loadProjectionMatrix(Is(m))).Times(1);
-    frustum.loadProjection(&ogl);
+    frustum->setFrustum(l,r,b,t,n,f);
+    EXPECT_CALL(*ogl, loadProjectionMatrix(Is(m))).Times(1);
+    frustum->loadProjection(ogl);
 }
 
 TEST_F(FrustumTest, customProjectionMatrixIsLoadedCorrectly) {
@@ -74,21 +83,22 @@ TEST_F(FrustumTest, customProjectionMatrixIsLoadedCorrectly) {
                              -0.57735f, -0.57735f, -0.57735f, 0.0f,
                              0.0f, 0.0f, 0.0f, 1.0f);
 
-    frustum.setProjectionMatrix(m);
-    EXPECT_CALL(ogl, loadProjectionMatrix(Is(m))).Times(1);
-    frustum.loadProjection(&ogl);
+    frustum->setProjectionMatrix(m);
+    EXPECT_CALL(*ogl, loadProjectionMatrix(Is(m))).Times(1);
+    frustum->loadProjection(ogl);
 }
 
 
 
 class CameraTest : public testing::Test {
 public:
-    MockOpenGL ogl;
+    MockOpenGL * ogl;
     //MockTransformationNode node;
     math3d::matrix44 *m, *nt;
     math3d::vector4 *f, *u;
 
     CameraTest() {
+        ogl = new MockOpenGL;
         nt = new math3d::matrix44(math3d::identity44);
         (*nt)[0][3] = 1.0f;
         (*nt)[1][3] = 2.0f;
@@ -101,33 +111,37 @@ public:
         f = new math3d::vector4(1,1,1);
         u = new math3d::vector4(0, -1, 0);
 
-        EXPECT_CALL(ogl, loadProjectionMatrix(_)).Times(1);
+        EXPECT_CALL(*ogl, loadProjectionMatrix(_)).Times(1);
     }
     ~CameraTest() {
         delete nt;
         delete m;
         delete f;
         delete u;
+        delete ogl;
+        math3d::print_internal_memory_page_info();
+
     }
 };
 
+
 TEST_F (CameraTest, defaultCameraConstructorPointsToNegativeZAndPositiveY) {
-    EXPECT_CALL(ogl, loadViewMatrix(Is(math3d::identity44))).Times(1);
+    EXPECT_CALL(*ogl, loadViewMatrix(Is(math3d::identity44))).Times(1);
     pbge::Camera camera;
-    camera.setCamera(&ogl);
+    camera.setCamera(ogl);
 }
 
 TEST_F (CameraTest, constructorWithFrontAndUpVectorWorksAsExpected) {
     pbge::Camera camera(*u,*f);
-    EXPECT_CALL(ogl, loadViewMatrix(Is(*m))).Times(1);
-    camera.setCamera(&ogl);
+    EXPECT_CALL(*ogl, loadViewMatrix(Is(*m))).Times(1);
+    camera.setCamera(ogl);
 }
 
 TEST_F (CameraTest, afterLookAtShouldLoadTheRightView) {
     pbge::Camera camera;
     camera.lookAt(*u, *f);
-    EXPECT_CALL(ogl, loadViewMatrix(Is(*m))).Times(1);
-    camera.setCamera(&ogl);
+    EXPECT_CALL(*ogl, loadViewMatrix(Is(*m))).Times(1);
+    camera.setCamera(ogl);
 }
 
 //TEST_F (CameraTest, composesTheCameraTransformationWithTheParentTransformationCorrectly) {
