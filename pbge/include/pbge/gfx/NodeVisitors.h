@@ -25,6 +25,10 @@ namespace pbge {
             stackIndex = 0;
         }
 
+        ~UpdaterVisitor() {
+            delete [] transformationStack;
+        }
+
         void visit(Node * node, OpenGL * ogl);
 
         void pushTransformation(const math3d::matrix44 & m);

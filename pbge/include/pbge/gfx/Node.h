@@ -82,6 +82,11 @@ namespace pbge {
             this->current = new math3d::matrix44(math3d::identity44);
         }
 
+        ~TransformationNode() {
+            delete this->transformation;
+            delete this->current;
+        }
+
         void setTransformationMatrix(const math3d::matrix44 & m) {
             *transformation = m;
         }

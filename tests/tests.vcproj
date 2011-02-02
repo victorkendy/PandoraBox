@@ -181,6 +181,14 @@
 				RelativePath=".\CameraTest.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\NodeTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VertexBufferObjectTest.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -192,15 +200,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\mocks\MockNode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\mocks\MockOpenGL.h"
 				>
 			</File>
 			<File
 				RelativePath=".\mocks\MockRenderTarget.h"
-				>
-			</File>
-			<File
-				RelativePath=".\mocks\MockTransformationNode.h"
 				>
 			</File>
 			<File
