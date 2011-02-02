@@ -23,7 +23,7 @@ TransformationNode * TransformationNode::rotation(const float & angle, const flo
 }
 
 void TransformationNode::updatePass(UpdaterVisitor *visitor, OpenGL *ogl) {
-    visitor->pushTransformation(*transformation);
+    visitor->pushTransformation(visitor->getCurrentTransformation() * (*transformation));
 }
 
 void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
