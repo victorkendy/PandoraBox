@@ -186,6 +186,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RenderTargetTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VertexBufferObjectTest.cpp"
 				>
 			</File>
