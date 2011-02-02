@@ -23,7 +23,8 @@ TransformationNode * TransformationNode::rotation(const float & angle, const flo
 }
 
 void TransformationNode::updatePass(UpdaterVisitor *visitor, OpenGL *ogl) {
-    visitor->pushTransformation(visitor->getCurrentTransformation() * (*transformation));
+    *current = visitor->getCurrentTransformation() * (*transformation);
+    visitor->pushTransformation(*current);
 }
 
 void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
@@ -31,11 +32,11 @@ void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) 
 }
 
 void TransformationNode::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
-    ogl->loadModelMatrix(*transformation);
+    ogl->loadModelMatrix(*current);
 }
 
 void TransformationNode::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
-    ogl->loadModelMatrix(*transformation);
+    ogl->loadModelMatrix(*current);
 }
 
 TransformationNode * TransformationNode::scale(const float & sx, const float & sy, const float & sz) {

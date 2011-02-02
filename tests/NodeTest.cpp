@@ -9,11 +9,15 @@
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
 
+#include "mocks/MockOpenGL.h"
+#include "mocks/MockVisitors.h"
+
 class NodeTest : public testing::Test {
 public:
     math3d::matrix44 *m, *t;
     pbge::TransformationNode * transformationNode;
     pbge::UpdaterVisitor * updater;
+    MockOpenGL ogl;
 
     void SetUp() {
         transformationNode = new pbge::TransformationNode;
@@ -28,28 +32,22 @@ public:
     }
 
     ~NodeTest() {
-
-        //delete transformationNode;
+        delete transformationNode;
+        delete m;
+        delete t;
+        delete updater;
     }
 };
 
 
 TEST_F(NodeTest, transformationNodeUpdaterComposesTransformations) {
-    math3d::matrix44 *p_m = m, *pointer;
+    updater->pushTransformation(*m);
     transformationNode->updatePass(updater, NULL);
-    //EXPECT_TRUE(m * t == *pointer);
-    //EXPECT_TRUE(m * t == *(transformationNode->getTransformationMatrix()));
+    EXPECT_CALL(ogl, loadModelMatrix(::testing::Eq(::testing::ByRef((*m) * (*t)))));
+    MockRenderVisitor renderVisitor;
+    transformationNode->renderPass(&renderVisitor, &ogl);
 }
-//
-//
-//TEST_F(NodeTest, dontFailIfUpdateReceivesNULL) {
-//    math3d::matrix44 * p_m;
-//    p_m = transformationNode->update(NULL);
-//    EXPECT_TRUE(*p_m == t);
-//    math3d::matrix44 * mat = transformationNode->getTransformationMatrix();
-//    EXPECT_TRUE(*p_m == *mat);
-//}
-//
+
 
 //////////////////////////////////////////////////////////////////////////
 //

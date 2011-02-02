@@ -215,6 +215,10 @@
 				RelativePath=".\mocks\MockTransformationNode.h"
 				>
 			</File>
+			<File
+				RelativePath=".\mocks\MockVisitors.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
