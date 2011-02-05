@@ -331,6 +331,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\ResourceStorage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\SceneGraph.h"
 				>
 			</File>

@@ -11,6 +11,7 @@
 #include "pbge/core/core.h"
 
 namespace pbge {
+    class ResourceStorage;
     class StateSet;
     class Buffer;
     class UniformInfo;
@@ -68,6 +69,8 @@ namespace pbge {
         virtual void enableMode(Mode mode);
 
         virtual StateSet & getState() { return *state; }
+
+        virtual ResourceStorage & getStorage() { return *storage; }
 
         
         
@@ -201,6 +204,8 @@ namespace pbge {
         GLenum currentMatrixMode;
 
         StateSet * state;
+
+        ResourceStorage * storage;
     };
 
 }

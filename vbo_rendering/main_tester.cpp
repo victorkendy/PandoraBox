@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "pbge/gfx/Shader.h"
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/Light.h"
 #include "pbge/gfx/Buffer.h"
@@ -39,8 +40,9 @@ void setUp() {
     renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     scene = new pbge::SceneGraph(new pbge::TransformationNode);
     pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
-    pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 5.0f, 0.0f));
+    pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));
     dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
+    scene->appendChildTo(light_parent, new pbge::ModelInstance(new pbge::BezierCurve()));
     cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
     dynamic_cast<pbge::Light*>(scene->appendChildTo(cam_node_name, new pbge::PointLight))->setDiffuseColor(0,1,1,1);
     scene->appendChildTo(child, vboModel);

@@ -120,7 +120,7 @@ namespace pbge {
         for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
             if(!(*it)->isCompiled()) {
                 if(!(*it)->compile(ogl)) {
-                    //std::cout << this->getInfoLog();
+                    std::cout << this->getInfoLog();
                     return false;
                 }
                 ogl->attachShader(programID, (*it)->getID());

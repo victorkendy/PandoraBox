@@ -60,7 +60,7 @@ void DepthPassVisitor::visit(Node *node, OpenGL *ogl) {
 
 
 void LightPassVisitor::visit(Node * node, pbge::OpenGL * ogl) {
-    ogl->getState().useProgram(currentLight->getLightPassProgram());
+    ogl->getState().useProgram(currentLight->getLightPassProgram(ogl));
     currentLight->setNecessaryUniforms(ogl, currentCamera->getViewTransform());
     node->renderPass(this, ogl);
     std::vector<Node*>::iterator child;

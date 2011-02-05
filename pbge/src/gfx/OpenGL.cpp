@@ -5,6 +5,7 @@
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/StateSet.h"
+#include "pbge/gfx/ResourceStorage.h"
 
 using namespace pbge;
 
@@ -17,6 +18,7 @@ OpenGL::OpenGL() {
     matrices[2] = math3d::identity44;
     glewInit();
     state = new StateSet(this);
+    storage = new ResourceStorage;
 }
 
 OpenGL::~OpenGL() {
