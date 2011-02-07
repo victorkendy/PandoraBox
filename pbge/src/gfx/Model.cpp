@@ -31,7 +31,7 @@ void VBOModel::renderDepth(ModelInstance* instance, OpenGL * ogl) {
 
 BezierCurve::BezierCurve() {
     this->controlPoints = new float[16];
-    this->tesselator = NULL;
+    this->evaluator = NULL;
     currentIndex = 0;
 }
 
@@ -44,8 +44,8 @@ void BezierCurve::addControlPoint(const float & x, const float & y, const float 
     controlPoints[index + 3] = w;
 }
 
-GPUProgram * BezierCurve::getTesselator(OpenGL * ogl) {
-    const std::string tesselatorVS = 
+GPUProgram * BezierCurve::getEvaluator(OpenGL * ogl) {
+    const std::string evaluatorVS = 
         "uniform vec4 p0;\n"
         "uniform vec4 p1;\n"
         "uniform vec4 p2;\n"
@@ -53,29 +53,30 @@ GPUProgram * BezierCurve::getTesselator(OpenGL * ogl) {
         "void main() {\n"
         "   float t = gl_Vertex.x;\n"
         "   float oneMinusT = 1.0 - t;\n"
-        "   vec4 position = 3 * oneMinusT * p2 + t * p3;\n"
-        "   oneMinusT *= 1.0 - t;\n"
-        "   position = 3 * oneMinusT * p1 + t * position;\n"
-        "   oneMinusT *= 1.0 - t;\n"
-        "   position = oneMinusT * p0 + t * position;\n"
+        "   float tl = oneMinusT;\n"
+        "   vec4 position = 3 * tl * p2 + t * p3;\n"
+        "   tl *= oneMinusT;\n"
+        "   position = 3 * tl * p1 + t * position;\n"
+        "   oneMinusT *= oneMinusT;\n"
+        "   position = tl * p0 + t * position;\n"
         "   gl_Position = gl_ModelViewProjectionMatrix * position;\n"
         "   gl_FrontColor = gl_Color;\n"
         "}";
-    if(tesselator == NULL) {
-        GPUProgram * storedTesselator = ogl->getStorage().getNamedProgram("pbge.defaultBezierTesselator");
-        if(storedTesselator == NULL) {
-            GLProgram * program = GLProgram::fromString(tesselatorVS, "");
-            ogl->getStorage().storeNamedProgram("pbge.defaultBezierTesselator", program);
-            tesselator = program;
+    if(evaluator == NULL) {
+        GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultBezierEvaluator");
+        if(storedEvaluator == NULL) {
+            GLProgram * program = GLProgram::fromString(evaluatorVS, "");
+            ogl->getStorage().storeNamedProgram("pbge.defaultBezierevaluator", program);
+            evaluator = program;
         } else {
-            tesselator = storedTesselator;
+            evaluator = storedEvaluator;
         }
     }
-    return tesselator;
+    return evaluator;
 }
 
 void BezierCurve::render(ModelInstance * instance, OpenGL * ogl) {
-    GPUProgram * program = this->getTesselator(ogl);
+    GPUProgram * program = this->getEvaluator(ogl);
     ogl->getState().useProgram(program);
     dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("p0", FLOAT_VEC4, -1)))->setValue(-1,0,0,1);
     dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("p1", FLOAT_VEC4, -1)))->setValue(-0.5f,-2.0f,0,1);

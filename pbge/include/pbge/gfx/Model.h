@@ -41,15 +41,15 @@ namespace pbge {
 
         void renderDepth(ModelInstance * instance, OpenGL * ogl);
 
-        void setTesselator(GPUProgram * _tesselator) {
-            tesselator = _tesselator;
+        void setEvaluator(GPUProgram * _evaluator) {
+            evaluator = _evaluator;
         }
 
-        GPUProgram * getTesselator(OpenGL * ogl);
+        GPUProgram * getEvaluator(OpenGL * ogl);
     private:
         float * controlPoints;
 
-        GPUProgram * tesselator;
+        GPUProgram * evaluator;
 
         int currentIndex;
     };
