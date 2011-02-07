@@ -13,3 +13,9 @@ gmock*
 gtest*
 out/
 bin/Debug/tester.lib
+
+_*.cpp
+_*.h
+_*.txt
+_*.hpp
+_*.c
