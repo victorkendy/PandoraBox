@@ -11,6 +11,7 @@ namespace pbge {
     class OpenGL;
     class Window;
     class SceneGraph;
+    class SceneInitializer;
 
     class PBGE_EXPORT Manager{
     public:
@@ -57,6 +58,8 @@ namespace pbge {
         void setWindowTitle(const std::string title);
 
         void setMainSceneGraph(SceneGraph * sceneGraph);
+
+        void setSceneInitializer(SceneInitializer * initializer);
 
         void displayGraphics();
 

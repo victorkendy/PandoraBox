@@ -29,8 +29,17 @@ OpenGL::~OpenGL() {
 
 void OpenGL::setContext(GLContext * glContext) {
     this->context = glContext;
-    context->makeCurrent();
-    glewInit();
+    if(context != NULL) {
+        context->makeCurrent();
+        glewInit();
+    }
+}
+
+void OpenGL::releaseContext() {
+    if(context != NULL) {
+        context->release();
+        context = NULL;
+    }
 }
 
 void OpenGL::setMatrixMode(GLenum mode) {

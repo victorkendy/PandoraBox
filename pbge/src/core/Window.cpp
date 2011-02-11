@@ -13,6 +13,8 @@
 #include "pbge/core/Window.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Renderer.h"
+#include "pbge/gfx/SceneGraph.h"
+#include "pbge/gfx/SceneInitializer.h"
 
 #if defined (WIN32) || defined (_WIN32)
 
@@ -36,6 +38,11 @@ namespace {
 
         void swapBuffers() {
             SwapBuffers(hdc);
+        }
+
+        void release() {
+            wglMakeCurrent(hdc, NULL);
+            wglDeleteContext(context);
         }
 
     private:
@@ -92,6 +99,10 @@ namespace {
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, (ULONG)window);
                 ogl = window->getOpenGL();
                 ogl->setContext(new WGLContext(GetDC(hwnd)));
+                if(window->getSceneInitializer() != NULL && window->getScene() == NULL) {
+                    pbge::SceneInitializer * initializer = window->getSceneInitializer();
+                    window->setScene((*initializer)(ogl));
+                }
                 ogl->drawBuffer(GL_BACK);
                 ogl->clearColor(0,0,0,1);
                 break;
@@ -99,6 +110,9 @@ namespace {
                 PostQuitMessage(0);
                 break;
             case WM_DESTROY:
+                window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+                ogl = window->getOpenGL();
+                ogl->releaseContext();
                 // find somewhere to delete OpenGL
                 break;
             case WM_PAINT:
@@ -148,5 +162,12 @@ void Window::displayWindow() {
     UpdateWindow(hwnd);
     messageLoop(hwnd);
     #endif
+}
+
+Window::~Window() {
+    delete initializer;
+    delete scene;
+    delete renderer;
+
 }
 

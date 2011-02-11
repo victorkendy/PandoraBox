@@ -55,6 +55,7 @@ namespace pbge {
     }
 
     Manager::~Manager() {
+        delete ogl;
         this->writeLog("Saindo");
     }
 
@@ -83,6 +84,10 @@ namespace pbge {
 
     void Manager::displayGraphics() {
         this->window->displayWindow();
+    }
+
+    void Manager::setSceneInitializer(SceneInitializer * initializer) {
+        this->window->setSceneInitializer(initializer);
     }
 
     void Manager::setMainSceneGraph(SceneGraph * scene) {

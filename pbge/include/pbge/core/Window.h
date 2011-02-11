@@ -9,6 +9,7 @@ namespace pbge {
     class OpenGL;
     class Renderer;
     class SceneGraph;
+    class SceneInitializer;
 
     class Window {
     public:
@@ -22,7 +23,10 @@ namespace pbge {
             renderer = NULL;
             ogl = NULL;
             scene = NULL;
+            initializer = NULL;
         }
+
+        ~Window();
         
         void setWindowDimensions(const unsigned & w, const unsigned & h) {
             width = w;
@@ -57,6 +61,14 @@ namespace pbge {
             return scene;
         }
 
+        void setSceneInitializer(SceneInitializer * newInitializer) {
+            initializer = newInitializer;
+        }
+
+        SceneInitializer * getSceneInitializer() {
+            return initializer;
+        }
+
         void displayWindow();
 
     private:
@@ -77,6 +89,8 @@ namespace pbge {
         OpenGL * ogl;
 
         SceneGraph * scene;
+
+        SceneInitializer * initializer;
     };
 }
 #endif

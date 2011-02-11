@@ -343,6 +343,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\SceneInitializer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Shader.h"
 				>
 			</File>

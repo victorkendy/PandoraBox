@@ -22,6 +22,8 @@ namespace pbge {
         virtual void makeCurrent() = 0;
 
         virtual void swapBuffers() = 0;
+
+        virtual void release() = 0;
     };
 
     class PBGE_EXPORT OpenGL {
@@ -56,6 +58,8 @@ namespace pbge {
         GLContext * getContext() {
             return context;
         }
+
+        void releaseContext ();
 
         void makeContextCurrent() {
             context->makeCurrent();
