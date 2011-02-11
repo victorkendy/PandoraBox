@@ -1,4 +1,3 @@
-#include <SDL/SDL.h>
 #include <GL/glew.h>
 #include <cstdlib>
 #include <string>
@@ -13,7 +12,6 @@
 
 namespace {
     pbge::Manager * manager = NULL;
-    SDL_Surface * screen = NULL;
 }
 
 namespace pbge {

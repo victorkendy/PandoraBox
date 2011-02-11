@@ -9,8 +9,6 @@
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/StateSet.h"
 
-#include <GL/glut.h>
-
 #include "vbo_setup.h"
 
 int cam_node_name;
@@ -47,7 +45,6 @@ void keyboard(unsigned char k, int x, int y) {
         case 's': m[1][3] -= 0.1f; break;
     }
     cam_node->setTransformationMatrix(m);
-    glutPostRedisplay();
 }
 
 int main(int argc, char ** argv) {
