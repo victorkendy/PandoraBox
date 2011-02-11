@@ -16,14 +16,21 @@ OpenGL::OpenGL() {
     currentMatrixMode = initialMatrixMode;
     matrices = new math3d::matrix44[3];
     matrices[2] = math3d::identity44;
-    glewInit();
     state = new StateSet(this);
     storage = new ResourceStorage;
+    this->context = NULL;
 }
 
 OpenGL::~OpenGL() {
     delete [] matrices;
     delete state;
+    delete context;
+}
+
+void OpenGL::setContext(GLContext * glContext) {
+    this->context = glContext;
+    context->makeCurrent();
+    glewInit();
 }
 
 void OpenGL::setMatrixMode(GLenum mode) {

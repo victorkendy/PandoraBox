@@ -14,30 +14,17 @@
 #include "vbo_setup.h"
 
 int cam_node_name;
-pbge::Renderer * renderer;
 pbge::SceneGraph * scene;
-
-void display() {
-    renderer->render();
-    GLenum error;
-    while((error = glGetError()) != GL_NO_ERROR) {
-        std::cout << gluErrorString(error) << std::endl;
-    }
-    glutSwapBuffers();
-}
 
 #ifndef M_PI
 #define M_PI 3.1415f
 #endif
 
 void setUp() {
-    pbge::Manager::init();
     // FIXME: remove the state change line
     pbge::Manager::getInstance()->getOpenGL()->enableMode(pbge::OpenGL::DEPTH_TEST);
-    glClearColor(0,0,0,0);
     pbge::ModelInstance * vboModel = createVBOInstance();
     // TODO: find somewhere else to put the instantiation
-    renderer = new pbge::Renderer(pbge::Manager::getInstance()->getOpenGL());
     scene = new pbge::SceneGraph(new pbge::TransformationNode);
     pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
     pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));
@@ -49,7 +36,6 @@ void setUp() {
     pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
     cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
     cam->setPerspective(45, 1, 1.0f, 10);
-    renderer->setScene(scene);
     math3d::print_internal_memory_page_info();
 }
 
@@ -65,15 +51,14 @@ void keyboard(unsigned char k, int x, int y) {
 }
 
 int main(int argc, char ** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGBA|GLUT_DEPTH|GLUT_DOUBLE);
-    glutInitWindowSize(500,500);
-    glutCreateWindow("vbo_rendering");
+    pbge::Manager::init();
+    pbge::Manager * manager = pbge::Manager::getInstance();
+    manager->setWindowDimensions(500, 500);
+    manager->setFullscreen(false);
+    manager->setWindowTitle("vbo_rendering");
     setUp();
-    glutDisplayFunc(display);
-    glutKeyboardFunc(keyboard);
-    glutMainLoop();
+    manager->setMainSceneGraph(scene);
+    manager->displayGraphics();
     delete scene;
-    delete renderer;
     return 0;
 }

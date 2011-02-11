@@ -10,6 +10,8 @@
 
 namespace pbge {
     class OpenGL;
+    class Window;
+    class SceneGraph;
 
     class PBGE_EXPORT Manager{
     public:
@@ -34,10 +36,6 @@ namespace pbge {
             pbgeLog = newLog;
         }
         
-        /* Initialize the OpenGL Context */
-        bool initializeOpenGL(OpenGLParameters parameters);
-        void cleanUp();
-
         /* Implements the singleton pattern */
         static Manager * getInstance();
 
@@ -50,13 +48,29 @@ namespace pbge {
         void _setOpenGL(OpenGL * _ogl) {
             this->ogl = _ogl;
         }
+    
+    // public window initialization functions
+    public:
+        void setWindowDimensions(const unsigned & w, const unsigned & h);
+
+        void setFullscreen(const bool & fullscreen);
+
+        void setWindowTitle(const std::string title);
+
+        void setMainSceneGraph(SceneGraph * sceneGraph);
+
+        void displayGraphics();
+
     private:
         Manager(bool test = false);
         ~Manager();
+        Window * window;
         Log * pbgeLog;
         OpenGL * ogl;
         std::vector<std::string> shaderDirectories;
         bool testConfiguration;
+
+        // window management functions
     };
 }
 

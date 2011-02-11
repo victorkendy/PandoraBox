@@ -5,8 +5,10 @@
 #include <vector>
 #include <cstdio>
 
+#include "pbge/core/Window.h"
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/SceneGraph.h"
 
 
 namespace {
@@ -35,6 +37,9 @@ namespace pbge {
         }
         this->testConfiguration = test;
         this->ogl = new OpenGL;
+        this->window = new Window;
+
+        window->setOpenGL(ogl);
         shaderDirectories.push_back(std::string("./shaders/"));
     }
 
@@ -51,40 +56,8 @@ namespace pbge {
         return shaderDirectories;
     }
 
-    bool Manager::initializeOpenGL(OpenGLParameters parameters) {
-        if(SDL_Init(SDL_INIT_VIDEO) != 0) {
-            this->writeErrorLog("Unable to Initialize OpenGL");
-            this->writeErrorLog(std::string(SDL_GetError()));
-            return false;
-        }
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_RED_SIZE, parameters.redSize);
-        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, parameters.greenSize);
-        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, parameters.blueSize);
-        SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, parameters.alphaSize);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, parameters.depthSize);
-        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, parameters.stencilSize);
-        screen = SDL_SetVideoMode(parameters.window_width,parameters.window_height, 32, SDL_OPENGL);
-        if(screen == NULL) {
-            this->writeErrorLog("Unable to Initialize OpenGL");
-            this->writeErrorLog(std::string(SDL_GetError()));
-            return false;
-        }
-        glewInit();
-        return true;
-    }
-
-    void Manager::cleanUp() {
-        if(screen) {
-            SDL_FreeSurface(screen);
-            SDL_Quit();
-        }
-    }
-
     Manager::~Manager() {
         this->writeLog("Saindo");
-        cleanUp();
-        SDL_Quit();
     }
 
     void Manager::init(bool test) {
@@ -96,5 +69,25 @@ namespace pbge {
             manager = new Manager();
         }
         return manager;
+    }
+
+    void Manager::setWindowDimensions(const unsigned & w, const unsigned & h) {
+        this->window->setWindowDimensions(w, h);
+    }
+
+    void Manager::setFullscreen(const bool & fullscreen) {
+        this->window->setFullscreen(fullscreen);
+    }
+
+    void Manager::setWindowTitle(const std::string title) {
+        this->window->setTitle(title);
+    }
+
+    void Manager::displayGraphics() {
+        this->window->displayWindow();
+    }
+
+    void Manager::setMainSceneGraph(SceneGraph * scene) {
+        this->window->setScene(scene);
     }
 }

@@ -16,6 +16,13 @@ namespace pbge {
     class Buffer;
     class UniformInfo;
     class UniformValue;
+    
+    class GLContext {
+    public:
+        virtual void makeCurrent() = 0;
+
+        virtual void swapBuffers() = 0;
+    };
 
     class PBGE_EXPORT OpenGL {
     public:
@@ -43,6 +50,20 @@ namespace pbge {
         OpenGL();
 
         ~OpenGL();
+        
+        void setContext(GLContext * newContext);
+
+        GLContext * getContext() {
+            return context;
+        }
+
+        void makeContextCurrent() {
+            context->makeCurrent();
+        }
+
+        void swapBuffers() {
+            context->swapBuffers();
+        }
 
         virtual void setMatrixMode(GLenum mode);
 
@@ -206,6 +227,8 @@ namespace pbge {
         StateSet * state;
 
         ResourceStorage * storage;
+
+        GLContext * context;
     };
 
 }

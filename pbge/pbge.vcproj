@@ -256,6 +256,10 @@
 				RelativePath=".\src\gfx\Win_Initialization.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\src\core\Window.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -368,6 +372,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\core\Vec3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\core\Window.h"
 				>
 			</File>
 		</Filter>
