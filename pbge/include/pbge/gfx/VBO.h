@@ -8,6 +8,7 @@
 #include <string>
 
 #include "pbge/core/core.h"
+#include "pbge/gfx/OpenGL.h"
 #include "pbge/exceptions/exceptions.h"
 
 namespace pbge {

@@ -3,7 +3,6 @@
 
 #include "pbge/core/Log.h"
 #include "pbge/core/core.h"
-#include "pbge/core/OpenGLParameters.h"
 
 #include <string>
 #include <vector>

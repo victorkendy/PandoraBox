@@ -21,8 +21,8 @@ pbge::SceneGraph * scene;
 void setUp() {
     // FIXME: remove the state change line
     pbge::Manager::getInstance()->getOpenGL()->enableMode(pbge::OpenGL::DEPTH_TEST);
+
     pbge::ModelInstance * vboModel = createVBOInstance();
-    // TODO: find somewhere else to put the instantiation
     scene = new pbge::SceneGraph(new pbge::TransformationNode);
     pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
     pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));

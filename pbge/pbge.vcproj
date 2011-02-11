@@ -319,10 +319,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\core\OpenGLParameters.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\pbge\internal\OpenGLStates.h"
 				>
 			</File>
