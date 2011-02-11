@@ -102,6 +102,7 @@ namespace {
                 if(window->getSceneInitializer() != NULL && window->getScene() == NULL) {
                     pbge::SceneInitializer * initializer = window->getSceneInitializer();
                     window->setScene((*initializer)(ogl));
+                    window->getRenderer()->setScene(window->getScene());
                 }
                 ogl->drawBuffer(GL_BACK);
                 ogl->clearColor(0,0,0,1);
@@ -134,7 +135,6 @@ using namespace pbge;
 
 void Window::displayWindow() {
     this->renderer = new Renderer(this->getOpenGL());
-    this->renderer->setScene(this->getScene());
 
     #if defined (WIN32) || defined (_WIN32) // code for win32 system
 
