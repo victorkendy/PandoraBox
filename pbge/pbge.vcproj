@@ -323,6 +323,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\pbge.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Renderer.h"
 				>
 			</File>
@@ -364,10 +368,6 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\VBO.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\core\Vec3.h"
 				>
 			</File>
 			<File

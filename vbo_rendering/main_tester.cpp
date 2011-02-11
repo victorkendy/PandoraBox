@@ -1,13 +1,6 @@
 #include <iostream>
 
-#include "pbge/gfx/Shader.h"
-#include "pbge/core/Manager.h"
-#include "pbge/gfx/Light.h"
-#include "pbge/gfx/Buffer.h"
-#include "pbge/gfx/SceneGraph.h"
-#include "pbge/gfx/Node.h"
-#include "pbge/gfx/Renderer.h"
-#include "pbge/gfx/StateSet.h"
+#include "pbge/pbge.h"
 
 #include "vbo_setup.h"
 
@@ -18,10 +11,9 @@ pbge::SceneGraph * scene;
 #define M_PI 3.1415f
 #endif
 
-void setUp() {
+void setUp(pbge::OpenGL * ogl) {
     // FIXME: remove the state change line
-    pbge::Manager::getInstance()->getOpenGL()->enableMode(pbge::OpenGL::DEPTH_TEST);
-
+    ogl->enableMode(pbge::OpenGL::DEPTH_TEST);
     pbge::ModelInstance * vboModel = createVBOInstance();
     scene = new pbge::SceneGraph(new pbge::TransformationNode);
     pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(M_PI/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
@@ -53,7 +45,7 @@ int main(int argc, char ** argv) {
     manager->setWindowDimensions(500, 500);
     manager->setFullscreen(false);
     manager->setWindowTitle("vbo_rendering");
-    setUp();
+    setUp(manager->getOpenGL());
     manager->setMainSceneGraph(scene);
     manager->displayGraphics();
     delete scene;
