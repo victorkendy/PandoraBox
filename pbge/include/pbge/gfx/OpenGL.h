@@ -25,9 +25,9 @@ namespace pbge {
 
         virtual void release() = 0;
 
-        virtual long getSystemGLContext() = 0;
+        virtual void getSystemGLContext(void * p_context) = 0;
 
-        virtual long getSystemDeviceContext() = 0;
+        virtual void getSystemDeviceContext(void * p_device) = 0;
     };
 
     class PBGE_EXPORT OpenGL {

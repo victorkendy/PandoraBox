@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pbge.lib math3d.lib"
+				AdditionalDependencies="pbge.lib math3d.lib OpenGL32.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)libs\$(ConfigurationName)&quot;;&quot;$(SolutionDir)bin\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"

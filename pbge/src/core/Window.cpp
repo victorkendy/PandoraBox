@@ -45,12 +45,14 @@ namespace {
             wglDeleteContext(context);
         }
 
-        long getSystemGLContext() {
-            return (long)(context);
+        void getSystemGLContext(void * p_context) {
+            HGLRC * p_hglrc = reinterpret_cast<HGLRC*>(p_context);
+            *p_hglrc = context;
         }
 
-        long getSystemDeviceContext() {
-            return (long)(hdc);
+        void getSystemDeviceContext(void * p_dc) {
+            HDC * p_device = reinterpret_cast<HDC*>(p_dc);
+            *p_device = hdc;
         }
 
     private:
