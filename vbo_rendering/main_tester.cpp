@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "pbge/pbge.h"
 
 #include "vbo_setup.h"

@@ -24,6 +24,10 @@ namespace pbge {
         virtual void swapBuffers() = 0;
 
         virtual void release() = 0;
+
+        virtual long getSystemGLContext() = 0;
+
+        virtual long getSystemDeviceContext() = 0;
     };
 
     class PBGE_EXPORT OpenGL {

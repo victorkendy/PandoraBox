@@ -1,5 +1,4 @@
 #include <GL/glew.h>
-#include <GL/glu.h>
 #include <cmath>
 
 #include "math3d/math3d.h"

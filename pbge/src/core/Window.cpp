@@ -45,6 +45,14 @@ namespace {
             wglDeleteContext(context);
         }
 
+        long getSystemGLContext() {
+            return (long)(context);
+        }
+
+        long getSystemDeviceContext() {
+            return (long)(hdc);
+        }
+
     private:
         void makePixelFormatDescriptor() {
             PIXELFORMATDESCRIPTOR pfd = {
