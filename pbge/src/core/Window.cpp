@@ -124,6 +124,7 @@ namespace {
                 window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
                 ogl = window->getOpenGL();
                 ogl->releaseContext();
+                PostQuitMessage(0);
                 // find somewhere to delete OpenGL
                 break;
             case WM_PAINT:
@@ -132,7 +133,7 @@ namespace {
                 ogl->clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
                 window->getRenderer()->render();
                 ogl->swapBuffers();
-                break;
+                return 0;
             default:
                 break;
         }

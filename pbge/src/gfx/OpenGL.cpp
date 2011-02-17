@@ -11,12 +11,9 @@ using namespace pbge;
 
 OpenGL::OpenGL() {
     std::cout << "instancing GL" << std::endl;
-    GLint initialMatrixMode;
-    glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
-    currentMatrixMode = initialMatrixMode;
     matrices = new math3d::matrix44[3];
     matrices[2] = math3d::identity44;
-    state = new StateSet(this);
+    this->state = NULL;
     storage = new ResourceStorage;
     this->context = NULL;
 }
@@ -28,7 +25,11 @@ OpenGL::~OpenGL() {
 }
 
 void OpenGL::setContext(GLContext * glContext) {
+    GLint initialMatrixMode;
     this->context = glContext;
+    this->getIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
+    currentMatrixMode = initialMatrixMode;
+    state = new StateSet(this);
     if(context != NULL) {
         context->makeCurrent();
         glewInit();
@@ -73,6 +74,16 @@ UniformValue * OpenGL::getUniformValue(const UniformInfo & info) {
 
 void OpenGL::enableMode(Mode mode) {
     this->state->enable(mode);
+}
+
+void OpenGL::disableDrawBuffer() {
+    this->drawBuffer(GL_NONE);
+    this->readBuffer(GL_NONE);
+}
+
+void OpenGL::enableDrawBuffer(GLenum buffer) {
+    this->drawBuffer(buffer);
+    this->readBuffer(buffer);
 }
 
 void OpenGL::activeTexture(GLenum textureUnit) {

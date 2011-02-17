@@ -1,6 +1,5 @@
 #include <iostream>
 #include "pbge/pbge.h"
-
 #include "vbo_setup.h"
 
 int cam_node_name;

@@ -97,6 +97,10 @@ namespace pbge {
 
         virtual void enableMode(Mode mode);
 
+        virtual void disableDrawBuffer();
+
+        virtual void enableDrawBuffer(GLenum buffer);
+
         virtual StateSet & getState() { return *state; }
 
         virtual ResourceStorage & getStorage() { return *storage; }

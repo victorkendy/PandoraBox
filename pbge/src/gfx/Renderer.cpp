@@ -36,13 +36,10 @@ void Renderer::updateScene(){
 
 void Renderer::renderWithCamera(Camera * camera, Node * root) {
     camera->setCamera(ogl);
-    
-    ogl->drawBuffer(GL_NONE);
-    ogl->readBuffer(GL_NONE);
+    ogl->disableDrawBuffer();
     depthRenderer->visit(root, ogl);
+    ogl->enableDrawBuffer(GL_BACK);
     ogl->depthMask(GL_FALSE);
-    ogl->drawBuffer(GL_BACK);
-    ogl->readBuffer(GL_BACK);
     
     ogl->enable(GL_BLEND);
     ogl->blendFunc(GL_ONE, GL_ONE);
@@ -53,8 +50,10 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
         lightPassVisitor->visit(root, ogl);
     }
     ogl->blendFunc(GL_DST_COLOR, GL_ZERO);
+    
     ogl->getState().useProgram(NULL);
     renderer->visit(root, ogl);
+    
     ogl->disable(GL_BLEND);
     camera->unsetCamera(ogl);
 }
