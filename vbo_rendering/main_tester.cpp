@@ -44,5 +44,6 @@ int main(int argc, char ** argv) {
     manager->setWindowTitle("vbo_rendering");
     manager->setSceneInitializer(new CustomSceneInitializer);
     manager->displayGraphics();
+    delete manager;
     return 0;
 }

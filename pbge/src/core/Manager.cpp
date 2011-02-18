@@ -52,6 +52,7 @@ namespace pbge {
     Manager::~Manager() {
         delete ogl;
         delete this->log;
+        delete window;
     }
 
     void Manager::setWindowDimensions(const unsigned & w, const unsigned & h) {

@@ -163,15 +163,16 @@ void Window::displayWindow() {
     wc.lpszMenuName = NULL;
     wc.lpszClassName = windowClassName;
     // TODO: store atom somewhere so i don't have to register the window class everytime
-    // FIXME: need to unregister the window class on program shutdown
-    ATOM atom = RegisterClass(&wc);
+    RegisterClass(&wc);
     // TODO: make the style dynamic to cope with fullscreen rendering
-    DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS; 
+    DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+
     HWND hwnd = CreateWindow(windowClassName, CString(this->windowTitle.c_str()), dwStyle,
                              this->positionX, this->positionY, this->width, this->height, NULL, NULL, hInstance, (LPVOID)this);
     ShowWindow(hwnd, SW_SHOW);
     UpdateWindow(hwnd);
     messageLoop(hwnd);
+    UnregisterClass(windowClassName, hInstance);
     #endif
 }
 
