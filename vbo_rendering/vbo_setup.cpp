@@ -13,7 +13,7 @@ void createVertexIndexes(std::vector<unsigned short> & vi) {
     vi = std::vector<unsigned short>(indexes, indexes + 24);
 }
 
-pbge::ModelInstance * createVBOInstance() {
+pbge::ModelInstance * createVBOInstance(pbge::OpenGL * ogl) {
     float v = 0.5f;
     std::vector<unsigned short> vIndexes;
     std::vector<unsigned short> nIndexes;
@@ -32,6 +32,6 @@ pbge::ModelInstance * createVBOInstance() {
     builder.pushValue(color, 0,0,0).pushValue(0,1,0).pushValue(0,1,1).pushValue(0,0,1);
     builder.pushValue(1,1,0).pushValue(1,1,1).pushValue(1,0,1).pushValue(1,0,0).setAttribIndex(vIndexes);
 
-    pbge::VertexBuffer * vbo = builder.done();
+    pbge::VertexBuffer * vbo = builder.done(GL_STATIC_DRAW, ogl);
     return new pbge::ModelInstance(new pbge::VBOModel(vbo, GL_QUADS));
 }

@@ -109,13 +109,6 @@ class VertexBufferBuilderTest : public testing::Test {
 public:
     MockOpenGL ogl;
     MockBuffer buffer;
-    static void SetUpTestCase() {
-        pbge::Manager::init(true);
-    }
-
-    virtual void setUp() {
-        pbge::Manager::getInstance()->_setOpenGL(&ogl);
-    }
 };
 
 TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
@@ -124,7 +117,6 @@ TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
 
     EXPECT_CALL(ogl, createBuffer(9*sizeof(float),GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
-    pbge::Manager::getInstance()->_setOpenGL(&ogl);
     
     pbge::VertexBufferBuilder builder(3);
     
@@ -135,7 +127,7 @@ TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
     indexes.push_back(0);
     indexes.push_back(2);
     builder.setAttribIndex(vertex, indexes);
-    builder.done();
+    builder.done(GL_STATIC_DRAW, &ogl);
     
     for(int i = 0; i < 9; i++) {
         ASSERT_FLOAT_EQ(expected[i], buf[i]);
@@ -148,7 +140,6 @@ TEST_F(VertexBufferBuilderTest, builderBuildsCombinationVertexAndNormalIterleave
 
     EXPECT_CALL(ogl, createBuffer(12*sizeof(float),GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
-    pbge::Manager::getInstance()->_setOpenGL(&ogl);
 
     pbge::VertexBufferBuilder builder(2);
     pbge::VertexAttribBuilder vertex = builder.addAttrib(3, pbge::VertexAttrib::VERTEX);
@@ -166,7 +157,7 @@ TEST_F(VertexBufferBuilderTest, builderBuildsCombinationVertexAndNormalIterleave
 
     builder.setAttribIndex(vertex, vertex_indexes);
     builder.setAttribIndex(normal, normal_indexes);
-    builder.done(GL_DYNAMIC_DRAW);
+    builder.done(GL_DYNAMIC_DRAW, &ogl);
     for(int i = 0; i < 12; i++) {
         ASSERT_FLOAT_EQ(expected[i], buf[i]);
     }
@@ -185,7 +176,7 @@ TEST_F(VertexBufferBuilderTest, ifThereIsAAttribWithNoIndexVectorThenThrowsBuild
     vertex_indexes.push_back(1);
 
     builder.setAttribIndex(vertex, vertex_indexes);
-    ASSERT_THROW(builder.done(GL_DYNAMIC_DRAW), pbge::BuilderValidationException);
+    ASSERT_THROW(builder.done(GL_DYNAMIC_DRAW, &ogl), pbge::BuilderValidationException);
 }
 
 TEST(VertexPositionAttribTest, bindCallsOpenGLWithCorrectParameters) {
@@ -239,9 +230,6 @@ TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
 TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     MockOpenGL ogl;
     MockBuffer buffer;
-    pbge::Manager::init(true);
-    pbge::Manager::getInstance()->_setOpenGL(&ogl);
-
     float buf[9];
 
     EXPECT_CALL(ogl, createBuffer(9*sizeof(float),GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
@@ -256,7 +244,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     indexes.push_back(0);
     indexes.push_back(2);
     builder.setAttribIndex(vertex, indexes);
-    pbge::VertexBuffer * vbo = builder.done();
+    pbge::VertexBuffer * vbo = builder.done(GL_STATIC_DRAW, &ogl);
 
     EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY));
     EXPECT_CALL(ogl, vertexPointer(3, GL_FLOAT, 3*sizeof(float), (GLbyte*)NULL));
@@ -265,8 +253,6 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
 TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     MockOpenGL ogl;
     MockBuffer buffer;
-    pbge::Manager::init(true);
-    pbge::Manager::getInstance()->_setOpenGL(&ogl);
     float buf[20];
 
     EXPECT_CALL(ogl, createBuffer(20*sizeof(float),GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
@@ -292,7 +278,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     builder.setAttribIndex(vertex, vertex_indexes);
     builder.setAttribIndex(normal, normal_indexes);
     builder.setAttribIndex(color, color_indexes);
-    pbge::VertexBuffer * vbo = builder.done(GL_DYNAMIC_DRAW);
+    pbge::VertexBuffer * vbo = builder.done(GL_DYNAMIC_DRAW, &ogl);
     EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY));
     EXPECT_CALL(ogl, enableClientState(GL_NORMAL_ARRAY));
     EXPECT_CALL(ogl, enableClientState(GL_COLOR_ARRAY));

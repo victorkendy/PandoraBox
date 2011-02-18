@@ -106,9 +106,8 @@ void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, GLsizei stride) {
     }
 }
 
-VertexBuffer * VertexBufferBuilder::done(GLenum usage) {
+VertexBuffer * VertexBufferBuilder::done(GLenum usage, OpenGL * ogl) {
     validateAttribs();
-    OpenGL * ogl = Manager::getInstance()->getOpenGL();
     GLsizei size = calculateSize();
     GLsizei stride = size / nVertices;
     Buffer * buffer = ogl->createBuffer(size*sizeof(float), usage, GL_ARRAY_BUFFER);

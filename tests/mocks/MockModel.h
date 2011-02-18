@@ -4,6 +4,8 @@
 
 class MockModel : public pbge::Model {
     MOCK_METHOD2(render, void(pbge::ModelInstance * instance, pbge::OpenGL * ogl));
+
+    MOCK_METHOD2(renderDepth, void(pbge::ModelInstance * instance, pbge::OpenGL * ogl));
 };
 
 class MockModelInstance : public pbge::ModelInstance {

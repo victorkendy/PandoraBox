@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
 
+#include "pbge/gfx/Camera.h"
 #include "pbge/gfx/Renderer.h"
 
+#include "mocks/MockNode.h"
 #include "mocks/MockModel.h"
 #include "mocks/MockOpenGL.h"
-#include "mocks/MockTransformationNode.h"
 #include "mocks/MockRenderTarget.h"
 
 using ::testing::_;
@@ -18,7 +19,7 @@ public:
 class BasicRendererVisitorTest : public ::testing::Test {
 public:
     MockOpenGL ogl;
-    MockTransformationNode root, child1, child2;
+    MockNode root, child1, child2;
     MockModel model;
     MockCamera camera;
     MockRenderTarget renderTarget;

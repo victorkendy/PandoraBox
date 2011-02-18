@@ -3,6 +3,8 @@
 #define VBO_SETUP_H_
 
 #include "pbge/gfx/Model.h"
-pbge::ModelInstance * createVBOInstance();
+#include "pbge/gfx/OpenGL.h"
+
+pbge::ModelInstance * createVBOInstance(pbge::OpenGL * ogl);
 
 #endif

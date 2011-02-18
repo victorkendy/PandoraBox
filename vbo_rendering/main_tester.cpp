@@ -9,7 +9,7 @@ class CustomSceneInitializer : public pbge::SceneInitializer {
         const float m_pi = 3.1415f;
         // FIXME: remove the state change line
         ogl->enableMode(pbge::OpenGL::DEPTH_TEST);
-        pbge::ModelInstance * vboModel = createVBOInstance();
+        pbge::ModelInstance * vboModel = createVBOInstance(ogl);
         pbge::SceneGraph * scene = new pbge::SceneGraph(new pbge::TransformationNode);
         pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(m_pi/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
         pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));
@@ -38,8 +38,7 @@ void keyboard(unsigned char k, int x, int y) {
 }*/
 
 int main(int argc, char ** argv) {
-    pbge::Manager::init();
-    pbge::Manager * manager = pbge::Manager::getInstance();
+    pbge::Manager * manager = new pbge::Manager;
     manager->setWindowDimensions(500, 500);
     manager->setFullscreen(false);
     manager->setWindowTitle("vbo_rendering");

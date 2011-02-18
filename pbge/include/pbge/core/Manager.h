@@ -17,12 +17,14 @@ namespace pbge {
     public:
         /* Write a status or warning message */
         void writeLog(std::string message) { 
-            pbgeLog->write(message); 
+            if(this->log != NULL)
+                log->write(message); 
         }
         
         /* Write internal error messages for the user */
         void writeErrorLog(std::string message) {
-            pbgeLog->writeError(message); 
+            if(this->log != NULL) 
+                log->writeError(message); 
         }
         
         /* Add a new shader source directory to the search path */
@@ -33,24 +35,21 @@ namespace pbge {
 
         /* sets a user defined logger */
         void setLog(Log * newLog) {
-            pbgeLog = newLog;
+            if(this->log != NULL)
+                delete this->log;
+            log = newLog;
         }
         
-        /* Implements the singleton pattern */
-        static Manager * getInstance();
-
-        static void init(bool test=false);
-
         OpenGL * getOpenGL() {
             return ogl;
         }
 
-        void _setOpenGL(OpenGL * _ogl) {
-            this->ogl = _ogl;
-        }
-    
     // public window initialization functions
     public:
+        Manager();
+
+        ~Manager();
+
         void setWindowDimensions(const unsigned & w, const unsigned & h);
 
         void setFullscreen(const bool & fullscreen);
@@ -64,15 +63,10 @@ namespace pbge {
         void displayGraphics();
 
     private:
-        Manager(bool test = false);
-        ~Manager();
         Window * window;
-        Log * pbgeLog;
+        Log * log;
         OpenGL * ogl;
         std::vector<std::string> shaderDirectories;
-        bool testConfiguration;
-
-        // window management functions
     };
 }
 

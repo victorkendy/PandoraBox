@@ -10,16 +10,12 @@
 #include "pbge/gfx/SceneGraph.h"
 
 
-namespace {
-    pbge::Manager * manager = NULL;
-}
-
 namespace pbge {
     
     class OpenGL;
-    // This class should be instantiated ONLY by the initManager() function call
-    Manager::Manager(bool test) {
-        pbgeLog = new LogTerminal();
+
+    Manager::Manager() {
+        log = new LogTerminal();
         // Get the installation directory of the PBGE_HOME
         char * installDir = getenv("PBGE_HOME");
         // Normalize the install dir
@@ -31,9 +27,8 @@ namespace pbge {
             }
             shaderDirectories.push_back(pbgeShaderPath);
         } else {
-            pbgeLog->write("Environment Variable PBGE_HOME not found");
+            log->write("Environment Variable PBGE_HOME not found");
         }
-        this->testConfiguration = test;
         this->ogl = new OpenGL;
         this->window = new Window;
 
@@ -56,18 +51,7 @@ namespace pbge {
 
     Manager::~Manager() {
         delete ogl;
-        this->writeLog("Saindo");
-    }
-
-    void Manager::init(bool test) {
-        manager = new Manager(test);
-    }
-    
-    Manager * Manager::getInstance() {
-        if(manager == NULL) {
-            manager = new Manager();
-        }
-        return manager;
+        delete this->log;
     }
 
     void Manager::setWindowDimensions(const unsigned & w, const unsigned & h) {
