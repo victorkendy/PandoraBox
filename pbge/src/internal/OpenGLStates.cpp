@@ -19,12 +19,14 @@ bool TextureUnit::shouldChange(OpenGL * ogl) {
 }
 
 void TextureUnit::makeChange(OpenGL * ogl) {
+    
     ogl->activeTexture(GL_TEXTURE0 + index);
     if(nextTexture == NULL)
         ogl->bindTexture(boundTexture->getTarget(), 0);
     else
         ogl->bindTexture(boundTexture->getTarget(), nextTexture->getGLID());
     boundTexture = nextTexture;
+    
 }
 
 StateEnabler::StateEnabler(GLenum _mode) {

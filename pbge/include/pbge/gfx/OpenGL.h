@@ -166,6 +166,8 @@ namespace pbge {
 
         virtual void genBuffers(GLsizei n, GLuint * buffers);
 
+        virtual void genTextures(GLsizei n, GLuint * textures);
+
         virtual void getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
 
         virtual void getFloatv(GLenum pname, GLfloat * params);
@@ -201,6 +203,12 @@ namespace pbge {
         virtual void shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes);
 
         virtual void texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
+
+        virtual void texImage2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, GLvoid * data);
+
+        virtual void texParameter(GLenum target, GLenum pname, GLint param);
+
+        virtual void texParameter(GLenum target, GLenum pname, GLfloat param);
 
         virtual void uniform1f(GLint location, GLfloat v);
 

@@ -202,6 +202,10 @@ void OpenGL::genBuffers(GLsizei n, GLuint * buffers) {
     glGenBuffers(n, buffers);
 }
 
+void OpenGL::genTextures(GLsizei n, GLuint * textures) {
+    glGenTextures(n, textures);
+}
+
 void OpenGL::getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name) {
     glGetActiveUniform(program, index, bufSize, length, size, type, name);
 }
@@ -272,6 +276,18 @@ void OpenGL::shaderSource(GLuint id, GLsizei count, const GLchar ** strings, con
 
 void OpenGL::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
     glTexCoordPointer(size, type, stride, pointer);
+}
+
+void OpenGL::texImage2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, GLvoid * data) {
+    glTexImage2D(target, level, internalFormat, width, height, border, format, type, data);
+}
+
+void OpenGL::texParameter(GLenum target, GLenum pname, GLint param) {
+    glTexParameteri(target, pname, param);
+}
+
+void OpenGL::texParameter(GLenum target, GLenum pname, GLfloat param) {
+    glTexParameterf(target, pname, param);
 }
 
 void OpenGL::uniform1f(GLint location, GLfloat v) {
