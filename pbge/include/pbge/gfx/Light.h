@@ -3,6 +3,7 @@
 #define PBGE_GFX_LIGHT_H_
 
 #include "math3d/vector4.h"
+
 #include "pbge/gfx/Node.h"
 
 namespace pbge {

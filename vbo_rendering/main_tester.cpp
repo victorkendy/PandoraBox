@@ -43,6 +43,7 @@ int main(int argc, char ** argv) {
     manager->setFullscreen(false);
     manager->setWindowTitle("vbo_rendering");
     manager->setSceneInitializer(new CustomSceneInitializer);
+    manager->printDebugInformation(true);
     manager->displayGraphics();
     delete manager;
     return 0;

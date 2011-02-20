@@ -12,8 +12,6 @@
 
 namespace pbge {
     
-    class OpenGL;
-
     Manager::Manager() {
         log = new LogTerminal();
         // Get the installation directory of the PBGE_HOME
@@ -51,7 +49,7 @@ namespace pbge {
 
     Manager::~Manager() {
         delete ogl;
-        delete this->log;
+        delete log;
         delete window;
     }
 
@@ -77,5 +75,9 @@ namespace pbge {
 
     void Manager::setMainSceneGraph(SceneGraph * scene) {
         this->window->setScene(scene);
+    }
+
+    void Manager::printDebugInformation(const bool & showInfo) {
+        this->window->setShowDebug(showInfo);
     }
 }

@@ -76,6 +76,8 @@ namespace pbge {
         Texture(Texture::Format format) {
             this->glID = 0;
             this->internalFormat = format;
+            this->minFilter = GL_LINEAR;
+            this->magFilter = GL_LINEAR;
         }
         
         GLuint getGLID() { return glID; }
@@ -97,7 +99,6 @@ namespace pbge {
     public:
         Texture2D(Texture::Format _internalFormat = RGBA) : Texture(_internalFormat) {
             this->target = GL_TEXTURE_2D;
-            this->sync = false;
         }
 
         void setWidth(unsigned w) {
@@ -109,6 +110,7 @@ namespace pbge {
         }
 
         void setData(Texture::Format format, Texture::DataType type, void * texData) {
+            //this->dataFormat = format;
             this->dataType = type;
             this->data = texData;
         }
@@ -116,7 +118,6 @@ namespace pbge {
         void initializeTexture(OpenGL * ogl);
 
     private:
-        bool sync, allocated;
         unsigned width;
         unsigned height;
 

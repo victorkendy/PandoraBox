@@ -109,7 +109,9 @@ namespace pbge {
     void GLProgram::updateUniforms(OpenGL * ogl) {
         std::set<UniformInfo>::iterator it;
         for(it = uniforms.begin(); it != uniforms.end(); it++) {
-            ogl->getUniformValue(*it)->bindValueOn(this, *it, ogl);
+            UniformValue * value = ogl->getUniformValue(*it);
+            if(value != NULL)
+                value->bindValueOn(this, *it, ogl);
         }
     }
 

@@ -60,6 +60,8 @@ namespace pbge {
 
         void setSceneInitializer(SceneInitializer * initializer);
 
+        void printDebugInformation(const bool & showInfo);
+
         void displayGraphics();
 
     private:

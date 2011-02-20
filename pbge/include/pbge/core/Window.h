@@ -14,6 +14,7 @@ namespace pbge {
     class Window {
     public:
         Window () {
+            showDebug = false;
             fullscreen = false;
             width = 500;
             height = 500;
@@ -69,6 +70,14 @@ namespace pbge {
             return initializer;
         }
 
+        void setShowDebug(const bool & show) {
+            this->showDebug = show;
+        }
+
+        bool getShowDebug() {
+            return showDebug;
+        }
+
         void displayWindow();
 
     private:
@@ -83,6 +92,8 @@ namespace pbge {
         unsigned positionY;
 
         bool fullscreen;
+
+        bool showDebug;
 
         Renderer * renderer;
 
