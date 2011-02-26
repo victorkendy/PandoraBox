@@ -19,3 +19,7 @@ void UniformFloatVec2::bindValueOn(GPUProgram *program, const UniformInfo & info
 void UniformFloat::bindValueOn(GPUProgram *program, const UniformInfo & info, OpenGL *ogl) {
     program->bindFloat(info, ogl, value);
 }
+
+void UniformSampler2D::bindValueOn(GPUProgram *program, const UniformInfo &info, OpenGL *ogl) {
+    program->bindSampler2D(info, ogl, texture);
+}

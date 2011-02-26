@@ -8,6 +8,7 @@
 #include "pbge/core/File.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Shader.h"
+#include "pbge/gfx/Texture.h"
 
 
 using std::string;
@@ -218,5 +219,9 @@ namespace pbge {
 
     void GLProgram::bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
         ogl->uniform4f(info.getLocation(), v1, v2, v3, v4);
+    }
+
+    void GLProgram::bindSampler2D(const UniformInfo & info, OpenGL * ogl, const Texture * tex) {
+        
     }
 }

@@ -1,5 +1,6 @@
 
 #include <string>
+#include <iostream>
 
 #if defined (WIN32) || defined (_WIN32)
     #include <windows.h>
@@ -116,6 +117,17 @@ namespace {
                 }
                 ogl->drawBuffer(GL_BACK);
                 ogl->clearColor(0,0,0,1);
+                /*
+                {
+                    char * ext = (char*)glGetString(GL_EXTENSIONS);
+                    char * tok = strtok(ext, " ");
+                    while(tok != NULL) {
+                        std::cout << tok << std::endl;
+                        tok = strtok(NULL, " ");
+                    }
+                    std::cout << glGetString(GL_VERSION) << std::endl;
+                }
+                */
                 break;
             case WM_CLOSE:
                 PostQuitMessage(0);

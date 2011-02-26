@@ -13,6 +13,7 @@ namespace pbge {
 
     class GPUProgram;
     class OpenGL;
+    class Texture;
 
     typedef enum {
         INVALID, 
@@ -212,6 +213,23 @@ namespace pbge {
 
     private:
         float value;
+    };
+
+    class UniformSampler2D : public UniformValue {
+    public:
+        UniformSampler2D() {
+            this->texture = NULL;
+        }
+
+        void setValue(Texture * value) {
+            this->texture = value;
+        }
+        
+        UniformType getType() { return SAMPLER_2D; }
+
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+    private:
+        Texture * texture;
     };
 }
 #endif
