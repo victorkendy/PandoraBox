@@ -48,6 +48,20 @@ namespace pbge {
         virtual void bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) = 0;
     };
 
+    
+
+    namespace detail {
+        class GLProgramUniform {
+        public:
+            GLProgramUniform(const UniformInfo & _info, UniformValue * _value) {
+                info = _info;
+                value = _value;
+            }
+
+            UniformInfo info;
+            UniformValue * value;
+        };
+    }
 
     class PBGE_EXPORT GLShader : public Shader{
     public:
@@ -143,7 +157,7 @@ namespace pbge {
 
         std::string infoLog;
 
-        std::set<UniformInfo> uniforms;
+        std::vector<detail::GLProgramUniform> uniforms;
     };
 }
 

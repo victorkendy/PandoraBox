@@ -110,7 +110,7 @@ namespace pbge {
         }
 
         void setData(Texture::Format format, Texture::DataType type, void * texData) {
-            //this->dataFormat = format;
+            this->dataFormat = format;
             this->dataType = type;
             this->data = texData;
         }
