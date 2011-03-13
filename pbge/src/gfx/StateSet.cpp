@@ -43,6 +43,10 @@ StateSet::StateSet(OpenGL * ogl) {
     states[OpenGL::PROGRAM_POINT_SIZE] = new StateEnabler(GL_PROGRAM_POINT_SIZE);
 
     boundProgram = new BoundProgram;
+    
+    int numberOfTextureUnits = ogl->numberOfTextureUnits();
+    for (int i = 0; i < numberOfTextureUnits; i++)
+        textureUnits.push_back(new TextureUnit(ogl, i));
 }
 
 StateSet::~StateSet() {
@@ -110,7 +114,20 @@ UniformValue * StateSet::createUniform(const UniformInfo &info) {
 UniformValue * StateSet::getUniformValue(const UniformInfo & info) {
     std::map<UniformInfo, UniformValue*>::iterator value = this->uniformValues.find(info);
     if(value == this->uniformValues.end()) {
-        return createUniform(info);       
+        return createUniform(info);
     }
     return value->second;
+}
+
+TextureUnit * StateSet::chooseTexUnit(Texture * texture) {
+    std::vector<TextureUnit*>::iterator unit;
+    TextureUnit * chosen = NULL;
+    for(unit = textureUnits.begin(); unit != textureUnits.end(); unit++) {
+        if((*unit)->getCurrentTexture() == texture) {
+            chosen = *unit;
+            break;
+        } else if(((*unit)->getCurrentTexture() == NULL) && (chosen == NULL))
+            chosen = *unit;
+    }
+    return chosen;
 }

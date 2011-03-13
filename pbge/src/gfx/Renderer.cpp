@@ -36,10 +36,14 @@ void Renderer::updateScene(){
 
 void Renderer::renderWithCamera(Camera * camera, Node * root) {
     camera->setCamera(ogl);
+
+    
     ogl->disableDrawBuffer();
     depthRenderer->visit(root, ogl);
     ogl->enableDrawBuffer(GL_BACK);
     ogl->depthMask(GL_FALSE);
+
+    
     
     ogl->enable(GL_BLEND);
     ogl->blendFunc(GL_ONE, GL_ONE);
@@ -61,10 +65,13 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
 void Renderer::render(){
     ogl->depthMask(GL_TRUE);
     ogl->depthFunc(GL_LEQUAL);
+    
+    
     ogl->clear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     Node * root = this->getScene()->getSceneGraphRoot();
     if(this->getScene() == NULL || root == NULL) return;
     updateScene();
+    
     std::vector<Camera*> & activeCameras = updater->getActiveCameras();
     std::vector<Camera*>::iterator camera;
     for(camera = activeCameras.begin(); camera != activeCameras.end(); camera++) {

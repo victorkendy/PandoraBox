@@ -52,7 +52,12 @@ namespace pbge {
     }
 
     void VertexBuffer::bind(OpenGL * ogl) {
+        GLenum err;
+        while((glGetError()) != GL_NO_ERROR);
         this->buffer->flush(ogl, true);
+        while((err = glGetError()) != GL_NO_ERROR) {
+            std::cout << err << std::endl;
+        }
         bindAllAttribs(ogl);
     }
 

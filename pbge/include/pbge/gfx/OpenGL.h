@@ -15,6 +15,8 @@ namespace pbge {
     class StateSet;
     class Buffer;
     class UniformInfo;
+    class TextureUnit;
+    class Texture;
     class UniformValue;
     
     class GLContext {
@@ -105,6 +107,9 @@ namespace pbge {
 
         virtual ResourceStorage & getStorage() { return *storage; }
 
+        virtual TextureUnit * chooseTextureUnit(Texture * texture);
+        
+        virtual const int numberOfTextureUnits();
         
         
         // raw OpenGL API calls

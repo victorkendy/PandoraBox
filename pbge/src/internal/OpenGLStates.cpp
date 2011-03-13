@@ -24,7 +24,7 @@ void TextureUnit::makeChange(OpenGL * ogl) {
     if(nextTexture == NULL)
         ogl->bindTexture(boundTexture->getTarget(), 0);
     else
-        ogl->bindTexture(boundTexture->getTarget(), nextTexture->getGLID());
+        ogl->bindTexture(nextTexture->getTarget(), nextTexture->getGLID());
     boundTexture = nextTexture;
     
 }

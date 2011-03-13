@@ -10,6 +10,8 @@
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Texture.h"
 
+#include "pbge/internal/OpenGLStates.h"
+
 
 using std::string;
 
@@ -221,7 +223,8 @@ namespace pbge {
         ogl->uniform4f(info.getLocation(), v1, v2, v3, v4);
     }
 
-    void GLProgram::bindSampler2D(const UniformInfo & info, OpenGL * ogl, const Texture * tex) {
-        
+    void GLProgram::bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex) {
+        TextureUnit * unit = ogl->chooseTextureUnit(tex);
+        unit->setTexture(tex);
     }
 }

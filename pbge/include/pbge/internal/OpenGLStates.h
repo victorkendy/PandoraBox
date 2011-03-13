@@ -48,11 +48,28 @@ namespace pbge {
     };
 
     class PBGE_EXPORT TextureUnit : public State{
+    public:
         TextureUnit(OpenGL * ogl, unsigned index);
 
         void makeChange(OpenGL * ogl);
 
         bool shouldChange(OpenGL * ogl);
+
+        void setTexture(Texture * tex) {
+            this->nextTexture = tex;
+        }
+
+        Texture * getNextTexture() {
+            return nextTexture;
+        }
+
+        Texture * getCurrentTexture() {
+            return boundTexture;
+        }
+
+        const unsigned getIndex() {
+            return index;
+        }
 
     private:
         bool active;

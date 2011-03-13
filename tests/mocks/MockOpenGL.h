@@ -10,6 +10,7 @@
 
 class MockOpenGL : public pbge::OpenGL {
 public:
+    MOCK_METHOD0(numberOfTextureUnits, const int());
     MOCK_METHOD1(setMatrixMode, void(GLenum mode));
     MOCK_METHOD1(loadViewMatrix, void(const math3d::matrix44 & m));
     MOCK_METHOD1(loadProjectionMatrix, void(const math3d::matrix44 & m));

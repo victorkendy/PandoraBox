@@ -148,7 +148,7 @@ namespace {
                 if(window->getShowDebug()) {
                     GLenum err;
                     while((err = glGetError()) != GL_NO_ERROR) {
-                        std::cout << err << std::endl;
+                        //std::cout << err << std::endl;
                     }
                 }
                 return 0;
