@@ -2,6 +2,7 @@
 *.ilk
 *.pdb
 *.exe
+*.pgd
 *.ncb
 *.suo
 *.user

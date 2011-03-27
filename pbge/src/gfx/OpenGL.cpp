@@ -25,14 +25,14 @@ OpenGL::~OpenGL() {
 }
 
 void OpenGL::setContext(GLContext * glContext) {
-    GLint initialMatrixMode;
     this->context = glContext;
-    this->getIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
-    currentMatrixMode = initialMatrixMode;
-    state = new StateSet(this);
     if(context != NULL) {
         context->makeCurrent();
         glewInit();
+        GLint initialMatrixMode;
+        this->getIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
+        currentMatrixMode = initialMatrixMode;
+        state = new StateSet(this);
     }
 }
 
@@ -85,6 +85,18 @@ void OpenGL::enableDrawBuffer(GLenum buffer) {
     this->drawBuffer(buffer);
     this->readBuffer(buffer);
 }
+
+TextureUnit * OpenGL::chooseTextureUnit(Texture * texture) {
+    return state->chooseTexUnit(texture);
+}
+
+const int OpenGL::numberOfTextureUnits() {
+    GLint numberOfUnits = -1;
+    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &numberOfUnits);
+    std::cout << "number of texture units: " << numberOfUnits << std::endl;
+    return numberOfUnits;
+}
+
 
 void OpenGL::activeTexture(GLenum textureUnit) {
     glActiveTexture(textureUnit);

@@ -75,6 +75,7 @@ namespace pbge {
             this->size = _size;
             this->usage = _usage;
             this->target = _target;
+            this->begin_update = -1;
             // malloc is used because raw data is needed
             this->data = malloc(size);
             if(this->data == NULL) {

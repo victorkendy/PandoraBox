@@ -12,6 +12,7 @@
 namespace pbge {
 
     class FileReader;
+    class Texture;
 
     class PBGE_EXPORT Shader {
     public:
@@ -43,23 +44,33 @@ namespace pbge {
 
     public: // Uniform binding
         virtual void bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor) = 0;
+
         virtual void bindFloatVec2(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2) = 0;
+
         virtual void bindFloatVec3(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3) = 0;
+
         virtual void bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) = 0;
+
+        virtual void bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex) = 0;
     };
 
     
 
+    // default shader implementation
+
     namespace detail {
+        // internal class used to store the uniform inside the shader
         class GLProgramUniform {
         public:
             GLProgramUniform(const UniformInfo & _info, UniformValue * _value) {
                 info = _info;
                 value = _value;
+                stamp = 0;
             }
 
             UniformInfo info;
             UniformValue * value;
+            unsigned long stamp;
         };
     }
 
@@ -140,9 +151,15 @@ namespace pbge {
 
     public: // Uniform binding
         void bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor);
+
         void bindFloatVec2(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2);
+
         void bindFloatVec3(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3);
+
         void bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4);
+
+        void bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex);
+
         void updateUniforms(OpenGL * ogl);
     private:
         void extractInfoLog(OpenGL * ogl);

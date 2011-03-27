@@ -22,11 +22,16 @@ void VBOModel::render(ModelInstance * instance, OpenGL * ogl) {
 }
 
 void VBOModel::renderDepth(ModelInstance* instance, OpenGL * ogl) {
+    
     ogl->enable(GL_VERTEX_ARRAY);
-    vbo->bindOnly(VertexAttrib::VERTEX, ogl);
+    
+    vbo->bind(ogl);
+    
     glDrawArrays(primitive, 0, vbo->getNVertices());
     vbo->unbind(ogl);
     ogl->disable(GL_VERTEX_ARRAY);
+    
+    
 }
 
 BezierCurve::BezierCurve() {
@@ -76,6 +81,7 @@ GPUProgram * BezierCurve::getEvaluator(OpenGL * ogl) {
 }
 
 void BezierCurve::render(ModelInstance * instance, OpenGL * ogl) {
+
     GPUProgram * program = this->getEvaluator(ogl);
     ogl->getState().useProgram(program);
     dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("p0", FLOAT_VEC4, -1)))->setValue(-1,0,0,1);

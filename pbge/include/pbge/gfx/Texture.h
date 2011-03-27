@@ -84,6 +84,11 @@ namespace pbge {
 
         GLenum getTarget() { return target; }
 
+        void setFiltering(unsigned minificationFilter, unsigned magnificationFilter) {
+            this->minFilter = minificationFilter;
+            this->magFilter = magnificationFilter;
+        }
+
         void bindTexture(OpenGL * ogl);
 
         virtual void initializeTexture(OpenGL * ogl) = 0;

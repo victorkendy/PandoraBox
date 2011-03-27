@@ -182,6 +182,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GLStateTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NodeTest.cpp"
 				>
 			</File>
