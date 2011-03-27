@@ -226,5 +226,6 @@ namespace pbge {
     void GLProgram::bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex) {
         TextureUnit * unit = ogl->chooseTextureUnit(tex);
         unit->setTexture(tex);
+        unit->makeChange(ogl);
     }
 }

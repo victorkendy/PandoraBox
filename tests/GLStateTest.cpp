@@ -42,6 +42,12 @@ TEST(StateSetTest, ifTheTextureIsBoundToAUnitReturnsTheUnitThatIsBoundToTheTextu
     ASSERT_EQ(&texture, stateSet.chooseTexUnit(&texture)->getCurrentTexture());
 }
 
+void bindTexOnUnit(pbge::TextureUnit * unit, MockTexture & texture, MockOpenGL & ogl) {
+    unit->setTexture(&texture);
+    ASSERT_TRUE(unit->shouldChange(&ogl));
+    unit->makeChange(&ogl);
+}
+
 TEST(StateSetTest, ifThereIsAFreeUnitAndTheTextureIsNotBoundReturnTheFreeUnit) {
     MockOpenGL ogl;
     MockTexture texture;
@@ -49,17 +55,28 @@ TEST(StateSetTest, ifThereIsAFreeUnitAndTheTextureIsNotBoundReturnTheFreeUnit) {
     EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
     pbge::StateSet stateSet(&ogl);
     pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
-    unit->setTexture(&texture);
-    ASSERT_TRUE(unit->shouldChange(&ogl));
-    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex())).Times(1);
+    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex()));
     EXPECT_CALL(ogl, bindTexture(_, _));
-    unit->makeChange(&ogl);
+    bindTexOnUnit(unit, texture, ogl);
     ASSERT_EQ(NULL, stateSet.chooseTexUnit(&texture2)->getCurrentTexture());
 }
 
-/*
-TEST(StateSetTest, ifThereAreNoFreeUnitsChooseTextureUnitReturnsTheUnitWithTheOldestBinding) {
 
+TEST(StateSetTest, ifThereAreNoFreeUnitsChooseTextureUnitReturnsTheUnitWithTheOldestBinding) {
+    MockOpenGL ogl;
+    MockTexture texture;
+    MockTexture texture2;
+    MockTexture texture3;
+
+    EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
+    pbge::StateSet stateSet(&ogl);
+    pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
+    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex())).Times(1);
+    EXPECT_CALL(ogl, bindTexture(_, _)).Times(2);
+    bindTexOnUnit(unit, texture, ogl);
+    
+    unit = stateSet.chooseTexUnit(&texture2);
+    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex())).Times(1);
+    bindTexOnUnit(unit, texture2, ogl);
 }
 
-*/

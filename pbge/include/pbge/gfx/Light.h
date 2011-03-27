@@ -12,6 +12,7 @@ namespace pbge {
     class GPUProgram;
     class UpdaterVisitor;
     class RenderVisitor;
+    class Texture2D;
 
     class PBGE_EXPORT Light : public Node {
     public:
@@ -74,7 +75,7 @@ namespace pbge {
 
         GPUProgram * getLightPassProgram(OpenGL * ogl) {
             if(program == NULL)
-                return PointLight::getDefaultLightPassProgram(ogl);
+                program = PointLight::getDefaultLightPassProgram(ogl);
             return program;
         }
 
@@ -104,6 +105,8 @@ namespace pbge {
         GPUProgram * program;
 
         node_list childs;
+
+        Texture2D * texture;
 
         bool on;
     };

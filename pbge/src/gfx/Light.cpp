@@ -1,10 +1,12 @@
 #include <iostream>
+#include <cstdlib>
 
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Light.h"
+#include "pbge/gfx/Texture.h"
 #include "pbge/gfx/ResourceStorage.h"
 
 
@@ -46,6 +48,7 @@ Shader * PointLight::getDefaultLightPassFS(OpenGL * ogl) {
         "uniform vec4 light_diffuseColor;\n"
         "varying vec3 normal;\n"
         "varying vec3 lightDir;\n"
+        "uniform sampler2D texture;\n"
 
         "void main() {\n"
         "   float ndotd;\n"
@@ -74,6 +77,9 @@ GPUProgram * PointLight::getDefaultLightPassProgram(OpenGL * ogl) {
     }
     return program;
 }
+
+#define W 2
+#define H 2
 
 PointLight::PointLight() {
     on = true;
