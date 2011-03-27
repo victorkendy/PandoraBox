@@ -5,6 +5,7 @@
 *.ncb
 *.suo
 *.user
+*.pgd
 
 pbge.dll
 pbge.lib
