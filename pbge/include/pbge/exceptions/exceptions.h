@@ -25,7 +25,10 @@ namespace pbge {
         BuilderException(const std::string & _message) : Exception(_message) {}
     };
 
-
+    class InvalidIndexException : public Exception {
+    public:
+        InvalidIndexException(const std::string & _message) : Exception(_message) {}
+    };
 }
 
 

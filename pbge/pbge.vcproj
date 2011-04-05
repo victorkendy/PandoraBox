@@ -241,6 +241,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\tensor\TensorModel.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Texture.cpp"
 				>
 			</File>
@@ -360,6 +364,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\StateSet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\tensor\TensorModel.h"
 				>
 			</File>
 			<File
