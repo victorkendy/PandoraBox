@@ -227,5 +227,6 @@ namespace pbge {
         TextureUnit * unit = ogl->chooseTextureUnit(tex);
         unit->setTexture(tex);
         unit->makeChange(ogl);
+        ogl->uniform1i(info.getLocation(), unit->getIndex());
     }
 }
