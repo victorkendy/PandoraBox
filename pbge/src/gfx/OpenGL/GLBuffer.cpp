@@ -4,9 +4,29 @@
 
 using namespace pbge;
 
-GLBuffer::GLBuffer(size_t _size, GLenum _usage, GraphicAPI * ogl) {
+GLenum translateUsageHint(Buffer::UsageHint usageHint) {
+    GLenum usage;
+    switch (usageHint) {
+        case Buffer::STREAM_COPY: usage = GL_STREAM_COPY; break;
+        case Buffer::STREAM_DRAW: usage = GL_STREAM_DRAW; break;
+        case Buffer::STREAM_READ: usage = GL_STREAM_READ; break;
+
+        case Buffer::STATIC_COPY: usage = GL_STATIC_COPY; break;
+        case Buffer::STATIC_DRAW: usage = GL_STATIC_DRAW; break;
+        case Buffer::STATIC_READ: usage = GL_STATIC_READ; break;
+
+        case Buffer::DYNAMIC_COPY: usage = GL_DYNAMIC_COPY; break;
+        case Buffer::DYNAMIC_DRAW: usage = GL_DYNAMIC_DRAW; break;
+        case Buffer::DYNAMIC_READ: usage = GL_DYNAMIC_READ; break;
+
+        default: throw 1;
+    }
+    return usage;
+}
+
+GLBuffer::GLBuffer(size_t _size, Buffer::UsageHint _usage, GraphicAPI * ogl) {
     this->size = _size;
-    this->usage = _usage;
+    this->usage = translateUsageHint(_usage);
     this->target = 0;
     this->data = malloc(size);
     if (this->data == NULL) {
@@ -16,23 +36,44 @@ GLBuffer::GLBuffer(size_t _size, GLenum _usage, GraphicAPI * ogl) {
     this->gl = ogl;
 } 
 
-void * GLBuffer::map(GLenum access) {
-    if (data == NULL) {
-        glBindBuffer(target, glID);
-        return glMapBuffer(target, access);
+void * GLBuffer::map(AccessPattern accessPattern) {
+    unsigned access = 0;
+    if(data != NULL) {
+        return data;
     }
-    return data;
+    switch(accessPattern) {
+        case READ_ONLY: access = GL_READ_ONLY; break;
+        case WRITE_ONLY: access = GL_WRITE_ONLY; break;
+        case READ_WRITE: access = GL_READ_WRITE; break;
+        // TODO: log warn
+        default: throw 1;
+    }
+    glBindBuffer(target, glID);
+    return glMapBuffer(target, access);
 }
 
-void GLBuffer::bindOn(GLenum _target) {
+void GLBuffer::unmap() {
+    glUnmapBuffer(target);
+}
+
+void GLBuffer::bindOn(Target _target) {
+    GLenum bindPoint;
+    switch(_target) {
+        case Buffer::VertexBuffer: bindPoint = GL_ARRAY_BUFFER; break;
+        case Buffer::IndexBuffer: bindPoint = GL_ELEMENT_ARRAY_BUFFER; break;
+        case Buffer::PixelReadBackBuffer: bindPoint = GL_PIXEL_PACK_BUFFER; break;
+        case Buffer::PixelSendBuffer: bindPoint = GL_PIXEL_UNPACK_BUFFER; break;
+        // TODO: log error
+        default: throw 1;
+    }
     // the default target will be the target of the first bind
     if (this->target == 0) {
-        this->target = _target;
+        this->target = bindPoint;
     }
     if (this->glID == 0) {
         this->initialize();
     }
-    glBindBuffer(target, glID);
+    glBindBuffer(bindPoint, glID);
 }
 
 void GLBuffer::unbind() {
@@ -43,11 +84,11 @@ void GLBuffer::initialize() {
     glGenBuffers(1, &glID);
     glBindBuffer(target, glID);
     if (data != NULL) {
-        glBufferData(target, size, usage, data);
+        glBufferData(target, size, data, usage);
         delete data;
         data = NULL;
     } else { // maybe allocation failed?
-        glBufferData(target, size, usage, NULL);
+        glBufferData(target, size, NULL, usage);
     }
 }
 

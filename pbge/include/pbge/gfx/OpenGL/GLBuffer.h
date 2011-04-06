@@ -19,18 +19,20 @@ namespace pbge {
         friend OpenGL;
 
         // returns the data buffer
-        void * map(GLenum access);
+        void * map(Buffer::AccessPattern access);
+
+        void unmap();
 
         void unbind();
 
-        void bindOn(GLenum _target);
+        void bindOn(Buffer::Target _target);
 
         GLuint getID() {
             return glID;
         }
     private:
         // retirei o target
-        GLBuffer(size_t _size, GLenum _usage, GraphicAPI * _gl);
+        GLBuffer(size_t _size, Buffer::UsageHint _usage, GraphicAPI * _gl);
         
         void destroy();
 

@@ -232,7 +232,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     MockBuffer buffer;
     float buf[9];
 
-    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW, pbge::Buffer::VertexBuffer)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
     
     pbge::VertexBufferBuilder builder(3);
@@ -255,7 +255,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     MockBuffer buffer;
     float buf[20];
 
-    EXPECT_CALL(ogl, createBuffer(20*sizeof(float),GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, createBuffer(20*sizeof(float),pbge::Buffer::DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
 
     pbge::VertexBufferBuilder builder(2);
@@ -278,7 +278,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     builder.setAttribIndex(vertex, vertex_indexes);
     builder.setAttribIndex(normal, normal_indexes);
     builder.setAttribIndex(color, color_indexes);
-    pbge::VertexBuffer * vbo = builder.done(GL_DYNAMIC_DRAW, &ogl);
+    pbge::VertexBuffer * vbo = builder.done(pbge::Buffer::DYNAMIC_DRAW, &ogl);
     EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY));
     EXPECT_CALL(ogl, enableClientState(GL_NORMAL_ARRAY));
     EXPECT_CALL(ogl, enableClientState(GL_COLOR_ARRAY));

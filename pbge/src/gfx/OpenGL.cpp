@@ -65,7 +65,7 @@ void OpenGL::updateState() {
     this->state->apply(this);
 }
 
-Buffer * OpenGL::createBuffer(size_t _size, GLenum _usage, GLenum _target) {
+Buffer * OpenGL::createBuffer(size_t _size, Buffer::UsageHint _usage) {
     return new GLBuffer(_size, _usage, this);
 }
 

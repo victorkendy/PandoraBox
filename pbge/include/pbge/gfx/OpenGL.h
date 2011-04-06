@@ -9,6 +9,7 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
+#include "pbge/gfx/Buffer.h"
 
 namespace pbge {
     class ResourceStorage;
@@ -93,7 +94,7 @@ namespace pbge {
 
         virtual void uploadProjection();
 
-        virtual Buffer * createBuffer(size_t _size, GLenum _usage, GLenum _target);
+        virtual Buffer * createBuffer(size_t _size, Buffer::UsageHint _usage);
 
         virtual UniformValue * getUniformValue(const UniformInfo & info);
 

@@ -43,7 +43,7 @@ namespace pbge {
     }
 
     void VertexBuffer::bindOnly(VertexAttrib::Type type, OpenGL * ogl) {
-        buffer->flush(ogl, true);
+        buffer->bindOn(Buffer::VertexBuffer);
         std::vector<VertexAttrib*>::iterator it;
         for(it = attribs.begin(); it != attribs.end(); it++) {
             if((*it)->getType() == type)
@@ -53,16 +53,12 @@ namespace pbge {
 
     void VertexBuffer::bind(OpenGL * ogl) {
         GLenum err;
-        while((glGetError()) != GL_NO_ERROR);
-        this->buffer->flush(ogl, true);
-        while((err = glGetError()) != GL_NO_ERROR) {
-            std::cout << err << std::endl;
-        }
+        buffer->bindOn(Buffer::VertexBuffer);
         bindAllAttribs(ogl);
     }
 
     void VertexBuffer::unbind(OpenGL * ogl) {
-        this->buffer->unbind(ogl);
+        this->buffer->unbind();
     }
 
     VertexBuffer::~VertexBuffer() {

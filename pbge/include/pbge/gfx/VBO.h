@@ -235,7 +235,7 @@ namespace pbge {
 
         VertexBufferBuilder & setAttribIndex(const std::vector<unsigned short> & indexes);
 
-        VertexBuffer * done(GLenum usage, OpenGL * ogl);
+        VertexBuffer * done(Buffer::UsageHint usage, OpenGL * ogl);
 
     private:
         void validateAttribs();
