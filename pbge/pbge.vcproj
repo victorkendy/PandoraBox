@@ -181,6 +181,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\OpenGL\GLBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\OpenGL\GLBuffer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Light.cpp"
 				>
 			</File>
