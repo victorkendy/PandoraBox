@@ -8,8 +8,6 @@
 
 namespace pbge {
 
-    class OpenGL;
-
     typedef OpenGL GraphicAPI;
 
 

@@ -17,7 +17,7 @@ public:
     MOCK_METHOD1(loadModelMatrix, void(const math3d::matrix44 & m));
     MOCK_METHOD0(updateState, void());
     MOCK_METHOD0(uploadProjection, void());
-    MOCK_METHOD3(createBuffer, pbge::Buffer*(size_t _size, GLenum _usage, GLenum _target));
+    MOCK_METHOD2(createBuffer, pbge::Buffer*(size_t _size, pbge::Buffer::UsageHint _usage));
     MOCK_METHOD1(activeTexture, void(GLenum textureUnit));
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
     MOCK_METHOD2(attachShader, void(GLuint program, GLuint shader));
@@ -58,7 +58,11 @@ public:
 
 class MockBuffer : public pbge::Buffer {
 public:
-    MOCK_METHOD0(map, void*());
+    MOCK_METHOD1(map, void*(pbge::Buffer::AccessPattern pattern));
+    MOCK_METHOD0(unmap, void());
+    MOCK_METHOD0(unbind, void());
+    MOCK_METHOD1(bindOn, void(Target _target));
+    MOCK_METHOD0(destroy, void());
 };
 
 #endif //PBGE_TESTS_MOCKOPENGL_H_

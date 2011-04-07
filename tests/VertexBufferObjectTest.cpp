@@ -115,8 +115,8 @@ TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
     float buf[9];
     float expected[] = {2.0f, 3.0f, 4.0f, 1.0f,2.0f,3.0f, 3.0f,4.0f,5.0f};
 
-    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),GL_STATIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
-    EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
+    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
     
     pbge::VertexBufferBuilder builder(3);
     
@@ -127,7 +127,7 @@ TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
     indexes.push_back(0);
     indexes.push_back(2);
     builder.setAttribIndex(vertex, indexes);
-    builder.done(GL_STATIC_DRAW, &ogl);
+    builder.done(pbge::Buffer::STATIC_DRAW, &ogl);
     
     for(int i = 0; i < 9; i++) {
         ASSERT_FLOAT_EQ(expected[i], buf[i]);
@@ -138,8 +138,8 @@ TEST_F(VertexBufferBuilderTest, builderBuildsCombinationVertexAndNormalIterleave
     float buf[12];
     float expected[] = {1.0f,2.0f,3.0f,0.0f,1.0f,0.0f, 4.0f,5.0f,6.0f,1.0f,0.0f,1.0f};
 
-    EXPECT_CALL(ogl, createBuffer(12*sizeof(float),GL_DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
-    EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
+    EXPECT_CALL(ogl, createBuffer(12*sizeof(float),pbge::Buffer::DYNAMIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
 
     pbge::VertexBufferBuilder builder(2);
     pbge::VertexAttribBuilder vertex = builder.addAttrib(3, pbge::VertexAttrib::VERTEX);
@@ -157,7 +157,7 @@ TEST_F(VertexBufferBuilderTest, builderBuildsCombinationVertexAndNormalIterleave
 
     builder.setAttribIndex(vertex, vertex_indexes);
     builder.setAttribIndex(normal, normal_indexes);
-    builder.done(GL_DYNAMIC_DRAW, &ogl);
+    builder.done(pbge::Buffer::DYNAMIC_DRAW, &ogl);
     for(int i = 0; i < 12; i++) {
         ASSERT_FLOAT_EQ(expected[i], buf[i]);
     }
@@ -176,7 +176,7 @@ TEST_F(VertexBufferBuilderTest, ifThereIsAAttribWithNoIndexVectorThenThrowsBuild
     vertex_indexes.push_back(1);
 
     builder.setAttribIndex(vertex, vertex_indexes);
-    ASSERT_THROW(builder.done(GL_DYNAMIC_DRAW, &ogl), pbge::BuilderValidationException);
+    ASSERT_THROW(builder.done(pbge::Buffer::DYNAMIC_DRAW, &ogl), pbge::BuilderValidationException);
 }
 
 TEST(VertexPositionAttribTest, bindCallsOpenGLWithCorrectParameters) {
@@ -232,8 +232,8 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     MockBuffer buffer;
     float buf[9];
 
-    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW, pbge::Buffer::VertexBuffer)).Times(1).WillOnce(Return(&buffer));
-    EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
+    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
     
     pbge::VertexBufferBuilder builder(3);
     
@@ -244,7 +244,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     indexes.push_back(0);
     indexes.push_back(2);
     builder.setAttribIndex(vertex, indexes);
-    pbge::VertexBuffer * vbo = builder.done(GL_STATIC_DRAW, &ogl);
+    pbge::VertexBuffer * vbo = builder.done(pbge::Buffer::STATIC_DRAW, &ogl);
 
     EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY));
     EXPECT_CALL(ogl, vertexPointer(3, GL_FLOAT, 3*sizeof(float), (GLbyte*)NULL));
@@ -255,8 +255,8 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     MockBuffer buffer;
     float buf[20];
 
-    EXPECT_CALL(ogl, createBuffer(20*sizeof(float),pbge::Buffer::DYNAMIC_DRAW,GL_ARRAY_BUFFER)).Times(1).WillOnce(Return(&buffer));
-    EXPECT_CALL(buffer, map()).Times(1).WillOnce(Return((void*)(buf)));
+    EXPECT_CALL(ogl, createBuffer(20*sizeof(float),pbge::Buffer::DYNAMIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
 
     pbge::VertexBufferBuilder builder(2);
     pbge::VertexAttribBuilder vertex = builder.addAttrib(3, pbge::VertexAttrib::VERTEX);
