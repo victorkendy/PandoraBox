@@ -54,6 +54,35 @@ namespace pbge {
         int currentIndex;
     };
 
+    class PBGE_EXPORT Circle : public Model {
+    public:
+        Circle(const float & radius, const int & slices = 16);
+
+        void renderDepth(ModelInstance * instance, OpenGL * ogl);
+
+        void render(ModelInstance * instance, OpenGL * ogl);
+    private:
+        float radius;
+        int slices;
+    };
+
+    class PBGE_EXPORT Ellipse : public Circle {
+    public:
+        Ellipse(const float & x_semi_axis, const float & y_semi_axis, const int & slices);
+
+        void render(ModelInstance * instance, OpenGL * ogl);
+
+        void setEvaluator(GPUProgram * _evaluator) {
+            evaluator = _evaluator;
+        }
+
+        GPUProgram * getEvaluator(OpenGL * ogl);
+    private:
+        float x_semi_axis;
+        float y_semi_axis;
+        GPUProgram * evaluator;
+    };
+
     class PBGE_EXPORT ModelInstance : public Node {
     public:
         ModelInstance(){

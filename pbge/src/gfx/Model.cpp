@@ -1,3 +1,4 @@
+#include <math.h>
 
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/OpenGL.h"
@@ -5,6 +6,8 @@
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/StateSet.h"
+#include "pbge/exceptions/exceptions.h"
+#include "pbge/core/definitions.h"
 
 using namespace pbge;
 
@@ -71,7 +74,7 @@ GPUProgram * BezierCurve::getEvaluator(OpenGL * ogl) {
         GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultBezierEvaluator");
         if(storedEvaluator == NULL) {
             GLProgram * program = GLProgram::fromString(evaluatorVS, "");
-            ogl->getStorage().storeNamedProgram("pbge.defaultBezierevaluator", program);
+            ogl->getStorage().storeNamedProgram("pbge.defaultBezierEvaluator", program);
             evaluator = program;
         } else {
             evaluator = storedEvaluator;
@@ -111,4 +114,68 @@ void ModelInstance::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
     ogl->updateState();
     ogl->uploadProjection();
     model->renderDepth(this, ogl);
+}
+
+Circle::Circle(const float & _radius, const int & _slices) {
+    if(_radius <= 0) {
+        throw IllegalArgumentException("radius must have a positive value");
+    }
+    if(_slices < 3) {
+        throw IllegalArgumentException("there must be at least 3 slices");
+    }
+    this->radius = _radius;
+    this->slices = _slices;
+}
+
+void Circle::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
+
+void Circle::render(ModelInstance * instance, OpenGL * ogl) {
+    float radius = this->radius;
+    float param_step = 2 * PBGE_pi / this->slices;
+    
+    glBegin(GL_LINE_LOOP);
+    glColor3f(1,1,1);
+    for(float t = 0; t < 2 * PBGE_pi; t+=param_step) {
+        glVertex2f(radius * cos(t), radius * sin(t));
+    }
+    glEnd();
+    ogl->getState().useProgram(NULL);
+}
+
+// I want to have a default value for slices
+Ellipse::Ellipse(const float & _x_semi_axis, const float & _y_semi_axis, const int & _slices) : Circle(1.0f, _slices) {
+    if(_x_semi_axis <= 0 || _y_semi_axis <= 0) {
+        throw IllegalArgumentException("both semi-axis must be positive values");
+    }
+    this->x_semi_axis = _x_semi_axis;
+    this->y_semi_axis = _y_semi_axis;
+}
+
+void Ellipse::render(ModelInstance * instance, OpenGL * ogl) {
+    GPUProgram * program = this->getEvaluator(ogl);
+    ogl->getState().useProgram(program);
+    dynamic_cast<UniformFloatVec2*>(ogl->getState().getUniformValue(UniformInfo("scale", FLOAT_VEC2, -1)))->setValue(this->x_semi_axis, this->y_semi_axis);
+    ogl->updateState();
+    Circle::render(instance, ogl);
+}
+
+GPUProgram * Ellipse::getEvaluator(OpenGL * ogl) {
+    const std::string evaluatorVS = 
+        "uniform vec2 scale;\n"
+        "void main() {\n"
+        "   mat2 scaleMatrix = mat2(scale[0],0,0,scale[1]);\n"
+        "   gl_Position = gl_ModelViewProjectionMatrix * scaleMatrix * gl_Vertex;\n"
+        "   gl_FrontColor = gl_Color;\n"
+        "}";
+    if(evaluator == NULL) {
+        GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultEllipseEvaluator");
+        if(storedEvaluator == NULL) {
+            GLProgram * program = GLProgram::fromString(evaluatorVS, "");
+            ogl->getStorage().storeNamedProgram("pbge.defaultEllipseEvaluator", program);
+            evaluator = program;
+        } else {
+            evaluator = storedEvaluator;
+        }
+    }
+    return evaluator;
 }
