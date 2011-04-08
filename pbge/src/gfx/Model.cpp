@@ -74,7 +74,7 @@ GPUProgram * BezierCurve::getEvaluator(OpenGL * ogl) {
         GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultBezierEvaluator");
         if(storedEvaluator == NULL) {
             GLProgram * program = GLProgram::fromString(evaluatorVS, "");
-            ogl->getStorage().storeNamedProgram("pbge.defaultBezierevaluator", program);
+            ogl->getStorage().storeNamedProgram("pbge.defaultBezierEvaluator", program);
             evaluator = program;
         } else {
             evaluator = storedEvaluator;
@@ -140,4 +140,42 @@ void Circle::render(ModelInstance * instance, OpenGL * ogl) {
     }
     glEnd();
     ogl->getState().useProgram(NULL);
+}
+
+// I want to have a default value for slices
+Ellipse::Ellipse(const float & _x_semi_axis, const float & _y_semi_axis, const int & _slices) : Circle(1.0f, _slices) {
+    if(_x_semi_axis <= 0 || _y_semi_axis <= 0) {
+        throw IllegalArgumentException("both semi-axis must be positive values");
+    }
+    this->x_semi_axis = _x_semi_axis;
+    this->y_semi_axis = _y_semi_axis;
+}
+
+void Ellipse::render(ModelInstance * instance, OpenGL * ogl) {
+    GPUProgram * program = this->getEvaluator(ogl);
+    ogl->getState().useProgram(program);
+    dynamic_cast<UniformFloatVec2*>(ogl->getState().getUniformValue(UniformInfo("scale", FLOAT_VEC2, -1)))->setValue(this->x_semi_axis, this->y_semi_axis);
+    ogl->updateState();
+    Circle::render(instance, ogl);
+}
+
+GPUProgram * Ellipse::getEvaluator(OpenGL * ogl) {
+    const std::string evaluatorVS = 
+        "uniform vec2 scale;\n"
+        "void main() {\n"
+        "   mat2 scaleMatrix = mat2(scale[0],0,0,scale[1]);\n"
+        "   gl_Position = gl_ModelViewProjectionMatrix * scaleMatrix * gl_Vertex;\n"
+        "   gl_FrontColor = gl_Color;\n"
+        "}";
+    if(evaluator == NULL) {
+        GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultEllipseEvaluator");
+        if(storedEvaluator == NULL) {
+            GLProgram * program = GLProgram::fromString(evaluatorVS, "");
+            ogl->getStorage().storeNamedProgram("pbge.defaultEllipseEvaluator", program);
+            evaluator = program;
+        } else {
+            evaluator = storedEvaluator;
+        }
+    }
+    return evaluator;
 }
