@@ -1,3 +1,4 @@
+#include <math.h>
 
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/OpenGL.h"
@@ -5,6 +6,8 @@
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/StateSet.h"
+#include "pbge/exceptions/exceptions.h"
+#include "pbge/core/definitions.h"
 
 using namespace pbge;
 
@@ -111,4 +114,30 @@ void ModelInstance::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
     ogl->updateState();
     ogl->uploadProjection();
     model->renderDepth(this, ogl);
+}
+
+Circle::Circle(const float & _radius, const int & _slices) {
+    if(_radius <= 0) {
+        throw IllegalArgumentException("radius must have a positive value");
+    }
+    if(_slices < 3) {
+        throw IllegalArgumentException("there must be at least 3 slices");
+    }
+    this->radius = _radius;
+    this->slices = _slices;
+}
+
+void Circle::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
+
+void Circle::render(ModelInstance * instance, OpenGL * ogl) {
+    float radius = this->radius;
+    float param_step = 2 * PBGE_pi / this->slices;
+    
+    glBegin(GL_LINE_LOOP);
+    glColor3f(1,1,1);
+    for(float t = 0; t < 2 * PBGE_pi; t+=param_step) {
+        glVertex2f(radius * cos(t), radius * sin(t));
+    }
+    glEnd();
+    ogl->getState().useProgram(NULL);
 }

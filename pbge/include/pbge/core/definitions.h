@@ -7,15 +7,15 @@
 // floatVector
 #define PBGE_FLOAT_VECTOR_SIZE 56
 
-// Constantes booleanas
+// Boolean constants
 #define PBGE_true 1
 #define PBGE_false 0
 
-// Constantes numéricas
-#define PBGE_pi 3.1415927
+// Numeric constants
+#define PBGE_pi 3.1415927f
 #define PBGE_1_pi 0.3183099f   // 1/PBGE_pi
 
-// Constantes para estabilidade de rotação
+// Rotation stability constants
 #define PBGE_min_rotation 0.18f
 #define PBGE_max_rotation 3.125f
 
