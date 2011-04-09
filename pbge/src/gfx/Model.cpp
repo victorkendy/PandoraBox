@@ -149,6 +149,7 @@ Ellipse::Ellipse(const float & _x_semi_axis, const float & _y_semi_axis, const i
     }
     this->x_semi_axis = _x_semi_axis;
     this->y_semi_axis = _y_semi_axis;
+    this->evaluator = NULL;
 }
 
 void Ellipse::render(ModelInstance * instance, OpenGL * ogl) {
@@ -163,7 +164,9 @@ GPUProgram * Ellipse::getEvaluator(OpenGL * ogl) {
     const std::string evaluatorVS = 
         "uniform vec2 scale;\n"
         "void main() {\n"
-        "   mat2 scaleMatrix = mat2(scale[0],0,0,scale[1]);\n"
+        "   mat4 scaleMatrix = mat4(1.0);\n"
+        "   scaleMatrix[0][0] = scale[0];\n"
+        "   scaleMatrix[1][1] = scale[1];\n"
         "   gl_Position = gl_ModelViewProjectionMatrix * scaleMatrix * gl_Vertex;\n"
         "   gl_FrontColor = gl_Color;\n"
         "}";
