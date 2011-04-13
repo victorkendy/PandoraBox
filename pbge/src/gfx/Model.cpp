@@ -190,3 +190,32 @@ GPUProgram * Ellipse::getEvaluator(OpenGL * ogl) {
     }
     return evaluator;
 }
+
+Sphere::Sphere(const float & _radius, const int & _slices) {
+    if(_radius <= 0) {
+        throw IllegalArgumentException("radius must have a positive value");
+    }
+    if(_slices < 3) {
+        throw IllegalArgumentException("there must be at least 3 slices");
+    }
+    this->radius = _radius;
+    this->slices = _slices;
+}
+
+void Sphere::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
+
+void Sphere::render(ModelInstance * instance, OpenGL * ogl) {
+    float radius = this->radius;
+    float param_step = 2 * PBGE_pi / this->slices;
+    
+    glBegin(GL_QUAD_STRIP);
+    glColor3f(1,1,1);
+    for(float phi = 0, next_phi = param_step; phi < 2 * PBGE_pi; phi = next_phi, next_phi += param_step) {
+        for(float theta = 0; theta < PBGE_pi; theta += param_step) {
+            glVertex3f(radius * sin(theta) * cos(phi), radius * sin(theta) * sin(phi), radius * cos(theta));
+            glVertex3f(radius * sin(theta) * cos(next_phi), radius * sin(theta) * sin(next_phi), radius * cos(theta));
+        }
+    }
+    glEnd();
+    ogl->getState().useProgram(NULL);
+}
