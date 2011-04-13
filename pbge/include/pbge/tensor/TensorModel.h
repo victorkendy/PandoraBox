@@ -5,7 +5,7 @@
 
 namespace pbge {
 
-    // Only symmetric 2D matrices (others are not implemented yet)
+    // Only symmetric 2D and 3D matrices and diagonal matrices of any order (others are not implemented yet)
     class PBGE_EXPORT TensorModel : public Model {
     public:
         TensorModel(float ** tensor, int order, int slices = 16);
@@ -22,14 +22,21 @@ namespace pbge {
         float ** eigenvectors;
         bool calculated;
         int slices;
-        Ellipse * model;
+        Model * model;
 
         // Formulas based on Kingsley, Peter B. (2005). Introduction to Diffusion Tensor Imaging Mathematics: Part I. Tensors, Rotations, and Eigenvectors. Concepts in Magnetic Resonance Part A (Bridging Education and Research): 117-119
         void calculateEigenValuesAndVectors();
         void calculateEigenValuesAndVectors2d();
         void calculateEigenValues2dSymmetric();
         void calculateEigenVectors2dSymmetric();
+        void calculateEigenValuesAndVectors3d();
+        void calculateEigenValuesAndVectorsDiagonal();
+        void calculateEigenValues3dSymmetric();
+        void calculateEigenVectors3dSymmetric();
         
+        void render2d(ModelInstance * instance, OpenGL * ogl);
+        void render3d(ModelInstance * instance, OpenGL * ogl);
+
         bool tensorIsDiagonal();
         bool tensorIsSymmetric();
     };

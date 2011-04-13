@@ -219,3 +219,53 @@ void Sphere::render(ModelInstance * instance, OpenGL * ogl) {
     glEnd();
     ogl->getState().useProgram(NULL);
 }
+
+void Ellipsoid::setTransformation(const math3d::matrix44 & transformation) {
+    *(this->transformation) = transformation;
+}
+
+// I want a default value for slices
+Ellipsoid::Ellipsoid(const float & _x_semi_axis, const float & _y_semi_axis, const float & _z_semi_axis, const int & _slices) : Sphere(1.0f, _slices) {
+    if(_x_semi_axis <= 0 || _y_semi_axis <= 0 || _z_semi_axis <= 0) {
+        throw IllegalArgumentException("all semi-axis must be positive values");
+    }
+    this->x_semi_axis = _x_semi_axis;
+    this->y_semi_axis = _y_semi_axis;
+    this->z_semi_axis = _z_semi_axis;
+    this->evaluator = NULL;
+    this->transformation = new math3d::matrix44(math3d::identity44);
+}
+
+void Ellipsoid::render(ModelInstance * instance, OpenGL * ogl) {
+    GPUProgram * program = this->getEvaluator(ogl);
+    ogl->getState().useProgram(program);
+    dynamic_cast<UniformFloatVec3*>(ogl->getState().getUniformValue(UniformInfo("scale", FLOAT_VEC3, -1)))->setValue(this->x_semi_axis, this->y_semi_axis, this->z_semi_axis);
+    dynamic_cast<UniformMat4*>(ogl->getState().getUniformValue(UniformInfo("transformation", FLOAT_MAT4, -1)))->setValue(*(this->transformation));
+    ogl->updateState();
+    Sphere::render(instance, ogl);
+}
+
+GPUProgram * Ellipsoid::getEvaluator(OpenGL * ogl) {
+    const std::string evaluatorVS = 
+        "uniform vec3 scale;\n"
+        "uniform mat4 transformation;\n"
+        "void main() {\n"
+        "   mat4 scaleMatrix = mat4(1.0);\n"
+        "   scaleMatrix[0][0] = scale[0];\n"
+        "   scaleMatrix[1][1] = scale[1];\n"
+        "   scaleMatrix[2][2] = scale[2];\n"
+        "   gl_Position = gl_ModelViewProjectionMatrix * transformation * scaleMatrix * gl_Vertex;\n"
+        "   gl_FrontColor = gl_Color;\n"
+        "}";
+    if(evaluator == NULL) {
+        GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultEllipseEvaluator");
+        if(storedEvaluator == NULL) {
+            GLProgram * program = GLProgram::fromString(evaluatorVS, "");
+            ogl->getStorage().storeNamedProgram("pbge.defaultEllipseEvaluator", program);
+            evaluator = program;
+        } else {
+            evaluator = storedEvaluator;
+        }
+    }
+    return evaluator;
+}

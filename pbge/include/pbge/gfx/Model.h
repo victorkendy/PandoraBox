@@ -99,6 +99,27 @@ namespace pbge {
         int slices;
     };
 
+    class PBGE_EXPORT Ellipsoid : public Sphere {
+    public:
+        Ellipsoid(const float & x_semi_axis, const float & y_semi_axis, const float & z_semi_axis, const int & slices);
+
+        void render(ModelInstance * instance, OpenGL * ogl);
+
+        void setEvaluator(GPUProgram * _evaluator) {
+            evaluator = _evaluator;
+        }
+
+        GPUProgram * getEvaluator(OpenGL * ogl);
+
+        void setTransformation(const math3d::matrix44 & transformation);
+    private:
+        float x_semi_axis;
+        float y_semi_axis;
+        float z_semi_axis;
+        GPUProgram * evaluator;
+        math3d::matrix44 * transformation;
+    };
+
     class PBGE_EXPORT ModelInstance : public Node {
     public:
         ModelInstance(){
