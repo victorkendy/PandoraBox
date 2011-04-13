@@ -6,6 +6,7 @@
 #include "pbge/core/core.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Node.h"
+#include "math3d/math3d.h"
 
 namespace pbge {
     class VertexBuffer;
@@ -77,10 +78,13 @@ namespace pbge {
         }
 
         GPUProgram * getEvaluator(OpenGL * ogl);
+
+        void setTransformation(const math3d::matrix44 & transformation);
     private:
         float x_semi_axis;
         float y_semi_axis;
         GPUProgram * evaluator;
+        math3d::matrix44 * transformation;
     };
 
     class PBGE_EXPORT ModelInstance : public Node {

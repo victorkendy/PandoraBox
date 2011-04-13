@@ -52,6 +52,8 @@ namespace pbge {
         virtual void bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) = 0;
 
         virtual void bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex) = 0;
+
+        virtual void bindMat4(const UniformInfo & info, OpenGL * ogl, const float * v) = 0;
     };
 
     
@@ -159,6 +161,8 @@ namespace pbge {
         void bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4);
 
         void bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex);
+
+        void bindMat4(const UniformInfo & info, OpenGL * ogl, const float * v);
 
         void updateUniforms(OpenGL * ogl);
     private:

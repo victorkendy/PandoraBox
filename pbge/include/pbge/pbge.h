@@ -18,6 +18,7 @@
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/VBO.h"
+#include "pbge/tensor/TensorModel.h"
 
 
 

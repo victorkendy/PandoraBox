@@ -103,6 +103,9 @@ UniformValue * StateSet::createUniform(const UniformInfo &info) {
     else if(type == SAMPLER_2D) {
         newValue = new UniformSampler2D;
     }
+    else if(type == FLOAT_MAT4) {
+        newValue = new UniformMat4;
+    }
     if(newValue != NULL) {
         uniformValues[info] = newValue;
         return newValue;

@@ -229,4 +229,8 @@ namespace pbge {
         unit->makeChange(ogl);
         ogl->uniform1i(info.getLocation(), unit->getIndex());
     }
+
+    void GLProgram::bindMat4(const UniformInfo & info, OpenGL * ogl, const float * v) {
+        ogl->uniformMatrix4fv(info.getLocation(), 1, GL_FALSE, v);
+    }
 }

@@ -335,6 +335,10 @@ void OpenGL::uniform4i(GLint location, GLint v1, GLint v2, GLint v3, GLint v4) {
     glUniform4i(location, v1, v2, v3, v4);
 }
 
+void OpenGL::uniformMatrix4fv(GLint location, GLuint count, GLboolean transpose, const GLfloat *v) {
+    glUniformMatrix4fv(location, count, transpose, v);
+}
+
 void OpenGL::useProgram(GLuint program) {
     glUseProgram(program);
 }

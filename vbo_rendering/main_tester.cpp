@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 #include "pbge/pbge.h"
 #include "vbo_setup.h"
 
@@ -16,7 +17,18 @@ class CustomSceneInitializer : public pbge::SceneInitializer {
         dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
         scene->appendChildTo(light_parent, new pbge::ModelInstance(new pbge::BezierCurve()));
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
-        scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::Ellipse(2,3,29)));
+        //scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::Ellipse(0.5f,0.2f,100)));
+        
+        float ** tensor;
+        tensor = (float**)malloc(2*sizeof(float*));
+        tensor[0] = (float*)malloc(2*sizeof(float));
+        tensor[1] = (float*)malloc(2*sizeof(float));
+        tensor[0][0] = 0.6f;
+        tensor[0][1] = 0.2f;
+        tensor[1][0] = 0.2f;
+        tensor[1][1] = 0.3f;
+
+        scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::TensorModel(tensor, 2, 50)));
         cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
         dynamic_cast<pbge::Light*>(scene->appendChildTo(cam_node_name, new pbge::PointLight))->setDiffuseColor(0,1,1,1);
         scene->appendChildTo(child, vboModel);

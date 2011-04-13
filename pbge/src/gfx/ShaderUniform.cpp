@@ -23,3 +23,7 @@ void UniformFloat::bindValueOn(GPUProgram *program, const UniformInfo & info, Op
 void UniformSampler2D::bindValueOn(GPUProgram *program, const UniformInfo &info, OpenGL *ogl) {
     program->bindSampler2D(info, ogl, texture);
 }
+
+void UniformMat4::bindValueOn(GPUProgram *program, const UniformInfo &info, OpenGL *ogl) {
+    program->bindMat4(info, ogl, this->values);
+}
