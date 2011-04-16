@@ -55,9 +55,13 @@ TEST(UniformInfoTest, smokeTest) {
 
 class MockTexture : public pbge::Texture {
 public:
-    MockTexture() : pbge::Texture(pbge::Texture::RGBA) {}
-    
     MOCK_METHOD1(initializeTexture, void(pbge::OpenGL * gl));
+
+    MOCK_METHOD1(setMinFilter, void(pbge::Texture::Filter filter));
+
+    MOCK_METHOD1(setMagFilter, void(pbge::Texture::Filter filter));
+
+    MOCK_METHOD1(bindTextureOn, void(pbge::TextureUnit * unit));
 };
 
 TEST(StateSetTest, ifAllUnitsAreFreeReturnsAFreeUnit) {
@@ -78,8 +82,6 @@ TEST(StateSetTest, ifTheTextureIsBoundToAUnitReturnsTheUnitThatIsBoundToTheTextu
     pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
     unit->setTexture(&texture);
     ASSERT_TRUE(unit->shouldChange(&ogl));
-    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex())).Times(1);
-    EXPECT_CALL(ogl, bindTexture(_, _));
     unit->makeChange(&ogl);
     ASSERT_EQ(&texture, stateSet.chooseTexUnit(&texture)->getCurrentTexture());
 }
@@ -97,8 +99,6 @@ TEST(StateSetTest, ifThereIsAFreeUnitAndTheTextureIsNotBoundReturnTheFreeUnit) {
     EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
     pbge::StateSet stateSet(&ogl);
     pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
-    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex()));
-    EXPECT_CALL(ogl, bindTexture(_, _));
     bindTexOnUnit(unit, texture, ogl);
     ASSERT_EQ(NULL, stateSet.chooseTexUnit(&texture2)->getCurrentTexture());
 }
@@ -113,12 +113,9 @@ TEST(StateSetTest, ifThereAreNoFreeUnitsChooseTextureUnitReturnsTheUnitWithTheOl
     EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
     pbge::StateSet stateSet(&ogl);
     pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
-    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex())).Times(1);
-    EXPECT_CALL(ogl, bindTexture(_, _)).Times(2);
     bindTexOnUnit(unit, texture, ogl);
     
     unit = stateSet.chooseTexUnit(&texture2);
-    EXPECT_CALL(ogl, activeTexture(GL_TEXTURE0 + unit->getIndex())).Times(1);
     bindTexOnUnit(unit, texture2, ogl);
 }
 

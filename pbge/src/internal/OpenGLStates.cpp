@@ -19,12 +19,11 @@ bool TextureUnit::shouldChange(OpenGL * ogl) {
 }
 
 void TextureUnit::makeChange(OpenGL * ogl) {
-    
-    ogl->activeTexture(GL_TEXTURE0 + index);
-    if(nextTexture == NULL && boundTexture != NULL)
-        ogl->bindTexture(boundTexture->getTarget(), 0);
-    else
-        nextTexture->bindTexture(ogl);
+    if(nextTexture == NULL && boundTexture != NULL) {
+        // should unbind texture?
+    } else {
+        nextTexture->bindTextureOn(this);
+    }
     boundTexture = nextTexture;
     
 }
