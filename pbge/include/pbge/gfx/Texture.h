@@ -9,6 +9,7 @@
 #include "pbge/gfx/Buffer.h"
 
 namespace pbge {
+    class Image;
 
     class Texture {
     public:
@@ -50,6 +51,11 @@ namespace pbge {
             BGRA = GL_BGRA
         } Format;
 
+        // TODO: others.....
+        typedef enum {
+            LINEAR = GL_LINEAR
+        } Filter;
+
         typedef enum {
             UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
             BYTE = GL_BYTE,
@@ -73,63 +79,28 @@ namespace pbge {
             UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV
         } DataType;
         
-        Texture(Texture::Format format) {
-            this->glID = 0;
-            this->internalFormat = format;
-            this->minFilter = GL_LINEAR;
-            this->magFilter = GL_LINEAR;
-        }
+        // Interface Definition
         
-        GLuint getGLID() { return glID; }
+        // Changes the texture minification filter
+        // default is Linear
+        virtual void setMinFilter(Filter filter) = 0;
 
-        GLenum getTarget() { return target; }
-
-        void setFiltering(unsigned minificationFilter, unsigned magnificationFilter) {
-            this->minFilter = minificationFilter;
-            this->magFilter = magnificationFilter;
-        }
-
-        void bindTexture(OpenGL * ogl);
-
-        virtual void initializeTexture(OpenGL * ogl) = 0;
-
-    protected:
-        unsigned glID;
-        Texture::Format internalFormat;
-        unsigned target;
-        unsigned minFilter, magFilter;
+        // Changes the texture magnification filter
+        // default is Linear
+        virtual void setMagFilter(Filter filter) = 0;
+        
+        // binds the texture object to a given texture unit
+        virtual void bindTextureOn(TextureUnit * unit) = 0;
     };
 
     class Texture2D : public Texture {
     public:
-        Texture2D(Texture::Format _internalFormat = RGBA) : Texture(_internalFormat) {
-            this->target = GL_TEXTURE_2D;
-        }
-
-        void setWidth(unsigned w) {
-            this->width = w;
-        }
-
-        void setHeight(unsigned h) {
-            this->height = h;
-        }
-
-        void setData(Texture::Format format, Texture::DataType type, void * texData) {
-            this->dataFormat = format;
-            this->dataType = type;
-            this->data = texData;
-        }
+        // replace the internal image of the texture object with given image
+        virtual void setImage(Image * image, Texture::Format format) = 0;
         
-        void initializeTexture(OpenGL * ogl);
-
-    private:
-        unsigned width;
-        unsigned height;
-
-        void * data;
-        Texture::DataType dataType;
-        Texture::Format dataFormat;
-    };
-
+        // replace the internal image of the texture object with given raw data
+        // obeying the specified format
+        virtual void setImageData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, int height, Texture::Format internalFormat) = 0;
+    };        
 }
 #endif

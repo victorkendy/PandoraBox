@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\OpenGL\GLTextures.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Light.cpp"
 				>
 			</File>
@@ -249,10 +253,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\gfx\Texture.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\gfx\VertexBuffer.cpp"
 				>
 			</File>
@@ -296,6 +296,14 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\core\File.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\OpenGL\GLTextures.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\Image.h"
 				>
 			</File>
 			<File

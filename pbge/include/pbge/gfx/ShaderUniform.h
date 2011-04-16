@@ -69,13 +69,7 @@ namespace pbge {
         }
         
         bool operator < (const UniformInfo other) const {
-            if(this->getType() < other.getType()) {
-                return true;
-            } else if (this->getType() == other.getType()) {
-                return this->getName() < other.getName();
-            } else {
-                return false;
-            }
+            return (this->getType() < other.getType() || (this->getType() == other.getType() && this->getName() < other.getName()));
         }
 
         std::string toString() { 

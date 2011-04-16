@@ -114,8 +114,6 @@ namespace pbge {
         
         
         // raw OpenGL API calls
-        virtual void activeTexture(GLenum textureUnit);
-
         virtual void alphaFunc(GLenum func, GLclampf ref);
 
         virtual void attachShader(GLuint program, GLuint shader);
@@ -126,16 +124,8 @@ namespace pbge {
 
         virtual void bindAttribLocation(GLuint program, GLuint index, const GLchar* name);
 
-        virtual void bindBuffer(GLenum target, GLuint buffer);
-
-        virtual void bindTexture(GLenum target, GLuint texture);
-
         virtual void blendFunc(GLenum sfactor, GLenum dfactor);
 
-        virtual void bufferData(GLenum target, GLsizeiptr size, GLvoid * data, GLenum usage);
-
-        virtual void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid * data);
-        
         virtual void clear(GLbitfield mask);
 
         virtual void clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
@@ -156,8 +146,6 @@ namespace pbge {
 
         virtual GLuint createShader(GLenum shaderType);
 
-        virtual void deleteBuffers(GLsizei n, GLuint * buffers);
-
         virtual void depthFunc(GLenum func);
 
         virtual void depthMask(GLboolean flag);
@@ -169,10 +157,6 @@ namespace pbge {
         virtual void enable(GLenum mode);
 
         virtual void enableClientState(GLenum cap);
-
-        virtual void genBuffers(GLsizei n, GLuint * buffers);
-
-        virtual void genTextures(GLsizei n, GLuint * textures);
 
         virtual void getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
 
@@ -196,8 +180,6 @@ namespace pbge {
 
         virtual void loadMatrix(GLfloat * matrix);
 
-        virtual void * mapBuffer(GLenum target, GLenum access);
-
         virtual void matrixMode(GLenum mode);
 
         virtual void normalPointer(GLenum type, GLsizei stride, GLvoid * pointer);
@@ -209,12 +191,6 @@ namespace pbge {
         virtual void shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes);
 
         virtual void texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
-
-        virtual void texImage2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, GLvoid * data);
-
-        virtual void texParameter(GLenum target, GLenum pname, GLint param);
-
-        virtual void texParameter(GLenum target, GLenum pname, GLfloat param);
 
         virtual void uniform1f(GLint location, GLfloat v);
 

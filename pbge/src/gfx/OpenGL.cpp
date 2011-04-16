@@ -99,10 +99,6 @@ const int OpenGL::numberOfTextureUnits() {
 }
 
 
-void OpenGL::activeTexture(GLenum textureUnit) {
-    glActiveTexture(textureUnit);
-}
-
 void OpenGL::alphaFunc(GLenum func, GLclampf ref) {
     glAlphaFunc(func, ref);
 }
@@ -123,24 +119,8 @@ void OpenGL::bindAttribLocation(GLuint program, GLuint index, const GLchar* name
     glBindAttribLocation(program, index, name);
 }
 
-void OpenGL::bindBuffer(GLenum target, GLuint buffer) {
-    glBindBuffer(target, buffer);
-}
-
-void OpenGL::bindTexture(GLenum target, GLuint texture) {
-    glBindTexture(target, texture);
-}
-
 void OpenGL::blendFunc(GLenum sfactor, GLenum dfactor) {
     glBlendFunc(sfactor, dfactor);
-}
-
-void OpenGL::bufferData(GLenum target, GLsizeiptr size, GLvoid * data, GLenum usage) {
-    glBufferData(target, size, data, usage);
-}
-
-void OpenGL::bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid * data) {
-    glBufferSubData(target, offset, size, data);
 }
 
 void OpenGL::clear(GLbitfield mask) {
@@ -183,10 +163,6 @@ GLuint OpenGL::createShader(GLenum shaderType) {
     return glCreateShader(shaderType);
 }
 
-void OpenGL::deleteBuffers(GLsizei n, GLuint * buffers) {
-    glDeleteBuffers(n, buffers);
-}
-
 void OpenGL::depthFunc(GLenum func) {
     glDepthFunc(func);
 }
@@ -209,14 +185,6 @@ void OpenGL::enable(GLenum mode) {
 
 void OpenGL::enableClientState(GLenum cap) {
     glEnableClientState(cap);
-}
-
-void OpenGL::genBuffers(GLsizei n, GLuint * buffers) {
-    glGenBuffers(n, buffers);
-}
-
-void OpenGL::genTextures(GLsizei n, GLuint * textures) {
-    glGenTextures(n, textures);
 }
 
 void OpenGL::getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name) {
@@ -263,10 +231,6 @@ void OpenGL::loadMatrix(GLfloat * matrix) {
     glLoadMatrixf(matrix);
 }
 
-void * OpenGL::mapBuffer(GLenum target, GLenum access) {
-    return glMapBuffer(target, access);
-}
-
 void OpenGL::matrixMode(GLenum mode) {
     glMatrixMode(mode);
 }
@@ -289,18 +253,6 @@ void OpenGL::shaderSource(GLuint id, GLsizei count, const GLchar ** strings, con
 
 void OpenGL::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
     glTexCoordPointer(size, type, stride, pointer);
-}
-
-void OpenGL::texImage2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, GLvoid * data) {
-    glTexImage2D(target, level, internalFormat, width, height, border, format, type, data);
-}
-
-void OpenGL::texParameter(GLenum target, GLenum pname, GLint param) {
-    glTexParameteri(target, pname, param);
-}
-
-void OpenGL::texParameter(GLenum target, GLenum pname, GLfloat param) {
-    glTexParameterf(target, pname, param);
 }
 
 void OpenGL::uniform1f(GLint location, GLfloat v) {
