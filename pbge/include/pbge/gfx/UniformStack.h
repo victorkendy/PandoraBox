@@ -32,8 +32,9 @@ namespace pbge {
 
         UniformSet * getGloabalUniforms();
 
-    private:
         UniformValue * findUniform(const UniformInfo & info);
+
+    private:
 
         std::vector<UniformSet *> stack;
     };

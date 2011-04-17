@@ -59,23 +59,6 @@ namespace pbge {
     
 
     // default shader implementation
-
-    namespace detail {
-        // internal class used to store the uniform inside the shader
-        class GLProgramUniform {
-        public:
-            GLProgramUniform(const UniformInfo & _info, UniformValue * _value) {
-                info = _info;
-                value = _value;
-                stamp = 0;
-            }
-
-            UniformInfo info;
-            UniformValue * value;
-            unsigned long stamp;
-        };
-    }
-
     class PBGE_EXPORT GLShader : public Shader{
     public:
         GLShader() { 
@@ -178,7 +161,7 @@ namespace pbge {
 
         std::string infoLog;
 
-        std::vector<detail::GLProgramUniform> uniforms;
+        std::vector<UniformInfo> uniforms;
     };
 }
 

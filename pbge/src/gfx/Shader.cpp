@@ -110,10 +110,12 @@ namespace pbge {
     }
 
     void GLProgram::updateUniforms(OpenGL * ogl) {
-        std::vector<detail::GLProgramUniform>::iterator it;
+        std::vector<UniformInfo>::iterator it;
         for(it = uniforms.begin(); it != uniforms.end(); it++) {
-            if(it->value != NULL) {
-                it->value->bindValueOn(this, it->info, ogl);
+            UniformValue * value = ogl->searchUniform(*it);
+            if(value != NULL) {
+                std::cout << "binding value" << std::endl;
+                value->bindValueOn(this, *it, ogl);
             }
         }
     }
@@ -167,7 +169,7 @@ namespace pbge {
             // don't include reserved names
             if(static_cast<int>(uniformName.find("gl_")) != 0) {
                 UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), ogl->getUniformLocation(programID, name));
-                uniforms.push_back(detail::GLProgramUniform(info, ogl->getUniformValue(info)));
+                uniforms.push_back(info);
                 std::cout << "found uniform: " << uniformName << std::endl;
             }
         }

@@ -73,6 +73,10 @@ UniformValue * OpenGL::getUniformValue(const UniformInfo & info) {
     return this->state->getUniformValue(info);
 }
 
+UniformValue * OpenGL::searchUniform(const UniformInfo & info) {
+    return this->state->searchUniform(info);
+}
+
 void OpenGL::enableMode(Mode mode) {
     this->state->enable(mode);
 }

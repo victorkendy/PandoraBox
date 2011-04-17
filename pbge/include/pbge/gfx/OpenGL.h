@@ -98,6 +98,8 @@ namespace pbge {
 
         virtual UniformValue * getUniformValue(const UniformInfo & info);
 
+        virtual UniformValue * searchUniform(const UniformInfo & info);
+
         virtual void enableMode(Mode mode);
 
         virtual void disableDrawBuffer();

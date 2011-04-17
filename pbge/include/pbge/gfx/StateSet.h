@@ -53,6 +53,8 @@ namespace pbge {
         
         UniformValue * getUniformValue(const UniformInfo & info);
 
+        UniformValue * searchUniform(const UniformInfo & info);
+
         TextureUnit * chooseTexUnit(Texture * texture);
 
     private:
