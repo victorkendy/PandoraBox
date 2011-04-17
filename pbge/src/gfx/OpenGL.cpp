@@ -111,10 +111,6 @@ void OpenGL::begin(GLenum mode) {
     glBegin(mode);
 }
 
-void OpenGL::beginQuery(GLenum target, GLuint id) {
-    glBeginQuery(target, id);
-}
-
 void OpenGL::bindAttribLocation(GLuint program, GLuint index, const GLchar* name) {
     glBindAttribLocation(program, index, name);
 }
@@ -135,16 +131,8 @@ void OpenGL::clearDepth(GLclampd depth) {
     glClearDepth(depth);
 }
 
-void OpenGL::clearStencil(GLint s) {
-    glClearStencil(s);
-}
-
 void OpenGL::clientActiveTexture(GLenum textureUnit) {
     glClientActiveTexture(textureUnit);
-}
-
-void OpenGL::clipPlane(GLenum plane, const GLdouble * equation) {
-    glClipPlane(plane, equation);
 }
 
 void OpenGL::colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
@@ -303,12 +291,3 @@ void OpenGL::viewport(GLint x, GLint y, GLint w, GLint h) {
     glViewport(x,y,w,h);
 }
 
-
-
-void OpenGL::genFramebuffersEXT(GLsizei n, GLuint * buffers) {
-    glGenFramebuffersEXT(n, buffers);
-}
-
-void OpenGL::deleteFramebuffersEXT(GLsizei n, GLuint * buffers) {
-    glDeleteFramebuffersEXT(n, buffers);
-}

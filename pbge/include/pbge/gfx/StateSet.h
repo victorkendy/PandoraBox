@@ -18,6 +18,7 @@ namespace pbge {
     class TextureUnit;
     class BoundProgram;
     class GPUProgram;
+    class UniformStack;
 
     class PBGE_EXPORT State {
     public: 
@@ -55,13 +56,12 @@ namespace pbge {
         TextureUnit * chooseTexUnit(Texture * texture);
 
     private:
-        UniformValue * createUniform(const UniformInfo & info);
 
         std::vector<State *> states;
 
         BoundProgram * boundProgram;
 
-        std::map<UniformInfo, UniformValue *> uniformValues;
+        UniformStack * uniformStack;
 
         std::vector<TextureUnit*> textureUnits;
 

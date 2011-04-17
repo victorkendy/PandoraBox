@@ -44,13 +44,16 @@ namespace pbge {
         // allows factory method on OpenGL
         friend OpenGL;
 
-        // returns the data buffer
+        // maps the buffer's memory on the client's memory space
         virtual void * map(AccessPattern access) = 0;
 
+        // returns a previously mapped client memory to the graphic api
         virtual void unmap() = 0;
 
+        // Unbind a buffer
         virtual void unbind() = 0;
 
+        // Bind the buffer to a specific target
         virtual void bindOn(Target _target) = 0;
 
     protected:

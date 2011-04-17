@@ -257,6 +257,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\UniformSet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\gfx\UniformStack.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\VertexBuffer.cpp"
 				>
 			</File>
@@ -392,6 +400,14 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\TextureRendererFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\UniformSet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\UniformStack.h"
 				>
 			</File>
 			<File

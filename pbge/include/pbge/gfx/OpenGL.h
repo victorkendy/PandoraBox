@@ -120,8 +120,6 @@ namespace pbge {
 
         virtual void begin(GLenum mode);
 
-        virtual void beginQuery(GLenum target, GLuint id);
-
         virtual void bindAttribLocation(GLuint program, GLuint index, const GLchar* name);
 
         virtual void blendFunc(GLenum sfactor, GLenum dfactor);
@@ -132,11 +130,7 @@ namespace pbge {
 
         virtual void clearDepth(GLclampd depth);
 
-        virtual void clearStencil(GLint s);
-
         virtual void clientActiveTexture(GLenum textureUnit);
-
-        virtual void clipPlane(GLenum plane, const GLdouble * equation);
 
         virtual void colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
@@ -216,11 +210,6 @@ namespace pbge {
 
         virtual void viewport(GLint x, GLint y, GLint w, GLint h);
         
-        //Extensions to 2.1
-        virtual void genFramebuffersEXT(GLsizei n, GLuint * buffers);
-
-        virtual void deleteFramebuffersEXT(GLsizei n, GLuint * buffers);
-
     private:
         void uploadModelview();
 

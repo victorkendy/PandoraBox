@@ -2,6 +2,8 @@
 #include <algorithm>
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/internal/OpenGLStates.h"
+#include "pbge/gfx/UniformStack.h"
+#include "pbge/gfx/UniformSet.h"
 #include "pbge/gfx/StateSet.h"
 
 using namespace pbge;
@@ -43,7 +45,8 @@ StateSet::StateSet(OpenGL * ogl) {
     states[OpenGL::PROGRAM_POINT_SIZE] = new StateEnabler(GL_PROGRAM_POINT_SIZE);
 
     boundProgram = new BoundProgram;
-    
+    uniformStack = new UniformStack;
+
     int numberOfTextureUnits = ogl->numberOfTextureUnits();
     for (int i = 0; i < numberOfTextureUnits; i++)
         textureUnits.push_back(new TextureUnit(ogl, i));
@@ -85,41 +88,9 @@ void StateSet::useProgram(GPUProgram * program) {
     changes.insert(boundProgram);
 }
 
-UniformValue * StateSet::createUniform(const UniformInfo &info) {
-    UniformType type = info.getType();
-    UniformValue * newValue = NULL;
-    if(type == FLOAT_VEC4) {
-        newValue = new UniformFloatVec4;
-    }
-    else if(type == FLOAT_VEC3) {
-        newValue = new UniformFloatVec3;
-    }
-    else if(type == FLOAT_VEC2) {
-        newValue = new UniformFloatVec2;
-    }
-    else if(type == FLOAT) {
-        newValue = new UniformFloat;
-    }
-    else if(type == SAMPLER_2D) {
-        newValue = new UniformSampler2D;
-    }
-    else if(type == FLOAT_MAT4) {
-        newValue = new UniformMat4;
-    }
-    if(newValue != NULL) {
-        uniformValues[info] = newValue;
-        return newValue;
-    } else {
-        return NULL;
-    }
-}
-
 UniformValue * StateSet::getUniformValue(const UniformInfo & info) {
-    std::map<UniformInfo, UniformValue*>::iterator value = this->uniformValues.find(info);
-    if(value == this->uniformValues.end()) {
-        return createUniform(info);
-    }
-    return value->second;
+    
+    return uniformStack->getGloabalUniforms()->getValue(info);
 }
 
 TextureUnit * StateSet::chooseTexUnit(Texture * texture) {
