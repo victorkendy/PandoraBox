@@ -20,6 +20,13 @@ namespace pbge {
 
         UniformValue * searchValue(const UniformInfo & info);
 
+        UniformFloat * getFloat(const std::string & name);
+
+        UniformFloatVec2 * getFloatVec2(const std::string & name);
+
+        UniformFloatVec3 * getFloatVec3(const std::string & name);
+
+        UniformFloatVec4 * getFloatVec4(const std::string & name);
     private:
         UniformValue * createUniform(const UniformInfo & info);
 

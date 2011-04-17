@@ -1,5 +1,6 @@
 #include <math.h>
 
+#include "pbge/gfx/UniformSet.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/ResourceStorage.h"
@@ -105,16 +106,46 @@ void BezierCurve::render(ModelInstance * instance, OpenGL * ogl) {
 void BezierCurve::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
 
 
+ModelInstance::ModelInstance() {
+    this->model = NULL;
+    this->uniforms = new UniformSet();
+    this->renderProgram = NULL;
+    this->depthProgram = NULL;
+}
+
+ModelInstance::ModelInstance(Model * m) {
+    this->model = m;
+    this->uniforms = new UniformSet();
+    this->renderProgram = NULL;
+    this->depthProgram = NULL;
+}
+
+ModelInstance::~ModelInstance() {
+    delete uniforms;
+}
+
 void ModelInstance::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
+    ogl->pushUniforms(this->uniforms);
+    ogl->getState().useProgram(this->renderProgram);
     ogl->updateState();
     ogl->uploadProjection();
     model->render(this, ogl);
 }
 
+void ModelInstance::postRenderPass(RenderVisitor * visitor, OpenGL * ogl) {
+    ogl->popUniforms();
+}
+
 void ModelInstance::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
+    ogl->pushUniforms(this->uniforms);
+    ogl->getState().useProgram(this->depthProgram);
     ogl->updateState();
     ogl->uploadProjection();
     model->renderDepth(this, ogl);
+}
+
+void ModelInstance::postDepthPass(RenderVisitor * visitor, OpenGL * ogl) {
+    ogl->popUniforms();
 }
 
 Circle::Circle(const float & _radius, const int & _slices) {

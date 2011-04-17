@@ -149,7 +149,7 @@ namespace pbge {
 
         void updateUniforms(OpenGL * ogl);
     private:
-        void extractInfoLog(OpenGL * ogl);
+        void extractInfoLog();
 
         void extractUniformInformation(OpenGL * ogl);
 

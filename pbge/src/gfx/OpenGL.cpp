@@ -102,6 +102,14 @@ const int OpenGL::numberOfTextureUnits() {
     return numberOfUnits;
 }
 
+void OpenGL::pushUniforms(UniformSet * uniforms) {
+    this->state->pushUniformSet(uniforms);
+}
+
+void OpenGL::popUniforms() {
+    this->state->popUniformSet();
+}
+
 
 void OpenGL::alphaFunc(GLenum func, GLclampf ref) {
     glAlphaFunc(func, ref);
@@ -189,14 +197,6 @@ void OpenGL::getFloatv(GLenum pname, GLfloat * params) {
 
 void OpenGL::getIntegerv(GLenum pname, GLint * params) {
     glGetIntegerv(pname, params);
-}
-
-void OpenGL::getProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei * length, GLchar * infoLog) {
-    glGetProgramInfoLog(program, maxLength, length, infoLog);
-}
-
-void OpenGL::getProgramiv(GLuint program, GLenum pname, GLint * params) {
-    glGetProgramiv(program, pname, params);
 }
 
 void OpenGL::getShaderiv(GLuint shader, GLenum pname, GLint * ptr) {

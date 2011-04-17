@@ -89,7 +89,8 @@ void StateSet::useProgram(GPUProgram * program) {
 }
 
 UniformValue * StateSet::getUniformValue(const UniformInfo & info) {
-    return uniformStack->getGloabalUniforms()->getValue(info);
+    UniformSet * set = uniformStack->getGloabalUniforms();
+    return set->getValue(info);
 }
 
 UniformValue * StateSet::searchUniform(const UniformInfo & info) {
@@ -107,4 +108,12 @@ TextureUnit * StateSet::chooseTexUnit(Texture * texture) {
             chosen = *unit;
     }
     return chosen;
+}
+
+void StateSet::pushUniformSet(UniformSet * uniforms) {
+    this->uniformStack->push(uniforms);
+}
+
+void StateSet::popUniformSet() {
+    this->uniformStack->pop();
 }

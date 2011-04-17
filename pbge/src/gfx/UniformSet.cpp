@@ -59,3 +59,19 @@ UniformValue * UniformSet::searchValue(const UniformInfo & info) {
     }
     return value->second;
 }
+
+UniformFloat * UniformSet::getFloat(const std::string & name) {
+    return dynamic_cast<UniformFloat *>(this->getValue(UniformInfo(name, pbge::FLOAT, -1)));
+}
+
+UniformFloatVec2 * UniformSet::getFloatVec2(const std::string & name) {
+    return dynamic_cast<UniformFloatVec2 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC2, -1)));
+}
+
+UniformFloatVec3 * UniformSet::getFloatVec3(const std::string & name) {
+    return dynamic_cast<UniformFloatVec3 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC3, -1)));
+}
+
+UniformFloatVec4 * UniformSet::getFloatVec4(const std::string & name) {
+    return dynamic_cast<UniformFloatVec4 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC4, -1)));
+}

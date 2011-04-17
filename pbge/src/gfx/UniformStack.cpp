@@ -18,7 +18,7 @@ UniformStack::~UniformStack() {
 UniformValue * UniformStack::findUniform(const UniformInfo &info) {
     std::vector<UniformSet *>::reverse_iterator set;
     for(set = stack.rbegin(); set != stack.rend(); set++) {
-        UniformValue * value = (*set)->getValue(info);
+        UniformValue * value = (*set)->searchValue(info);
         if(value != NULL) {
             return value;
         }
@@ -30,18 +30,10 @@ UniformSet * UniformStack::getGloabalUniforms() {
     return stack.at(0);
 }
 
-UniformFloat * UniformStack::findFloat(const std::string & name) {
-    return dynamic_cast<UniformFloat*>(findUniform(UniformInfo(name, pbge::FLOAT, -1)));
+void UniformStack::push(UniformSet *uniforms) {
+    stack.push_back(uniforms);
 }
 
-UniformFloatVec2 * UniformStack::findFloatVec2(const std::string & name) {
-    return dynamic_cast<UniformFloatVec2*>(findUniform(UniformInfo(name, pbge::FLOAT_VEC2, -1)));
-}
-
-UniformFloatVec3 * UniformStack::findFloatVec3(const std::string & name) {
-    return dynamic_cast<UniformFloatVec3*>(findUniform(UniformInfo(name, pbge::FLOAT_VEC3, -1)));
-}
-
-UniformFloatVec4 * UniformStack::findFloatVec4(const std::string & name) {
-    return dynamic_cast<UniformFloatVec4*>(findUniform(UniformInfo(name, pbge::FLOAT_VEC4, -1)));
+void UniformStack::pop() {
+    stack.pop_back();
 }

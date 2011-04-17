@@ -22,17 +22,13 @@ namespace pbge {
 
         ~UniformStack();
 
-        UniformFloat * findFloat(const std::string & name);
-
-        UniformFloatVec2 * findFloatVec2(const std::string & name);
-
-        UniformFloatVec3 * findFloatVec3(const std::string & name);
-
-        UniformFloatVec4 * findFloatVec4(const std::string & name);
-
         UniformSet * getGloabalUniforms();
 
         UniformValue * findUniform(const UniformInfo & info);
+
+        void push(UniformSet * uniforms);
+
+        void pop();
 
     private:
 

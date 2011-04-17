@@ -57,6 +57,10 @@ namespace pbge {
 
         TextureUnit * chooseTexUnit(Texture * texture);
 
+        void pushUniformSet(UniformSet * uniforms);
+
+        void popUniformSet();
+
     private:
 
         std::vector<State *> states;

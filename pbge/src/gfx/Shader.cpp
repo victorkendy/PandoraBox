@@ -133,21 +133,21 @@ namespace pbge {
             }
         }
         ogl->linkProgram(programID);
-        extractInfoLog(ogl);
-        ogl->getProgramiv(programID, GL_LINK_STATUS, &status);
+        extractInfoLog();
+        glGetProgramiv(programID, GL_LINK_STATUS, &status);
         linked = (status == GL_TRUE);
         if(linked)
             extractUniformInformation(ogl);
         return linked;
     }
 
-    void GLProgram::extractInfoLog(OpenGL * ogl) {
+    void GLProgram::extractInfoLog() {
         GLint infoLogLength;
         GLsizei lixo;
         GLchar * _infoLog;
-        ogl->getProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+        glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
         _infoLog = new GLchar[infoLogLength];
-        ogl->getProgramInfoLog(programID, infoLogLength, &lixo, _infoLog);
+        glGetProgramInfoLog(programID, infoLogLength, &lixo, _infoLog);
         this->infoLog = std::string(_infoLog, infoLogLength);
         delete [] _infoLog;
     }
@@ -159,8 +159,8 @@ namespace pbge {
         GLenum uniformType;
         GLchar * name;
         ogl->useProgram(programID);
-        ogl->getProgramiv(programID, GL_ACTIVE_UNIFORMS, &numberOfActiveUniforms);
-        ogl->getProgramiv(programID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameSize);
+        glGetProgramiv(programID, GL_ACTIVE_UNIFORMS, &numberOfActiveUniforms);
+        glGetProgramiv(programID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameSize);
         name = new GLchar [maxUniformNameSize];
         for(int uniformIndex = 0; uniformIndex < numberOfActiveUniforms; ++uniformIndex) {
             ogl->getActiveUniform(programID, uniformIndex, maxUniformNameSize, NULL, &uniformSize, &uniformType, name);

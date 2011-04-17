@@ -19,6 +19,7 @@ namespace pbge {
     class TextureUnit;
     class Texture;
     class UniformValue;
+    class UniformSet;
     
     class GLContext {
     public:
@@ -113,6 +114,10 @@ namespace pbge {
         virtual TextureUnit * chooseTextureUnit(Texture * texture);
         
         virtual const int numberOfTextureUnits();
+
+        virtual void pushUniforms(UniformSet * uniforms);
+
+        virtual void popUniforms();
         
         
         // raw OpenGL API calls
@@ -159,10 +164,6 @@ namespace pbge {
         virtual void getFloatv(GLenum pname, GLfloat * params);
 
         virtual void getIntegerv(GLenum pname, GLint * params);
-
-        virtual void getProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei * length, GLchar * infoLog);
-
-        virtual void getProgramiv(GLuint program, GLenum pname, GLint * params);
 
         virtual void getShaderiv(GLuint shader, GLenum pname, GLint * ptr);
 

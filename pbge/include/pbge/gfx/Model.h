@@ -12,6 +12,7 @@ namespace pbge {
     class VertexBuffer;
     class ModelInstance;
     class GPUProgram;
+    class UniformSet;
 
     class PBGE_EXPORT Model{
     public:
@@ -122,25 +123,24 @@ namespace pbge {
 
     class PBGE_EXPORT ModelInstance : public Node {
     public:
-        ModelInstance(){
-            model = NULL;
-        }
+        ModelInstance();
 
-        ModelInstance(Model * _model) {
-            model = _model;
-        }
-        
-        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
+        ModelInstance(Model * _model);
 
-        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
+        ~ModelInstance();
+    // Node interface methods
+    public:
+        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {}
+
+        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {}
 
         void renderPass(RenderVisitor * visitor, OpenGL * ogl);
 
-        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
+        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl);
 
         void depthPass(RenderVisitor * visitor, OpenGL * ogl);
 
-        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl){}
+        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl);
 
         void addChild(Node * node) {
             childs.push_back(node);
@@ -149,14 +149,32 @@ namespace pbge {
         node_list & getChilds() {
             return childs;
         }
-
+    // Model Instance methods
+    public:
         Model * getModel() {
             return model;
         }
+
+        void setDepthPassProgram(GPUProgram * depthPassProgram) {
+            depthProgram = depthPassProgram;
+        }
+
+        void setRenderPassProgram(GPUProgram * renderPassProgram) {
+            renderProgram = renderPassProgram;
+        }
+
+        UniformSet * getUniformSet() {
+            return uniforms;
+        }
+
     private:
         Model * model;
 
         node_list childs;
+
+        UniformSet * uniforms;
+
+        GPUProgram * depthProgram, * renderProgram;
     };
 }
 #endif
