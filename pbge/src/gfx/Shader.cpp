@@ -114,7 +114,6 @@ namespace pbge {
         for(it = uniforms.begin(); it != uniforms.end(); it++) {
             UniformValue * value = ogl->searchUniform(*it);
             if(value != NULL) {
-                std::cout << "binding value" << std::endl;
                 value->bindValueOn(this, *it, ogl);
             }
         }
@@ -210,29 +209,29 @@ namespace pbge {
     }
 
     void GLProgram::bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor) {
-        ogl->uniform1f(info.getLocation(), valor);
+        glUniform1f(info.getLocation(), valor);
     }
 
     void GLProgram::bindFloatVec2(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2) {
-        ogl->uniform2f(info.getLocation(), v1, v2);
+        glUniform2f(info.getLocation(), v1, v2);
     }
 
     void GLProgram::bindFloatVec3(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3) {
-        ogl->uniform3f(info.getLocation(), v1, v2, v3);
+        glUniform3f(info.getLocation(), v1, v2, v3);
     }
 
     void GLProgram::bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
-        ogl->uniform4f(info.getLocation(), v1, v2, v3, v4);
+        glUniform4f(info.getLocation(), v1, v2, v3, v4);
     }
 
     void GLProgram::bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex) {
         TextureUnit * unit = ogl->chooseTextureUnit(tex);
         unit->setTexture(tex);
         unit->makeChange(ogl);
-        ogl->uniform1i(info.getLocation(), unit->getIndex());
+        glUniform1i(info.getLocation(), unit->getIndex());
     }
 
     void GLProgram::bindMat4(const UniformInfo & info, OpenGL * ogl, const float * v) {
-        ogl->uniformMatrix4fv(info.getLocation(), 1, GL_FALSE, v);
+        glUniformMatrix4fv(info.getLocation(), 1, GL_FALSE, v);
     }
 }

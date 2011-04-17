@@ -247,42 +247,6 @@ void OpenGL::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * p
     glTexCoordPointer(size, type, stride, pointer);
 }
 
-void OpenGL::uniform1f(GLint location, GLfloat v) {
-    glUniform1f(location, v);
-}
-
-void OpenGL::uniform2f(GLint location, GLfloat v1, GLfloat v2) {
-    glUniform2f(location, v1, v2);
-}
-
-void OpenGL::uniform3f(GLint location, GLfloat v1, GLfloat v2, GLfloat v3) {
-    glUniform3f(location, v1, v2, v3);
-}
-
-void OpenGL::uniform4f(GLint location, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) {
-    glUniform4f(location, v1, v2, v3, v4);
-}
-
-void OpenGL::uniform1i(GLint location, GLint v) {
-    glUniform1i(location, v);
-}
-
-void OpenGL::uniform2i(GLint location, GLint v1, GLint v2) {
-    glUniform2i(location, v1, v2);
-}
-
-void OpenGL::uniform3i(GLint location, GLint v1, GLint v2, GLint v3) {
-    glUniform3i(location, v1, v2, v3);
-}
-
-void OpenGL::uniform4i(GLint location, GLint v1, GLint v2, GLint v3, GLint v4) {
-    glUniform4i(location, v1, v2, v3, v4);
-}
-
-void OpenGL::uniformMatrix4fv(GLint location, GLuint count, GLboolean transpose, const GLfloat *v) {
-    glUniformMatrix4fv(location, count, transpose, v);
-}
-
 void OpenGL::useProgram(GLuint program) {
     glUseProgram(program);
 }
