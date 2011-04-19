@@ -17,8 +17,8 @@ class MockGraphicAPI : public pbge::GraphicAPI {
 public:
     MOCK_METHOD0(numberOfTextureUnits, const int());
     MOCK_METHOD1(setMatrixMode, void(GLenum mode));
-    MOCK_METHOD1(setContext, void(pbge::GLContext * newContext));
-    MOCK_METHOD0(getContext, pbge::GLContext*());
+    MOCK_METHOD1(setContext, void(pbge::GraphicContext * newContext));
+    MOCK_METHOD0(getContext, pbge::GraphicContext*());
     MOCK_METHOD0(releaseContext, void());
     MOCK_METHOD0(makeContextCurrent, void());
     MOCK_METHOD0(swapBuffers, void());

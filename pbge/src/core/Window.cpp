@@ -20,7 +20,7 @@
 #if defined (WIN32) || defined (_WIN32)
 
 namespace {
-    class WGLContext : public pbge::GLContext {
+    class WGLContext : public pbge::GraphicContext {
     public:
         WGLContext(HDC hDC) {
             hdc = hDC;
@@ -46,7 +46,7 @@ namespace {
             wglDeleteContext(context);
         }
 
-        void getSystemGLContext(void * p_context) {
+        void getSystemGraphicContext(void * p_context) {
             HGLRC * p_hglrc = reinterpret_cast<HGLRC*>(p_context);
             *p_hglrc = context;
         }

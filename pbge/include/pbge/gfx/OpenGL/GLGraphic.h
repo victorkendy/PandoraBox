@@ -12,9 +12,9 @@ namespace pbge {
 
         ~GLGraphic();
         
-        void setContext(GLContext * newContext);
+        void setContext(GraphicContext * newContext);
 
-        GLContext * getContext();
+        GraphicContext * getContext();
 
         void releaseContext();
 
@@ -71,7 +71,7 @@ namespace pbge {
 
         ResourceStorage * storage;
 
-        GLContext * context;
+        GraphicContext * context;
 
         GraphicObjectsFactory * factory;
     };

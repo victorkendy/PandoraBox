@@ -22,7 +22,7 @@ namespace pbge {
     class UniformSet;
     class GraphicObjectsFactory;
 
-    class GLContext {
+    class GraphicContext {
     public:
         virtual void makeCurrent() = 0;
 
@@ -30,7 +30,7 @@ namespace pbge {
 
         virtual void release() = 0;
 
-        virtual void getSystemGLContext(void * p_context) = 0;
+        virtual void getSystemGraphicContext(void * p_context) = 0;
 
         virtual void getSystemDeviceContext(void * p_device) = 0;
     };
@@ -61,9 +61,9 @@ namespace pbge {
     public:
         static GraphicAPI * createInstance();
 
-        virtual void setContext(GLContext * newContext) = 0;
+        virtual void setContext(GraphicContext * newContext) = 0;
 
-        virtual GLContext * getContext() = 0;
+        virtual GraphicContext * getContext() = 0;
 
         virtual void releaseContext() = 0;
 

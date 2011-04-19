@@ -21,7 +21,7 @@ GLGraphic::~GLGraphic() {
     delete context;
 }
 
-void GLGraphic::setContext(GLContext * newContext) {
+void GLGraphic::setContext(GraphicContext * newContext) {
     this->context = newContext;
     if(context != NULL) {
         context->makeCurrent();
@@ -33,7 +33,7 @@ void GLGraphic::setContext(GLContext * newContext) {
     }
 }
 
-GLContext * GLGraphic::getContext() {
+GraphicContext * GLGraphic::getContext() {
     return context;
 }
 
