@@ -81,8 +81,6 @@ namespace pbge {
 
         virtual void updateState() = 0;
 
-        virtual void uploadProjection() = 0;
-
         virtual GraphicObjectsFactory * getFactory() = 0;
 
         virtual UniformValue * getUniformValue(const UniformInfo & info) = 0;

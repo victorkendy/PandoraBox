@@ -40,7 +40,6 @@ public:
     MOCK_METHOD0(popUniforms, void());
 
 
-    MOCK_METHOD1(activeTexture, void(GLenum textureUnit));
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
     MOCK_METHOD2(attachShader, void(GLuint program, GLuint shader));
     MOCK_METHOD1(begin, void(GLenum mode));

@@ -128,7 +128,6 @@ void ModelInstance::renderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->pushUniforms(this->uniforms);
     ogl->getState()->useProgram(this->renderProgram);
     ogl->updateState();
-    ogl->uploadProjection();
     model->render(this, ogl);
 }
 
@@ -140,7 +139,6 @@ void ModelInstance::depthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->pushUniforms(this->uniforms);
     ogl->getState()->useProgram(this->depthProgram);
     ogl->updateState();
-    ogl->uploadProjection();
     model->renderDepth(this, ogl);
 }
 

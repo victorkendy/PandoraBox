@@ -32,10 +32,6 @@ namespace pbge {
 
         void updateState();
 
-        void uploadProjection();
-
-        void uploadModelView();
-
         GraphicObjectsFactory * getFactory();
 
         UniformValue * getUniformValue(const UniformInfo & info);
@@ -61,7 +57,7 @@ namespace pbge {
         void popUniforms();
  
     private:
-        void uploadModelview();
+        bool projectionUpdated;
 
         math3d::matrix44 * matrices;
 

@@ -13,6 +13,7 @@ GLGraphic::GLGraphic() {
     storage = new ResourceStorage;
     this->context = NULL;
     this->factory = new GLObjectsFactory(this);
+    this->projectionUpdated = true;
 }
 
 GLGraphic::~GLGraphic() {
@@ -63,6 +64,7 @@ void GLGraphic::loadViewMatrix(const math3d::matrix44 & m) {
 }
 
 void GLGraphic::loadProjectionMatrix(const math3d::matrix44 & m) {
+    projectionUpdated = true;
     matrices[1] = m;
 }
 
@@ -71,18 +73,13 @@ void GLGraphic::loadModelMatrix(const math3d::matrix44 & m) {
 }
 
 void GLGraphic::updateState() {
-    this->uploadModelview();
-    this->state->apply(this);
-}
-
-void GLGraphic::uploadModelview() {
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf((matrices[0]*matrices[2]).transpose());
-}
-
-void GLGraphic::uploadProjection() {
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(matrices[1].transpose());
+    if(projectionUpdated) {
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(matrices[1].transpose());
+    }
+    this->state->apply(this);
 }
 
 GraphicObjectsFactory * GLGraphic::getFactory() {
