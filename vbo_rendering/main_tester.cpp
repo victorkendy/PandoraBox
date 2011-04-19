@@ -69,6 +69,7 @@ void keyboard(unsigned char k, int x, int y) {
 }*/
 
 int main(int argc, char ** argv) {
+    system("dir");
     pbge::Manager * manager = new pbge::Manager;
     manager->setWindowDimensions(500, 500);
     manager->setFullscreen(false);

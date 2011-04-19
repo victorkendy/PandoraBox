@@ -23,6 +23,8 @@ namespace pbge {
         
         virtual const std::string & getInfoLog()=0;
 
+        virtual const ShaderType getType() = 0;
+
         virtual bool compile(OpenGL * ogl) = 0;
     };
 
@@ -41,6 +43,8 @@ namespace pbge {
         virtual GLuint getId() = 0;
 
         virtual void updateUniforms(OpenGL * ogl) = 0;
+
+        virtual const std::vector<Shader*> getShaderOfType(Shader::ShaderType type) = 0;
 
     public: // Uniform binding
         virtual void bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor) = 0;
@@ -79,6 +83,10 @@ namespace pbge {
 
         const std::string & getInfoLog() {
             return infoLog;
+        }
+
+        const ShaderType getType() {
+            return type;
         }
 
         GLuint getID() { 
@@ -127,6 +135,8 @@ namespace pbge {
         bool isLinked() {
             return linked;
         }
+
+        const std::vector<Shader*> getShaderOfType(Shader::ShaderType type);
 
         static GLProgram * fromString(const std::string &vertexShader, const std::string &fragmentShader);
 

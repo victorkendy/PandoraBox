@@ -4,6 +4,7 @@
 
 #include "pbge/core/core.h"
 #include "pbge/core/Log.h"
+#include "pbge/core/File.h"
 #include "pbge/core/Manager.h"
 
 #include "pbge/gfx/Buffer.h"
@@ -19,6 +20,7 @@
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/tensor/TensorModel.h"
+#include "pbge/gfx/UniformSet.h"
 
 
 

@@ -1,7 +1,6 @@
 
+#include "pbge/pbge.h"
 #include "vbo_setup.h"
-#include "pbge/gfx/VBO.h"
-#include "pbge/gfx/Model.h"
 
 void createNormalIndexes(std::vector<unsigned short> & ni) {
     unsigned short indexes[] = {3,3,3,3, 5,5,5,5, 0,0,0,0, 2,2,2,2, 1,1,1,1, 4,4,4,4};
@@ -33,5 +32,6 @@ pbge::ModelInstance * createVBOInstance(pbge::OpenGL * ogl) {
     builder.pushValue(1,1,0).pushValue(1,1,1).pushValue(1,0,1).pushValue(1,0,0).setAttribIndex(vIndexes);
 
     pbge::VertexBuffer * vbo = builder.done(pbge::Buffer::STATIC_DRAW, ogl);
-    return new pbge::ModelInstance(new pbge::VBOModel(vbo, GL_QUADS));
+    pbge::ModelInstance * instance = new pbge::ModelInstance(new pbge::VBOModel(vbo, GL_QUADS));
+    return instance;
 }

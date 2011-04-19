@@ -119,6 +119,16 @@ namespace pbge {
         }
     }
 
+    const std::vector<Shader*> GLProgram::getShaderOfType(Shader::ShaderType type) {
+        std::vector<Shader*> shaders;
+        std::vector<GLShader*>::iterator shader;
+        for(shader = attachedShaders.begin(); shader != attachedShaders.end(); shader++) {
+            if((*shader)->getType() == type)
+                shaders.push_back(*shader);
+        }
+        return shaders;
+    }
+
     bool GLProgram::link(OpenGL * ogl){
         GLint status;
         std::vector<GLShader*>::iterator it;
@@ -195,16 +205,16 @@ namespace pbge {
     }
 
     GLProgram * GLProgram::fromFile(FileReader * filevs, FileReader * filefs){
+        GLProgram * program = new GLProgram;
         GLShader *vs, *fs;
         if(filevs != NULL){
             vs = GLShader::loadSourceFromFile(filevs, Shader::VERTEX_SHADER);
+            program->attachShader(vs);
         }
         if(filefs != NULL){
             fs = GLShader::loadSourceFromFile(filefs, Shader::FRAGMENT_SHADER);
+            program->attachShader(fs);
         }
-        GLProgram * program = new GLProgram;
-        program->attachShader(vs);
-        program->attachShader(fs);
         return program;
     }
 
