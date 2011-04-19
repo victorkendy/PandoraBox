@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\OpenGL\GLObjectsFactory.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\OpenGL\GLTextures.cpp"
 				>
 			</File>
@@ -311,7 +315,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\OpenGL\GLObjectsFactory.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\OpenGL\GLTextures.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\GraphicObjectsFactory.h"
 				>
 			</File>
 			<File

@@ -10,8 +10,6 @@
 
 namespace pbge {
 
-    
-
     // The Buffer Object interface
     class Buffer {
     public:
@@ -40,9 +38,6 @@ namespace pbge {
             DYNAMIC_READ,
             DYNAMIC_COPY
         } UsageHint;
-
-        // allows factory method on OpenGL
-        friend OpenGL;
 
         // maps the buffer's memory on the client's memory space
         virtual void * map(AccessPattern access) = 0;

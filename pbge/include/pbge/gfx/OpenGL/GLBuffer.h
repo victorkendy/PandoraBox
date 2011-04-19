@@ -9,12 +9,14 @@
 namespace pbge {
 
     typedef OpenGL GraphicAPI;
+  
+    class GLObjectsFactory;
 
 
     // TODO: make changes to the buffer interface
     class GLBuffer : Buffer {
     public:
-        friend OpenGL;
+        friend GLObjectsFactory;
 
         // returns the data buffer
         void * map(Buffer::AccessPattern access);

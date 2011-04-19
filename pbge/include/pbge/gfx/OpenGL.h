@@ -20,7 +20,8 @@ namespace pbge {
     class Texture;
     class UniformValue;
     class UniformSet;
-    
+    class GraphicObjectsFactory;
+
     class GLContext {
     public:
         virtual void makeCurrent() = 0;
@@ -95,7 +96,7 @@ namespace pbge {
 
         virtual void uploadProjection();
 
-        virtual Buffer * createBuffer(size_t _size, Buffer::UsageHint _usage);
+        virtual GraphicObjectsFactory * getFactory();
 
         virtual UniformValue * getUniformValue(const UniformInfo & info);
 
@@ -207,6 +208,8 @@ namespace pbge {
         ResourceStorage * storage;
 
         GLContext * context;
+
+        GraphicObjectsFactory * factory;
     };
 
 }

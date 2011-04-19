@@ -4,6 +4,7 @@
 #include "pbge/core/Manager.h"
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/gfx/VBO.h"
+#include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/OpenGl.h"
 #include "pbge/gfx/Buffer.h"
 
@@ -110,7 +111,7 @@ VertexBuffer * VertexBufferBuilder::done(Buffer::UsageHint usage, OpenGL * ogl) 
     validateAttribs();
     GLsizei size = calculateSize();
     GLsizei stride = size / nVertices;
-    Buffer * buffer = ogl->createBuffer(size*sizeof(float), usage);
+    Buffer * buffer = ogl->getFactory()->createBuffer(size*sizeof(float), usage);
     float * data = static_cast<float*>(buffer->map(Buffer::WRITE_ONLY));
     std::vector<VertexAttribBuilder>::iterator it;
     int dataIndex = 0;

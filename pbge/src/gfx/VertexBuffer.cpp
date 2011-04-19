@@ -52,7 +52,6 @@ namespace pbge {
     }
 
     void VertexBuffer::bind(OpenGL * ogl) {
-        GLenum err;
         buffer->bindOn(Buffer::VertexBuffer);
         bindAllAttribs(ogl);
     }

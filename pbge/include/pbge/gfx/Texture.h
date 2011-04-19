@@ -78,7 +78,7 @@ namespace pbge {
             UNSIGNED_INT_10_10_10_2 = GL_UNSIGNED_INT_10_10_10_2,
             UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV
         } DataType;
-        
+
         // Interface Definition
         
         // Changes the texture minification filter

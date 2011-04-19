@@ -10,12 +10,14 @@ namespace pbge {
     class OpenGL;
     class Image;
     class TextureUnit;
+    class GLObjectsFactory;
+
 
     class GLTexture2D : Texture2D {
-
-    friend OpenGL;
-
     public:
+
+        friend GLObjectsFactory;
+
         // check the documentation of the Texture2D interface
         void setImage(Image * img, Texture::Format format);
 

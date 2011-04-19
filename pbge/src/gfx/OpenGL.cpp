@@ -7,6 +7,7 @@
 #include "pbge/gfx/OpenGL/GLBuffer.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/ResourceStorage.h"
+#include "pbge/gfx/OpenGL/GLObjectsFactory.h"
 
 using namespace pbge;
 
@@ -17,6 +18,7 @@ OpenGL::OpenGL() {
     this->state = NULL;
     storage = new ResourceStorage;
     this->context = NULL;
+    this->factory = new GLObjectsFactory(this);
 }
 
 OpenGL::~OpenGL() {
@@ -65,8 +67,8 @@ void OpenGL::updateState() {
     this->state->apply(this);
 }
 
-Buffer * OpenGL::createBuffer(size_t _size, Buffer::UsageHint _usage) {
-    return new GLBuffer(_size, _usage, this);
+GraphicObjectsFactory * OpenGL::getFactory() {
+    return this->factory;
 }
 
 UniformValue * OpenGL::getUniformValue(const UniformInfo & info) {
