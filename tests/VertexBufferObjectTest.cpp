@@ -108,6 +108,7 @@ TEST(VertexAttribBuilderTest, areIndexesAssignedReturnsTrueOnlyAfterTheIndexVect
 class VertexBufferBuilderTest : public testing::Test {
 public:
     MockOpenGL ogl;
+    MockGraphicFactory factory;
     MockBuffer buffer;
 };
 
@@ -115,7 +116,8 @@ TEST_F(VertexBufferBuilderTest, builderBuildsVerticesFromIndexesCorrectly) {
     float buf[9];
     float expected[] = {2.0f, 3.0f, 4.0f, 1.0f,2.0f,3.0f, 3.0f,4.0f,5.0f};
 
-    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, getFactory()).Times(1).WillOnce(Return(&factory));
+    EXPECT_CALL(factory, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
     
     pbge::VertexBufferBuilder builder(3);
@@ -138,7 +140,8 @@ TEST_F(VertexBufferBuilderTest, builderBuildsCombinationVertexAndNormalIterleave
     float buf[12];
     float expected[] = {1.0f,2.0f,3.0f,0.0f,1.0f,0.0f, 4.0f,5.0f,6.0f,1.0f,0.0f,1.0f};
 
-    EXPECT_CALL(ogl, createBuffer(12*sizeof(float),pbge::Buffer::DYNAMIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, getFactory()).Times(1).WillOnce(Return(&factory));
+    EXPECT_CALL(factory, createBuffer(12*sizeof(float),pbge::Buffer::DYNAMIC_DRAW)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
 
     pbge::VertexBufferBuilder builder(2);
@@ -230,9 +233,11 @@ TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
 TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     MockOpenGL ogl;
     MockBuffer buffer;
+    MockGraphicFactory factory;
     float buf[9];
 
-    EXPECT_CALL(ogl, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    EXPECT_CALL(ogl, getFactory()).Times(1).WillOnce(Return(&factory));
+    EXPECT_CALL(factory, createBuffer(9*sizeof(float),pbge::Buffer::STATIC_DRAW)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
     
     pbge::VertexBufferBuilder builder(3);
@@ -253,9 +258,11 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
 TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
     MockOpenGL ogl;
     MockBuffer buffer;
+    MockGraphicFactory factory;
     float buf[20];
-
-    EXPECT_CALL(ogl, createBuffer(20*sizeof(float),pbge::Buffer::DYNAMIC_DRAW)).Times(1).WillOnce(Return(&buffer));
+    
+    EXPECT_CALL(ogl, getFactory()).Times(1).WillOnce(Return(&factory));
+    EXPECT_CALL(factory, createBuffer(20*sizeof(float),pbge::Buffer::DYNAMIC_DRAW)).Times(1).WillOnce(Return(&buffer));
     EXPECT_CALL(buffer, map(pbge::Buffer::WRITE_ONLY)).Times(1).WillOnce(Return((void*)(buf)));
 
     pbge::VertexBufferBuilder builder(2);

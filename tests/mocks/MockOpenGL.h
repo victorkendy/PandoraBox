@@ -3,10 +3,15 @@
 #ifndef PBGE_TESTS_MOCKOPENGL_H_
 #define PBGE_TESTS_MOCKOPENGL_H_
 
+#include <string>
 #include <gmock/gmock.h>
 
+#include "pbge/core/File.h"
 #include "pbge/gfx/OpenGL.h"
 #include "pbge/gfx/Buffer.h"
+#include "pbge/gfx/Texture.h"
+#include "pbge/gfx/Shader.h"
+#include "pbge/gfx/GraphicObjectsFactory.h"
 
 class MockOpenGL : public pbge::OpenGL {
 public:
@@ -17,6 +22,7 @@ public:
     MOCK_METHOD1(loadModelMatrix, void(const math3d::matrix44 & m));
     MOCK_METHOD0(updateState, void());
     MOCK_METHOD0(uploadProjection, void());
+    MOCK_METHOD0(getFactory, pbge::GraphicObjectsFactory*());
     MOCK_METHOD2(createBuffer, pbge::Buffer*(size_t _size, pbge::Buffer::UsageHint _usage));
     MOCK_METHOD1(activeTexture, void(GLenum textureUnit));
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
@@ -48,6 +54,17 @@ public:
     
     MOCK_METHOD2(genFramebuffersEXT, void(GLsizei n, GLuint * buffers));
     MOCK_METHOD2(deleteFramebuffersEXT, void(GLsizei n, GLuint * buffers));
+};
+
+class MockGraphicFactory : public pbge::GraphicObjectsFactory {
+public:
+    MOCK_METHOD2(createBuffer, pbge::Buffer*(size_t _size, pbge::Buffer::UsageHint _usage));
+    MOCK_METHOD0(create2DTexture, pbge::Texture2D*());
+    MOCK_METHOD2(createShaderFromFile, pbge::Shader*(pbge::FileReader * file, pbge::Shader::ShaderType type));
+    MOCK_METHOD2(createShaderFromString, pbge::Shader*(const std::string & source, pbge::Shader::ShaderType type));
+    MOCK_METHOD0(createProgram, pbge::GPUProgram*());
+    MOCK_METHOD2(createProgramFromFile, pbge::GPUProgram*(pbge::FileReader * vsSource, pbge::FileReader * fsSource));
+    MOCK_METHOD2(createProgramFromString, pbge::GPUProgram*(const std::string & vsSource, const std::string & fsSource));
 };
 
 class MockBuffer : public pbge::Buffer {
