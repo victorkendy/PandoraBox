@@ -27,7 +27,7 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         context->makeCurrent();
         glewInit();
         GLint initialMatrixMode;
-        this->getIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
+        glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
         currentMatrixMode = initialMatrixMode;
         state = new StateSet(this);
     }
@@ -102,13 +102,13 @@ void GLGraphic::enableMode(Mode mode) {
 }
 
 void GLGraphic::disableDrawBuffer() {
-    this->drawBuffer(GL_NONE);
-    this->readBuffer(GL_NONE);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
 }
 
 void GLGraphic::enableDrawBuffer(GLenum buffer) {
-    this->drawBuffer(buffer);
-    this->readBuffer(buffer);
+    glDrawBuffer(buffer);
+    glReadBuffer(buffer);
 }
 
 StateSet * GLGraphic::getState() { 

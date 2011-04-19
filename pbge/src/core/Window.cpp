@@ -115,7 +115,7 @@ namespace {
                     window->setScene((*initializer)(ogl));
                     window->getRenderer()->setScene(window->getScene());
                 }
-                ogl->drawBuffer(GL_BACK);
+                ogl->enableDrawBuffer(GL_BACK);
                 ogl->clearColor(0,0,0,1);
                 /*
                 {

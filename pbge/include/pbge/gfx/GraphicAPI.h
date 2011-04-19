@@ -116,8 +116,6 @@ namespace pbge {
 
         virtual void begin(GLenum mode);
 
-        virtual void bindAttribLocation(GLuint program, GLuint index, const GLchar* name);
-
         virtual void blendFunc(GLenum sfactor, GLenum dfactor);
 
         virtual void clear(GLbitfield mask);
@@ -142,35 +140,21 @@ namespace pbge {
 
         virtual void disable(GLenum mode);
 
-        virtual void drawBuffer(GLenum mode);
-
         virtual void enable(GLenum mode);
 
         virtual void enableClientState(GLenum cap);
 
         virtual void getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
 
-        virtual void getFloatv(GLenum pname, GLfloat * params);
-
-        virtual void getIntegerv(GLenum pname, GLint * params);
-
         virtual void getShaderiv(GLuint shader, GLenum pname, GLint * ptr);
 
         virtual void getShaderInfoLog(GLuint shader, GLsizei maxLength, GLsizei * length, GLchar * infoLog);
-
-        virtual const char * getString(GLenum name);
 
         virtual GLint getUniformLocation(GLuint program, const char * name);
 
         virtual void linkProgram(GLuint program);
 
-        virtual void loadMatrix(GLfloat * matrix);
-
-        virtual void matrixMode(GLenum mode);
-
         virtual void normalPointer(GLenum type, GLsizei stride, GLvoid * pointer);
-
-        virtual void readBuffer(GLenum mode);
 
         virtual void secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
