@@ -9,7 +9,7 @@
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
 
-#include "mocks/MockOpenGL.h"
+#include "mocks/MockGraphicAPI.h"
 #include "mocks/MockVisitors.h"
 #include "mocks/MockNode.h"
 
@@ -18,11 +18,11 @@ public:
     math3d::matrix44 *m, *t;
     pbge::TransformationNode * transformationNode;
     pbge::UpdaterVisitor * updater;
-    MockOpenGL * ogl;
+    MockGraphicAPI * ogl;
     MockRenderVisitor * renderVisitor;
 
     void SetUp() {
-        ogl = new MockOpenGL;
+        ogl = new MockGraphicAPI;
         transformationNode = new pbge::TransformationNode;
         m = new math3d::matrix44(1.0f, 1.1f, 1.2f, 1.3f, 2.0f, 2.1f, 2.2f, 2.3f,
                              3.0f, 3.1f, 3.2f, 3.3f, 4.0f, 4.1f, 4.2f, 4.3f);

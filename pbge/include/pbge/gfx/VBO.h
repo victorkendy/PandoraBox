@@ -8,7 +8,7 @@
 #include <string>
 
 #include "pbge/core/core.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/exceptions/exceptions.h"
 
 namespace pbge {
@@ -43,7 +43,7 @@ namespace pbge {
         int getNCoord() {
             return nCoord;
         }
-        virtual void bindAttrib(OpenGL * ogl) = 0;
+        virtual void bindAttrib(GraphicAPI * gfx) = 0;
     private:
         int nCoord, offset;
         GLsizei stride;
@@ -55,7 +55,7 @@ namespace pbge {
 
         Type getType() { return VERTEX; }
 
-        void bindAttrib(OpenGL * ogl);
+        void bindAttrib(GraphicAPI * gfx);
     };
 
     class PBGE_EXPORT VertexNormalAttrib : public VertexAttrib{
@@ -64,7 +64,7 @@ namespace pbge {
         
         Type getType() { return NORMAL; }
 
-        void bindAttrib(OpenGL * ogl);
+        void bindAttrib(GraphicAPI * gfx);
     };
 
     class PBGE_EXPORT VertexTexcoordAttrib : public VertexAttrib {
@@ -73,7 +73,7 @@ namespace pbge {
 
         Type getType() { return TEXCOORD; }
 
-        void bindAttrib(OpenGL * ogl);
+        void bindAttrib(GraphicAPI * gfx);
     };
 
     class PBGE_EXPORT VertexColorAttrib : public VertexAttrib {
@@ -82,7 +82,7 @@ namespace pbge {
 
         Type getType() { return COLOR; }
 
-        void bindAttrib(OpenGL * ogl);
+        void bindAttrib(GraphicAPI * gfx);
     };
 
     class PBGE_EXPORT VertexSecondaryColorAttrib : public VertexAttrib {
@@ -91,7 +91,7 @@ namespace pbge {
 
         Type getType() { return SECONDARY_COLOR; }
 
-        void bindAttrib(OpenGL * ogl);
+        void bindAttrib(GraphicAPI * gfx);
     };
 
     class PBGE_EXPORT VertexCustomAttrib : public VertexAttrib {
@@ -100,7 +100,7 @@ namespace pbge {
 
         Type getType() { return CUSTOM_ATTRIB;}
 
-        void bindAttrib(OpenGL * ogl) {}
+        void bindAttrib(GraphicAPI * gfx) {}
     };
 
 
@@ -117,13 +117,13 @@ namespace pbge {
             attribs.push_back(attrib);
         }
 
-        void bindAllAttribs(OpenGL * ogl);
+        void bindAllAttribs(GraphicAPI * gfx);
 
-        void bindOnly(VertexAttrib::Type, OpenGL * ogl);
+        void bindOnly(VertexAttrib::Type, GraphicAPI * gfx);
 
-        void bind(OpenGL * ogl);
+        void bind(GraphicAPI * gfx);
 
-        void unbind(OpenGL * ogl);
+        void unbind(GraphicAPI * gfx);
 
         unsigned getNVertices() {
             return nVertices;
@@ -235,7 +235,7 @@ namespace pbge {
 
         VertexBufferBuilder & setAttribIndex(const std::vector<unsigned short> & indexes);
 
-        VertexBuffer * done(Buffer::UsageHint usage, OpenGL * ogl);
+        VertexBuffer * done(Buffer::UsageHint usage, GraphicAPI * gfx);
 
     private:
         void validateAttribs();

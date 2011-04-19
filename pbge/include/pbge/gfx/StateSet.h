@@ -8,7 +8,7 @@
 #include <map>
 
 #include "pbge/gfx/ShaderUniform.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/core/core.h"
 
 #include <vector>
@@ -22,15 +22,15 @@ namespace pbge {
 
     class PBGE_EXPORT State {
     public: 
-        void applyChanges(OpenGL * ogl) {
+        void applyChanges(GraphicAPI * ogl) {
             if(shouldChange(ogl)) {
                 makeChange(ogl);
             }
         }
 
-        virtual void makeChange(OpenGL * ogl) = 0;
+        virtual void makeChange(GraphicAPI * ogl) = 0;
 
-        virtual bool shouldChange(OpenGL * ogl) = 0;
+        virtual bool shouldChange(GraphicAPI * ogl) = 0;
     };
 
 
@@ -39,17 +39,17 @@ namespace pbge {
     */
     class PBGE_EXPORT StateSet {
     public:
-        StateSet(OpenGL * ogl);
+        StateSet(GraphicAPI * ogl);
 
         ~StateSet();
 
-        void apply(OpenGL * ogl);
+        void apply(GraphicAPI * ogl);
 
         void useProgram(GPUProgram * program);
 
-        void enable(OpenGL::Mode mode);
+        void enable(GraphicAPI::Mode mode);
 
-        void disable(OpenGL::Mode mode);
+        void disable(GraphicAPI::Mode mode);
         
         UniformValue * getUniformValue(const UniformInfo & info);
 

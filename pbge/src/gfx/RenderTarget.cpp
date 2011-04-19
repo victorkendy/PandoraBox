@@ -10,7 +10,7 @@ namespace pbge {
         this->posy = posY;
     }
 
-    void Viewport::setRenderTarget(OpenGL * ogl){
+    void Viewport::setRenderTarget(GraphicAPI * ogl){
         ogl->viewport(this->posx, this->posy, getWidth(), getHeight());
     }
 }

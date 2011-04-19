@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "mocks/MockOpenGL.h"
+#include "mocks/MockGraphicAPI.h"
 
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Texture.h"
@@ -55,7 +55,7 @@ TEST(UniformInfoTest, smokeTest) {
 
 class MockTexture : public pbge::Texture {
 public:
-    MOCK_METHOD1(initializeTexture, void(pbge::OpenGL * gl));
+    MOCK_METHOD1(initializeTexture, void(pbge::GraphicAPI * gl));
 
     MOCK_METHOD1(setMinFilter, void(pbge::Texture::Filter filter));
 
@@ -65,7 +65,7 @@ public:
 };
 
 TEST(StateSetTest, ifAllUnitsAreFreeReturnsAFreeUnit) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     MockTexture texture;
     EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
     
@@ -75,7 +75,7 @@ TEST(StateSetTest, ifAllUnitsAreFreeReturnsAFreeUnit) {
 }
 
 TEST(StateSetTest, ifTheTextureIsBoundToAUnitReturnsTheUnitThatIsBoundToTheTexture) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     MockTexture texture;
     EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
     pbge::StateSet stateSet(&ogl);
@@ -86,14 +86,14 @@ TEST(StateSetTest, ifTheTextureIsBoundToAUnitReturnsTheUnitThatIsBoundToTheTextu
     ASSERT_EQ(&texture, stateSet.chooseTexUnit(&texture)->getCurrentTexture());
 }
 
-void bindTexOnUnit(pbge::TextureUnit * unit, MockTexture & texture, MockOpenGL & ogl) {
+void bindTexOnUnit(pbge::TextureUnit * unit, MockTexture & texture, MockGraphicAPI & ogl) {
     unit->setTexture(&texture);
     ASSERT_TRUE(unit->shouldChange(&ogl));
     unit->makeChange(&ogl);
 }
 
 TEST(StateSetTest, ifThereIsAFreeUnitAndTheTextureIsNotBoundReturnTheFreeUnit) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     MockTexture texture;
     MockTexture texture2;
     EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
@@ -105,7 +105,7 @@ TEST(StateSetTest, ifThereIsAFreeUnitAndTheTextureIsNotBoundReturnTheFreeUnit) {
 
 
 TEST(StateSetTest, ifThereAreNoFreeUnitsChooseTextureUnitReturnsTheUnitWithTheOldestBinding) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     MockTexture texture;
     MockTexture texture2;
     MockTexture texture3;

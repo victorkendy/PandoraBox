@@ -12,7 +12,7 @@
 namespace pbge {
 
     class GPUProgram;
-    class OpenGL;
+    class GraphicAPI;
     class Texture;
 
     typedef enum {
@@ -91,7 +91,7 @@ namespace pbge {
     public:
         virtual UniformType getType() = 0;
 
-        virtual void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl) = 0;
+        virtual void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl) = 0;
     };
 
     // Declaration of the UniformValues
@@ -127,7 +127,7 @@ namespace pbge {
             this->setValue(v[0], v[1], v[2], v[3]);
         }
 
-        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
 
     private:
         float values[4];
@@ -157,7 +157,7 @@ namespace pbge {
             values[2] = z;
         }
 
-        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
 
     private:
         float values[3];
@@ -184,7 +184,7 @@ namespace pbge {
             values[1] = y;
         }
 
-        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
 
     private:
         float values[2];
@@ -208,7 +208,7 @@ namespace pbge {
             value = v;
         }
 
-        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
 
     private:
         float value;
@@ -226,7 +226,7 @@ namespace pbge {
         
         UniformType getType() { return SAMPLER_2D; }
 
-        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     private:
         Texture * texture;
     };
@@ -295,7 +295,7 @@ namespace pbge {
 
         UniformType getType() { return FLOAT_MAT4; }
 
-        void bindValueOn(GPUProgram * program, const UniformInfo & info, OpenGL * ogl);
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     private:
         float values[16];
     };

@@ -189,11 +189,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\OpenGL\GLGraphic.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\OpenGL\GLObjectsFactory.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\gfx\OpenGL\GLTextures.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\gfx\GraphicAPI.cpp"
 				>
 			</File>
 			<File
@@ -218,10 +226,6 @@
 			</File>
 			<File
 				RelativePath=".\src\gfx\NodeVisitors.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\gfx\OpenGL.cpp"
 				>
 			</File>
 			<File
@@ -315,11 +319,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\OpenGL\GLGraphic.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\OpenGL\GLObjectsFactory.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\OpenGL\GLTextures.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\GraphicAPI.h"
 				>
 			</File>
 			<File
@@ -352,10 +364,6 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\NodeVisitors.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\gfx\OpenGL.h"
 				>
 			</File>
 			<File

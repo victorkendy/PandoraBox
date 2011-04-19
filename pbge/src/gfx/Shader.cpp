@@ -6,7 +6,7 @@
 
 #include "pbge/core/Manager.h"
 #include "pbge/core/File.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Texture.h"
 
@@ -66,7 +66,7 @@ namespace pbge {
         return shader;
     }
 
-    bool GLShader::compile(OpenGL * ogl) {
+    bool GLShader::compile(GraphicAPI * ogl) {
         GLint status;
         if(type == VERTEX_SHADER)
             shaderID = ogl->createShader(GL_VERTEX_SHADER);
@@ -83,7 +83,7 @@ namespace pbge {
         return compiled;
     }
     
-    void GLShader::extractInfolog(OpenGL * ogl) {
+    void GLShader::extractInfolog(GraphicAPI * ogl) {
         GLint infoLogLength;
         GLchar * _infolog;
         ogl->getShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
@@ -95,7 +95,7 @@ namespace pbge {
 
 
 
-    void GLProgram::bind(OpenGL * ogl){
+    void GLProgram::bind(GraphicAPI * ogl){
         if(!linked) {
             link(ogl);
             if(!linked)
@@ -105,11 +105,11 @@ namespace pbge {
         updateUniforms(ogl);
     }
 
-    void GLProgram::unbind(OpenGL * ogl){
+    void GLProgram::unbind(GraphicAPI * ogl){
         ogl->useProgram(0);
     }
 
-    void GLProgram::updateUniforms(OpenGL * ogl) {
+    void GLProgram::updateUniforms(GraphicAPI * ogl) {
         std::vector<UniformInfo>::iterator it;
         for(it = uniforms.begin(); it != uniforms.end(); it++) {
             UniformValue * value = ogl->searchUniform(*it);
@@ -129,7 +129,7 @@ namespace pbge {
         return shaders;
     }
 
-    bool GLProgram::link(OpenGL * ogl){
+    bool GLProgram::link(GraphicAPI * ogl){
         GLint status;
         std::vector<GLShader*>::iterator it;
         if(programID == 0) programID = ogl->createProgram();
@@ -162,7 +162,7 @@ namespace pbge {
         delete [] _infoLog;
     }
 
-    void GLProgram::extractUniformInformation(OpenGL * ogl) {
+    void GLProgram::extractUniformInformation(GraphicAPI * ogl) {
         GLint numberOfActiveUniforms;
         GLint maxUniformNameSize;
         GLint uniformSize;
@@ -218,30 +218,30 @@ namespace pbge {
         return program;
     }
 
-    void GLProgram::bindFloat(const UniformInfo & info, OpenGL * ogl, const float & valor) {
+    void GLProgram::bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float & valor) {
         glUniform1f(info.getLocation(), valor);
     }
 
-    void GLProgram::bindFloatVec2(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2) {
+    void GLProgram::bindFloatVec2(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2) {
         glUniform2f(info.getLocation(), v1, v2);
     }
 
-    void GLProgram::bindFloatVec3(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3) {
+    void GLProgram::bindFloatVec3(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3) {
         glUniform3f(info.getLocation(), v1, v2, v3);
     }
 
-    void GLProgram::bindFloatVec4(const UniformInfo & info, OpenGL * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
+    void GLProgram::bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
         glUniform4f(info.getLocation(), v1, v2, v3, v4);
     }
 
-    void GLProgram::bindSampler2D(const UniformInfo & info, OpenGL * ogl, Texture * tex) {
+    void GLProgram::bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture * tex) {
         TextureUnit * unit = ogl->chooseTextureUnit(tex);
         unit->setTexture(tex);
         unit->makeChange(ogl);
         glUniform1i(info.getLocation(), unit->getIndex());
     }
 
-    void GLProgram::bindMat4(const UniformInfo & info, OpenGL * ogl, const float * v) {
+    void GLProgram::bindMat4(const UniformInfo & info, GraphicAPI * ogl, const float * v) {
         glUniformMatrix4fv(info.getLocation(), 1, GL_FALSE, v);
     }
 }

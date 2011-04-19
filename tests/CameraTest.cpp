@@ -4,7 +4,7 @@
 
 #include "pbge/gfx/Camera.h"
 
-#include "mocks/MockOpenGL.h"
+#include "mocks/MockGraphicAPI.h"
 //#include "mocks/MockTransformationNode.h"
 //#include "mocks/MockRenderTarget.h"
 
@@ -18,12 +18,12 @@ using ::testing::_;
 
 class FrustumTest : public testing::Test {
 public:
-    MockOpenGL * ogl;
+    MockGraphicAPI * ogl;
     
     pbge::Frustum * frustum;
     
     FrustumTest() {
-        ogl = new MockOpenGL;
+        ogl = new MockGraphicAPI;
         frustum = new pbge::Frustum;
     }
 
@@ -92,13 +92,13 @@ TEST_F(FrustumTest, customProjectionMatrixIsLoadedCorrectly) {
 
 class CameraTest : public testing::Test {
 public:
-    MockOpenGL * ogl;
+    MockGraphicAPI * ogl;
     //MockTransformationNode node;
     math3d::matrix44 *m, *nt;
     math3d::vector4 *f, *u;
 
     CameraTest() {
-        ogl = new MockOpenGL;
+        ogl = new MockGraphicAPI;
         nt = new math3d::matrix44(math3d::identity44);
         (*nt)[0][3] = 1.0f;
         (*nt)[1][3] = 2.0f;

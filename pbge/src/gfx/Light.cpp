@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/Shader.h"
@@ -12,7 +12,7 @@
 
 using namespace pbge;
 
-void PointLight::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
+void PointLight::updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {
     if(isLightOn())
         visitor->addActiveLight(this);
     math3d::matrix44 m = visitor->getCurrentTransformation();
@@ -22,7 +22,7 @@ void PointLight::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
     (*position)[3] = m[3][3];
 }
 
-Shader * PointLight::getDefaultLightPassVS(OpenGL * ogl) {
+Shader * PointLight::getDefaultLightPassVS(GraphicAPI * ogl) {
     const std::string pointLightVSSource =
         "uniform vec4 light_position;\n"
         "varying vec3 normal;\n"
@@ -35,15 +35,15 @@ Shader * PointLight::getDefaultLightPassVS(OpenGL * ogl) {
         "   lightDir = (light_position - position).xyz;\n"
         "}\n";
 
-    Shader * shader = ogl->getStorage().getNamedShader("pbge.defaultPointLightVertexShader");
+    Shader * shader = ogl->getStorage()->getNamedShader("pbge.defaultPointLightVertexShader");
     if(shader == NULL) {
         shader = GLShader::loadSource(pointLightVSSource, Shader::VERTEX_SHADER);
-        ogl->getStorage().storeNamedShader("pbge.defaultPointLightVertexShader", shader);
+        ogl->getStorage()->storeNamedShader("pbge.defaultPointLightVertexShader", shader);
     }
     return shader;
 }
 
-Shader * PointLight::getDefaultLightPassFS(OpenGL * ogl) {
+Shader * PointLight::getDefaultLightPassFS(GraphicAPI * ogl) {
     const std::string pointLightFSSource = 
         "uniform vec4 light_diffuseColor;\n"
         "varying vec3 normal;\n"
@@ -58,21 +58,21 @@ Shader * PointLight::getDefaultLightPassFS(OpenGL * ogl) {
         "   gl_FragColor = lightColor * ndotd;\n"
         "}\n";
 
-    Shader * shader = ogl->getStorage().getNamedShader("pbge.defaultPointLightFragmentShader");
+    Shader * shader = ogl->getStorage()->getNamedShader("pbge.defaultPointLightFragmentShader");
     if(shader == NULL) {
         shader = GLShader::loadSource(pointLightFSSource, Shader::FRAGMENT_SHADER);
-        ogl->getStorage().storeNamedShader("pbge.defaultPointLightFragmentShader", shader);
+        ogl->getStorage()->storeNamedShader("pbge.defaultPointLightFragmentShader", shader);
     }
     return shader;
 }
 
-GPUProgram * PointLight::getDefaultLightPassProgram(OpenGL * ogl) {
-    GPUProgram * program = ogl->getStorage().getNamedProgram("pbge.defaultPointLightProgram");
+GPUProgram * PointLight::getDefaultLightPassProgram(GraphicAPI * ogl) {
+    GPUProgram * program = ogl->getStorage()->getNamedProgram("pbge.defaultPointLightProgram");
     if(program == NULL) {
         GLProgram * glProgram = new GLProgram;
         glProgram->attachShader(dynamic_cast<GLShader*>(PointLight::getDefaultLightPassVS(ogl)));
         glProgram->attachShader(dynamic_cast<GLShader*>(PointLight::getDefaultLightPassFS(ogl)));
-        ogl->getStorage().storeNamedProgram("pbge.defaultPointLightProgram", glProgram);
+        ogl->getStorage()->storeNamedProgram("pbge.defaultPointLightProgram", glProgram);
         program = glProgram;
     }
     return program;
@@ -88,10 +88,10 @@ PointLight::PointLight() {
     this->setDiffuseColor(0.5f, 0.5f, 0.5f, 1.0f);
 }
 
-void PointLight::setNecessaryUniforms(OpenGL * ogl, const math3d::matrix44 & viewTransform) {
-    UniformFloatVec4 * position = dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("light_position", FLOAT_VEC4, -1)));
+void PointLight::setNecessaryUniforms(GraphicAPI * ogl, const math3d::matrix44 & viewTransform) {
+    UniformFloatVec4 * position = dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("light_position", FLOAT_VEC4, -1)));
     math3d::vector4 p = viewTransform * (this->getPosition());
     position->setValue(p);
-    UniformFloatVec4 * color = dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("light_diffuseColor", FLOAT_VEC4, -1)));
+    UniformFloatVec4 * color = dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("light_diffuseColor", FLOAT_VEC4, -1)));
     color->setValue(diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
 }

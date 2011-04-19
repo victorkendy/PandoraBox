@@ -2,12 +2,12 @@
 #include "pbge/gfx/OpenGL/GLTextures.h"
 #include "pbge/internal/OpenGLStates.h"
 #include "pbge/gfx/Texture.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Image.h"
 
 using namespace pbge;
 
-GLTexture2D::GLTexture2D(OpenGL * gl) {
+GLTexture2D::GLTexture2D(GraphicAPI * gl) {
     this->ogl = gl;
     this->data = NULL;
     this->minFilter = GL_LINEAR;

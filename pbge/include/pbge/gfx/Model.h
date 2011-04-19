@@ -4,7 +4,7 @@
 #define gfxmodel_h_
 
 #include "pbge/core/core.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Node.h"
 #include "math3d/math3d.h"
 
@@ -16,18 +16,18 @@ namespace pbge {
 
     class PBGE_EXPORT Model{
     public:
-        virtual void render(ModelInstance * instance, OpenGL * ogl)=0;
+        virtual void render(ModelInstance * instance, GraphicAPI * ogl)=0;
 
-        virtual void renderDepth(ModelInstance * instance, OpenGL * ogl)=0;
+        virtual void renderDepth(ModelInstance * instance, GraphicAPI * ogl)=0;
     };
 
     class PBGE_EXPORT VBOModel : public Model {
     public:
         VBOModel(VertexBuffer * vbo, GLenum primitive);
 
-        void render(ModelInstance * instance, OpenGL * ogl);
+        void render(ModelInstance * instance, GraphicAPI * ogl);
 
-        void renderDepth(ModelInstance * instance, OpenGL * ogl);
+        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
     private:
         VertexBuffer * vbo;
         GLenum primitive;
@@ -39,15 +39,15 @@ namespace pbge {
         
         void addControlPoint(const float & x, const float & y, const float & z, const float & w);
 
-        void render(ModelInstance * instance, OpenGL * ogl);
+        void render(ModelInstance * instance, GraphicAPI * ogl);
 
-        void renderDepth(ModelInstance * instance, OpenGL * ogl);
+        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
 
         void setEvaluator(GPUProgram * _evaluator) {
             evaluator = _evaluator;
         }
 
-        GPUProgram * getEvaluator(OpenGL * ogl);
+        GPUProgram * getEvaluator(GraphicAPI * ogl);
     private:
         float * controlPoints;
 
@@ -60,9 +60,9 @@ namespace pbge {
     public:
         Circle(const float & radius, const int & slices = 16);
 
-        void renderDepth(ModelInstance * instance, OpenGL * ogl);
+        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
 
-        void render(ModelInstance * instance, OpenGL * ogl);
+        void render(ModelInstance * instance, GraphicAPI * ogl);
     private:
         float radius;
         int slices;
@@ -72,13 +72,13 @@ namespace pbge {
     public:
         Ellipse(const float & x_semi_axis, const float & y_semi_axis, const int & slices);
 
-        void render(ModelInstance * instance, OpenGL * ogl);
+        void render(ModelInstance * instance, GraphicAPI * ogl);
 
         void setEvaluator(GPUProgram * _evaluator) {
             evaluator = _evaluator;
         }
 
-        GPUProgram * getEvaluator(OpenGL * ogl);
+        GPUProgram * getEvaluator(GraphicAPI * ogl);
 
         void setTransformation(const math3d::matrix44 & transformation);
     private:
@@ -92,9 +92,9 @@ namespace pbge {
     public:
         Sphere(const float & radius, const int & slices = 16);
 
-        void renderDepth(ModelInstance * instance, OpenGL * ogl);
+        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
 
-        void render(ModelInstance * instance, OpenGL * ogl);
+        void render(ModelInstance * instance, GraphicAPI * ogl);
     private:
         float radius;
         int slices;
@@ -104,13 +104,13 @@ namespace pbge {
     public:
         Ellipsoid(const float & x_semi_axis, const float & y_semi_axis, const float & z_semi_axis, const int & slices);
 
-        void render(ModelInstance * instance, OpenGL * ogl);
+        void render(ModelInstance * instance, GraphicAPI * ogl);
 
         void setEvaluator(GPUProgram * _evaluator) {
             evaluator = _evaluator;
         }
 
-        GPUProgram * getEvaluator(OpenGL * ogl);
+        GPUProgram * getEvaluator(GraphicAPI * ogl);
 
         void setTransformation(const math3d::matrix44 & transformation);
     private:
@@ -130,17 +130,17 @@ namespace pbge {
         ~ModelInstance();
     // Node interface methods
     public:
-        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {}
+        void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {}
 
-        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {}
+        void postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {}
 
-        void renderPass(RenderVisitor * visitor, OpenGL * ogl);
+        void renderPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
-        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl);
+        void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
-        void depthPass(RenderVisitor * visitor, OpenGL * ogl);
+        void depthPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
-        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl);
+        void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
         void addChild(Node * node) {
             childs.push_back(node);

@@ -12,14 +12,14 @@ namespace pbge {
     class UpdaterVisitor;
     class RenderVisitor;
     class Camera;
-    class OpenGL;
+    class GraphicAPI;
     class LightPassVisitor;
     class SceneGraph;
     class Node;
 
     class PBGE_EXPORT Renderer{
     public:
-        Renderer(OpenGL * _ogl);
+        Renderer(GraphicAPI * _ogl);
 
         void setScene(const SceneGraph * scene_manager);
 
@@ -41,7 +41,7 @@ namespace pbge {
 
         LightPassVisitor * lightPassVisitor;
 
-        OpenGL * ogl;
+        GraphicAPI * ogl;
     };
 }
 #endif

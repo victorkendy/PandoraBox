@@ -5,7 +5,7 @@
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/GraphicObjectsFactory.h"
-#include "pbge/gfx/OpenGl.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Buffer.h"
 
 using namespace pbge;
@@ -107,7 +107,7 @@ void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, GLsizei stride) {
     }
 }
 
-VertexBuffer * VertexBufferBuilder::done(Buffer::UsageHint usage, OpenGL * ogl) {
+VertexBuffer * VertexBufferBuilder::done(Buffer::UsageHint usage, GraphicAPI * ogl) {
     validateAttribs();
     GLsizei size = calculateSize();
     GLsizei stride = size / nVertices;

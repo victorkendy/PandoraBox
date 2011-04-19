@@ -6,7 +6,7 @@
 #include <string>
 
 namespace pbge {
-    class OpenGL;
+    class GraphicAPI;
     class Renderer;
     class SceneGraph;
     class SceneInitializer;
@@ -42,11 +42,11 @@ namespace pbge {
             windowTitle = title;
         }
 
-        void setOpenGL(OpenGL * openGL) {
+        void setGraphicAPI(GraphicAPI * openGL) {
             this->ogl = openGL;
         }
 
-        OpenGL * getOpenGL () {
+        GraphicAPI * getGraphicAPI () {
             return ogl;
         }
 
@@ -97,7 +97,7 @@ namespace pbge {
 
         Renderer * renderer;
 
-        OpenGL * ogl;
+        GraphicAPI * ogl;
 
         SceneGraph * scene;
 

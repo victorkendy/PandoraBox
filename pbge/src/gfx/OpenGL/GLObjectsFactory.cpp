@@ -7,7 +7,7 @@
 
 using namespace pbge;
 
-GLObjectsFactory::GLObjectsFactory(OpenGL * ogl) {
+GLObjectsFactory::GLObjectsFactory(GraphicAPI * ogl) {
     this->gl = ogl;
 }
 

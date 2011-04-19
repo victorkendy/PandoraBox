@@ -11,7 +11,7 @@
 #include "pbge/gfx/Light.h"
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/Node.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"

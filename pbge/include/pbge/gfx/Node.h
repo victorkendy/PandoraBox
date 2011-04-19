@@ -13,7 +13,7 @@
 
 namespace pbge {
     
-    class OpenGL;
+    class GraphicAPI;
     class UpdaterVisitor;
     class RenderVisitor;
     class Camera;
@@ -31,17 +31,17 @@ namespace pbge {
 
         typedef std::vector<Node *> node_list;
         
-        virtual void updatePass(UpdaterVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) = 0;
 
-        virtual void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) = 0;
 
-        virtual void renderPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void renderPass(RenderVisitor * visitor, GraphicAPI * ogl) = 0;
 
-        virtual void postRenderPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl) = 0;
 
-        virtual void depthPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void depthPass(RenderVisitor * visitor, GraphicAPI * ogl) = 0;
 
-        virtual void postDepthPass(RenderVisitor * visitor, OpenGL * ogl) = 0;
+        virtual void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl) = 0;
 
         virtual void addChild(Node * node) = 0;
         
@@ -95,17 +95,17 @@ namespace pbge {
             return *transformation;
         }
 
-        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+        void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl);
 
-        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+        void postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * ogl);
 
-        void renderPass(RenderVisitor * visitor, OpenGL * ogl);
+        void renderPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
-        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl) {}
+        void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl) {}
 
-        void depthPass(RenderVisitor * visitor, OpenGL * ogl);
+        void depthPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
-        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl) {}
+        void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl) {}
 
         void addChild(Node * node) {
             childs.push_back(node);
@@ -142,17 +142,17 @@ namespace pbge {
 
         CameraNode(Camera * _camera);
 
-        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+        void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl);
 
-        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl){}
+        void postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * ogl){}
 
-        void renderPass(RenderVisitor * visitor, OpenGL * ogl){}
+        void renderPass(RenderVisitor * visitor, GraphicAPI * ogl){}
 
-        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
+        void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl){}
 
-        void depthPass(RenderVisitor * visitor, OpenGL * ogl){};
+        void depthPass(RenderVisitor * visitor, GraphicAPI * ogl){};
 
-        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl){};
+        void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl){};
 
         void lookAt(const math3d::vector4 & up, const math3d::vector4 & front);
 

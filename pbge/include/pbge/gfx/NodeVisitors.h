@@ -13,7 +13,7 @@ namespace pbge {
     class Node;
     class Light;
     class Camera;
-    class OpenGL;
+    class GraphicAPI;
 
     class PBGE_EXPORT UpdaterVisitor {
     public:
@@ -29,7 +29,7 @@ namespace pbge {
             delete [] transformationStack;
         }
 
-        void visit(Node * node, OpenGL * ogl);
+        void visit(Node * node, GraphicAPI * ogl);
 
         void pushTransformation(const math3d::matrix44 & m);
 
@@ -54,7 +54,7 @@ namespace pbge {
         }
 
     private:
-        void _visit(Node * node, OpenGL * ogl);
+        void _visit(Node * node, GraphicAPI * ogl);
 
         math3d::matrix44 * transformationStack;
 
@@ -65,19 +65,19 @@ namespace pbge {
         std::vector<Light*> activeLights;
     };
 
-    /* Interface for a visitor class that render something on some OpenGL buffer */
+    /* Interface for a visitor class that render something on some GraphicAPI buffer */
     class PBGE_EXPORT RenderVisitor {
     public:
-        virtual void visit(Node * node, OpenGL * ogl) = 0;
+        virtual void visit(Node * node, GraphicAPI * ogl) = 0;
     };
 
     class PBGE_EXPORT ColorPassVisitor : public RenderVisitor {
-        void visit(Node * node, OpenGL * ogl);
+        void visit(Node * node, GraphicAPI * ogl);
     };
 
     class PBGE_EXPORT DepthPassVisitor : public RenderVisitor{
     public:
-        void visit(Node * node, OpenGL * ogl);
+        void visit(Node * node, GraphicAPI * ogl);
     };
 
     class PBGE_EXPORT LightPassVisitor : public RenderVisitor {
@@ -95,7 +95,7 @@ namespace pbge {
             currentCamera = camera;
         }
 
-        void visit(Node * node, OpenGL * ogl);
+        void visit(Node * node, GraphicAPI * ogl);
     private:
         Camera * currentCamera;
 

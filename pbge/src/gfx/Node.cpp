@@ -3,7 +3,7 @@
 
 #include "math3d/utils/matrix_utils.h" 
 
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Camera.h"
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
@@ -22,20 +22,20 @@ TransformationNode * TransformationNode::rotation(const float & angle, const flo
     return new TransformationNode(math3d::rotationMatrix(angle, x, y, z));
 }
 
-void TransformationNode::updatePass(UpdaterVisitor *visitor, OpenGL *ogl) {
+void TransformationNode::updatePass(UpdaterVisitor *visitor, GraphicAPI *ogl) {
     *current = visitor->getCurrentTransformation() * (*transformation);
     visitor->pushTransformation(*current);
 }
 
-void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
+void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {
     visitor->popTransformation();
 }
 
-void TransformationNode::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
+void TransformationNode::renderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->loadModelMatrix(*current);
 }
 
-void TransformationNode::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
+void TransformationNode::depthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->loadModelMatrix(*current);
 }
 
@@ -67,7 +67,7 @@ CameraNode::CameraNode(Camera * _camera) {
     camera->setParent(this);
 }
 
-void CameraNode::updatePass(UpdaterVisitor * visitor, OpenGL * ogl) {
+void CameraNode::updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {
     *viewTransformation = visitor->getCurrentTransformation();
     visitor->addActiveCamera(this->camera);
 }

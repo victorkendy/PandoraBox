@@ -9,12 +9,12 @@
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/StateSet.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/core/Manager.h"
 
 using namespace pbge;
 
-Renderer::Renderer(OpenGL * _ogl){
+Renderer::Renderer(GraphicAPI * _ogl){
     this->ogl = _ogl;
     this->updater = new UpdaterVisitor;
     this->renderer = new ColorPassVisitor;
@@ -55,7 +55,7 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     }
     ogl->blendFunc(GL_DST_COLOR, GL_ZERO);
     
-    ogl->getState().useProgram(NULL);
+    ogl->getState()->useProgram(NULL);
     renderer->visit(root, ogl);
     
     ogl->disable(GL_BLEND);

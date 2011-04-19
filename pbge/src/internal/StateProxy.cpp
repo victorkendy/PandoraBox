@@ -1,30 +1,30 @@
 
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/internal/StateProxy.h"
 
 using namespace pbge;
 
-EnableMode::EnableMode(pbge::OpenGL::Mode _mode){
+EnableMode::EnableMode(pbge::GraphicAPI::Mode _mode){
     this->mode = _mode;
 }
 
-void EnableMode::apply(pbge::OpenGL *ogl) {
-    ogl->getState().enable(mode);
+void EnableMode::apply(pbge::GraphicAPI *ogl) {
+    ogl->getState()->enable(mode);
 }   
 
-void EnableMode::unApply(pbge::OpenGL *ogl) {
-    ogl->getState().disable(mode);
+void EnableMode::unApply(pbge::GraphicAPI *ogl) {
+    ogl->getState()->disable(mode);
 }
 
-DisableMode::DisableMode(pbge::OpenGL::Mode _mode) {
+DisableMode::DisableMode(pbge::GraphicAPI::Mode _mode) {
     this->mode = _mode;
 }
 
-void DisableMode::apply(pbge::OpenGL *ogl) {
+void DisableMode::apply(pbge::GraphicAPI *ogl) {
     ogl->disable(mode);
 }
 
-void DisableMode::unApply(pbge::OpenGL *ogl) {
+void DisableMode::unApply(pbge::GraphicAPI *ogl) {
     ogl->enable(mode);
 }

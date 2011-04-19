@@ -208,15 +208,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\mocks\MockGraphicAPI.h"
+				>
+			</File>
+			<File
 				RelativePath=".\mocks\MockModel.h"
 				>
 			</File>
 			<File
 				RelativePath=".\mocks\MockNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\mocks\MockOpenGL.h"
 				>
 			</File>
 			<File

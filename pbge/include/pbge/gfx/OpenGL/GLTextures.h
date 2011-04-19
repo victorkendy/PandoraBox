@@ -7,7 +7,7 @@
 #include "pbge/gfx/Texture.h"
 
 namespace pbge {
-    class OpenGL;
+    class GraphicAPI;
     class Image;
     class TextureUnit;
     class GLObjectsFactory;
@@ -34,7 +34,7 @@ namespace pbge {
         void setMagFilter(Texture::Filter magFilter);
 
     private:
-        GLTexture2D (OpenGL * _gl); 
+        GLTexture2D (GraphicAPI * _gl); 
         
         // Checks if this texture object is compatible with the specified image and format
         // the image is compatible if the format equal the internalFormat and the dimensions
@@ -50,7 +50,7 @@ namespace pbge {
         // representation of that object
         void replaceGLObjectData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, int height, Texture::Format internalFormat);
 
-        OpenGL * ogl;
+        GraphicAPI * ogl;
 
         GLuint GLID;
 

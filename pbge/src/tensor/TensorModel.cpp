@@ -190,7 +190,7 @@ void TensorModel::calculateEigenVectors3dSymmetric() {
     }
 }
 
-void TensorModel::render(ModelInstance * instance, OpenGL * ogl) {
+void TensorModel::render(ModelInstance * instance, GraphicAPI * ogl) {
     if(this->model == NULL) {
         if(this->order == 2) {
             this->render2d(instance, ogl);
@@ -204,9 +204,9 @@ void TensorModel::render(ModelInstance * instance, OpenGL * ogl) {
     }
 }
 
-void TensorModel::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
+void TensorModel::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
 
-void TensorModel::render2d(ModelInstance * instance, OpenGL * ogl) {
+void TensorModel::render2d(ModelInstance * instance, GraphicAPI * ogl) {
     float eigenvalues[2];
     eigenvalues[0] = getEigenvalue(0);
     eigenvalues[1] = getEigenvalue(1);
@@ -222,7 +222,7 @@ void TensorModel::render2d(ModelInstance * instance, OpenGL * ogl) {
     this->model->render(instance, ogl);
 }
 
-void TensorModel::render3d(ModelInstance * instance, OpenGL * ogl) {
+void TensorModel::render3d(ModelInstance * instance, GraphicAPI * ogl) {
     float eigenvalues[3];
     eigenvalues[0] = getEigenvalue(0);
     eigenvalues[1] = getEigenvalue(1);

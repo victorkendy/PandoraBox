@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace pbge {
-    class OpenGL;
+    class GraphicAPI;
     class Window;
     class SceneGraph;
     class SceneInitializer;
@@ -40,7 +40,7 @@ namespace pbge {
             log = newLog;
         }
         
-        OpenGL * getOpenGL() {
+        GraphicAPI * getGraphicAPI() {
             return ogl;
         }
 
@@ -67,7 +67,7 @@ namespace pbge {
     private:
         Window * window;
         Log * log;
-        OpenGL * ogl;
+        GraphicAPI * ogl;
         std::vector<std::string> shaderDirectories;
     };
 }

@@ -6,10 +6,10 @@
 int cam_node_name;
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
-    pbge::SceneGraph * operator () (pbge::OpenGL * ogl) {
+    pbge::SceneGraph * operator () (pbge::GraphicAPI * ogl) {
         const float m_pi = 3.1415f;
         // FIXME: remove the state change line
-        ogl->enableMode(pbge::OpenGL::DEPTH_TEST);
+        ogl->enableMode(pbge::GraphicAPI::DEPTH_TEST);
         pbge::ModelInstance * vboModel = createVBOInstance(ogl);
         pbge::SceneGraph * scene = new pbge::SceneGraph(new pbge::TransformationNode);
         pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(m_pi/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
@@ -69,7 +69,6 @@ void keyboard(unsigned char k, int x, int y) {
 }*/
 
 int main(int argc, char ** argv) {
-    system("dir");
     pbge::Manager * manager = new pbge::Manager;
     manager->setWindowDimensions(500, 500);
     manager->setFullscreen(false);

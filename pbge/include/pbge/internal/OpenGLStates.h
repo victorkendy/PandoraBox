@@ -7,15 +7,15 @@
 #include "pbge/gfx/StateSet.h"
 
 namespace pbge {
-    class OpenGL;
+    class GraphicAPI;
 
     class PBGE_EXPORT StateEnabler : public State {
     public:
         StateEnabler(GLenum _mode);
 
-        void makeChange(OpenGL * ogl);
+        void makeChange(GraphicAPI * ogl);
 
-        bool shouldChange(OpenGL * ogl);
+        bool shouldChange(GraphicAPI * ogl);
 
         void enable();
 
@@ -32,15 +32,15 @@ namespace pbge {
             this->next = NULL;
         }
 
-        void makeChange(OpenGL * ogl);
+        void makeChange(GraphicAPI * ogl);
 
-        bool shouldChange(OpenGL * ogl);
+        bool shouldChange(GraphicAPI * ogl);
 
         void changeProgram(GPUProgram * program) {
             next = program;
         }
 
-        void updateUniforms(OpenGL * ogl);
+        void updateUniforms(GraphicAPI * ogl);
 
     private:
         GPUProgram * current;
@@ -49,11 +49,11 @@ namespace pbge {
 
     class PBGE_EXPORT TextureUnit : public State{
     public:
-        TextureUnit(OpenGL * ogl, unsigned index);
+        TextureUnit(GraphicAPI * ogl, unsigned index);
 
-        void makeChange(OpenGL * ogl);
+        void makeChange(GraphicAPI * ogl);
 
-        bool shouldChange(OpenGL * ogl);
+        bool shouldChange(GraphicAPI * ogl);
 
         void setTexture(Texture * tex) {
             this->nextTexture = tex;

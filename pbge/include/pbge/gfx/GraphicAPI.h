@@ -1,7 +1,7 @@
 
 
-#ifndef PBGE_GFX_OPENGL_H_
-#define PBGE_GFX_OPENGL_H_
+#ifndef PBGE_GFX_GRAPHICAPI_H_
+#define PBGE_GFX_GRAPHICAPI_H_
 
 #include <iostream>
 #include <GL/glew.h>
@@ -35,7 +35,7 @@ namespace pbge {
         virtual void getSystemDeviceContext(void * p_device) = 0;
     };
 
-    class PBGE_EXPORT OpenGL {
+    class PBGE_EXPORT GraphicAPI {
     public:
 
         typedef enum {
@@ -58,70 +58,58 @@ namespace pbge {
             PROGRAM_POINT_SIZE
         } Mode;
 
-        OpenGL();
+    public:
+        static GraphicAPI * createInstance();
 
-        ~OpenGL();
+        virtual void setContext(GLContext * newContext) = 0;
+
+        virtual GLContext * getContext() = 0;
+
+        virtual void releaseContext() = 0;
+
+        virtual void makeContextCurrent() = 0;
+
+        virtual void swapBuffers() = 0;
+
+        virtual void setMatrixMode(GLenum mode) = 0;
+
+        virtual void loadViewMatrix(const math3d::matrix44 & m) = 0;
+
+        virtual void loadProjectionMatrix(const math3d::matrix44 & m) = 0;
+
+        virtual void loadModelMatrix(const math3d::matrix44 & m) = 0;
+
+        virtual void updateState() = 0;
+
+        virtual void uploadProjection() = 0;
+
+        virtual GraphicObjectsFactory * getFactory() = 0;
+
+        virtual UniformValue * getUniformValue(const UniformInfo & info) = 0;
+
+        virtual UniformValue * searchUniform(const UniformInfo & info) = 0;
+
+        virtual void enableMode(Mode mode) = 0;
+
+        virtual void disableDrawBuffer() = 0;
+
+        virtual void enableDrawBuffer(GLenum buffer) = 0;
+
+        virtual StateSet * getState() = 0;
+
+        virtual ResourceStorage * getStorage() = 0;
+
+        virtual TextureUnit * chooseTextureUnit(Texture * texture) = 0;
         
-        void setContext(GLContext * newContext);
+        virtual const int numberOfTextureUnits() = 0;
 
-        GLContext * getContext() {
-            return context;
-        }
+        virtual void pushUniforms(UniformSet * uniforms) = 0;
 
-        void releaseContext ();
-
-        void makeContextCurrent() {
-            context->makeCurrent();
-        }
-
-        void swapBuffers() {
-            context->swapBuffers();
-        }
-
-        virtual void setMatrixMode(GLenum mode);
-
-        virtual void loadViewMatrix(const math3d::matrix44 & m) {
-            matrices[0] = m;
-        }
-
-        virtual void loadProjectionMatrix(const math3d::matrix44 & m) {
-            matrices[1] = m;
-        }
-
-        virtual void loadModelMatrix(const math3d::matrix44 & m) {
-            matrices[2] = m;
-        }
-
-        virtual void updateState();
-
-        virtual void uploadProjection();
-
-        virtual GraphicObjectsFactory * getFactory();
-
-        virtual UniformValue * getUniformValue(const UniformInfo & info);
-
-        virtual UniformValue * searchUniform(const UniformInfo & info);
-
-        virtual void enableMode(Mode mode);
-
-        virtual void disableDrawBuffer();
-
-        virtual void enableDrawBuffer(GLenum buffer);
-
-        virtual StateSet & getState() { return *state; }
-
-        virtual ResourceStorage & getStorage() { return *storage; }
-
-        virtual TextureUnit * chooseTextureUnit(Texture * texture);
-        
-        virtual const int numberOfTextureUnits();
-
-        virtual void pushUniforms(UniformSet * uniforms);
-
-        virtual void popUniforms();
+        virtual void popUniforms() = 0;
         
         
         // raw OpenGL API calls
+        // TODO: remove all this....
         virtual void alphaFunc(GLenum func, GLclampf ref);
 
         virtual void attachShader(GLuint program, GLuint shader);
@@ -195,23 +183,7 @@ namespace pbge {
         virtual void vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
         virtual void viewport(GLint x, GLint y, GLint w, GLint h);
-        
-    private:
-        void uploadModelview();
-
-        math3d::matrix44 * matrices;
-
-        GLenum currentMatrixMode;
-
-        StateSet * state;
-
-        ResourceStorage * storage;
-
-        GLContext * context;
-
-        GraphicObjectsFactory * factory;
     };
-
 }
 
 #endif

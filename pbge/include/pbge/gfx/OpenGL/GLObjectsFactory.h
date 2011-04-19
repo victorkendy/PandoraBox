@@ -4,11 +4,11 @@
 #include "pbge/gfx/GraphicObjectsFactory.h"
 
 namespace pbge {
-    class OpenGL;
+    class GraphicAPI;
 
     class GLObjectsFactory : public GraphicObjectsFactory {
     public:
-        GLObjectsFactory(OpenGL * gl);
+        GLObjectsFactory(GraphicAPI * gl);
 
         Buffer * createBuffer(size_t _size, Buffer::UsageHint _usage);
 
@@ -24,7 +24,7 @@ namespace pbge {
 
         GPUProgram * createProgramFromString(const std::string & vsSource, const std::string & fsSource);
     private:
-        OpenGL * gl;
+        GraphicAPI * gl;
     };
 }
 

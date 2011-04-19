@@ -11,7 +11,7 @@ namespace pbge {
 
     class EXTFBOTextureRenderer:public TextureRenderer {
     public:
-        EXTFBOTextureRenderer(OpenGL * _ogl) {
+        EXTFBOTextureRenderer(GraphicAPI * _ogl) {
             this->ogl = _ogl;
             initialize();
         }
@@ -25,7 +25,7 @@ namespace pbge {
         void initialize() {
             ogl->genFramebuffersEXT(1, &fbo);
         }
-        OpenGL * ogl;
+        GraphicAPI * ogl;
         GLuint fbo;
     };
 
@@ -39,7 +39,7 @@ namespace pbge {
         TextureRendererFactory() {
             throw "need opengl";
         }
-        TextureRendererFactory(OpenGL * _ogl) {
+        TextureRendererFactory(GraphicAPI * _ogl) {
             this->ogl = _ogl;
         }
 
@@ -65,7 +65,7 @@ namespace pbge {
         }
 
     private:
-        OpenGL * ogl;
+        GraphicAPI * ogl;
         TextureRenderer * textureRenderer;
     };
 }

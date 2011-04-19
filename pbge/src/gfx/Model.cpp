@@ -2,7 +2,7 @@
 
 #include "pbge/gfx/UniformSet.h"
 #include "pbge/gfx/Shader.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/ResourceStorage.h"
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/VBO.h"
@@ -18,7 +18,7 @@ VBOModel::VBOModel(pbge::VertexBuffer * _vbo, GLenum _primitive) {
     this->primitive = _primitive;
 }
 
-void VBOModel::render(ModelInstance * instance, OpenGL * ogl) {
+void VBOModel::render(ModelInstance * instance, GraphicAPI * ogl) {
     ogl->enable(GL_VERTEX_ARRAY);
     vbo->bind(ogl);
     glDrawArrays(primitive, 0, vbo->getNVertices());
@@ -26,7 +26,7 @@ void VBOModel::render(ModelInstance * instance, OpenGL * ogl) {
     ogl->disable(GL_VERTEX_ARRAY);
 }
 
-void VBOModel::renderDepth(ModelInstance* instance, OpenGL * ogl) {
+void VBOModel::renderDepth(ModelInstance* instance, GraphicAPI * ogl) {
     
     ogl->enable(GL_VERTEX_ARRAY);
     
@@ -54,7 +54,7 @@ void BezierCurve::addControlPoint(const float & x, const float & y, const float 
     controlPoints[index + 3] = w;
 }
 
-GPUProgram * BezierCurve::getEvaluator(OpenGL * ogl) {
+GPUProgram * BezierCurve::getEvaluator(GraphicAPI * ogl) {
     const std::string evaluatorVS = 
         "uniform vec4 p0;\n"
         "uniform vec4 p1;\n"
@@ -73,10 +73,10 @@ GPUProgram * BezierCurve::getEvaluator(OpenGL * ogl) {
         "   gl_FrontColor = gl_Color;\n"
         "}";
     if(evaluator == NULL) {
-        GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultBezierEvaluator");
+        GPUProgram * storedEvaluator = ogl->getStorage()->getNamedProgram("pbge.defaultBezierEvaluator");
         if(storedEvaluator == NULL) {
             GLProgram * program = GLProgram::fromString(evaluatorVS, "");
-            ogl->getStorage().storeNamedProgram("pbge.defaultBezierEvaluator", program);
+            ogl->getStorage()->storeNamedProgram("pbge.defaultBezierEvaluator", program);
             evaluator = program;
         } else {
             evaluator = storedEvaluator;
@@ -85,14 +85,14 @@ GPUProgram * BezierCurve::getEvaluator(OpenGL * ogl) {
     return evaluator;
 }
 
-void BezierCurve::render(ModelInstance * instance, OpenGL * ogl) {
+void BezierCurve::render(ModelInstance * instance, GraphicAPI * ogl) {
 
     GPUProgram * program = this->getEvaluator(ogl);
-    ogl->getState().useProgram(program);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("p0", FLOAT_VEC4, -1)))->setValue(-1,0,0,1);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("p1", FLOAT_VEC4, -1)))->setValue(-0.5f,-2.0f,0,1);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("p2", FLOAT_VEC4, -1)))->setValue(0.0f,1.0f,0,1);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState().getUniformValue(UniformInfo("p3", FLOAT_VEC4, -1)))->setValue(1.0f,1.0f,0,1);
+    ogl->getState()->useProgram(program);
+    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p0", FLOAT_VEC4, -1)))->setValue(-1,0,0,1);
+    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p1", FLOAT_VEC4, -1)))->setValue(-0.5f,-2.0f,0,1);
+    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p2", FLOAT_VEC4, -1)))->setValue(0.0f,1.0f,0,1);
+    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p3", FLOAT_VEC4, -1)))->setValue(1.0f,1.0f,0,1);
     ogl->updateState();
     glBegin(GL_LINE_STRIP);
     glColor3f(1,1,1);
@@ -100,10 +100,10 @@ void BezierCurve::render(ModelInstance * instance, OpenGL * ogl) {
         glVertex2f(0.01f * i, 0.01f * i);
     }
     glEnd();
-    ogl->getState().useProgram(NULL);
+    ogl->getState()->useProgram(NULL);
 }
 
-void BezierCurve::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
+void BezierCurve::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
 
 
 ModelInstance::ModelInstance() {
@@ -124,27 +124,27 @@ ModelInstance::~ModelInstance() {
     delete uniforms;
 }
 
-void ModelInstance::renderPass(RenderVisitor * visitor, OpenGL * ogl) {
+void ModelInstance::renderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->pushUniforms(this->uniforms);
-    ogl->getState().useProgram(this->renderProgram);
+    ogl->getState()->useProgram(this->renderProgram);
     ogl->updateState();
     ogl->uploadProjection();
     model->render(this, ogl);
 }
 
-void ModelInstance::postRenderPass(RenderVisitor * visitor, OpenGL * ogl) {
+void ModelInstance::postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->popUniforms();
 }
 
-void ModelInstance::depthPass(RenderVisitor * visitor, OpenGL * ogl) {
+void ModelInstance::depthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->pushUniforms(this->uniforms);
-    ogl->getState().useProgram(this->depthProgram);
+    ogl->getState()->useProgram(this->depthProgram);
     ogl->updateState();
     ogl->uploadProjection();
     model->renderDepth(this, ogl);
 }
 
-void ModelInstance::postDepthPass(RenderVisitor * visitor, OpenGL * ogl) {
+void ModelInstance::postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->popUniforms();
 }
 
@@ -159,9 +159,9 @@ Circle::Circle(const float & _radius, const int & _slices) {
     this->slices = _slices;
 }
 
-void Circle::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
+void Circle::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
 
-void Circle::render(ModelInstance * instance, OpenGL * ogl) {
+void Circle::render(ModelInstance * instance, GraphicAPI * ogl) {
     float radius = this->radius;
     float param_step = 2 * PBGE_pi / this->slices;
     
@@ -171,7 +171,7 @@ void Circle::render(ModelInstance * instance, OpenGL * ogl) {
         glVertex2f(radius * cos(t), radius * sin(t));
     }
     glEnd();
-    ogl->getState().useProgram(NULL);
+    ogl->getState()->useProgram(NULL);
 }
 
 void Ellipse::setTransformation(const math3d::matrix44 & transformation) {
@@ -189,16 +189,16 @@ Ellipse::Ellipse(const float & _x_semi_axis, const float & _y_semi_axis, const i
     this->transformation = new math3d::matrix44(math3d::identity44);
 }
 
-void Ellipse::render(ModelInstance * instance, OpenGL * ogl) {
+void Ellipse::render(ModelInstance * instance, GraphicAPI * ogl) {
     GPUProgram * program = this->getEvaluator(ogl);
-    ogl->getState().useProgram(program);
-    dynamic_cast<UniformFloatVec2*>(ogl->getState().getUniformValue(UniformInfo("scale", FLOAT_VEC2, -1)))->setValue(this->x_semi_axis, this->y_semi_axis);
-    dynamic_cast<UniformMat4*>(ogl->getState().getUniformValue(UniformInfo("transformation", FLOAT_MAT4, -1)))->setValue(*(this->transformation));
+    ogl->getState()->useProgram(program);
+    dynamic_cast<UniformFloatVec2*>(ogl->getState()->getUniformValue(UniformInfo("scale", FLOAT_VEC2, -1)))->setValue(this->x_semi_axis, this->y_semi_axis);
+    dynamic_cast<UniformMat4*>(ogl->getState()->getUniformValue(UniformInfo("transformation", FLOAT_MAT4, -1)))->setValue(*(this->transformation));
     ogl->updateState();
     Circle::render(instance, ogl);
 }
 
-GPUProgram * Ellipse::getEvaluator(OpenGL * ogl) {
+GPUProgram * Ellipse::getEvaluator(GraphicAPI * ogl) {
     const std::string evaluatorVS = 
         "uniform vec2 scale;\n"
         "uniform mat4 transformation;\n"
@@ -210,10 +210,10 @@ GPUProgram * Ellipse::getEvaluator(OpenGL * ogl) {
         "   gl_FrontColor = gl_Color;\n"
         "}";
     if(evaluator == NULL) {
-        GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultEllipseEvaluator");
+        GPUProgram * storedEvaluator = ogl->getStorage()->getNamedProgram("pbge.defaultEllipseEvaluator");
         if(storedEvaluator == NULL) {
             GLProgram * program = GLProgram::fromString(evaluatorVS, "");
-            ogl->getStorage().storeNamedProgram("pbge.defaultEllipseEvaluator", program);
+            ogl->getStorage()->storeNamedProgram("pbge.defaultEllipseEvaluator", program);
             evaluator = program;
         } else {
             evaluator = storedEvaluator;
@@ -233,9 +233,9 @@ Sphere::Sphere(const float & _radius, const int & _slices) {
     this->slices = _slices;
 }
 
-void Sphere::renderDepth(ModelInstance * instance, OpenGL * ogl) {}
+void Sphere::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
 
-void Sphere::render(ModelInstance * instance, OpenGL * ogl) {
+void Sphere::render(ModelInstance * instance, GraphicAPI * ogl) {
     float radius = this->radius;
     float param_step = 2 * PBGE_pi / this->slices;
     
@@ -248,7 +248,7 @@ void Sphere::render(ModelInstance * instance, OpenGL * ogl) {
         }
     }
     glEnd();
-    ogl->getState().useProgram(NULL);
+    ogl->getState()->useProgram(NULL);
 }
 
 void Ellipsoid::setTransformation(const math3d::matrix44 & transformation) {
@@ -267,16 +267,16 @@ Ellipsoid::Ellipsoid(const float & _x_semi_axis, const float & _y_semi_axis, con
     this->transformation = new math3d::matrix44(math3d::identity44);
 }
 
-void Ellipsoid::render(ModelInstance * instance, OpenGL * ogl) {
+void Ellipsoid::render(ModelInstance * instance, GraphicAPI * ogl) {
     GPUProgram * program = this->getEvaluator(ogl);
-    ogl->getState().useProgram(program);
-    dynamic_cast<UniformFloatVec3*>(ogl->getState().getUniformValue(UniformInfo("scale", FLOAT_VEC3, -1)))->setValue(this->x_semi_axis, this->y_semi_axis, this->z_semi_axis);
-    dynamic_cast<UniformMat4*>(ogl->getState().getUniformValue(UniformInfo("transformation", FLOAT_MAT4, -1)))->setValue(*(this->transformation));
+    ogl->getState()->useProgram(program);
+    dynamic_cast<UniformFloatVec3*>(ogl->getState()->getUniformValue(UniformInfo("scale", FLOAT_VEC3, -1)))->setValue(this->x_semi_axis, this->y_semi_axis, this->z_semi_axis);
+    dynamic_cast<UniformMat4*>(ogl->getState()->getUniformValue(UniformInfo("transformation", FLOAT_MAT4, -1)))->setValue(*(this->transformation));
     ogl->updateState();
     Sphere::render(instance, ogl);
 }
 
-GPUProgram * Ellipsoid::getEvaluator(OpenGL * ogl) {
+GPUProgram * Ellipsoid::getEvaluator(GraphicAPI * ogl) {
     const std::string evaluatorVS = 
         "uniform vec3 scale;\n"
         "uniform mat4 transformation;\n"
@@ -289,10 +289,10 @@ GPUProgram * Ellipsoid::getEvaluator(OpenGL * ogl) {
         "   gl_FrontColor = gl_Color;\n"
         "}";
     if(evaluator == NULL) {
-        GPUProgram * storedEvaluator = ogl->getStorage().getNamedProgram("pbge.defaultEllipseEvaluator");
+        GPUProgram * storedEvaluator = ogl->getStorage()->getNamedProgram("pbge.defaultEllipseEvaluator");
         if(storedEvaluator == NULL) {
             GLProgram * program = GLProgram::fromString(evaluatorVS, "");
-            ogl->getStorage().storeNamedProgram("pbge.defaultEllipseEvaluator", program);
+            ogl->getStorage()->storeNamedProgram("pbge.defaultEllipseEvaluator", program);
             evaluator = program;
         } else {
             evaluator = storedEvaluator;

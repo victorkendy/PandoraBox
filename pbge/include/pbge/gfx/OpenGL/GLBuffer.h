@@ -7,9 +7,7 @@
 #include "pbge/gfx/Buffer.h"
 
 namespace pbge {
-
-    typedef OpenGL GraphicAPI;
-  
+    class GraphicAPI;
     class GLObjectsFactory;
 
 

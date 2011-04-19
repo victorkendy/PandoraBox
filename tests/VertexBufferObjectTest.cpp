@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #include <vector>
 
-#include "mocks/MockOpenGL.h"
+#include "mocks/MockGraphicAPI.h"
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/core/Manager.h"
 #include "pbge/gfx/VBO.h"
@@ -107,7 +107,7 @@ TEST(VertexAttribBuilderTest, areIndexesAssignedReturnsTrueOnlyAfterTheIndexVect
 
 class VertexBufferBuilderTest : public testing::Test {
 public:
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     MockGraphicFactory factory;
     MockBuffer buffer;
 };
@@ -183,7 +183,7 @@ TEST_F(VertexBufferBuilderTest, ifThereIsAAttribWithNoIndexVectorThenThrowsBuild
 }
 
 TEST(VertexPositionAttribTest, bindCallsOpenGLWithCorrectParameters) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     EXPECT_CALL(ogl, vertexPointer(4, GL_FLOAT, 10, (GLbyte*)NULL + 10)).Times(1);
     EXPECT_CALL(ogl, enableClientState(GL_VERTEX_ARRAY)).Times(1);
 
@@ -192,7 +192,7 @@ TEST(VertexPositionAttribTest, bindCallsOpenGLWithCorrectParameters) {
 }
 
 TEST(VertexNormalAttribTest, bindCallsOpenGLWithCorrectParameters) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     EXPECT_CALL(ogl, normalPointer(GL_FLOAT, 10, (GLbyte*)NULL + 10)).Times(1);
     EXPECT_CALL(ogl, enableClientState(GL_NORMAL_ARRAY)).Times(1);
 
@@ -201,7 +201,7 @@ TEST(VertexNormalAttribTest, bindCallsOpenGLWithCorrectParameters) {
 }
 
 TEST(VertexTexcoordAttribTest, bindCallsOpenGLWithCorrectParameters) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     EXPECT_CALL(ogl, texCoordPointer(4, GL_FLOAT, 10, (GLbyte*)NULL + 10)).Times(1);
     EXPECT_CALL(ogl, enableClientState(GL_TEXTURE_COORD_ARRAY)).Times(1);
 
@@ -210,7 +210,7 @@ TEST(VertexTexcoordAttribTest, bindCallsOpenGLWithCorrectParameters) {
 }
 
 TEST(VertexColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     EXPECT_CALL(ogl, colorPointer(4, GL_FLOAT, 10, (GLbyte*)NULL + 10)).Times(1);
     EXPECT_CALL(ogl, enableClientState(GL_COLOR_ARRAY)).Times(1);
 
@@ -219,7 +219,7 @@ TEST(VertexColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
 }
 
 TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     EXPECT_CALL(ogl, secondaryColorPointer(3, GL_FLOAT, 10, (GLbyte*)NULL + 10)).Times(1);
     EXPECT_CALL(ogl, enableClientState(GL_SECONDARY_COLOR_ARRAY)).Times(1);
 
@@ -231,7 +231,7 @@ TEST(VertexSecondaryColorAttribTest, bindCallsOpenGLWithCorrectParameters) {
 //Integration Test
 
 TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     MockBuffer buffer;
     MockGraphicFactory factory;
     float buf[9];
@@ -256,7 +256,7 @@ TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly) {
     vbo->bindAllAttribs(&ogl);
 }
 TEST(VertexBufferTest, VBOIsConstructedAndBindsCorrectly2) {
-    MockOpenGL ogl;
+    MockGraphicAPI ogl;
     MockBuffer buffer;
     MockGraphicFactory factory;
     float buf[20];

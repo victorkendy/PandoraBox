@@ -46,7 +46,7 @@ void Camera::lookAt(const math3d::vector4 & up, const math3d::vector4 & front){
     is_valid = 0;
 }
 
-void Camera::setCamera(OpenGL * ogl) {
+void Camera::setCamera(GraphicAPI * ogl) {
     if(is_valid == 0) 
         setCameraTransformation();
     *viewTransform = *cameraTransformation;
@@ -60,7 +60,7 @@ void Camera::setCamera(OpenGL * ogl) {
         this->renderTarget->setRenderTarget(ogl);
 }
 
-void Camera::unsetCamera(OpenGL * ogl){
+void Camera::unsetCamera(GraphicAPI * ogl){
     if(this->renderTarget)
         renderTarget->unsetRenderTarget(ogl);
 }
@@ -140,7 +140,7 @@ void Frustum::setPerspective(const float &fovy, const float &aspect, const float
     updateFrustumPlanes();
 }
 
-void Frustum::loadProjection(OpenGL * ogl) const {
+void Frustum::loadProjection(GraphicAPI * ogl) const {
     ogl->loadProjectionMatrix(*projectionMatrix);
 }
 

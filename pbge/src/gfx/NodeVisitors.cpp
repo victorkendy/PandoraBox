@@ -1,7 +1,7 @@
 #include <vector>
 
 #include "pbge/gfx/ShaderUniform.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Camera.h"
 #include "pbge/gfx/Light.h"
 #include "pbge/gfx/StateSet.h"
@@ -12,7 +12,7 @@
 
 using namespace pbge;
 
-void UpdaterVisitor::visit(Node * node, OpenGL * ogl) {
+void UpdaterVisitor::visit(Node * node, GraphicAPI * ogl) {
     // reset the visitor state
     activeCameras.clear();
     activeLights.clear();
@@ -21,7 +21,7 @@ void UpdaterVisitor::visit(Node * node, OpenGL * ogl) {
     _visit(node, ogl);
 }
 
-void UpdaterVisitor::_visit(Node * node, OpenGL * ogl) {
+void UpdaterVisitor::_visit(Node * node, GraphicAPI * ogl) {
     node->updatePass(this, ogl);
     std::vector<Node*>::iterator child;
     for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
@@ -42,7 +42,7 @@ const math3d::matrix44 UpdaterVisitor::getCurrentTransformation() {
 }
 
 
-void ColorPassVisitor::visit(Node *node, OpenGL *ogl) {
+void ColorPassVisitor::visit(Node *node, GraphicAPI *ogl) {
     node->renderPass(this, ogl);
     std::vector<Node*>::iterator child;
     for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
@@ -50,7 +50,7 @@ void ColorPassVisitor::visit(Node *node, OpenGL *ogl) {
     node->postRenderPass(this, ogl);
 }
 
-void DepthPassVisitor::visit(Node *node, OpenGL *ogl) {
+void DepthPassVisitor::visit(Node *node, GraphicAPI *ogl) {
     node->depthPass(this, ogl);
     std::vector<Node*>::iterator child;
     for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
@@ -59,8 +59,8 @@ void DepthPassVisitor::visit(Node *node, OpenGL *ogl) {
 }
 
 
-void LightPassVisitor::visit(Node * node, pbge::OpenGL * ogl) {
-    ogl->getState().useProgram(currentLight->getLightPassProgram(ogl));
+void LightPassVisitor::visit(Node * node, pbge::GraphicAPI * ogl) {
+    ogl->getState()->useProgram(currentLight->getLightPassProgram(ogl));
     currentLight->setNecessaryUniforms(ogl, currentCamera->getViewTransform());
     node->renderPass(this, ogl);
     std::vector<Node*>::iterator child;

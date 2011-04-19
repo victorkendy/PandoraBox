@@ -6,7 +6,7 @@
 
 namespace pbge {
     class SceneGraph;
-    class OpenGL;
+    class GraphicAPI;
 
     class PBGE_EXPORT SceneInitializer {
     public:
@@ -15,7 +15,7 @@ namespace pbge {
 
             must return a valid scene graph
         */
-        virtual SceneGraph * operator () (OpenGL * ogl) = 0;
+        virtual SceneGraph * operator () (GraphicAPI * ogl) = 0;
 
     };
 }

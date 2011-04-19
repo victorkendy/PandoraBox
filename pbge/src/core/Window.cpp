@@ -12,7 +12,7 @@
 #endif
 
 #include "pbge/core/Window.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"
@@ -102,13 +102,13 @@ namespace {
     LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
         pbge::Window * window;
         CREATESTRUCT * cs;
-        pbge::OpenGL * ogl;
+        pbge::GraphicAPI * ogl;
         switch(msg) {
             case WM_CREATE:
                 cs = (CREATESTRUCT*)lParam;
                 window = reinterpret_cast<pbge::Window*>(cs->lpCreateParams);
                 SetWindowLongPtr(hwnd, GWLP_USERDATA, (ULONG)window);
-                ogl = window->getOpenGL();
+                ogl = window->getGraphicAPI();
                 ogl->setContext(new WGLContext(GetDC(hwnd)));
                 if(window->getSceneInitializer() != NULL && window->getScene() == NULL) {
                     pbge::SceneInitializer * initializer = window->getSceneInitializer();
@@ -134,14 +134,14 @@ namespace {
                 break;
             case WM_DESTROY:
                 window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                ogl = window->getOpenGL();
+                ogl = window->getGraphicAPI();
                 ogl->releaseContext();
                 PostQuitMessage(0);
                 // find somewhere to delete OpenGL
                 break;
             case WM_PAINT:
                 window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                ogl = window->getOpenGL();
+                ogl = window->getGraphicAPI();
                 ogl->clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
                 window->getRenderer()->render();
                 ogl->swapBuffers();
@@ -164,7 +164,7 @@ namespace {
 using namespace pbge;
 
 void Window::displayWindow() {
-    this->renderer = new Renderer(this->getOpenGL());
+    this->renderer = new Renderer(this->getGraphicAPI());
 
     #if defined (WIN32) || defined (_WIN32) // code for win32 system
 

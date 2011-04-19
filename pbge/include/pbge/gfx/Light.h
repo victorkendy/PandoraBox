@@ -22,9 +22,9 @@ namespace pbge {
 
         virtual bool isLightOn() = 0;
 
-        virtual GPUProgram * getLightPassProgram(OpenGL * ogl) = 0;
+        virtual GPUProgram * getLightPassProgram(GraphicAPI * ogl) = 0;
 
-        virtual void setNecessaryUniforms(OpenGL * ogl, const math3d::matrix44 & viewTransform) = 0;
+        virtual void setNecessaryUniforms(GraphicAPI * ogl, const math3d::matrix44 & viewTransform) = 0;
 
         virtual void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) = 0;
 
@@ -33,17 +33,17 @@ namespace pbge {
 
     class PBGE_EXPORT PointLight : public Light {
     public: // the node interface methods
-        void updatePass(UpdaterVisitor * visitor, OpenGL * ogl);
+        void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl);
 
-        void postUpdatePass(UpdaterVisitor * visitor, OpenGL * ogl) {}
+        void postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {}
 
-        void renderPass(RenderVisitor * visitor, OpenGL * ogl){}
+        void renderPass(RenderVisitor * visitor, GraphicAPI * ogl){}
 
-        void postRenderPass(RenderVisitor * visitor, OpenGL * ogl){}
+        void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl){}
 
-        void depthPass(RenderVisitor * visitor, OpenGL * ogl) {}
+        void depthPass(RenderVisitor * visitor, GraphicAPI * ogl) {}
 
-        void postDepthPass(RenderVisitor * visitor, OpenGL * ogl) {}
+        void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl) {}
 
         void addChild(Node * node) {
             childs.push_back(node);
@@ -73,13 +73,13 @@ namespace pbge {
             return *position;
         }
 
-        GPUProgram * getLightPassProgram(OpenGL * ogl) {
+        GPUProgram * getLightPassProgram(GraphicAPI * ogl) {
             if(program == NULL)
                 program = PointLight::getDefaultLightPassProgram(ogl);
             return program;
         }
 
-        void setNecessaryUniforms(OpenGL * ogl, const math3d::matrix44 & viewTransform);
+        void setNecessaryUniforms(GraphicAPI * ogl, const math3d::matrix44 & viewTransform);
 
         void setSpecularColor(const float & red, const float & green, const float & blue, const float & alpha) {}
 
@@ -91,11 +91,11 @@ namespace pbge {
         }
 
     public:
-        static Shader * getDefaultLightPassVS(OpenGL * ogl);
+        static Shader * getDefaultLightPassVS(GraphicAPI * ogl);
 
-        static Shader * getDefaultLightPassFS(OpenGL * ogl);
+        static Shader * getDefaultLightPassFS(GraphicAPI * ogl);
 
-        static GPUProgram * getDefaultLightPassProgram(OpenGL * ogl);
+        static GPUProgram * getDefaultLightPassProgram(GraphicAPI * ogl);
 
     private:
         math3d::vector4 * position;

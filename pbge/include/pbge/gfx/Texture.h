@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "pbge/core/core.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Buffer.h"
 
 namespace pbge {

@@ -6,7 +6,7 @@
 
 #include "pbge/core/Window.h"
 #include "pbge/core/Manager.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/SceneGraph.h"
 
 
@@ -27,10 +27,10 @@ namespace pbge {
         } else {
             log->write("Environment Variable PBGE_HOME not found");
         }
-        this->ogl = new OpenGL;
+        this->ogl = GraphicAPI::createInstance();
         this->window = new Window;
 
-        window->setOpenGL(ogl);
+        window->setGraphicAPI(ogl);
         shaderDirectories.push_back(std::string("./shaders/"));
     }
 

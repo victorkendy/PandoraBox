@@ -7,7 +7,7 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
-#include "pbge/gfx/OpenGL.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/RenderTarget.h"
 
 namespace pbge {
@@ -38,7 +38,7 @@ namespace pbge {
         void setProjectionMatrix (const math3d::matrix44 & newProjection);
         
         // Send the projection matrix to the current active opengl matrix
-        void loadProjection (OpenGL * ogl) const;
+        void loadProjection (GraphicAPI * ogl) const;
     private:
         void updateFrustumPlanes();
         void updatePerspectivePoints();
@@ -70,9 +70,9 @@ namespace pbge {
         }
         
         // Load the view transformation to opengl and sets the render target
-        virtual void setCamera (OpenGL * ogl);
+        virtual void setCamera (GraphicAPI * ogl);
         // unset the render target
-        virtual void unsetCamera (OpenGL * ogl);
+        virtual void unsetCamera (GraphicAPI * ogl);
         
         void setParent(CameraNode * node) { parent = node; }
 
