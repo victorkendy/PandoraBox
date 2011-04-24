@@ -42,7 +42,6 @@ public:
 
 
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
-    MOCK_METHOD2(attachShader, void(GLuint program, GLuint shader));
     MOCK_METHOD2(beginQuery, void(GLenum target, GLuint id));
     MOCK_METHOD1(clear, void(GLbitfield mask));
     MOCK_METHOD4(clearColor, void(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha));
@@ -50,14 +49,8 @@ public:
     MOCK_METHOD1(clearStencil, void(GLint s));
     MOCK_METHOD1(clientActiveTexture, void(GLenum textureUnit));
     MOCK_METHOD2(clipPlane, void(GLenum plane, const GLdouble * equation));
-    MOCK_METHOD4(colorPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
     MOCK_METHOD1(disable, void(GLenum mode));
     MOCK_METHOD1(enable, void(GLenum mode));
-    MOCK_METHOD1(enableClientState, void(GLenum cap));
-    MOCK_METHOD3(normalPointer, void(GLenum type, GLsizei stride, GLvoid * pointer));
-    MOCK_METHOD4(secondaryColorPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
-    MOCK_METHOD4(texCoordPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
-    MOCK_METHOD4(vertexPointer, void(GLint size, GLenum type, GLsizei stride, GLvoid * pointer));
     MOCK_METHOD4(viewport, void(GLint x, GLint y, GLint w, GLint h));
 };
 
