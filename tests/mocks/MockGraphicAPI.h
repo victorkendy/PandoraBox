@@ -38,11 +38,11 @@ public:
     MOCK_METHOD1(chooseTextureUnit, pbge::TextureUnit*(pbge::Texture * texture));
     MOCK_METHOD1(pushUniforms, void(pbge::UniformSet * uniforms));
     MOCK_METHOD0(popUniforms, void());
+    MOCK_METHOD1(bindVertexBuffer, void(pbge::VertexBuffer * vbo));
 
 
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
     MOCK_METHOD2(attachShader, void(GLuint program, GLuint shader));
-    MOCK_METHOD1(begin, void(GLenum mode));
     MOCK_METHOD2(beginQuery, void(GLenum target, GLuint id));
     MOCK_METHOD1(clear, void(GLbitfield mask));
     MOCK_METHOD4(clearColor, void(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha));

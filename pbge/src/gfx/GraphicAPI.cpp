@@ -23,10 +23,6 @@ void GraphicAPI::attachShader(GLuint program, GLuint shader) {
     glAttachShader(program, shader);
 }
 
-void GraphicAPI::begin(GLenum mode) {
-    glBegin(mode);
-}
-
 void GraphicAPI::blendFunc(GLenum sfactor, GLenum dfactor) {
     glBlendFunc(sfactor, dfactor);
 }
@@ -45,10 +41,6 @@ void GraphicAPI::clearDepth(GLclampd depth) {
 
 void GraphicAPI::clientActiveTexture(GLenum textureUnit) {
     glClientActiveTexture(textureUnit);
-}
-
-void GraphicAPI::colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
-    glColorPointer(size, type, stride, pointer);
 }
 
 void GraphicAPI::compileShader(GLuint shader) {
@@ -79,10 +71,6 @@ void GraphicAPI::enable(GLenum mode) {
     glEnable(mode);
 }
 
-void GraphicAPI::enableClientState(GLenum cap) {
-    glEnableClientState(cap);
-}
-
 void GraphicAPI::getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name) {
     glGetActiveUniform(program, index, bufSize, length, size, type, name);
 }
@@ -103,28 +91,12 @@ void GraphicAPI::linkProgram(GLuint program) {
     glLinkProgram(program);
 }
 
-void GraphicAPI::normalPointer(GLenum type, GLsizei stride, GLvoid * pointer) {
-    glNormalPointer(type, stride, pointer);
-}
-
-void GraphicAPI::secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
-    glSecondaryColorPointer(size, type, stride, pointer);
-}
-
 void GraphicAPI::shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes) {
     glShaderSource(id, count, strings, sizes);
 }
 
-void GraphicAPI::texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
-    glTexCoordPointer(size, type, stride, pointer);
-}
-
 void GraphicAPI::useProgram(GLuint program) {
     glUseProgram(program);
-}
-
-void GraphicAPI::vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer) {
-    glVertexPointer(size, type, stride, pointer);
 }
 
 void GraphicAPI::viewport(GLint x, GLint y, GLint w, GLint h) {

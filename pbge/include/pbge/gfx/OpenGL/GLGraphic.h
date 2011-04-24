@@ -55,6 +55,8 @@ namespace pbge {
         void pushUniforms(UniformSet * uniforms);
 
         void popUniforms();
+
+        void bindVertexBuffer(VertexBuffer * vbo);
  
     private:
         bool projectionUpdated;

@@ -117,6 +117,11 @@ namespace {
                 }
                 ogl->enableDrawBuffer(GL_BACK);
                 ogl->clearColor(0,0,0,1);
+                {
+                GLint bla = 0;
+                glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE_ARB, &bla);
+                std::cout << "GL_MAX_TEXTURE_BUFFER_SIZE_ARB: " << bla << std::endl; 
+                }
                 /*
                 {
                     char * ext = (char*)glGetString(GL_EXTENSIONS);
@@ -145,13 +150,6 @@ namespace {
                 ogl->clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
                 window->getRenderer()->render();
                 ogl->swapBuffers();
-                if(window->getShowDebug()) {
-                    GLenum err;
-                    /*
-                    while((err = glGetError()) != GL_NO_ERROR) {
-                        std::cout << err << std::endl;
-                    }*/
-                }
                 return 0;
             default:
                 break;

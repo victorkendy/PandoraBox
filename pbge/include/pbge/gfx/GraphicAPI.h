@@ -21,6 +21,7 @@ namespace pbge {
     class UniformValue;
     class UniformSet;
     class GraphicObjectsFactory;
+    class VertexBuffer;
 
     class GraphicContext {
     public:
@@ -104,6 +105,8 @@ namespace pbge {
         virtual void pushUniforms(UniformSet * uniforms) = 0;
 
         virtual void popUniforms() = 0;
+
+        virtual void bindVertexBuffer(VertexBuffer * vbo) = 0;
         
         
         // raw OpenGL API calls
@@ -111,8 +114,6 @@ namespace pbge {
         virtual void alphaFunc(GLenum func, GLclampf ref);
 
         virtual void attachShader(GLuint program, GLuint shader);
-
-        virtual void begin(GLenum mode);
 
         virtual void blendFunc(GLenum sfactor, GLenum dfactor);
 
@@ -123,8 +124,6 @@ namespace pbge {
         virtual void clearDepth(GLclampd depth);
 
         virtual void clientActiveTexture(GLenum textureUnit);
-
-        virtual void colorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
         virtual void compileShader(GLuint shader);
 
@@ -140,8 +139,6 @@ namespace pbge {
 
         virtual void enable(GLenum mode);
 
-        virtual void enableClientState(GLenum cap);
-
         virtual void getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
 
         virtual void getShaderiv(GLuint shader, GLenum pname, GLint * ptr);
@@ -152,17 +149,9 @@ namespace pbge {
 
         virtual void linkProgram(GLuint program);
 
-        virtual void normalPointer(GLenum type, GLsizei stride, GLvoid * pointer);
-
-        virtual void secondaryColorPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
-
         virtual void shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes);
 
-        virtual void texCoordPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
-
         virtual void useProgram(GLuint program);
-
-        virtual void vertexPointer(GLint size, GLenum type, GLsizei stride, GLvoid * pointer);
 
         virtual void viewport(GLint x, GLint y, GLint w, GLint h);
     };

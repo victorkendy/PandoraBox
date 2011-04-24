@@ -1,3 +1,4 @@
+#include "pbge/gfx/VBO.h"
 #include "pbge/gfx/OpenGL/GLGraphic.h"
 #include "pbge/gfx/ResourceStorage.h"
 #include "pbge/gfx/OpenGL/GLObjectsFactory.h"
@@ -134,3 +135,33 @@ void GLGraphic::pushUniforms(UniformSet * uniforms) {
 void GLGraphic::popUniforms() {
     this->state->popUniformSet();
 }
+
+#define ATTRIB_POINTER_OFFSET(offset) ((GLbyte *)NULL + (offset))
+
+void GLGraphic::bindVertexBuffer(VertexBuffer * vbo) {
+    vbo->getBuffer()->bindOn(Buffer::VertexBuffer);
+    std::vector<VertexAttrib>::iterator attr;
+    std::vector<VertexAttrib> & attribs = vbo->getAttribs();
+    for(attr = attribs.begin(); attr != attribs.end(); attr++) {
+        if(attr->getType() == VertexAttrib::VERTEX) {
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(attr->getNCoord(), GL_FLOAT, attr->getStride(), ATTRIB_POINTER_OFFSET(attr->getOffset()));
+        }
+        else if (attr->getType() == VertexAttrib::NORMAL) {
+            glEnableClientState(GL_NORMAL_ARRAY);
+            glNormalPointer(GL_FLOAT, attr->getStride(), ATTRIB_POINTER_OFFSET(attr->getOffset()));
+        } else if(attr->getType() == VertexAttrib::COLOR) {
+            glEnableClientState(GL_COLOR_ARRAY);
+            glColorPointer(attr->getNCoord(), GL_FLOAT, attr->getStride(), ATTRIB_POINTER_OFFSET(attr->getOffset()));
+        } else if(attr->getType() == VertexAttrib::SECONDARY_COLOR) {
+            glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
+            glSecondaryColorPointer(attr->getNCoord(), GL_FLOAT, attr->getStride(), ATTRIB_POINTER_OFFSET(attr->getOffset()));
+        } else if(attr->getType() == VertexAttrib::TEXCOORD) {
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glTexCoordPointer(attr->getNCoord(), GL_FLOAT, attr->getStride(), ATTRIB_POINTER_OFFSET(attr->getOffset()));
+        }
+            
+    }
+}
+
+#undef ATTRIB_POINTER_OFFSET

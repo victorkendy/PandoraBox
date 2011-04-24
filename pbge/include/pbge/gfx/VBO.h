@@ -26,13 +26,12 @@ namespace pbge {
             CUSTOM_ATTRIB
         } Type;
 
-        VertexAttrib(int _nCoord, int _offset, GLsizei _stride) {
+        VertexAttrib(int _nCoord, int _offset, GLsizei _stride, Type _type) {
             nCoord = _nCoord;
             offset = _offset;
             stride = _stride;
+            type = _type;
         }
-
-        virtual Type getType() = 0;
 
         int getOffset() {
             return offset;
@@ -43,66 +42,14 @@ namespace pbge {
         int getNCoord() {
             return nCoord;
         }
-        virtual void bindAttrib(GraphicAPI * gfx) = 0;
+        Type getType() {
+            return type;
+        }
     private:
+        Type type;
         int nCoord, offset;
         GLsizei stride;
     };
-
-    class PBGE_EXPORT VertexPositionAttrib : public VertexAttrib{
-    public:
-        VertexPositionAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-
-        Type getType() { return VERTEX; }
-
-        void bindAttrib(GraphicAPI * gfx);
-    };
-
-    class PBGE_EXPORT VertexNormalAttrib : public VertexAttrib{
-    public:
-        VertexNormalAttrib(int _offset, GLsizei _stride) : VertexAttrib(3, _offset, _stride) {}
-        
-        Type getType() { return NORMAL; }
-
-        void bindAttrib(GraphicAPI * gfx);
-    };
-
-    class PBGE_EXPORT VertexTexcoordAttrib : public VertexAttrib {
-    public:
-        VertexTexcoordAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-
-        Type getType() { return TEXCOORD; }
-
-        void bindAttrib(GraphicAPI * gfx);
-    };
-
-    class PBGE_EXPORT VertexColorAttrib : public VertexAttrib {
-    public:
-        VertexColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-
-        Type getType() { return COLOR; }
-
-        void bindAttrib(GraphicAPI * gfx);
-    };
-
-    class PBGE_EXPORT VertexSecondaryColorAttrib : public VertexAttrib {
-    public:
-        VertexSecondaryColorAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-
-        Type getType() { return SECONDARY_COLOR; }
-
-        void bindAttrib(GraphicAPI * gfx);
-    };
-
-    class PBGE_EXPORT VertexCustomAttrib : public VertexAttrib {
-    public:
-        VertexCustomAttrib(int _nCoord, int _offset, GLsizei _stride) : VertexAttrib(_nCoord, _offset, _stride) {}
-
-        Type getType() { return CUSTOM_ATTRIB;}
-
-        void bindAttrib(GraphicAPI * gfx) {}
-    };
-
 
     class PBGE_EXPORT VertexBuffer {
     public:
@@ -113,8 +60,12 @@ namespace pbge {
 
         ~VertexBuffer();
 
-        void addAttrib(VertexAttrib * attrib) {
+        void addAttrib(VertexAttrib attrib) {
             attribs.push_back(attrib);
+        }
+
+        std::vector<VertexAttrib> & getAttribs() {
+            return attribs;
         }
 
         void bindAllAttribs(GraphicAPI * gfx);
@@ -125,6 +76,10 @@ namespace pbge {
 
         void unbind(GraphicAPI * gfx);
 
+        Buffer * getBuffer() {
+            return buffer;
+        }
+
         unsigned getNVertices() {
             return nVertices;
         }
@@ -132,11 +87,8 @@ namespace pbge {
     private:
         Buffer * buffer;
         unsigned nVertices;
-        std::vector<VertexAttrib*> attribs;
+        std::vector<VertexAttrib> attribs;
     };
-
-
-
 
 
 
@@ -190,7 +142,7 @@ namespace pbge {
 
         bool isValid();
 
-        VertexAttrib * createInstance(int offset, GLsizei stride);
+        const VertexAttrib createInstance(int offset, GLsizei stride);
 
     private:
         std::string name;
