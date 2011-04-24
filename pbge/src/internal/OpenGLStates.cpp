@@ -59,7 +59,7 @@ bool BoundProgram::shouldChange(GraphicAPI * ogl) {
 
 void BoundProgram::makeChange(GraphicAPI * ogl) {
     if(this->next == NULL)
-        ogl->useProgram(0);
+        glUseProgram(0);
     else
         next->bind(ogl);
     current = next;

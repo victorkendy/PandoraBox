@@ -66,55 +66,55 @@ namespace pbge {
         return shader;
     }
 
-    bool GLShader::compile(GraphicAPI * ogl) {
+    bool GLShader::compile(GraphicAPI * gfx) {
         GLint status;
         if(type == VERTEX_SHADER)
-            shaderID = ogl->createShader(GL_VERTEX_SHADER);
+            shaderID = glCreateShader(GL_VERTEX_SHADER);
         else if(type == FRAGMENT_SHADER)
-            shaderID = ogl->createShader(GL_FRAGMENT_SHADER);
+            shaderID = glCreateShader(GL_FRAGMENT_SHADER);
         else 
             return false;
         const GLchar * strPtr = const_cast<GLchar*>(source);
-        ogl->shaderSource(shaderID, 1, &strPtr, NULL);
-        ogl->compileShader(shaderID);
-        ogl->getShaderiv(shaderID, GL_COMPILE_STATUS, &status);
+        glShaderSource(shaderID, 1, &strPtr, NULL);
+        glCompileShader(shaderID);
+        glGetShaderiv(shaderID, GL_COMPILE_STATUS, &status);
         compiled = (status == GL_TRUE);
-        extractInfolog(ogl);
+        extractInfolog(gfx);
         return compiled;
     }
     
-    void GLShader::extractInfolog(GraphicAPI * ogl) {
+    void GLShader::extractInfolog(GraphicAPI * gfx) {
         GLint infoLogLength;
         GLchar * _infolog;
-        ogl->getShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+        glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
         _infolog = new GLchar[infoLogLength];
-        ogl->getShaderInfoLog(shaderID, infoLogLength, NULL, _infolog);
+        glGetShaderInfoLog(shaderID, infoLogLength, NULL, _infolog);
         this->infoLog = std::string(_infolog);
         delete [] _infolog;
     }
 
 
 
-    void GLProgram::bind(GraphicAPI * ogl){
+    void GLProgram::bind(GraphicAPI * gfx){
         if(!linked) {
-            link(ogl);
+            link(gfx);
             if(!linked)
                 return;
         }
-        ogl->useProgram(programID);
-        updateUniforms(ogl);
+        glUseProgram(programID);
+        updateUniforms(gfx);
     }
 
     void GLProgram::unbind(GraphicAPI * ogl){
-        ogl->useProgram(0);
+        glUseProgram(0);
     }
 
-    void GLProgram::updateUniforms(GraphicAPI * ogl) {
+    void GLProgram::updateUniforms(GraphicAPI * gfx) {
         std::vector<UniformInfo>::iterator it;
         for(it = uniforms.begin(); it != uniforms.end(); it++) {
-            UniformValue * value = ogl->searchUniform(*it);
+            UniformValue * value = gfx->searchUniform(*it);
             if(value != NULL) {
-                value->bindValueOn(this, *it, ogl);
+                value->bindValueOn(this, *it, gfx);
             }
         }
     }
@@ -129,25 +129,25 @@ namespace pbge {
         return shaders;
     }
 
-    bool GLProgram::link(GraphicAPI * ogl){
+    bool GLProgram::link(GraphicAPI * gfx){
         GLint status;
         std::vector<GLShader*>::iterator it;
-        if(programID == 0) programID = ogl->createProgram();
+        if(programID == 0) programID = glCreateProgram();
         for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
             if(!(*it)->isCompiled()) {
-                if(!(*it)->compile(ogl)) {
+                if(!(*it)->compile(gfx)) {
                     std::cout << this->getInfoLog();
                     return false;
                 }
-                ogl->attachShader(programID, (*it)->getID());
+                glAttachShader(programID, (*it)->getID());
             }
         }
-        ogl->linkProgram(programID);
+        glLinkProgram(programID);
         extractInfoLog();
         glGetProgramiv(programID, GL_LINK_STATUS, &status);
         linked = (status == GL_TRUE);
         if(linked)
-            extractUniformInformation(ogl);
+            extractUniformInformation(gfx);
         return linked;
     }
 
@@ -168,16 +168,16 @@ namespace pbge {
         GLint uniformSize;
         GLenum uniformType;
         GLchar * name;
-        ogl->useProgram(programID);
+        glUseProgram(programID);
         glGetProgramiv(programID, GL_ACTIVE_UNIFORMS, &numberOfActiveUniforms);
         glGetProgramiv(programID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameSize);
         name = new GLchar [maxUniformNameSize];
         for(int uniformIndex = 0; uniformIndex < numberOfActiveUniforms; ++uniformIndex) {
-            ogl->getActiveUniform(programID, uniformIndex, maxUniformNameSize, NULL, &uniformSize, &uniformType, name);
+            glGetActiveUniform(programID, uniformIndex, maxUniformNameSize, NULL, &uniformSize, &uniformType, name);
             std::string uniformName = name;
             // don't include reserved names
             if(static_cast<int>(uniformName.find("gl_")) != 0) {
-                UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), ogl->getUniformLocation(programID, name));
+                UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), glGetUniformLocation(programID, name));
                 uniforms.push_back(info);
                 std::cout << "found uniform: " << uniformName << std::endl;
             }

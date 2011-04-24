@@ -113,23 +113,13 @@ namespace pbge {
         // TODO: remove all this....
         virtual void alphaFunc(GLenum func, GLclampf ref);
 
-        virtual void attachShader(GLuint program, GLuint shader);
-
         virtual void blendFunc(GLenum sfactor, GLenum dfactor);
 
         virtual void clear(GLbitfield mask);
 
         virtual void clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 
-        virtual void clearDepth(GLclampd depth);
-
         virtual void clientActiveTexture(GLenum textureUnit);
-
-        virtual void compileShader(GLuint shader);
-
-        virtual GLuint createProgram();
-
-        virtual GLuint createShader(GLenum shaderType);
 
         virtual void depthFunc(GLenum func);
 
@@ -138,20 +128,6 @@ namespace pbge {
         virtual void disable(GLenum mode);
 
         virtual void enable(GLenum mode);
-
-        virtual void getActiveUniform(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
-
-        virtual void getShaderiv(GLuint shader, GLenum pname, GLint * ptr);
-
-        virtual void getShaderInfoLog(GLuint shader, GLsizei maxLength, GLsizei * length, GLchar * infoLog);
-
-        virtual GLint getUniformLocation(GLuint program, const char * name);
-
-        virtual void linkProgram(GLuint program);
-
-        virtual void shaderSource(GLuint id, GLsizei count, const GLchar ** strings, const GLint * sizes);
-
-        virtual void useProgram(GLuint program);
 
         virtual void viewport(GLint x, GLint y, GLint w, GLint h);
     };
