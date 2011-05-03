@@ -139,6 +139,7 @@ void GLGraphic::popUniforms() {
 #define ATTRIB_POINTER_OFFSET(offset) ((GLbyte *)NULL + (offset))
 
 void GLGraphic::bindVertexBuffer(VertexBuffer * vbo) {
+    glEnable(GL_VERTEX_ARRAY);
     vbo->getBuffer()->bindOn(Buffer::VertexBuffer);
     std::vector<VertexAttrib>::iterator attr;
     std::vector<VertexAttrib> & attribs = vbo->getAttribs();

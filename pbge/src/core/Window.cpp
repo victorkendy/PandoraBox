@@ -117,11 +117,6 @@ namespace {
                 }
                 ogl->enableDrawBuffer(GL_BACK);
                 ogl->clearColor(0,0,0,1);
-                {
-                GLint bla = 0;
-                glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE_ARB, &bla);
-                std::cout << "GL_MAX_TEXTURE_BUFFER_SIZE_ARB: " << bla << std::endl; 
-                }
                 /*
                 {
                     char * ext = (char*)glGetString(GL_EXTENSIONS);

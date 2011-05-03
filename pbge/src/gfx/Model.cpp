@@ -19,7 +19,6 @@ VBOModel::VBOModel(pbge::VertexBuffer * _vbo, GLenum _primitive) {
 }
 
 void VBOModel::render(ModelInstance * instance, GraphicAPI * ogl) {
-    ogl->enable(GL_VERTEX_ARRAY);
     vbo->bind(ogl);
     glDrawArrays(primitive, 0, vbo->getNVertices());
     vbo->unbind(ogl);
@@ -27,16 +26,10 @@ void VBOModel::render(ModelInstance * instance, GraphicAPI * ogl) {
 }
 
 void VBOModel::renderDepth(ModelInstance* instance, GraphicAPI * ogl) {
-    
-    ogl->enable(GL_VERTEX_ARRAY);
-    
     vbo->bind(ogl);
-    
     glDrawArrays(primitive, 0, vbo->getNVertices());
     vbo->unbind(ogl);
     ogl->disable(GL_VERTEX_ARRAY);
-    
-    
 }
 
 BezierCurve::BezierCurve() {
