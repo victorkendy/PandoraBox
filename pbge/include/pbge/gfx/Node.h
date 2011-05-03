@@ -45,7 +45,7 @@ namespace pbge {
 
         virtual void addChild(Node * node) = 0;
         
-        virtual node_list & getChilds() = 0;
+        virtual node_list & getChildren() = 0;
 
         int getSceneGraphIndex() {
             return sceneGraphIndex;
@@ -111,7 +111,7 @@ namespace pbge {
             childs.push_back(node);
         }
         
-        node_list & getChilds() {
+        node_list & getChildren() {
             return childs;
         }
         
@@ -163,7 +163,7 @@ namespace pbge {
             childs.push_back(node);
         }
         
-        node_list & getChilds() {
+        node_list & getChildren() {
             return childs;
         }
 

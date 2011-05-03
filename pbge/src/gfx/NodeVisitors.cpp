@@ -24,7 +24,7 @@ void UpdaterVisitor::visit(Node * node, GraphicAPI * ogl) {
 void UpdaterVisitor::_visit(Node * node, GraphicAPI * ogl) {
     node->updatePass(this, ogl);
     std::vector<Node*>::iterator child;
-    for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
+    for(child = node->getChildren().begin(); child != node->getChildren().end(); child++)
         this->_visit(*child, ogl);
     node->postUpdatePass(this, ogl);
 }
@@ -45,7 +45,7 @@ const math3d::matrix44 UpdaterVisitor::getCurrentTransformation() {
 void ColorPassVisitor::visit(Node *node, GraphicAPI *ogl) {
     node->renderPass(this, ogl);
     std::vector<Node*>::iterator child;
-    for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
+    for(child = node->getChildren().begin(); child != node->getChildren().end(); child++)
         this->visit(*child, ogl);
     node->postRenderPass(this, ogl);
 }
@@ -53,7 +53,7 @@ void ColorPassVisitor::visit(Node *node, GraphicAPI *ogl) {
 void DepthPassVisitor::visit(Node *node, GraphicAPI *ogl) {
     node->depthPass(this, ogl);
     std::vector<Node*>::iterator child;
-    for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
+    for(child = node->getChildren().begin(); child != node->getChildren().end(); child++)
         this->visit(*child, ogl);
     node->postDepthPass(this, ogl);
 }
@@ -64,7 +64,7 @@ void LightPassVisitor::visit(Node * node, pbge::GraphicAPI * ogl) {
     currentLight->setNecessaryUniforms(ogl, currentCamera->getViewTransform());
     node->renderPass(this, ogl);
     std::vector<Node*>::iterator child;
-    for(child = node->getChilds().begin(); child != node->getChilds().end(); child++)
+    for(child = node->getChildren().begin(); child != node->getChildren().end(); child++)
         this->visit(*child, ogl);
     node->postRenderPass(this, ogl);
 }

@@ -14,7 +14,7 @@ public:
     MOCK_METHOD2(depthPass, void(pbge::RenderVisitor * visitor, pbge::GraphicAPI * ogl));
     MOCK_METHOD2(postDepthPass, void(pbge::RenderVisitor * visitor, pbge::GraphicAPI * ogl));
 
-    pbge::Node::node_list & getChilds() {
+    pbge::Node::node_list & getChildren() {
         return childs;
     }
 

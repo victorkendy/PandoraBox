@@ -49,7 +49,7 @@ namespace pbge {
             childs.push_back(node);
         }
         
-        node_list & getChilds() {
+        node_list & getChildren() {
             return childs;
         }
 
