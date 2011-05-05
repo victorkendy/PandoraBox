@@ -16,6 +16,10 @@ namespace pbge {
 
     class PBGE_EXPORT Model{
     public:
+        virtual void beforeRender(GraphicAPI * gfx) = 0;
+
+        virtual void afterRender(GraphicAPI * gfx) = 0;
+
         virtual void render(GraphicAPI * gfx)=0;
 
         virtual void renderDepth(GraphicAPI * gfx)=0;
@@ -24,6 +28,10 @@ namespace pbge {
     class PBGE_EXPORT VBOModel : public Model {
     public:
         VBOModel(VertexBuffer * vbo, GLenum primitive);
+
+        void beforeRender(GraphicAPI * gfx);
+
+        void afterRender(GraphicAPI * gfx);
 
         void render(GraphicAPI * gfx);
 
@@ -38,6 +46,10 @@ namespace pbge {
         BezierCurve();
         
         void addControlPoint(const float & x, const float & y, const float & z, const float & w);
+
+        void beforeRender(GraphicAPI * gfx);
+
+        void afterRender(GraphicAPI * gfx);
 
         void render(GraphicAPI * gfx);
 
@@ -60,6 +72,10 @@ namespace pbge {
     public:
         Circle(const float & radius, const int & slices = 16);
 
+        void beforeRender(GraphicAPI * gfx);
+
+        void afterRender(GraphicAPI * gfx);
+
         void renderDepth(GraphicAPI * ogl);
 
         void render(GraphicAPI * ogl);
@@ -71,6 +87,10 @@ namespace pbge {
     class PBGE_EXPORT Ellipse : public Circle {
     public:
         Ellipse(const float & x_semi_axis, const float & y_semi_axis, const int & slices);
+
+        void beforeRender(GraphicAPI * gfx);
+
+        void afterRender(GraphicAPI * gfx);
 
         void render(GraphicAPI * ogl);
 
@@ -92,6 +112,10 @@ namespace pbge {
     public:
         Sphere(const float & radius, const int & slices = 16);
 
+        void beforeRender(GraphicAPI * gfx);
+
+        void afterRender(GraphicAPI * gfx);
+
         void renderDepth(GraphicAPI * ogl);
 
         void render(GraphicAPI * ogl);
@@ -103,6 +127,10 @@ namespace pbge {
     class PBGE_EXPORT Ellipsoid : public Sphere {
     public:
         Ellipsoid(const float & x_semi_axis, const float & y_semi_axis, const float & z_semi_axis, const int & slices);
+
+        void beforeRender(GraphicAPI * gfx);
+
+        void afterRender(GraphicAPI * gfx);
 
         void render(GraphicAPI * ogl);
 

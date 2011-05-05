@@ -5,6 +5,7 @@
 #include "pbge/gfx/GraphicAPI.h"
 
 namespace pbge {
+    class GLDrawController;
 
     class GLGraphic : public GraphicAPI {
     public:
@@ -57,6 +58,8 @@ namespace pbge {
         void popUniforms();
 
         void bindVertexBuffer(VertexBuffer * vbo);
+
+        DrawController * getDrawController();
  
     private:
         bool projectionUpdated;
@@ -72,6 +75,8 @@ namespace pbge {
         GraphicContext * context;
 
         GraphicObjectsFactory * factory;
+
+        GLDrawController * drawController;
     };
 
 }

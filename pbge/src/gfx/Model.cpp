@@ -3,6 +3,7 @@
 #include "pbge/gfx/UniformSet.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/GraphicAPI.h"
+#include "pbge/gfx/DrawController.h"
 #include "pbge/gfx/ResourceStorage.h"
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/VBO.h"
@@ -18,18 +19,21 @@ VBOModel::VBOModel(pbge::VertexBuffer * _vbo, GLenum _primitive) {
     this->primitive = _primitive;
 }
 
-void VBOModel::render(GraphicAPI * ogl) {
-    vbo->bind(ogl);
-    glDrawArrays(primitive, 0, vbo->getNVertices());
-    vbo->unbind(ogl);
-    ogl->disable(GL_VERTEX_ARRAY);
+void VBOModel::beforeRender(GraphicAPI * gfx) {
+    vbo->bind(gfx);
 }
 
-void VBOModel::renderDepth(GraphicAPI * ogl) {
-    vbo->bind(ogl);
+void VBOModel::afterRender(GraphicAPI * gfx) {
+    vbo->unbind(gfx);
+    gfx->disable(GL_VERTEX_ARRAY);
+}
+
+void VBOModel::render(GraphicAPI * gfx) {
     glDrawArrays(primitive, 0, vbo->getNVertices());
-    vbo->unbind(ogl);
-    ogl->disable(GL_VERTEX_ARRAY);
+}
+
+void VBOModel::renderDepth(GraphicAPI * gfx) {
+    render(gfx);
 }
 
 BezierCurve::BezierCurve() {
@@ -78,25 +82,30 @@ GPUProgram * BezierCurve::getEvaluator(GraphicAPI * ogl) {
     return evaluator;
 }
 
-void BezierCurve::render(GraphicAPI * ogl) {
+void BezierCurve::beforeRender(GraphicAPI * gfx) {
+    GPUProgram * program = this->getEvaluator(gfx);
+    gfx->getState()->useProgram(program);
+    dynamic_cast<UniformFloatVec4*>(gfx->getState()->getUniformValue(UniformInfo("p0", FLOAT_VEC4, -1)))->setValue(-1,0,0,1);
+    dynamic_cast<UniformFloatVec4*>(gfx->getState()->getUniformValue(UniformInfo("p1", FLOAT_VEC4, -1)))->setValue(-0.5f,-2.0f,0,1);
+    dynamic_cast<UniformFloatVec4*>(gfx->getState()->getUniformValue(UniformInfo("p2", FLOAT_VEC4, -1)))->setValue(0.0f,1.0f,0,1);
+    dynamic_cast<UniformFloatVec4*>(gfx->getState()->getUniformValue(UniformInfo("p3", FLOAT_VEC4, -1)))->setValue(1.0f,1.0f,0,1);
+    gfx->updateState();
+}
 
-    GPUProgram * program = this->getEvaluator(ogl);
-    ogl->getState()->useProgram(program);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p0", FLOAT_VEC4, -1)))->setValue(-1,0,0,1);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p1", FLOAT_VEC4, -1)))->setValue(-0.5f,-2.0f,0,1);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p2", FLOAT_VEC4, -1)))->setValue(0.0f,1.0f,0,1);
-    dynamic_cast<UniformFloatVec4*>(ogl->getState()->getUniformValue(UniformInfo("p3", FLOAT_VEC4, -1)))->setValue(1.0f,1.0f,0,1);
-    ogl->updateState();
+void BezierCurve::afterRender(GraphicAPI * gfx) {
+    gfx->getState()->useProgram(NULL);
+}
+
+void BezierCurve::render(GraphicAPI * ogl) {
     glBegin(GL_LINE_STRIP);
     glColor3f(1,1,1);
     for(int i = 0; i < 100; i++) {
         glVertex2f(0.01f * i, 0.01f * i);
     }
     glEnd();
-    ogl->getState()->useProgram(NULL);
 }
 
-void BezierCurve::renderDepth(GraphicAPI * ogl) {}
+void BezierCurve::renderDepth(GraphicAPI * gfx) {}
 
 
 ModelInstance::ModelInstance() {
@@ -117,26 +126,26 @@ ModelInstance::~ModelInstance() {
     delete uniforms;
 }
 
-void ModelInstance::renderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
-    ogl->pushUniforms(this->uniforms);
-    ogl->getState()->useProgram(this->renderProgram);
-    ogl->updateState();
-    model->render(ogl);
+void ModelInstance::renderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->pushUniforms(this->uniforms);
+    gfx->getState()->useProgram(this->renderProgram);
+    gfx->updateState();
+    gfx->getDrawController()->draw(model);
 }
 
-void ModelInstance::postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
-    ogl->popUniforms();
+void ModelInstance::postRenderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->popUniforms();
 }
 
-void ModelInstance::depthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
-    ogl->pushUniforms(this->uniforms);
-    ogl->getState()->useProgram(this->depthProgram);
-    ogl->updateState();
-    model->renderDepth(ogl);
+void ModelInstance::depthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->pushUniforms(this->uniforms);
+    gfx->getState()->useProgram(this->depthProgram);
+    gfx->updateState();
+    gfx->getDrawController()->draw(model);
 }
 
-void ModelInstance::postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
-    ogl->popUniforms();
+void ModelInstance::postDepthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->popUniforms();
 }
 
 Circle::Circle(const float & _radius, const int & _slices) {
@@ -149,6 +158,11 @@ Circle::Circle(const float & _radius, const int & _slices) {
     this->radius = _radius;
     this->slices = _slices;
 }
+
+void Circle::beforeRender(GraphicAPI * gfx) {
+}
+
+void Circle::afterRender(GraphicAPI * gfx) {}
 
 void Circle::renderDepth(GraphicAPI * ogl) {}
 
@@ -179,6 +193,10 @@ Ellipse::Ellipse(const float & _x_semi_axis, const float & _y_semi_axis, const i
     this->evaluator = NULL;
     this->transformation = new math3d::matrix44(math3d::identity44);
 }
+
+void Ellipse::beforeRender(GraphicAPI * gfx) {}
+
+void Ellipse::afterRender(GraphicAPI * gfx) {}
 
 void Ellipse::render(GraphicAPI * ogl) {
     GPUProgram * program = this->getEvaluator(ogl);
@@ -224,6 +242,10 @@ Sphere::Sphere(const float & _radius, const int & _slices) {
     this->slices = _slices;
 }
 
+void Sphere::beforeRender(GraphicAPI * gfx){}
+
+void Sphere::afterRender(GraphicAPI * gfx){}
+
 void Sphere::renderDepth(GraphicAPI * ogl) {}
 
 void Sphere::render(GraphicAPI * ogl) {
@@ -257,6 +279,10 @@ Ellipsoid::Ellipsoid(const float & _x_semi_axis, const float & _y_semi_axis, con
     this->evaluator = NULL;
     this->transformation = new math3d::matrix44(math3d::identity44);
 }
+
+void Ellipsoid::beforeRender(GraphicAPI * gfx) {}
+
+void Ellipsoid::afterRender(GraphicAPI * gfx) {}
 
 void Ellipsoid::render(GraphicAPI * ogl) {
     GPUProgram * program = this->getEvaluator(ogl);

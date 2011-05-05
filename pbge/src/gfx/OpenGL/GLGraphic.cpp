@@ -1,5 +1,6 @@
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/OpenGL/GLGraphic.h"
+#include "pbge/gfx/OpenGL/GLDrawController.h"
 #include "pbge/gfx/ResourceStorage.h"
 #include "pbge/gfx/OpenGL/GLObjectsFactory.h"
 #include "pbge/gfx/StateSet.h"
@@ -15,6 +16,7 @@ GLGraphic::GLGraphic() {
     this->context = NULL;
     this->factory = new GLObjectsFactory(this);
     this->projectionUpdated = true;
+    this->drawController = new GLDrawController(this);
 }
 
 GLGraphic::~GLGraphic() {
@@ -163,6 +165,10 @@ void GLGraphic::bindVertexBuffer(VertexBuffer * vbo) {
         }
             
     }
+}
+
+DrawController * GLGraphic::getDrawController() {
+    return drawController;
 }
 
 #undef ATTRIB_POINTER_OFFSET

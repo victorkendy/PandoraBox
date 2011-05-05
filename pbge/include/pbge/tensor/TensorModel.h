@@ -13,8 +13,10 @@ namespace pbge {
         float getEigenvalue(int index);
         float * getEigenvector(int index);
         
-        void render(GraphicAPI * ogl);
-        void renderDepth(GraphicAPI * ogl);
+        void beforeRender(GraphicAPI * gfx){}
+        void afterRender(GraphicAPI * gfx){}
+        void render(GraphicAPI * gfx);
+        void renderDepth(GraphicAPI * gfx);
     private:
         float ** tensor;
         int order;

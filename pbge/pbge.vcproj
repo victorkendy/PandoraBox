@@ -315,6 +315,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\DrawController.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\exceptions\exceptions.h"
 				>
 			</File>

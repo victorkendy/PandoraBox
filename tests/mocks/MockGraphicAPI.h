@@ -12,6 +12,7 @@
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/GraphicObjectsFactory.h"
+#include "pbge/gfx/DrawController.h"
 
 class MockGraphicAPI : public pbge::GraphicAPI {
 public:
@@ -39,6 +40,7 @@ public:
     MOCK_METHOD1(pushUniforms, void(pbge::UniformSet * uniforms));
     MOCK_METHOD0(popUniforms, void());
     MOCK_METHOD1(bindVertexBuffer, void(pbge::VertexBuffer * vbo));
+    MOCK_METHOD0(getDrawController, pbge::DrawController*());
 
 
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
