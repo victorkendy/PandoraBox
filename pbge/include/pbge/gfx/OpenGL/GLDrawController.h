@@ -16,13 +16,12 @@ namespace pbge {
 
         void draw(Model * model, int times);
 
-        
+        void drawVBOModel(VBOModel * model);
+
+        void drawVBOModel(VBOModel * model, int times);
+
     private:
         void callRender(Model * model);
-
-        void drawVBO(VBOModel * model);
-
-        void drawVBO(VBOModel * model, int times);
 
         GLGraphic * ogl;
     };

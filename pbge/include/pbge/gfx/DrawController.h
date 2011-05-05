@@ -10,6 +10,10 @@ namespace pbge {
         virtual void draw(Model * model) = 0;
 
         virtual void draw(Model * model, int times) = 0;
+
+        virtual void drawVBOModel(VBOModel * model) = 0;
+
+        virtual void drawVBOModel(VBOModel * model, int times) = 0;
     };
 }
 

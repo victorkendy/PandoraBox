@@ -130,7 +130,11 @@ void ModelInstance::renderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
     gfx->pushUniforms(this->uniforms);
     gfx->getState()->useProgram(this->renderProgram);
     gfx->updateState();
-    gfx->getDrawController()->draw(model);
+    VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
+    if(vboModel == NULL)
+        gfx->getDrawController()->draw(model);
+    else
+        gfx->getDrawController()->drawVBOModel(vboModel);
 }
 
 void ModelInstance::postRenderPass(RenderVisitor * visitor, GraphicAPI * gfx) {

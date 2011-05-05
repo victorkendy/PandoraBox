@@ -13,35 +13,27 @@ GLDrawController::GLDrawController(GLGraphic * _ogl) {
 }
 
 void GLDrawController::draw(Model * model) {
-    VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
     model->beforeRender(ogl);
-    if(vboModel == NULL) {
-        callRender(model);
-    } else {
-        this->drawVBO(vboModel);
-    }
+    callRender(model);
     model->afterRender(ogl);
 }
 
 void GLDrawController::draw(Model * model, int times) {
     model->beforeRender(ogl);
-    VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
-    if(vboModel == NULL) {
-        for(int i = 0; i < times; i++) {
-            callRender(model);
-        }
-    } else {
-        drawVBO(vboModel, times);
+    for(int i = 0; i < times; i++) {
+        callRender(model);
     }
     model->afterRender(ogl);
 }
 
-void GLDrawController::drawVBO(VBOModel *model) {
+void GLDrawController::drawVBOModel(VBOModel *model) {
+    model->beforeRender(ogl);
     model->render(ogl);
+    model->afterRender(ogl);
 }
 
 // Instanced Rendering optimization if possible
-void GLDrawController::drawVBO(VBOModel *model, int times) {
+void GLDrawController::drawVBOModel(VBOModel *model, int times) {
     if(GLEW_ARB_draw_instanced) {
         draw((Model*)model, times);
     } else {
