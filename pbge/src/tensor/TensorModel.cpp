@@ -190,23 +190,23 @@ void TensorModel::calculateEigenVectors3dSymmetric() {
     }
 }
 
-void TensorModel::render(ModelInstance * instance, GraphicAPI * ogl) {
+void TensorModel::render(GraphicAPI * ogl) {
     if(this->model == NULL) {
         if(this->order == 2) {
-            this->render2d(instance, ogl);
+            this->render2d(ogl);
         }
         else if(this->order == 3) {
-            this->render3d(instance, ogl);
+            this->render3d(ogl);
         }
     }
     else {
-        this->model->render(instance, ogl);
+        this->model->render(ogl);
     }
 }
 
-void TensorModel::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
+void TensorModel::renderDepth(GraphicAPI * ogl) {}
 
-void TensorModel::render2d(ModelInstance * instance, GraphicAPI * ogl) {
+void TensorModel::render2d(GraphicAPI * ogl) {
     float eigenvalues[2];
     eigenvalues[0] = getEigenvalue(0);
     eigenvalues[1] = getEigenvalue(1);
@@ -219,10 +219,10 @@ void TensorModel::render2d(ModelInstance * instance, GraphicAPI * ogl) {
                                                        0, 0, 1, 0,
                                                        0, 0, 0, 1);
     dynamic_cast<Ellipse *>(this->model)->setTransformation(*rotation);
-    this->model->render(instance, ogl);
+    this->model->render(ogl);
 }
 
-void TensorModel::render3d(ModelInstance * instance, GraphicAPI * ogl) {
+void TensorModel::render3d(GraphicAPI * ogl) {
     float eigenvalues[3];
     eigenvalues[0] = getEigenvalue(0);
     eigenvalues[1] = getEigenvalue(1);
@@ -237,5 +237,5 @@ void TensorModel::render3d(ModelInstance * instance, GraphicAPI * ogl) {
                                                        eigenvectors[0][2], eigenvectors[1][2], eigenvectors[2][2], 0,
                                                        0, 0, 0, 1);
     dynamic_cast<Ellipsoid *>(this->model)->setTransformation(*rotation);
-    this->model->render(instance, ogl);
+    this->model->render(ogl);
 }

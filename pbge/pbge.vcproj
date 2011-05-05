@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\OpenGL\GLDrawController.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\OpenGL\GLGraphic.cpp"
 				>
 			</File>
@@ -316,6 +320,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\core\File.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\OpenGL\GLDrawController.h"
 				>
 			</File>
 			<File

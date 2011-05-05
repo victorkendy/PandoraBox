@@ -16,18 +16,18 @@ namespace pbge {
 
     class PBGE_EXPORT Model{
     public:
-        virtual void render(ModelInstance * instance, GraphicAPI * ogl)=0;
+        virtual void render(GraphicAPI * gfx)=0;
 
-        virtual void renderDepth(ModelInstance * instance, GraphicAPI * ogl)=0;
+        virtual void renderDepth(GraphicAPI * gfx)=0;
     };
 
     class PBGE_EXPORT VBOModel : public Model {
     public:
         VBOModel(VertexBuffer * vbo, GLenum primitive);
 
-        void render(ModelInstance * instance, GraphicAPI * ogl);
+        void render(GraphicAPI * gfx);
 
-        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
+        void renderDepth(GraphicAPI * gfx);
     private:
         VertexBuffer * vbo;
         GLenum primitive;
@@ -39,15 +39,15 @@ namespace pbge {
         
         void addControlPoint(const float & x, const float & y, const float & z, const float & w);
 
-        void render(ModelInstance * instance, GraphicAPI * ogl);
+        void render(GraphicAPI * gfx);
 
-        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
+        void renderDepth(GraphicAPI * gfx);
 
         void setEvaluator(GPUProgram * _evaluator) {
             evaluator = _evaluator;
         }
 
-        GPUProgram * getEvaluator(GraphicAPI * ogl);
+        GPUProgram * getEvaluator(GraphicAPI * gfx);
     private:
         float * controlPoints;
 
@@ -60,9 +60,9 @@ namespace pbge {
     public:
         Circle(const float & radius, const int & slices = 16);
 
-        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
+        void renderDepth(GraphicAPI * ogl);
 
-        void render(ModelInstance * instance, GraphicAPI * ogl);
+        void render(GraphicAPI * ogl);
     private:
         float radius;
         int slices;
@@ -72,7 +72,7 @@ namespace pbge {
     public:
         Ellipse(const float & x_semi_axis, const float & y_semi_axis, const int & slices);
 
-        void render(ModelInstance * instance, GraphicAPI * ogl);
+        void render(GraphicAPI * ogl);
 
         void setEvaluator(GPUProgram * _evaluator) {
             evaluator = _evaluator;
@@ -92,9 +92,9 @@ namespace pbge {
     public:
         Sphere(const float & radius, const int & slices = 16);
 
-        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
+        void renderDepth(GraphicAPI * ogl);
 
-        void render(ModelInstance * instance, GraphicAPI * ogl);
+        void render(GraphicAPI * ogl);
     private:
         float radius;
         int slices;
@@ -104,7 +104,7 @@ namespace pbge {
     public:
         Ellipsoid(const float & x_semi_axis, const float & y_semi_axis, const float & z_semi_axis, const int & slices);
 
-        void render(ModelInstance * instance, GraphicAPI * ogl);
+        void render(GraphicAPI * ogl);
 
         void setEvaluator(GPUProgram * _evaluator) {
             evaluator = _evaluator;

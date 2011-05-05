@@ -13,8 +13,8 @@ namespace pbge {
         float getEigenvalue(int index);
         float * getEigenvector(int index);
         
-        void render(ModelInstance * instance, GraphicAPI * ogl);
-        void renderDepth(ModelInstance * instance, GraphicAPI * ogl);
+        void render(GraphicAPI * ogl);
+        void renderDepth(GraphicAPI * ogl);
     private:
         float ** tensor;
         int order;
@@ -34,8 +34,8 @@ namespace pbge {
         void calculateEigenValues3dSymmetric();
         void calculateEigenVectors3dSymmetric();
         
-        void render2d(ModelInstance * instance, GraphicAPI * ogl);
-        void render3d(ModelInstance * instance, GraphicAPI * ogl);
+        void render2d(GraphicAPI * ogl);
+        void render3d(GraphicAPI * ogl);
 
         bool tensorIsDiagonal();
         bool tensorIsSymmetric();

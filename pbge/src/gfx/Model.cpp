@@ -18,14 +18,14 @@ VBOModel::VBOModel(pbge::VertexBuffer * _vbo, GLenum _primitive) {
     this->primitive = _primitive;
 }
 
-void VBOModel::render(ModelInstance * instance, GraphicAPI * ogl) {
+void VBOModel::render(GraphicAPI * ogl) {
     vbo->bind(ogl);
     glDrawArrays(primitive, 0, vbo->getNVertices());
     vbo->unbind(ogl);
     ogl->disable(GL_VERTEX_ARRAY);
 }
 
-void VBOModel::renderDepth(ModelInstance* instance, GraphicAPI * ogl) {
+void VBOModel::renderDepth(GraphicAPI * ogl) {
     vbo->bind(ogl);
     glDrawArrays(primitive, 0, vbo->getNVertices());
     vbo->unbind(ogl);
@@ -78,7 +78,7 @@ GPUProgram * BezierCurve::getEvaluator(GraphicAPI * ogl) {
     return evaluator;
 }
 
-void BezierCurve::render(ModelInstance * instance, GraphicAPI * ogl) {
+void BezierCurve::render(GraphicAPI * ogl) {
 
     GPUProgram * program = this->getEvaluator(ogl);
     ogl->getState()->useProgram(program);
@@ -96,7 +96,7 @@ void BezierCurve::render(ModelInstance * instance, GraphicAPI * ogl) {
     ogl->getState()->useProgram(NULL);
 }
 
-void BezierCurve::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
+void BezierCurve::renderDepth(GraphicAPI * ogl) {}
 
 
 ModelInstance::ModelInstance() {
@@ -121,7 +121,7 @@ void ModelInstance::renderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->pushUniforms(this->uniforms);
     ogl->getState()->useProgram(this->renderProgram);
     ogl->updateState();
-    model->render(this, ogl);
+    model->render(ogl);
 }
 
 void ModelInstance::postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
@@ -132,7 +132,7 @@ void ModelInstance::depthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
     ogl->pushUniforms(this->uniforms);
     ogl->getState()->useProgram(this->depthProgram);
     ogl->updateState();
-    model->renderDepth(this, ogl);
+    model->renderDepth(ogl);
 }
 
 void ModelInstance::postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
@@ -150,9 +150,9 @@ Circle::Circle(const float & _radius, const int & _slices) {
     this->slices = _slices;
 }
 
-void Circle::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
+void Circle::renderDepth(GraphicAPI * ogl) {}
 
-void Circle::render(ModelInstance * instance, GraphicAPI * ogl) {
+void Circle::render(GraphicAPI * ogl) {
     float radius = this->radius;
     float param_step = 2 * PBGE_pi / this->slices;
     
@@ -180,13 +180,13 @@ Ellipse::Ellipse(const float & _x_semi_axis, const float & _y_semi_axis, const i
     this->transformation = new math3d::matrix44(math3d::identity44);
 }
 
-void Ellipse::render(ModelInstance * instance, GraphicAPI * ogl) {
+void Ellipse::render(GraphicAPI * ogl) {
     GPUProgram * program = this->getEvaluator(ogl);
     ogl->getState()->useProgram(program);
     dynamic_cast<UniformFloatVec2*>(ogl->getState()->getUniformValue(UniformInfo("scale", FLOAT_VEC2, -1)))->setValue(this->x_semi_axis, this->y_semi_axis);
     dynamic_cast<UniformMat4*>(ogl->getState()->getUniformValue(UniformInfo("transformation", FLOAT_MAT4, -1)))->setValue(*(this->transformation));
     ogl->updateState();
-    Circle::render(instance, ogl);
+    Circle::render(ogl);
 }
 
 GPUProgram * Ellipse::getEvaluator(GraphicAPI * ogl) {
@@ -224,9 +224,9 @@ Sphere::Sphere(const float & _radius, const int & _slices) {
     this->slices = _slices;
 }
 
-void Sphere::renderDepth(ModelInstance * instance, GraphicAPI * ogl) {}
+void Sphere::renderDepth(GraphicAPI * ogl) {}
 
-void Sphere::render(ModelInstance * instance, GraphicAPI * ogl) {
+void Sphere::render(GraphicAPI * ogl) {
     float radius = this->radius;
     float param_step = 2 * PBGE_pi / this->slices;
     
@@ -258,13 +258,13 @@ Ellipsoid::Ellipsoid(const float & _x_semi_axis, const float & _y_semi_axis, con
     this->transformation = new math3d::matrix44(math3d::identity44);
 }
 
-void Ellipsoid::render(ModelInstance * instance, GraphicAPI * ogl) {
+void Ellipsoid::render(GraphicAPI * ogl) {
     GPUProgram * program = this->getEvaluator(ogl);
     ogl->getState()->useProgram(program);
     dynamic_cast<UniformFloatVec3*>(ogl->getState()->getUniformValue(UniformInfo("scale", FLOAT_VEC3, -1)))->setValue(this->x_semi_axis, this->y_semi_axis, this->z_semi_axis);
     dynamic_cast<UniformMat4*>(ogl->getState()->getUniformValue(UniformInfo("transformation", FLOAT_MAT4, -1)))->setValue(*(this->transformation));
     ogl->updateState();
-    Sphere::render(instance, ogl);
+    Sphere::render(ogl);
 }
 
 GPUProgram * Ellipsoid::getEvaluator(GraphicAPI * ogl) {
