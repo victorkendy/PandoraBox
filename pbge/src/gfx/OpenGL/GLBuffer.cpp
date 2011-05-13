@@ -53,7 +53,8 @@ void * GLBuffer::map(AccessPattern accessPattern) {
 }
 
 void GLBuffer::unmap() {
-    glUnmapBuffer(target);
+    if(data == NULL)
+        glUnmapBuffer(target);
 }
 
 void GLBuffer::bindOn(Target _target) {

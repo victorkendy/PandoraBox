@@ -36,6 +36,14 @@ namespace pbge {
         void render(GraphicAPI * gfx);
 
         void renderDepth(GraphicAPI * gfx);
+
+        GLenum getPrimitive() {
+            return primitive;
+        }
+
+        VertexBuffer * getVBO() {
+            return vbo;
+        }
     private:
         VertexBuffer * vbo;
         GLenum primitive;

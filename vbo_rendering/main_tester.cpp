@@ -17,7 +17,9 @@ class CustomSceneInitializer : public pbge::SceneInitializer {
         dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
         scene->appendChildTo(light_parent, new pbge::ModelInstance(new pbge::BezierCurve()));
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
-        scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::Ellipse(0.5f,0.2f,100)));
+
+        // scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::Ellipse(0.5f,0.2f,100)));
+        scene->appendChildTo(circle_parent, new pbge::ModelInstance(pbge::Geometrics::createCircle(1.0f, 10, ogl)));
         
         float ** tensor;
         tensor = (float**)malloc(2*sizeof(float*));

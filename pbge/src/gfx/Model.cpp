@@ -19,21 +19,20 @@ VBOModel::VBOModel(pbge::VertexBuffer * _vbo, GLenum _primitive) {
     this->primitive = _primitive;
 }
 
+// Because the VBO has driver specific optimizations,
+// we don't give any implementation for the render method
+// but just delegate it to the GraphicAPI
+ 
 void VBOModel::beforeRender(GraphicAPI * gfx) {
-    vbo->bind(gfx);
 }
 
 void VBOModel::afterRender(GraphicAPI * gfx) {
-    vbo->unbind(gfx);
-    gfx->disable(GL_VERTEX_ARRAY);
 }
 
 void VBOModel::render(GraphicAPI * gfx) {
-    glDrawArrays(primitive, 0, vbo->getNVertices());
 }
 
 void VBOModel::renderDepth(GraphicAPI * gfx) {
-    render(gfx);
 }
 
 BezierCurve::BezierCurve() {
@@ -145,7 +144,11 @@ void ModelInstance::depthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
     gfx->pushUniforms(this->uniforms);
     gfx->getState()->useProgram(this->depthProgram);
     gfx->updateState();
-    gfx->getDrawController()->draw(model);
+    VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
+    if(vboModel == NULL)
+        gfx->getDrawController()->draw(model);
+    else
+        gfx->getDrawController()->drawVBOModel(vboModel);
 }
 
 void ModelInstance::postDepthPass(RenderVisitor * visitor, GraphicAPI * gfx) {

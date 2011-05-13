@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\Geometrics.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\OpenGL\GLBuffer.cpp"
 				>
 			</File>
@@ -324,6 +328,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\core\File.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\Geometrics.h"
 				>
 			</File>
 			<File

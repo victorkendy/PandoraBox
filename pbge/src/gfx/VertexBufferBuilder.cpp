@@ -19,7 +19,12 @@ bool VertexAttribBuilder::isValid() {
 }
 
 void VertexAttribBuilder::getNextElement(float * elems) {
-    int baseIndex = indexes[currentElement++] * 4;
+    int baseIndex;
+    if(!this->indexesAssigned)
+        baseIndex = currentElement++;
+    else 
+        baseIndex = indexes[currentElement++];
+    baseIndex *= 4;
     for(int i = 0; i < 4; i++) {
         elems[i] = values[baseIndex + i];
     }
@@ -82,12 +87,12 @@ GLsizei VertexBufferBuilder::calculateSize() {
 }
 
 void VertexBufferBuilder::validateAttribs() {
-    std::vector<VertexAttribBuilder>::iterator it;
+    /*std::vector<VertexAttribBuilder>::iterator it;
     for(it = attribs.begin(); it != attribs.end(); it++) {
         if(!it->areIndexesAssigned()) {
             throw BuilderValidationException("attrib has no index vector");
         }
-    }
+    }*/
 }
 
 void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, GLsizei stride) {
