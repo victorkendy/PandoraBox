@@ -13,6 +13,7 @@
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/Geometrics.h"
 #include "pbge/gfx/GraphicAPI.h"
+#include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"

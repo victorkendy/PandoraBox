@@ -6,7 +6,32 @@
 int cam_node_name;
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
+private:
+    pbge::GPUProgram * ellipseProgram;
+
+    pbge::ModelInstance * createEllipse(pbge::VBOModel * circle, float x_semi_axis, float y_semi_axis) {
+        pbge::ModelInstance * ellipse = new pbge::ModelInstance(circle);
+        pbge::UniformSet * uniforms = ellipse->getUniformSet();
+        uniforms->getFloatVec2("scale")->setValue(x_semi_axis, y_semi_axis);
+        ellipse->setRenderPassProgram(ellipseProgram);
+        return ellipse;
+    }
+
+    void createEllipseProgram(pbge::GraphicAPI * gfx) {
+        std::string vertexShader =
+            "uniform vec2 scale;\n"
+            "void main() {\n"
+            "   mat4 scaleMatrix = mat4(1.0);\n"
+            "   scaleMatrix[0][0] = scale[0];\n"
+            "   scaleMatrix[1][1] = scale[1];\n"
+            "   gl_Position = gl_ModelViewProjectionMatrix * scaleMatrix * gl_Vertex;\n"
+            "   gl_FrontColor = vec4(1,1,1,1);\n"
+            "}";
+        ellipseProgram = gfx->getFactory()->createProgramFromString(vertexShader, "");
+    }
+public:
     pbge::SceneGraph * operator () (pbge::GraphicAPI * ogl) {
+        createEllipseProgram(ogl);
         const float m_pi = 3.1415f;
         // FIXME: remove the state change line
         ogl->enableMode(pbge::GraphicAPI::DEPTH_TEST);
@@ -19,7 +44,9 @@ class CustomSceneInitializer : public pbge::SceneInitializer {
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
 
         // scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::Ellipse(0.5f,0.2f,100)));
-        scene->appendChildTo(circle_parent, new pbge::ModelInstance(pbge::Geometrics::createCircle(1.0f, 10, ogl)));
+        pbge::VBOModel * circle = pbge::Geometrics::createCircle(1.0f, 100, ogl);
+        //scene->appendChildTo(circle_parent, new pbge::ModelInstance(circle));
+        scene->appendChildTo(circle_parent, createEllipse(circle, 0.5f, 0.2f));
         
         float ** tensor;
         tensor = (float**)malloc(2*sizeof(float*));
