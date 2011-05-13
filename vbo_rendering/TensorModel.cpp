@@ -1,12 +1,11 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "pbge/tensor/TensorModel.h"
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/core/definitions.h"
 #include "math3d/math3d.h"
 
-using namespace pbge;
+#include "TensorModel.h"
 
 TensorModel::TensorModel(float ** _tensor, int _order, int _slices) {
     this->tensor = _tensor;
@@ -26,7 +25,7 @@ TensorModel::~TensorModel() {
 
 float TensorModel::getEigenvalue(int index) {
     if(index > this->order - 1 || index < 0) {
-        throw InvalidIndexException("Invalid index for eigenvalue");
+        throw pbge::InvalidIndexException("Invalid index for eigenvalue");
     }
     if(!this->calculated) {
         this->calculateEigenValuesAndVectors();
@@ -36,7 +35,7 @@ float TensorModel::getEigenvalue(int index) {
 
 float* TensorModel::getEigenvector(int index) {
     if(index > this->order - 1 || index < 0) {
-        throw InvalidIndexException("Invalid index for eigenvector");
+        throw pbge::InvalidIndexException("Invalid index for eigenvector");
     }
     if(!this->calculated) {
         this->calculateEigenValuesAndVectors();
@@ -190,7 +189,7 @@ void TensorModel::calculateEigenVectors3dSymmetric() {
     }
 }
 
-void TensorModel::render(GraphicAPI * ogl) {
+void TensorModel::render(pbge::GraphicAPI * ogl) {
     if(this->model == NULL) {
         if(this->order == 2) {
             this->render2d(ogl);
@@ -204,13 +203,13 @@ void TensorModel::render(GraphicAPI * ogl) {
     }
 }
 
-void TensorModel::renderDepth(GraphicAPI * ogl) {}
+void TensorModel::renderDepth(pbge::GraphicAPI * ogl) {}
 
-void TensorModel::render2d(GraphicAPI * ogl) {
+void TensorModel::render2d(pbge::GraphicAPI * ogl) {
     float eigenvalues[2];
     eigenvalues[0] = getEigenvalue(0);
     eigenvalues[1] = getEigenvalue(1);
-    this->model = new Ellipse(eigenvalues[0], eigenvalues[1], this->slices);
+    this->model = new pbge::Ellipse(eigenvalues[0], eigenvalues[1], this->slices);
     float * eigenvectors[2];
     eigenvectors[0] = getEigenvector(0);
     eigenvectors[1] = getEigenvector(1);
@@ -218,16 +217,16 @@ void TensorModel::render2d(GraphicAPI * ogl) {
                                                        eigenvectors[0][1], eigenvectors[1][1], 0, 0,
                                                        0, 0, 1, 0,
                                                        0, 0, 0, 1);
-    dynamic_cast<Ellipse *>(this->model)->setTransformation(*rotation);
+    dynamic_cast<pbge::Ellipse *>(this->model)->setTransformation(*rotation);
     this->model->render(ogl);
 }
 
-void TensorModel::render3d(GraphicAPI * ogl) {
+void TensorModel::render3d(pbge::GraphicAPI * ogl) {
     float eigenvalues[3];
     eigenvalues[0] = getEigenvalue(0);
     eigenvalues[1] = getEigenvalue(1);
     eigenvalues[2] = getEigenvalue(2);
-    this->model = new Ellipsoid(eigenvalues[0], eigenvalues[1], eigenvalues[2], this->slices);
+    this->model = new pbge::Ellipsoid(eigenvalues[0], eigenvalues[1], eigenvalues[2], this->slices);
     float * eigenvectors[3];
     eigenvectors[0] = getEigenvector(0);
     eigenvectors[1] = getEigenvector(1);
@@ -236,6 +235,6 @@ void TensorModel::render3d(GraphicAPI * ogl) {
                                                        eigenvectors[0][1], eigenvectors[1][1], eigenvectors[2][1], 0,
                                                        eigenvectors[0][2], eigenvectors[1][2], eigenvectors[2][2], 0,
                                                        0, 0, 0, 1);
-    dynamic_cast<Ellipsoid *>(this->model)->setTransformation(*rotation);
+    dynamic_cast<pbge::Ellipsoid *>(this->model)->setTransformation(*rotation);
     this->model->render(ogl);
 }

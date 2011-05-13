@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "pbge/pbge.h"
 #include "vbo_setup.h"
+#include "TensorModel.h"
 
 int cam_node_name;
 
@@ -43,9 +44,7 @@ public:
         scene->appendChildTo(light_parent, new pbge::ModelInstance(new pbge::BezierCurve()));
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
 
-        // scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::Ellipse(0.5f,0.2f,100)));
         pbge::VBOModel * circle = pbge::Geometrics::createCircle(1.0f, 100, ogl);
-        //scene->appendChildTo(circle_parent, new pbge::ModelInstance(circle));
         scene->appendChildTo(circle_parent, createEllipse(circle, 0.5f, 0.2f));
         
         float ** tensor;
@@ -71,13 +70,13 @@ public:
         tensor3d[2][0] = 0.1f;
         tensor3d[2][1] = -0.0f;
         tensor3d[2][2] = 0.1f;
-
-        scene->appendChildTo(circle_parent, new pbge::ModelInstance(new pbge::TensorModel(tensor, 2, 50)));
+        TensorModel * model = new TensorModel(tensor, 2, 50);
+        scene->appendChildTo(circle_parent, new pbge::ModelInstance(model));
         cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
         dynamic_cast<pbge::Light*>(scene->appendChildTo(cam_node_name, new pbge::PointLight))->setDiffuseColor(0,1,1,1);
         scene->appendChildTo(child, vboModel);
         pbge::Node * sphereParent = scene->appendChildTo(child, pbge::TransformationNode::translation(-1.5f, 0.0f, 0.0f));
-        scene->appendChildTo(sphereParent, new pbge::ModelInstance(new pbge::TensorModel(tensor3d, 3, 20)));
+        scene->appendChildTo(sphereParent, new pbge::ModelInstance(new TensorModel(tensor3d, 3, 20)));
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(45, 1, 1.0f, 10);
