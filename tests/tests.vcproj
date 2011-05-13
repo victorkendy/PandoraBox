@@ -194,10 +194,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TensorModelTest.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\VertexBufferObjectTest.cpp"
 				>
 			</File>
