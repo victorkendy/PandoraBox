@@ -49,33 +49,6 @@ namespace pbge {
         GLenum primitive;
     };
 
-    class PBGE_EXPORT BezierCurve : public Model {
-    public:
-        BezierCurve();
-        
-        void addControlPoint(const float & x, const float & y, const float & z, const float & w);
-
-        void beforeRender(GraphicAPI * gfx);
-
-        void afterRender(GraphicAPI * gfx);
-
-        void render(GraphicAPI * gfx);
-
-        void renderDepth(GraphicAPI * gfx);
-
-        void setEvaluator(GPUProgram * _evaluator) {
-            evaluator = _evaluator;
-        }
-
-        GPUProgram * getEvaluator(GraphicAPI * gfx);
-    private:
-        float * controlPoints;
-
-        GPUProgram * evaluator;
-
-        int currentIndex;
-    };
-
     class PBGE_EXPORT Circle : public Model {
     public:
         Circle(const float & radius, const int & slices = 16);

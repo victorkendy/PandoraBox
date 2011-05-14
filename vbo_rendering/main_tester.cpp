@@ -41,12 +41,17 @@ public:
         pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(m_pi/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
         pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));
         dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
-        scene->appendChildTo(light_parent, new pbge::ModelInstance(new pbge::BezierCurve()));
+        
+        pbge::VBOModel * bezier = pbge::Geometrics::createBezier(math3d::vector4(-1,0,0,1), math3d::vector4(-0.5f,-2.0f,0,1), 
+                                                                 math3d::vector4(0.0f,1.0f,0,1), math3d::vector4(1.0f,1.0f,0,1), 100, ogl);
+        scene->appendChildTo(light_parent, new pbge::ModelInstance(bezier));
+
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
 
         pbge::VBOModel * circle = pbge::Geometrics::createCircle(1.0f, 100, ogl);
-        scene->appendChildTo(circle_parent, createEllipse(circle, 0.5f, 0.2f));
-        
+        scene->appendChildTo(circle_parent, new pbge::ModelInstance(circle));
+        scene->appendChildTo(circle_parent, createEllipse(circle, 1.0f, 0.2f));
+
         float ** tensor;
         tensor = (float**)malloc(2*sizeof(float*));
         tensor[0] = (float*)malloc(2*sizeof(float));
@@ -70,6 +75,7 @@ public:
         tensor3d[2][0] = 0.1f;
         tensor3d[2][1] = -0.0f;
         tensor3d[2][2] = 0.1f;
+
         TensorModel * model = new TensorModel(tensor, 2, 50);
         scene->appendChildTo(circle_parent, new pbge::ModelInstance(model));
         cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
@@ -80,7 +86,6 @@ public:
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(45, 1, 1.0f, 10);
-        //math3d::print_internal_memory_page_info();
 
         return scene;
     }
