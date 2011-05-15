@@ -27,6 +27,8 @@ namespace pbge {
         UniformFloatVec3 * getFloatVec3(const std::string & name);
 
         UniformFloatVec4 * getFloatVec4(const std::string & name);
+
+        UniformMat4 * getFloatMat4(const std::string & name);
     private:
         UniformValue * createUniform(const UniformInfo & info);
 

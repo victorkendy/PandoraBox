@@ -61,17 +61,21 @@ UniformValue * UniformSet::searchValue(const UniformInfo & info) {
 }
 
 UniformFloat * UniformSet::getFloat(const std::string & name) {
-    return dynamic_cast<UniformFloat *>(this->getValue(UniformInfo(name, pbge::FLOAT, -1)));
+    return dynamic_cast<UniformFloat *>(this->getValue(UniformInfo(name, pbge::FLOAT)));
 }
 
 UniformFloatVec2 * UniformSet::getFloatVec2(const std::string & name) {
-    return dynamic_cast<UniformFloatVec2 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC2, -1)));
+    return dynamic_cast<UniformFloatVec2 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC2)));
 }
 
 UniformFloatVec3 * UniformSet::getFloatVec3(const std::string & name) {
-    return dynamic_cast<UniformFloatVec3 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC3, -1)));
+    return dynamic_cast<UniformFloatVec3 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC3)));
 }
 
 UniformFloatVec4 * UniformSet::getFloatVec4(const std::string & name) {
-    return dynamic_cast<UniformFloatVec4 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC4, -1)));
+    return dynamic_cast<UniformFloatVec4 *>(this->getValue(UniformInfo(name, pbge::FLOAT_VEC4)));
+}
+
+UniformMat4 * UniformSet::getFloatMat4(const std::string & name) {
+    return dynamic_cast<UniformMat4 *>(this->getValue(UniformInfo(name, pbge::FLOAT_MAT4)));
 }

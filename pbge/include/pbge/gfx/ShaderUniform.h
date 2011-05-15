@@ -121,16 +121,21 @@ namespace pbge {
             }
             return ((unsigned char *)(valueStorage)) + (index * getTypeSize());
         }
+
+        const unsigned getNumberOfElements() const {
+            return numberOfElements;
+        }
     private:
         void resize(unsigned index) {
             unsigned _numberOfElements = numberOfElements + 1;
+            unsigned typeSize = getTypeSize();
             float reallocFactor = 2.0f;
             while(_numberOfElements <= index) {
                 _numberOfElements = static_cast<unsigned>(_numberOfElements * reallocFactor);
             }
-            void * _valueStorage = malloc(getTypeSize() * _numberOfElements);
+            void * _valueStorage = malloc(typeSize * _numberOfElements);
             if(numberOfElements > 0) {
-                memcpy(_valueStorage, valueStorage, numberOfElements * getTypeSize());
+                memcpy(_valueStorage, valueStorage, numberOfElements * typeSize);
             }
             numberOfElements = _numberOfElements;
             free(valueStorage);

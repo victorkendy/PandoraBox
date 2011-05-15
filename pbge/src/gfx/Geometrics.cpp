@@ -27,6 +27,26 @@ VBOModel * Geometrics::createCircunference(float radius, unsigned int slices, Gr
     return new VBOModel(vbo, GL_LINE_LOOP);
 }
 
+VBOModel * Geometrics::createSphere(float radius, unsigned slices, GraphicAPI * gfx) {
+    if(radius <= 0) {
+        throw IllegalArgumentException("radius must have a positive value");
+    }
+    if(slices < 3) {
+        throw IllegalArgumentException("there must be at least 3 slices");
+    }
+    float param_step = 2 * PBGE_pi / slices;
+    VertexBufferBuilder builder(slices * slices);
+    VertexAttribBuilder vertex = builder.addAttrib(4, VertexAttrib::VERTEX);
+    builder.on(vertex);
+    for(float phi = 0, next_phi = param_step; phi < 2 * PBGE_pi; phi = next_phi, next_phi += param_step) {
+        for(float theta = 0; theta < PBGE_pi; theta += param_step) {
+            builder.pushValue(radius * sin(theta) * cos(phi), radius * sin(theta) * sin(phi), radius * cos(theta), 1.0f);
+            builder.pushValue(radius * sin(theta) * cos(next_phi), radius * sin(theta) * sin(next_phi), radius * cos(theta), 1.0f);
+        }
+    }
+    return new VBOModel(builder.done(Buffer::STATIC_DRAW, gfx), GL_QUAD_STRIP);
+}
+
 VBOModel * Geometrics::createBezier(const math3d::vector4 &p0, const math3d::vector4 &p1, 
                                     const math3d::vector4 &p2, const math3d::vector4 &p3, 
                                     unsigned slices, GraphicAPI * gfx) {

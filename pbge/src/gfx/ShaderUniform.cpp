@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/ShaderUniform.h"
 
@@ -5,22 +7,22 @@ using namespace pbge;
 
 void UniformFloatVec4::bindValueOn(GPUProgram *program, const UniformInfo & info, GraphicAPI *ogl) {
     float * values = static_cast<float *>(getValueAt(0));
-    program->bindFloatVec4(info, ogl, values, info.getNumberOfElements());
+    program->bindFloatVec4(info, ogl, values, std::min(getNumberOfElements(), info.getNumberOfElements()));
 }
 
 void UniformFloatVec3::bindValueOn(GPUProgram *program, const UniformInfo & info, GraphicAPI *ogl) {
     float * values = static_cast<float *>(getValueAt(0));
-    program->bindFloatVec3(info, ogl, values, info.getNumberOfElements());
+    program->bindFloatVec3(info, ogl, values, std::min(getNumberOfElements(), info.getNumberOfElements()));
 }
 
 void UniformFloatVec2::bindValueOn(GPUProgram *program, const UniformInfo & info, GraphicAPI *ogl) {
     float * values = static_cast<float *>(getValueAt(0));
-    program->bindFloatVec2(info, ogl, values, info.getNumberOfElements());
+    program->bindFloatVec2(info, ogl, values, std::min(getNumberOfElements(), info.getNumberOfElements()));
 }
 
 void UniformFloat::bindValueOn(GPUProgram *program, const UniformInfo & info, GraphicAPI *ogl) {
     float * values = static_cast<float *>(getValueAt(0));
-    program->bindFloat(info, ogl, values, info.getNumberOfElements());
+    program->bindFloat(info, ogl, values, std::min(getNumberOfElements(), info.getNumberOfElements()));
 }
 
 void UniformSampler2D::bindValueOn(GPUProgram *program, const UniformInfo &info, GraphicAPI *ogl) {

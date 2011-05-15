@@ -14,9 +14,12 @@ namespace pbge {
     public:
         static VBOModel * createCircunference(float radius, unsigned slices, GraphicAPI * gfx);
 
+        static VBOModel * createSphere(float radius, unsigned slices, GraphicAPI * gfx);
+
         static VBOModel * createBezier(const math3d::vector4 & p0, const math3d::vector4 & p1,
                                        const math3d::vector4 & p2, const math3d::vector4 & p3, 
                                        unsigned slices, GraphicAPI * gfx);
+
     };
 
 }
