@@ -12,7 +12,7 @@ namespace pbge {
 
     class PBGE_EXPORT Geometrics {
     public:
-        static VBOModel * createCircle(float radius, unsigned slices, GraphicAPI * gfx);
+        static VBOModel * createCircunference(float radius, unsigned slices, GraphicAPI * gfx);
 
         static VBOModel * createBezier(const math3d::vector4 & p0, const math3d::vector4 & p1,
                                        const math3d::vector4 & p2, const math3d::vector4 & p3, 

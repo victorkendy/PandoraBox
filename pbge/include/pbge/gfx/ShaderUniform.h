@@ -2,7 +2,7 @@
 
 #ifndef PBGE_GFX_SHADERUNIFORM_H_
 #define PBGE_GFX_SHADERUNIFORM_H_
-
+#include <cstring>
 
 #include <string>
 #include <sstream>
@@ -48,10 +48,11 @@ namespace pbge {
 
     class UniformInfo {
     public:
-        UniformInfo(const std::string & _name, const UniformType _type, const int & _location) {
+        UniformInfo(const std::string & _name, const UniformType _type, const int & _location = -1, const unsigned _numberOfElements = 1) {
             name = _name;
             type = _type;
             location = _location;
+            numberOfElements = _numberOfElements;
         }
 
         UniformInfo(){}
@@ -67,6 +68,10 @@ namespace pbge {
         const int getLocation() const{
             return location;
         }
+
+        const unsigned getNumberOfElements() const {
+            return numberOfElements;
+        }
         
         bool operator < (const UniformInfo other) const {
             return (this->getType() < other.getType() || (this->getType() == other.getType() && this->getName() < other.getName()));
@@ -74,7 +79,7 @@ namespace pbge {
 
         std::string toString() { 
             std::ostringstream os(std::ostringstream::out);
-            os << name << " " << location << " " << type << std::endl;
+            os << name << " " << location << " " << type << " " << numberOfElements << std::endl;
             return os.str();
         }
 
@@ -84,139 +89,194 @@ namespace pbge {
 
         UniformType type;
 
+        unsigned numberOfElements;
+
         std::string name;
     };
 
     class UniformValue {
     public:
+        UniformValue() {
+            numberOfElements = 0;
+            valueStorage = NULL;
+        }
+
+        ~UniformValue() {
+            if(valueStorage != NULL) {
+                free(valueStorage);
+            }
+            numberOfElements = 0;
+        }
+
         virtual UniformType getType() = 0;
 
+        virtual unsigned getTypeSize() = 0;
+
         virtual void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl) = 0;
+
+    protected:
+        void * getValueAt(unsigned index) {
+            if(index >= numberOfElements) {
+                resize(index);
+            }
+            return ((unsigned char *)(valueStorage)) + (index * getTypeSize());
+        }
+    private:
+        void resize(unsigned index) {
+            unsigned _numberOfElements = numberOfElements + 1;
+            float reallocFactor = 2.0f;
+            while(_numberOfElements <= index) {
+                _numberOfElements = static_cast<unsigned>(_numberOfElements * reallocFactor);
+            }
+            void * _valueStorage = malloc(getTypeSize() * _numberOfElements);
+            if(numberOfElements > 0) {
+                memcpy(_valueStorage, valueStorage, numberOfElements * getTypeSize());
+            }
+            numberOfElements = _numberOfElements;
+            free(valueStorage);
+            valueStorage = _valueStorage;
+        }
+
+        void * valueStorage;
+
+        unsigned numberOfElements;
     };
 
     // Declaration of the UniformValues
 
     class UniformFloatVec4 : public UniformValue {
     public:
-        UniformFloatVec4() {
-            values[0] = 0.0f;
-            values[1] = 0.0f;
-            values[2] = 0.0f;
-            values[3] = 0.0f;
+        UniformFloatVec4() : UniformValue() {
+            setValueAt(0, 0.0f, 0.0f, 0.0f, 0.0f);
         }
 
-        UniformFloatVec4(const float & x, const float & y, const float & z, const float & w) {
-            values[0] = x;
-            values[1] = y;
-            values[2] = z;
-            values[3] = w;
+        UniformFloatVec4(const float & x, const float & y, const float & z, const float & w) : UniformValue() {
+            setValueAt(0, x,y,z,w);
         }
 
         UniformType getType() {
             return FLOAT_VEC4;
         }
+
+        unsigned getTypeSize() {
+            return 4 * sizeof(float);
+        }
+
+        void setValueAt(unsigned index, const float & x, const float & y, const float & z, const float & w) {
+            float * valueAtIndex = static_cast<float *>(this->getValueAt(index));
+            valueAtIndex[0] = x;
+            valueAtIndex[1] = y;
+            valueAtIndex[2] = z;
+            valueAtIndex[3] = w;
+        }
         
         void setValue(const float & x, const float & y, const float & z, const float & w) {
-            values[0] = x;
-            values[1] = y;
-            values[2] = z;
-            values[3] = w;
+            setValueAt(0, x,y,z,w);
         }
 
         void setValue(const math3d::vector4 & v) {
-            this->setValue(v[0], v[1], v[2], v[3]);
+            setValueAt(0, v[0], v[1], v[2], v[3]);
         }
 
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
-
-    private:
-        float values[4];
     };
 
     class UniformFloatVec3 : public UniformValue {
     public:
-        UniformFloatVec3() {
-            values[0] = 0.0f;
-            values[1] = 0.0f;
-            values[2] = 0.0f;
+        UniformFloatVec3() : UniformValue() {
+            setValueAt(0, 0.0f, 0.0f, 0.0f);
         }
 
-        UniformFloatVec3(const float & x, const float & y, const float & z) {
-            values[0] = x;
-            values[1] = y;
-            values[2] = z;
+        UniformFloatVec3(const float & x, const float & y, const float & z) : UniformValue(){
+            setValueAt(0, x, y, z);
         }
 
         UniformType getType() {
             return FLOAT_VEC3;
         }
-        
-        void setValue(const float & x, const float & y, const float & z) {
+
+        unsigned getTypeSize() {
+            return 3 * sizeof(float);
+        }
+
+        void setValueAt(unsigned index, const float & x, const float & y, const float & z) {
+            float * values = static_cast<float *>(getValueAt(index));
             values[0] = x;
             values[1] = y;
             values[2] = z;
         }
+        
+        void setValue(const float & x, const float & y, const float & z) {
+            setValueAt(0, x, y, z);
+        }
 
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
-
-    private:
-        float values[3];
     };
 
     class UniformFloatVec2 : public UniformValue {
     public:
-        UniformFloatVec2() {
-            values[0] = 0.0f;
-            values[1] = 0.0f;
+        UniformFloatVec2() : UniformValue(){
+            setValueAt(0, 0.0f, 0.0f);
         }
 
-        UniformFloatVec2(const float & x, const float & y) {
-            values[0] = x;
-            values[1] = y;
+        UniformFloatVec2(const float & x, const float & y) : UniformValue(){
+            setValueAt(0, x, y);
         }
 
         UniformType getType() {
             return FLOAT_VEC2;
         }
+
+        unsigned getTypeSize() {
+            return 2 * sizeof(float);
+        }
         
-        void setValue(const float & x, const float & y) {
+        void setValueAt(unsigned index, const float & x, const float & y) {
+            float * values = static_cast<float *>(getValueAt(index));
             values[0] = x;
             values[1] = y;
         }
 
-        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
+        void setValue(const float & x, const float & y) {
+            setValueAt(0, x, y);
+        }
 
-    private:
-        float values[2];
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     };
 
     class UniformFloat : public UniformValue {
     public:
-        UniformFloat() {
-            value = 0.0f;
+        UniformFloat() : UniformValue(){
+            setValueAt(0, 0.0f);
         }
 
-        UniformFloat(const float & v) {
-            value = v;
+        UniformFloat(const float & v) :UniformValue(){
+            setValueAt(0, v);
         }
 
         UniformType getType() {
             return FLOAT;
         }
+
+        unsigned getTypeSize() {
+            return sizeof(float);
+        }
+
+        void setValueAt(unsigned index, const float & x) {
+            float * value = static_cast<float *>(getValueAt(0));
+            *value = x;
+        }
         
         void setValue(const float & v) {
-            value = v;
+            setValueAt(0, v);
         }
 
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
-
-    private:
-        float value;
     };
 
     class UniformSampler2D : public UniformValue {
     public:
-        UniformSampler2D() {
+        UniformSampler2D() : UniformValue() {
             this->texture = NULL;
         }
 
@@ -226,6 +286,10 @@ namespace pbge {
         
         UniformType getType() { return SAMPLER_2D; }
 
+        unsigned getTypeSize() {
+            return sizeof(Texture *);
+        }
+
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     private:
         Texture * texture;
@@ -233,7 +297,7 @@ namespace pbge {
 
     class UniformMat4 : public UniformValue {
     public:
-        UniformMat4() {
+        UniformMat4() : UniformValue() {
             values[0] = 0.0f;
             values[1] = 0.0f;
             values[2] = 0.0f;
@@ -294,6 +358,10 @@ namespace pbge {
         }
 
         UniformType getType() { return FLOAT_MAT4; }
+
+        unsigned getTypeSize() {
+            return 16 * sizeof(float);
+        }
 
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     private:

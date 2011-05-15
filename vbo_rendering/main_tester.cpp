@@ -1,38 +1,19 @@
 #include <iostream>
 #include <stdlib.h>
 #include "pbge/pbge.h"
+
 #include "vbo_setup.h"
 #include "TensorModel.h"
+#include "Ellipses.h"
 
 int cam_node_name;
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
-private:
-    pbge::GPUProgram * ellipseProgram;
 
-    pbge::ModelInstance * createEllipse(pbge::VBOModel * circle, float x_semi_axis, float y_semi_axis) {
-        pbge::ModelInstance * ellipse = new pbge::ModelInstance(circle);
-        pbge::UniformSet * uniforms = ellipse->getUniformSet();
-        uniforms->getFloatVec2("scale")->setValue(x_semi_axis, y_semi_axis);
-        ellipse->setRenderPassProgram(ellipseProgram);
-        return ellipse;
-    }
-
-    void createEllipseProgram(pbge::GraphicAPI * gfx) {
-        std::string vertexShader =
-            "uniform vec2 scale;\n"
-            "void main() {\n"
-            "   mat4 scaleMatrix = mat4(1.0);\n"
-            "   scaleMatrix[0][0] = scale[0];\n"
-            "   scaleMatrix[1][1] = scale[1];\n"
-            "   gl_Position = gl_ModelViewProjectionMatrix * scaleMatrix * gl_Vertex;\n"
-            "   gl_FrontColor = vec4(1,1,1,1);\n"
-            "}";
-        ellipseProgram = gfx->getFactory()->createProgramFromString(vertexShader, "");
-    }
 public:
     pbge::SceneGraph * operator () (pbge::GraphicAPI * ogl) {
-        createEllipseProgram(ogl);
+        Ellipses ellipses(ogl);
+
         const float m_pi = 3.1415f;
         // FIXME: remove the state change line
         ogl->enableMode(pbge::GraphicAPI::DEPTH_TEST);
@@ -42,15 +23,15 @@ public:
         pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));
         dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
         
-        pbge::VBOModel * bezier = pbge::Geometrics::createBezier(math3d::vector4(-1,0,0,1), math3d::vector4(-0.5f,-2.0f,0,1), 
-                                                                 math3d::vector4(0.0f,1.0f,0,1), math3d::vector4(1.0f,1.0f,0,1), 100, ogl);
+        pbge::VBOModel * bezier = pbge::Geometrics::createBezier(math3d::vector4(-1,0,0,1), math3d::vector4(2,-2,0,1), 
+                                                                 math3d::vector4(-2,-2,0,1), math3d::vector4(1,0,0,1), 100, ogl);
         scene->appendChildTo(light_parent, new pbge::ModelInstance(bezier));
 
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
 
-        pbge::VBOModel * circle = pbge::Geometrics::createCircle(1.0f, 100, ogl);
+        pbge::VBOModel * circle = pbge::Geometrics::createCircunference(1.0f, 100, ogl);
         scene->appendChildTo(circle_parent, new pbge::ModelInstance(circle));
-        scene->appendChildTo(circle_parent, createEllipse(circle, 1.0f, 0.2f));
+        scene->appendChildTo(circle_parent, ellipses.createEllipse(1.0f, 0.2f));
 
         float ** tensor;
         tensor = (float**)malloc(2*sizeof(float*));

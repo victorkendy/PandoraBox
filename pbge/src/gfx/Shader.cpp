@@ -177,9 +177,9 @@ namespace pbge {
             std::string uniformName = name;
             // don't include reserved names
             if(static_cast<int>(uniformName.find("gl_")) != 0) {
-                UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), glGetUniformLocation(programID, name));
+                UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), glGetUniformLocation(programID, name), uniformSize);
                 uniforms.push_back(info);
-                std::cout << "found uniform: " << uniformName << std::endl;
+                std::cout << "found uniform: " << info.toString() << std::endl;
             }
         }
         delete [] name;
@@ -218,20 +218,20 @@ namespace pbge {
         return program;
     }
 
-    void GLProgram::bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float & valor) {
-        glUniform1f(info.getLocation(), valor);
+    void GLProgram::bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) {
+        glUniform1fv(info.getLocation(), size, values);
     }
 
-    void GLProgram::bindFloatVec2(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2) {
-        glUniform2f(info.getLocation(), v1, v2);
+    void GLProgram::bindFloatVec2(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) {
+        glUniform2fv(info.getLocation(), size, values);
     }
 
-    void GLProgram::bindFloatVec3(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3) {
-        glUniform3f(info.getLocation(), v1, v2, v3);
+    void GLProgram::bindFloatVec3(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) {
+        glUniform3fv(info.getLocation(), size, values);
     }
 
-    void GLProgram::bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3, const float & v4) {
-        glUniform4f(info.getLocation(), v1, v2, v3, v4);
+    void GLProgram::bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) {
+        glUniform4fv(info.getLocation(), size, values);
     }
 
     void GLProgram::bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture * tex) {

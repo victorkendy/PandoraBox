@@ -10,7 +10,7 @@
 
 using namespace pbge;
 
-VBOModel * Geometrics::createCircle(float radius, unsigned int slices, GraphicAPI * gfx) {
+VBOModel * Geometrics::createCircunference(float radius, unsigned int slices, GraphicAPI * gfx) {
     if(radius <= 0) {
         throw IllegalArgumentException("radius must have a positive value");
     }
@@ -32,7 +32,6 @@ VBOModel * Geometrics::createBezier(const math3d::vector4 &p0, const math3d::vec
                                     unsigned slices, GraphicAPI * gfx) {
     VertexBufferBuilder builder(slices);
     VertexAttribBuilder vertex = builder.addAttrib(4, VertexAttrib::VERTEX);
-    // VertexAttribBuilder normal = builder.addAttrib(3, VertexAttrib::NORMAL);
     float step = 1.0f / slices;
     builder.on(vertex);
     for(unsigned i = 0; i < slices; i++) {

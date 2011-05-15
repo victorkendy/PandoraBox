@@ -47,13 +47,13 @@ namespace pbge {
         virtual const std::vector<Shader*> getShaderOfType(Shader::ShaderType type) = 0;
 
     public: // Uniform binding
-        virtual void bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float & valor) = 0;
+        virtual void bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) = 0;
 
-        virtual void bindFloatVec2(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2) = 0;
+        virtual void bindFloatVec2(const UniformInfo & info, GraphicAPI * ogl, const float* values, const unsigned size) = 0;
 
-        virtual void bindFloatVec3(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3) = 0;
+        virtual void bindFloatVec3(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) = 0;
 
-        virtual void bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3, const float & v4) = 0;
+        virtual void bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) = 0;
 
         virtual void bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture * tex) = 0;
 
@@ -145,13 +145,13 @@ namespace pbge {
         GLuint getId() { return programID; }
 
     public: // Uniform binding
-        void bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float & valor);
+        void bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size);
 
-        void bindFloatVec2(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2);
+        void bindFloatVec2(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size);
 
-        void bindFloatVec3(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3);
+        void bindFloatVec3(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size);
 
-        void bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float & v1, const float & v2, const float & v3, const float & v4);
+        void bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size);
 
         void bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture * tex);
 
