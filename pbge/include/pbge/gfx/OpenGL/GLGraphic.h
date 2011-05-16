@@ -57,8 +57,6 @@ namespace pbge {
 
         void popUniforms();
 
-        void bindVertexBuffer(VertexBuffer * vbo);
-
         DrawController * getDrawController();
  
     private:

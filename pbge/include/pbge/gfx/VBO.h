@@ -58,7 +58,9 @@ namespace pbge {
             nVertices = _nVertices;
         }
 
-        ~VertexBuffer();
+        ~VertexBuffer() {
+            delete buffer;
+        }
 
         void addAttrib(VertexAttrib attrib) {
             attribs.push_back(attrib);
@@ -67,14 +69,6 @@ namespace pbge {
         std::vector<VertexAttrib> & getAttribs() {
             return attribs;
         }
-
-        void bindAllAttribs(GraphicAPI * gfx);
-
-        void bindOnly(VertexAttrib::Type, GraphicAPI * gfx);
-
-        void bind(GraphicAPI * gfx);
-
-        void unbind(GraphicAPI * gfx);
 
         Buffer * getBuffer() {
             return buffer;

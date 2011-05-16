@@ -65,8 +65,8 @@ namespace pbge {
         void lookAt (const math3d::vector4 & up, const math3d::vector4 & front);
 
         // Changes where de renderer will render the scene
-        void setRenderTarget (RenderTarget * target) {
-            renderTarget = target;
+        void setViewport (Viewport * port) {
+            viewport = port;
         }
         
         // Load the view transformation to opengl and sets the render target
@@ -83,7 +83,7 @@ namespace pbge {
         }
     protected:
         CameraNode * parent;
-        RenderTarget * renderTarget;
+        Viewport * viewport;
         math3d::vector4 * upVector;
         math3d::vector4 * frontVector;
         math3d::vector4 * sideVector;

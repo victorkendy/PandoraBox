@@ -107,8 +107,6 @@ namespace pbge {
 
         virtual void popUniforms() = 0;
 
-        virtual void bindVertexBuffer(VertexBuffer * vbo) = 0;
-
         virtual DrawController * getDrawController() = 0;
         
         
