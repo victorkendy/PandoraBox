@@ -8,7 +8,6 @@
 using namespace pbge;
 
 GLGraphic::GLGraphic() {
-    std::cout << "instancing GLGraphic" << std::endl;
     matrices = new math3d::matrix44[3];
     matrices[2] = math3d::identity44;
     this->state = NULL;
@@ -126,7 +125,6 @@ TextureUnit * GLGraphic::chooseTextureUnit(Texture * texture) {
 const int GLGraphic::numberOfTextureUnits() {
     GLint numberOfUnits = -1;
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &numberOfUnits);
-    std::cout << "number of texture units: " << numberOfUnits << std::endl;
     return numberOfUnits;
 }
 
