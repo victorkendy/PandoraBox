@@ -8,7 +8,8 @@ namespace pbge {
     class DrawController {
     public:
         virtual void draw(Model * model) = 0;
-
+        
+        // Implementation of the pseudo instancing
         virtual void draw(Model * model, int times) = 0;
 
         virtual void drawVBOModel(VBOModel * model) = 0;

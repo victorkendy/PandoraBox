@@ -20,6 +20,8 @@ namespace pbge {
 
         void drawVBOModel(VBOModel * model, int times);
 
+        void initialize();
+
     private:
 
         void bindVBO(VertexBuffer * buffer);
@@ -29,6 +31,12 @@ namespace pbge {
         void callRender(Model * model);
 
         GLGraphic * ogl;
+
+        bool coreSupported;
+
+        bool arbSupported;
+
+        bool extSupported;
     };
 
 }

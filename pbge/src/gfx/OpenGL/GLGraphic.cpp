@@ -33,6 +33,7 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
         currentMatrixMode = initialMatrixMode;
         state = new StateSet(this);
+        drawController->initialize();
     }
 }
 
