@@ -63,10 +63,15 @@ public:
         dynamic_cast<pbge::Light*>(scene->appendChildTo(cam_node_name, new pbge::PointLight))->setDiffuseColor(0,1,1,1);
         scene->appendChildTo(child, vboModel);
         pbge::Node * sphereParent = scene->appendChildTo(child, pbge::TransformationNode::translation(-1.5f, 0.0f, 0.0f));
-        scene->appendChildTo(sphereParent, new pbge::ModelInstance(new TensorModel(tensor3d, 3, 20)));
-        pbge::ModelInstance * sphere = new pbge::ModelInstance(pbge::Geometrics::createSphere(1.0f, 100, gfx));
+        //scene->appendChildTo(sphereParent, new pbge::ModelInstance(new TensorModel(tensor3d, 3, 20)));
+        pbge::Model * sphereModel = pbge::Geometrics::createSphere(1.0f, 100, gfx);
+        pbge::ModelCollection * spheres = new pbge::ModelCollection(sphereModel);
+        spheres->setRenderPassProgram(gfx->getFactory()->createProgramFromString("#extension GL_ARB_draw_instanced: enable\nvoid main() {gl_Position = ftransform() + gl_InstanceIDARB;gl_FrontColor = vec4(1,1,1,1);}", ""));
+        spheres->setDepthPassProgram(gfx->getFactory()->createProgramFromString("#extension GL_ARB_draw_instanced: enable\nvoid main() {gl_Position = ftransform() + gl_InstanceIDARB;}", ""));
+        scene->appendChildTo(sphereParent, spheres);
+        //pbge::ModelInstance * sphere = new pbge::ModelInstance(pbge::Geometrics::createSphere(1.0f, 100, gfx));
         //sphere->setRenderPassProgram(gfx->getFactory()->createProgramFromString("", "void main() {gl_FragColor = vec4(1,1,1,1);}"));
-        scene->appendChildTo(sphereParent, sphere);
+        //scene->appendChildTo(sphereParent, sphere);
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(45, 1, 1.0f, 10);

@@ -185,5 +185,61 @@ namespace pbge {
 
         GPUProgram * depthProgram, * renderProgram;
     };
+
+    class PBGE_EXPORT ModelCollection : public Node {
+    public:
+        ModelCollection();
+
+        ModelCollection(Model * _model);
+
+        ~ModelCollection();
+    // Node interface methods
+    public:
+        void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {}
+
+        void postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {}
+
+        void renderPass(RenderVisitor * visitor, GraphicAPI * ogl);
+
+        void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl);
+
+        void depthPass(RenderVisitor * visitor, GraphicAPI * ogl);
+
+        void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl);
+
+        void addChild(Node * node) {
+            childs.push_back(node);
+        }
+
+        node_list & getChildren() {
+            return childs;
+        }
+    // Model Instance methods
+    public:
+        Model * getModel() {
+            return model;
+        }
+
+        void setDepthPassProgram(GPUProgram * depthPassProgram) {
+            depthProgram = depthPassProgram;
+        }
+
+        void setRenderPassProgram(GPUProgram * renderPassProgram) {
+            renderProgram = renderPassProgram;
+        }
+
+        UniformSet * getUniformSet() {
+            return uniforms;
+        }
+
+    private:
+        Model * model;
+
+        node_list childs;
+
+        UniformSet * uniforms;
+
+        GPUProgram * depthProgram, * renderProgram;
+    };
 }
 #endif

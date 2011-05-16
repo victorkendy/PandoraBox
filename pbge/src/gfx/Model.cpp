@@ -83,6 +83,54 @@ void ModelInstance::postDepthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
     gfx->popUniforms();
 }
 
+ModelCollection::ModelCollection() {
+    this->model = NULL;
+    this->uniforms = new UniformSet();
+    this->renderProgram = NULL;
+    this->depthProgram = NULL;
+}
+
+ModelCollection::ModelCollection(Model * _model) {
+    this->model = _model;
+    this->uniforms = new UniformSet();
+    this->renderProgram = NULL;
+    this->depthProgram = NULL;
+}
+
+ModelCollection::~ModelCollection() {
+    delete uniforms;
+}
+
+void ModelCollection::renderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->pushUniforms(this->uniforms);
+    gfx->getState()->useProgram(this->renderProgram);
+    gfx->updateState();
+    VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
+    if(vboModel == NULL)
+        gfx->getDrawController()->draw(model, 2);
+    else
+        gfx->getDrawController()->drawVBOModel(vboModel, 2);
+}
+
+void ModelCollection::postRenderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->popUniforms();
+}
+
+void ModelCollection::depthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->pushUniforms(this->uniforms);
+    gfx->getState()->useProgram(this->depthProgram);
+    gfx->updateState();
+    VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
+    if(vboModel == NULL)
+        gfx->getDrawController()->draw(model, 2);
+    else
+        gfx->getDrawController()->drawVBOModel(vboModel, 2);
+}
+
+void ModelCollection::postDepthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    gfx->popUniforms();
+}
+
 Circle::Circle(const float & _radius, const int & _slices) {
     if(_radius <= 0) {
         throw IllegalArgumentException("radius must have a positive value");
