@@ -11,25 +11,25 @@ int cam_node_name;
 class CustomSceneInitializer : public pbge::SceneInitializer {
 
 public:
-    pbge::SceneGraph * operator () (pbge::GraphicAPI * ogl) {
-        Ellipses ellipses(ogl);
+    pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx) {
+        Ellipses ellipses(gfx);
 
         const float m_pi = 3.1415f;
         // FIXME: remove the state change line
-        ogl->enableMode(pbge::GraphicAPI::DEPTH_TEST);
-        pbge::ModelInstance * vboModel = createVBOInstance(ogl);
+        gfx->enableMode(pbge::GraphicAPI::DEPTH_TEST);
+        pbge::ModelInstance * vboModel = createVBOInstance(gfx);
         pbge::SceneGraph * scene = new pbge::SceneGraph(new pbge::TransformationNode);
         pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(m_pi/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
         pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));
         dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
         
         pbge::VBOModel * bezier = pbge::Geometrics::createBezier(math3d::vector4(-1,0,0,1), math3d::vector4(2,-2,0,1), 
-                                                                 math3d::vector4(-2,-2,0,1), math3d::vector4(1,0,0,1), 100, ogl);
+                                                                 math3d::vector4(-2,-2,0,1), math3d::vector4(1,0,0,1), 100, gfx);
         scene->appendChildTo(light_parent, new pbge::ModelInstance(bezier));
 
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
 
-        pbge::VBOModel * circle = pbge::Geometrics::createCircunference(1.0f, 100, ogl);
+        pbge::VBOModel * circle = pbge::Geometrics::createCircunference(1.0f, 100, gfx);
         scene->appendChildTo(circle_parent, new pbge::ModelInstance(circle));
         scene->appendChildTo(circle_parent, ellipses.createEllipse(1.0f, 0.2f));
 
@@ -63,10 +63,10 @@ public:
         dynamic_cast<pbge::Light*>(scene->appendChildTo(cam_node_name, new pbge::PointLight))->setDiffuseColor(0,1,1,1);
         scene->appendChildTo(child, vboModel);
         pbge::Node * sphereParent = scene->appendChildTo(child, pbge::TransformationNode::translation(-1.5f, 0.0f, 0.0f));
-        //scene->appendChildTo(sphereParent, new pbge::ModelInstance(new TensorModel(tensor3d, 3, 20)));
-        pbge::ModelInstance * sphere = new pbge::ModelInstance(pbge::Geometrics::createSphere(1.0f, 100, ogl));
-        sphere->setRenderPassProgram(ogl->getFactory()->createProgramFromString("", "void main() {gl_FragColor = vec4(1,1,1,1);}"));
-        scene->appendChildTo(sphereParent, sphere);
+        scene->appendChildTo(sphereParent, new pbge::ModelInstance(new TensorModel(tensor3d, 3, 20)));
+        //pbge::ModelInstance * sphere = new pbge::ModelInstance(pbge::Geometrics::createSphere(1.0f, 100, gfx));
+        //sphere->setRenderPassProgram(gfx->getFactory()->createProgramFromString("", "void main() {gl_FragColor = vec4(1,1,1,1);}"));
+        //scene->appendChildTo(sphereParent, sphere);
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(45, 1, 1.0f, 10);
