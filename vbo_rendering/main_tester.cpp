@@ -1,5 +1,6 @@
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
+#include <vector>
 #include "pbge/pbge.h"
 
 #include "vbo_setup.h"
@@ -80,6 +81,20 @@ public:
     }
 };
 
+class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
+public:
+    void keyDown(char c) {
+        
+        printf("Down: %c\n", c);
+    }
+
+    void keyUp(char c) {
+        printf("Up: %c\n", c);
+    }
+private:
+    std::vector<char> pressedKeys;
+};
+
 /*
 void keyboard(unsigned char k, int x, int y) {
     pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
@@ -97,6 +112,7 @@ int main(int argc, char ** argv) {
     manager->setFullscreen(false);
     manager->setWindowTitle("vbo_rendering");
     manager->setSceneInitializer(new CustomSceneInitializer);
+    manager->setKeyboardEventHandler(new CustomKeyboardEventHandler);
     manager->printDebugInformation(true);
     manager->displayGraphics();
     delete manager;

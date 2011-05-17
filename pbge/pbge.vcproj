@@ -355,6 +355,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\KeyboardEventHandler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Light.h"
 				>
 			</File>

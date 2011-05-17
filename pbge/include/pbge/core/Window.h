@@ -10,6 +10,7 @@ namespace pbge {
     class Renderer;
     class SceneGraph;
     class SceneInitializer;
+    class KeyboardEventHandler;
 
     class Window {
     public:
@@ -25,6 +26,7 @@ namespace pbge {
             ogl = NULL;
             scene = NULL;
             initializer = NULL;
+            keyboardEventHandler = NULL;
         }
 
         ~Window();
@@ -70,6 +72,14 @@ namespace pbge {
             return initializer;
         }
 
+        void setKeyboardEventHandler(KeyboardEventHandler * newHandler) {
+            keyboardEventHandler = newHandler;
+        }
+
+        KeyboardEventHandler * getKeyboardEventHandler() {
+            return keyboardEventHandler;
+        }
+
         void setShowDebug(const bool & show) {
             this->showDebug = show;
         }
@@ -102,6 +112,8 @@ namespace pbge {
         SceneGraph * scene;
 
         SceneInitializer * initializer;
+
+        KeyboardEventHandler * keyboardEventHandler;
     };
 }
 #endif

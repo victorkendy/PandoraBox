@@ -12,6 +12,7 @@ namespace pbge {
     class Window;
     class SceneGraph;
     class SceneInitializer;
+    class KeyboardEventHandler;
 
     class PBGE_EXPORT Manager{
     public:
@@ -59,6 +60,8 @@ namespace pbge {
         void setMainSceneGraph(SceneGraph * sceneGraph);
 
         void setSceneInitializer(SceneInitializer * initializer);
+
+        void setKeyboardEventHandler(KeyboardEventHandler * handler);
 
         void printDebugInformation(const bool & showInfo);
 

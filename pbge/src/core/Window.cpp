@@ -16,6 +16,7 @@
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"
+#include "pbge/gfx/KeyboardEventHandler.h"
 
 #if defined (WIN32) || defined (_WIN32)
 
@@ -99,6 +100,10 @@ namespace {
         }
     }
 
+    int isRepeatedKey(LPARAM lParam) {
+        return (lParam >> 30) & 1;
+    }
+
     LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
         pbge::Window * window;
         CREATESTRUCT * cs;
@@ -128,6 +133,20 @@ namespace {
                     std::cout << glGetString(GL_VERSION) << std::endl;
                 }
                 */
+                break;
+            case WM_KEYDOWN:
+                window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+                if(window != NULL && window->getKeyboardEventHandler() != NULL && !isRepeatedKey(lParam)) {
+                    pbge::KeyboardEventHandler * handler = window->getKeyboardEventHandler();
+                    handler->keyDown((char)wParam);
+                }
+                break;
+            case WM_KEYUP:
+                window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+                if(window != NULL && window->getKeyboardEventHandler() != NULL) {
+                    pbge::KeyboardEventHandler * handler = window->getKeyboardEventHandler();
+                    handler->keyUp((char)wParam);
+                }
                 break;
             case WM_CLOSE:
                 PostQuitMessage(0);

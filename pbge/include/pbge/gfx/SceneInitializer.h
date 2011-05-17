@@ -11,7 +11,7 @@ namespace pbge {
     class PBGE_EXPORT SceneInitializer {
     public:
         /*
-            when this method is called the by the pbge the OpenGL context is guaranteed to be initialized
+            when this method is called by pbge the OpenGL context is guaranteed to be initialized
 
             must return a valid scene graph
         */

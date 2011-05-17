@@ -22,6 +22,8 @@
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/UniformSet.h"
+#include "pbge/gfx/KeyboardEventHandler.h"
+
 
 
 

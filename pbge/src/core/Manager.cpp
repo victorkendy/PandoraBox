@@ -73,6 +73,10 @@ namespace pbge {
         this->window->setSceneInitializer(initializer);
     }
 
+    void Manager::setKeyboardEventHandler(KeyboardEventHandler * handler) {
+        this->window->setKeyboardEventHandler(handler);
+    }
+
     void Manager::setMainSceneGraph(SceneGraph * scene) {
         this->window->setScene(scene);
     }
