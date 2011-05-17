@@ -7,12 +7,12 @@ namespace pbge {
         /*
             this method is called when a key is pressed
         */
-        virtual void keyDown(char c) = 0;
+        virtual void keyDown(char key) = 0;
         
         /*
             this method is called when a key is released
         */
-        virtual void keyUp(char c) = 0;
+        virtual void keyUp(char key) = 0;
     };
 }
 

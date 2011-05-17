@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include <algorithm>
 #include "pbge/pbge.h"
 
 #include "vbo_setup.h"
@@ -8,6 +9,7 @@
 #include "Ellipses.h"
 
 int cam_node_name;
+pbge::SceneGraph * scene;
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
 
@@ -19,7 +21,7 @@ public:
         // FIXME: remove the state change line
         gfx->enableMode(pbge::GraphicAPI::DEPTH_TEST);
         pbge::ModelInstance * vboModel = createVBOInstance(gfx);
-        pbge::SceneGraph * scene = new pbge::SceneGraph(new pbge::TransformationNode);
+        scene = new pbge::SceneGraph(new pbge::TransformationNode);
         pbge::Node * child = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::rotation(m_pi/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f));
         pbge::Node * light_parent = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f));
         dynamic_cast<pbge::Light*>(scene->appendChildTo(light_parent, new pbge::PointLight))->setDiffuseColor(1,0,0,1);
@@ -83,28 +85,29 @@ public:
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
-    void keyDown(char c) {
-        
-        printf("Down: %c\n", c);
+    void keyDown(char key) {
+        //pressedKeys.push_back(key);
+
+        pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
+        math3d::matrix44 m = cam_node->getTransformationMatrix();
+        switch(key) {
+            case 'W': m[1][3] += 0.1f; break;
+            case 'S': m[1][3] -= 0.1f; break;
+            case 'A': m[0][3] -= 0.1f; break;
+            case 'D': m[0][3] += 0.1f; break;
+            case 'Q': m[2][3] += 0.1f; break;
+            case 'E': m[2][3] -= 0.1f; break;
+        }
+        cam_node->setTransformationMatrix(m);
     }
 
-    void keyUp(char c) {
-        printf("Up: %c\n", c);
+    void keyUp(char key) {
+        //pressedKeys.erase(std::find(pressedKeys.begin(), pressedKeys.end(), key));
+        ;
     }
-private:
-    std::vector<char> pressedKeys;
+//private:
+//    std::vector<char> pressedKeys;
 };
-
-/*
-void keyboard(unsigned char k, int x, int y) {
-    pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
-    math3d::matrix44 m = cam_node->getTransformationMatrix();
-    switch(k) {
-        case 'w': m[1][3] += 0.1f; break;
-        case 's': m[1][3] -= 0.1f; break;
-    }
-    cam_node->setTransformationMatrix(m);
-}*/
 
 int main(int argc, char ** argv) {
     pbge::Manager * manager = new pbge::Manager;

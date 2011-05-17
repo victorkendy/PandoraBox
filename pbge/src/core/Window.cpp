@@ -136,14 +136,14 @@ namespace {
                 break;
             case WM_KEYDOWN:
                 window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                if(window != NULL && window->getKeyboardEventHandler() != NULL && !isRepeatedKey(lParam)) {
+                if(window->getKeyboardEventHandler() != NULL /*&& !isRepeatedKey(lParam)*/) {
                     pbge::KeyboardEventHandler * handler = window->getKeyboardEventHandler();
                     handler->keyDown((char)wParam);
                 }
                 break;
             case WM_KEYUP:
                 window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                if(window != NULL && window->getKeyboardEventHandler() != NULL) {
+                if(window->getKeyboardEventHandler() != NULL) {
                     pbge::KeyboardEventHandler * handler = window->getKeyboardEventHandler();
                     handler->keyUp((char)wParam);
                 }
@@ -162,6 +162,9 @@ namespace {
                 window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
                 ogl = window->getGraphicAPI();
                 ogl->clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+                //if(window->getKeyboardEventHandler() != NULL) {
+                //    pbge::KeyboardEventHandler * keyboardHandler = window->getKeyboardEventHandler();
+                //}
                 window->getRenderer()->render();
                 ogl->swapBuffers();
                 return 0;
