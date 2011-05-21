@@ -257,6 +257,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\ShaderHelper.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\ShaderUniform.cpp"
 				>
 			</File>
@@ -412,6 +416,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Shader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\ShaderHelper.h"
 				>
 			</File>
 			<File

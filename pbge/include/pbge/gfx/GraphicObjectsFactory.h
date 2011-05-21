@@ -1,6 +1,7 @@
 #ifndef PBGE_GFX_GRAPHICOBJECTSFACTORY_H
 #define PBGE_GFX_GRAPHICOBJECTSFACTORY_H
 
+#include <vector>
 #include <string>
 
 #include "pbge/core/core.h"
@@ -25,6 +26,8 @@ namespace pbge {
         virtual GPUProgram * createProgram() = 0;
 
         virtual GPUProgram * createProgramFromFile(FileReader * vsSource, FileReader * fsSource) = 0;
+
+        virtual GPUProgram * createProgram(const std::vector<Shader*> & vertexShaders, const std::vector<Shader *> & fragShaders) = 0;
 
         virtual GPUProgram * createProgramFromString(const std::string & vsSource, const std::string & fsSource) = 0;
     };

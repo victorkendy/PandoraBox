@@ -4,6 +4,7 @@
 #define PBGE_TESTS_MOCKGRAPHICAPI_H_
 
 #include <string>
+#include <vector>
 #include <gmock/gmock.h>
 
 #include "pbge/core/File.h"
@@ -64,6 +65,7 @@ public:
     MOCK_METHOD2(createShaderFromString, pbge::Shader*(const std::string & source, pbge::Shader::ShaderType type));
     MOCK_METHOD0(createProgram, pbge::GPUProgram*());
     MOCK_METHOD2(createProgramFromFile, pbge::GPUProgram*(pbge::FileReader * vsSource, pbge::FileReader * fsSource));
+    MOCK_METHOD2(createProgram, pbge::GPUProgram*(const std::vector<pbge::Shader*> & vertexShaders, const std::vector<pbge::Shader *> & fragShaders));
     MOCK_METHOD2(createProgramFromString, pbge::GPUProgram*(const std::string & vsSource, const std::string & fsSource));
 };
 

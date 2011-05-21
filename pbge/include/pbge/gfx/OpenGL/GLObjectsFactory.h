@@ -1,6 +1,8 @@
 #ifndef PBGE_GFX_OPENGL_GLOBJECTSFACTORY_H
 #define PBGE_GFX_OPENGL_GLOBJECTSFACTORY_H
 
+#include <vector>
+
 #include "pbge/gfx/GraphicObjectsFactory.h"
 
 namespace pbge {
@@ -21,6 +23,8 @@ namespace pbge {
         GPUProgram * createProgram();
 
         GPUProgram * createProgramFromFile(FileReader * vsSource, FileReader * fsSource);
+
+        GPUProgram * createProgram(const std::vector<Shader*> & vertexShaders, const std::vector<Shader *> & fragShaders);
 
         GPUProgram * createProgramFromString(const std::string & vsSource, const std::string & fsSource);
     private:

@@ -60,6 +60,8 @@ namespace pbge {
         DrawController * getDrawController();
  
     private:
+        void createDefaultShaders();
+
         bool projectionUpdated;
 
         math3d::matrix44 * matrices;

@@ -33,7 +33,16 @@ public:
         pbge::Node * circle_parent = scene->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
 
         pbge::VBOModel * circle = pbge::Geometrics::createCircunference(1.0f, 100, gfx);
-        scene->appendChildTo(circle_parent, new pbge::ModelInstance(circle));
+        pbge::ModelInstance * circle_instance = new pbge::ModelInstance(circle);
+        pbge::ShaderHelper * helper = pbge::ShaderHelper::create(gfx)
+            ->withVertexShader("void calculateVertex(inout vec4 v, inout vec3 n, inout vec4 c){"
+                               "    vec4 vertex = 0.3 * v;"
+                               "    v = gl_ModelViewMatrix * vec4(vertex.xyz, 1);"
+                               "    n = gl_NormalMatrix * n;"
+                               "}");
+        //helper->setPrograms(circle_instance);
+        delete helper;
+        scene->appendChildTo(circle_parent, circle_instance);
         scene->appendChildTo(circle_parent, ellipses.createEllipse(1.0f, 0.2f));
 
         float ** tensor;
@@ -69,6 +78,7 @@ public:
         //scene->appendChildTo(sphereParent, new pbge::ModelInstance(new TensorModel(tensor3d, 3, 20)));
         pbge::Model * sphereModel = pbge::Geometrics::createSphere(1.0f, 100, gfx);
         pbge::ModelCollection * spheres = new pbge::ModelCollection(sphereModel);
+
         spheres->setRenderPassProgram(gfx->getFactory()->createProgramFromString("#extension GL_ARB_draw_instanced: enable\nvoid main() {gl_Position = ftransform() + gl_InstanceIDARB;gl_FrontColor = vec4(1,1,1,1);}", ""));
         spheres->setDepthPassProgram(gfx->getFactory()->createProgramFromString("#extension GL_ARB_draw_instanced: enable\nvoid main() {gl_Position = ftransform() + gl_InstanceIDARB;}", ""));
         scene->appendChildTo(sphereParent, spheres);

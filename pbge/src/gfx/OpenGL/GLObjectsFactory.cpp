@@ -1,4 +1,7 @@
 
+#include <vector>
+
+#include "pbge/exceptions/exceptions.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/OpenGL/GLObjectsFactory.h"
 #include "pbge/gfx/OpenGL/GLBuffer.h"
@@ -33,6 +36,32 @@ GPUProgram * GLObjectsFactory::createProgram() {
 
 GPUProgram * GLObjectsFactory::createProgramFromFile(FileReader * vsSource, FileReader * fsSource) {
     return GLProgram::fromFile(vsSource, fsSource);
+}
+
+GPUProgram * GLObjectsFactory::createProgram(const std::vector<Shader*> & vertexShaders, const std::vector<Shader *> & fragShaders) {
+    GLProgram * program = new GLProgram();
+    std::vector<Shader *>::const_iterator it;
+    for(it = vertexShaders.begin(); it != vertexShaders.end(); it++) {
+        GLShader * shader = dynamic_cast<GLShader*>(*it);
+        if(shader == NULL) {
+            throw IllegalArgumentException("invalid shader class type");
+        }
+        if(shader->getType() != Shader::VERTEX_SHADER) {
+            throw IllegalArgumentException("invalid shader type");
+        }
+        program->attachShader(shader);
+    }
+    for(it = fragShaders.begin(); it != fragShaders.end(); it++) {
+        GLShader * shader = dynamic_cast<GLShader*>(*it);
+        if(shader == NULL) {
+            throw IllegalArgumentException("invalid shader class type");
+        }
+        if(shader->getType() != Shader::FRAGMENT_SHADER) {
+            throw IllegalArgumentException("invalid shader type");
+        }
+        program->attachShader(shader);
+    }
+    return program;
 }
 
 GPUProgram * GLObjectsFactory::createProgramFromString(const std::string & vsSource, const std::string & fsSource) {

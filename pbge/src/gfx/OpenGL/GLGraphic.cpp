@@ -1,3 +1,5 @@
+#include <string>
+
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/OpenGL/GLGraphic.h"
 #include "pbge/gfx/OpenGL/GLDrawController.h"
@@ -16,12 +18,50 @@ GLGraphic::GLGraphic() {
     this->factory = new GLObjectsFactory(this);
     this->projectionUpdated = true;
     this->drawController = new GLDrawController(this);
+    createDefaultShaders();
 }
 
 GLGraphic::~GLGraphic() {
     delete [] matrices;
     delete state;
     delete context;
+}
+
+void GLGraphic::createDefaultShaders() {
+    std::string defaultVertexShader = 
+        "void calculateVertex(inout vec4 vertex, inout vec3 normal, inout vec4 color);\n"
+        "varying vec4 position;\n"
+        "varying vec3 normal;\n"
+        "void main() {\n"
+        "   vec4 vertex = gl_Vertex;\n"
+        "   vec3 _normal = gl_Normal;\n"
+        "   vec4 color = gl_Color;\n"
+        "   calculateVertex(vertex, _normal, color);\n"
+        "   gl_Position = gl_ProjectionMatrix * vertex; gl_FrontColor = color;\n"
+        "   position = vertex;\n"
+        "   normal = _normal;"
+        "}";
+    std::string defaultRenderShader = 
+        "void calculateFragmentColor(inout vec4 color);\n"
+        "void main() {\n"
+        "   vec4 color = gl_Color;\n"
+        "   calculateFragmentColor(color);\n"
+        "   gl_FragColor = color;\n"
+        "}";
+    std::string defaultDepthShader =
+        "varying vec4 position;\n"
+        "void calculateDepth(in vec4 normalizedPosition, out float depth);\n"
+        "void main(){\n"
+        "   float depth;\n"
+        "   gl_FragDepth = gl_FragCoord.z;\n"
+        "}";
+    Shader * vertexShader = getFactory()->createShaderFromString(defaultVertexShader, Shader::VERTEX_SHADER);
+    Shader * renderShader = getFactory()->createShaderFromString(defaultRenderShader, Shader::FRAGMENT_SHADER);
+    Shader * depthShader = getFactory()->createShaderFromString(defaultDepthShader, Shader::FRAGMENT_SHADER);
+    
+    getStorage()->storeNamedShader("pbge.defaultMainVertexShader", vertexShader);
+    getStorage()->storeNamedShader("pbge.defaultMainRenderPassShader", renderShader);
+    getStorage()->storeNamedShader("pbge.defaultMainDepthPassShader", depthShader);
 }
 
 void GLGraphic::setContext(GraphicContext * newContext) {
