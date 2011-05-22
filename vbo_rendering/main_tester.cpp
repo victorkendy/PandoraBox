@@ -35,16 +35,19 @@ public:
         pbge::VBOModel * circle = pbge::Geometrics::createCircunference(1.0f, 100, gfx);
         pbge::ModelInstance * circle_instance = new pbge::ModelInstance(circle);
         pbge::ShaderHelper * helper = pbge::ShaderHelper::create(gfx)
-            ->withVertexShader("void calculateVertex(inout vec4 v, inout vec3 n, inout vec4 c){"
-                               "    vec4 vertex = 0.3 * v;"
-                               "    v = gl_ModelViewMatrix * vec4(vertex.xyz, 1);"
-                               "    n = gl_NormalMatrix * n;"
-                               "}");
-        //helper->setPrograms(circle_instance);
-        delete helper;
+            ->withVertexShader(
+                               "void calculateVertex(out vec4 v, out vec3 n, out vec4 c){\n"
+                               "    vec4 vertex = 0.3 * (gl_Vertex);\n"
+                               "    v = gl_ModelViewMatrix * vec4(vertex.xyz, 1);\n"
+                               "    n = gl_NormalMatrix * gl_Normal;\n"
+                               "}\n")
+            ->withRenderPassShader(
+                "void calculateFragmentColor(out vec4 color){"
+                "   color=vec4(1,0,0,1);"
+                "}"
+            );
+        helper->setPrograms(circle_instance);
         scene->appendChildTo(circle_parent, circle_instance);
-        scene->appendChildTo(circle_parent, ellipses.createEllipse(1.0f, 0.2f));
-
         float ** tensor;
         tensor = (float**)malloc(2*sizeof(float*));
         tensor[0] = (float*)malloc(2*sizeof(float));

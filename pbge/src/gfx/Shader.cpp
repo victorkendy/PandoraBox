@@ -68,12 +68,14 @@ namespace pbge {
 
     bool GLShader::compile(GraphicAPI * gfx) {
         GLint status;
-        if(type == VERTEX_SHADER)
-            shaderID = glCreateShader(GL_VERTEX_SHADER);
-        else if(type == FRAGMENT_SHADER)
-            shaderID = glCreateShader(GL_FRAGMENT_SHADER);
-        else 
-            return false;
+        if(shaderID == 0) { 
+            if(type == VERTEX_SHADER)
+                shaderID = glCreateShader(GL_VERTEX_SHADER);
+            else if(type == FRAGMENT_SHADER)
+                shaderID = glCreateShader(GL_FRAGMENT_SHADER);
+            else 
+                return false;
+        }
         const GLchar * strPtr = const_cast<GLchar*>(source);
         glShaderSource(shaderID, 1, &strPtr, NULL);
         glCompileShader(shaderID);
@@ -134,13 +136,13 @@ namespace pbge {
         std::vector<GLShader*>::iterator it;
         if(programID == 0) programID = glCreateProgram();
         for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
-            if(!(*it)->isCompiled()) {
+            //if(!(*it)->isCompiled()) {
                 if(!(*it)->compile(gfx)) {
                     std::cout << this->getInfoLog();
                     return false;
                 }
                 glAttachShader(programID, (*it)->getID());
-            }
+            //}
         }
         glLinkProgram(programID);
         extractInfoLog();

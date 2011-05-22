@@ -29,22 +29,22 @@ GLGraphic::~GLGraphic() {
 
 void GLGraphic::createDefaultShaders() {
     std::string defaultVertexShader = 
-        "void calculateVertex(inout vec4 vertex, inout vec3 normal, inout vec4 color);\n"
+        "void calculateVertex(out vec4 vertex, out vec3 normal, out vec4 color);\n"
         "varying vec4 position;\n"
         "varying vec3 normal;\n"
         "void main() {\n"
-        "   vec4 vertex = gl_Vertex;\n"
-        "   vec3 _normal = gl_Normal;\n"
-        "   vec4 color = gl_Color;\n"
+        "   vec4 vertex;\n"
+        "   vec3 _normal;\n"
+        "   vec4 color;\n"
         "   calculateVertex(vertex, _normal, color);\n"
         "   gl_Position = gl_ProjectionMatrix * vertex; gl_FrontColor = color;\n"
         "   position = vertex;\n"
         "   normal = _normal;"
         "}";
     std::string defaultRenderShader = 
-        "void calculateFragmentColor(inout vec4 color);\n"
+        "void calculateFragmentColor(out vec4 color);\n"
         "void main() {\n"
-        "   vec4 color = gl_Color;\n"
+        "   vec4 color;\n"
         "   calculateFragmentColor(color);\n"
         "   gl_FragColor = color;\n"
         "}";

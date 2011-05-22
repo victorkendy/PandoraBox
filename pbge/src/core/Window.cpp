@@ -122,17 +122,6 @@ namespace {
                 }
                 ogl->enableDrawBuffer(GL_BACK);
                 ogl->clearColor(0,0,0,1);
-                /*
-                {
-                    char * ext = (char*)glGetString(GL_EXTENSIONS);
-                    char * tok = strtok(ext, " ");
-                    while(tok != NULL) {
-                        std::cout << tok << std::endl;
-                        tok = strtok(NULL, " ");
-                    }
-                    std::cout << glGetString(GL_VERSION) << std::endl;
-                }
-                */
                 break;
             case WM_KEYDOWN:
                 window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -214,6 +203,5 @@ Window::~Window() {
     delete initializer;
     delete scene;
     delete renderer;
-
 }
 

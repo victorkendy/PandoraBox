@@ -107,10 +107,11 @@ void ShaderHelper::setPrograms(ModelInstance * instance) {
         Shader * mainVertexShader = searchShader("pbge.defaultMainVertexShader");
         vertexShaders.push_back(mainVertexShader);
     }
-    renderPassProgram = createProgram("pbge.defaultMainRenderPassShader", renderPassShaders);
+    
     depthPassProgram = createProgram("pbge.defaultMainDepthPassShader", depthPassShaders);
-    //renderPassProgram->link(gfx);
-    //depthPassProgram->link(gfx);
+    renderPassProgram = createProgram("pbge.defaultMainRenderPassShader", renderPassShaders);
+    depthPassProgram->link(gfx);
+    renderPassProgram->link(gfx);
     instance->setDepthPassProgram(depthPassProgram);
     instance->setRenderPassProgram(renderPassProgram);
 }

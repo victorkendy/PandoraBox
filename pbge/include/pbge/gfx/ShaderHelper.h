@@ -18,7 +18,7 @@ namespace pbge {
     public:
         /* 
            one of the vertex shaders must implement the function 
-           void calculateVertex(inout vec4 vertex, inout vec3 normal, inout vec4 color);
+           void calculateVertex(out vec4 vertex, out vec3 normal, out vec4 color);
         */
         ShaderHelper * withVertexShader(Shader * shader);
         ShaderHelper * withVertexShader(const std::string & src);
@@ -26,7 +26,7 @@ namespace pbge {
         
         /*
           one of the fragment shaders for renderPass must implement
-          void calculateFragmentColor(inout vec4 color);
+          void calculateFragmentColor(out vec4 color);
         */
         ShaderHelper * withRenderPassShader(Shader * shader);
         ShaderHelper * withRenderPassShader(const std::string & src);
