@@ -165,20 +165,3 @@ TEST_F(VertexBufferBuilderTest, builderBuildsCombinationVertexAndNormalIterleave
         ASSERT_FLOAT_EQ(expected[i], buf[i]);
     }
 }
-
-TEST_F(VertexBufferBuilderTest, ifThereIsAAttribWithNoIndexVectorThenThrowsBuilderValidationException) {
-    pbge::VertexBufferBuilder builder(2);
-    pbge::VertexAttribBuilder vertex = builder.addAttrib(3, pbge::VertexAttrib::VERTEX);
-    pbge::VertexAttribBuilder normal = builder.addAttrib(3, pbge::VertexAttrib::NORMAL);
-    builder.pushValue(vertex, 1,2,3);
-    builder.pushValue(vertex, 4,5,6);
-    builder.pushValue(normal, 1,0,1);
-    builder.pushValue(normal, 0,1,0);
-    std::vector<unsigned short> vertex_indexes;
-    vertex_indexes.push_back(0);
-    vertex_indexes.push_back(1);
-
-    builder.setAttribIndex(vertex, vertex_indexes);
-    ASSERT_THROW(builder.done(pbge::Buffer::DYNAMIC_DRAW, &ogl), pbge::BuilderValidationException);
-}
-

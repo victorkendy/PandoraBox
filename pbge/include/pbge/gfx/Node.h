@@ -101,11 +101,11 @@ namespace pbge {
 
         void renderPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
-        void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl) {}
+        void postRenderPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
         void depthPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
-        void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl) {}
+        void postDepthPass(RenderVisitor * visitor, GraphicAPI * ogl);
 
         void addChild(Node * node) {
             childs.push_back(node);

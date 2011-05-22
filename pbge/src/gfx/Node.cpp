@@ -32,11 +32,23 @@ void TransformationNode::postUpdatePass(UpdaterVisitor * visitor, GraphicAPI * o
 }
 
 void TransformationNode::renderPass(RenderVisitor * visitor, GraphicAPI * ogl) {
+    visitor->pushTransformation(*current);
     ogl->loadModelMatrix(*current);
 }
 
+void TransformationNode::postRenderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    visitor->popTransformation();
+    gfx->loadModelMatrix(visitor->getCurrentTransformation());
+}
+
 void TransformationNode::depthPass(RenderVisitor * visitor, GraphicAPI * ogl) {
+    visitor->pushTransformation(*current);
     ogl->loadModelMatrix(*current);
+}
+
+void TransformationNode::postDepthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
+    visitor->popTransformation();
+    gfx->loadModelMatrix(visitor->getCurrentTransformation());
 }
 
 TransformationNode * TransformationNode::scale(const float & sx, const float & sy, const float & sz) {

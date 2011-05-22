@@ -225,6 +225,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\MatrixStack.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Model.cpp"
 				>
 			</File>
@@ -372,6 +376,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\core\Manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\MatrixStack.h"
 				>
 			</File>
 			<File

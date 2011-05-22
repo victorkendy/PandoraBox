@@ -1,5 +1,6 @@
 #include <vector>
 
+#include "pbge/gfx/MatrixStack.h"
 #include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Camera.h"
@@ -16,8 +17,7 @@ void UpdaterVisitor::visit(Node * node, GraphicAPI * ogl) {
     // reset the visitor state
     activeCameras.clear();
     activeLights.clear();
-    stackIndex = 0;
-    transformationStack[0] = math3d::identity44;
+    stack.clear();
     _visit(node, ogl);
 }
 
@@ -30,15 +30,15 @@ void UpdaterVisitor::_visit(Node * node, GraphicAPI * ogl) {
 }
 
 void UpdaterVisitor::pushTransformation(const math3d::matrix44 & m) {
-    transformationStack[++stackIndex] = m;
+    stack.push(m);
 }
 
 void UpdaterVisitor::popTransformation() {
-    --stackIndex;
+    stack.pop();
 }
 
 const math3d::matrix44 UpdaterVisitor::getCurrentTransformation() {
-    return transformationStack[stackIndex];
+    return stack.peek();
 }
 
 

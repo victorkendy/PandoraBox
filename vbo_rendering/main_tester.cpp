@@ -76,8 +76,9 @@ public:
         scene->appendChildTo(circle_parent, new pbge::ModelInstance(model));
         cam_node_name = scene->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f))->getSceneGraphIndex();
         dynamic_cast<pbge::Light*>(scene->appendChildTo(cam_node_name, new pbge::PointLight))->setDiffuseColor(0,1,1,1);
-        scene->appendChildTo(child, vboModel);
+        
         pbge::Node * sphereParent = scene->appendChildTo(child, pbge::TransformationNode::translation(-1.5f, 0.0f, 0.0f));
+        scene->appendChildTo(child, vboModel);
         //scene->appendChildTo(sphereParent, new pbge::ModelInstance(new TensorModel(tensor3d, 3, 20)));
         pbge::Model * sphereModel = pbge::Geometrics::createSphere(1.0f, 100, gfx);
         pbge::ModelCollection * spheres = new pbge::ModelCollection(sphereModel);

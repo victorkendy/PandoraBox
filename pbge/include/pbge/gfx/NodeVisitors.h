@@ -7,6 +7,7 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
+#include "pbge/gfx/MatrixStack.h"
 
 namespace pbge {
 
@@ -20,13 +21,9 @@ namespace pbge {
         static const int MAX_STACK_DEPTH = 16;
 
         UpdaterVisitor() {
-            transformationStack = new math3d::matrix44[UpdaterVisitor::MAX_STACK_DEPTH];
-            transformationStack[0] = math3d::identity44;
-            stackIndex = 0;
         }
 
         ~UpdaterVisitor() {
-            delete [] transformationStack;
         }
 
         void visit(Node * node, GraphicAPI * ogl);
@@ -56,19 +53,31 @@ namespace pbge {
     private:
         void _visit(Node * node, GraphicAPI * ogl);
 
-        math3d::matrix44 * transformationStack;
-
-        int stackIndex;
+        MatrixStack stack;
 
         std::vector<Camera *> activeCameras;
 
         std::vector<Light*> activeLights;
     };
 
-    /* Interface for a visitor class that render something on some GraphicAPI buffer */
+    /* abstract class for a render pass visitor */
     class PBGE_EXPORT RenderVisitor {
     public:
         virtual void visit(Node * node, GraphicAPI * ogl) = 0;
+
+        void pushTransformation(const math3d::matrix44 & m) {
+            stack.push(m);
+        }
+
+        void popTransformation() {
+            stack.pop();
+        }
+
+        const math3d::matrix44 getCurrentTransformation() {
+            return stack.peek();
+        }
+    private:
+        MatrixStack stack;
     };
 
     class PBGE_EXPORT ColorPassVisitor : public RenderVisitor {
