@@ -56,8 +56,17 @@ private:
 
         pbge::Model * sphereModel = pbge::Geometrics::createSphere(1.0f, 100, gfx);
         pbge::ModelCollection * spheres = new pbge::ModelCollection(sphereModel);
-        spheres->setRenderPassProgram(gfx->getFactory()->createProgramFromString("#extension GL_ARB_draw_instanced: enable\nvoid main() {gl_Position = ftransform() + gl_InstanceIDARB;gl_FrontColor = vec4(1,1,1,1);}", ""));
-        spheres->setDepthPassProgram(gfx->getFactory()->createProgramFromString("#extension GL_ARB_draw_instanced: enable\nvoid main() {gl_Position = ftransform() + gl_InstanceIDARB;}", ""));
+        spheres->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
+            "#extension GL_ARB_draw_instanced: enable\n"
+            "void main() {\n"
+            "   gl_Position = ftransform() + gl_InstanceIDARB;\n"
+            "   gl_FrontColor = vec4(1,1,1,1);\n"
+            "}", ""));
+        spheres->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
+            "#extension GL_ARB_draw_instanced: enable\n"
+            "void main() {\n"
+            "   gl_Position = ftransform() + gl_InstanceIDARB;\n"
+            "}", ""));
         graph->appendChildTo(sphereParent, spheres);
     }
 
