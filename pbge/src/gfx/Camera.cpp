@@ -89,41 +89,14 @@ void Frustum::setProjectionMatrix(const math3d::matrix44 &newProjection) {
 void Frustum::setFrustum(const float &left, const float &right,
                          const float &bottom, const float &top,
                          const float &near, const float &far) {
-    
-    float A = (right + left) / (right - left),
-          B = (top + bottom) / (top - bottom),
-          C = -(far + near) / (far - near),
-          D = -(2*far*near) / (far - near);
-    projectionMatrix->loadIdentity ();
-    (*projectionMatrix)[0][0] = 2 * near / (right - left);
-    (*projectionMatrix)[1][1] = 2 * near / (top - bottom);
-    /* Put A, B, C, and D in the projection matrix */
-    (*projectionMatrix)[0][2] = A;
-    (*projectionMatrix)[1][2] = B;
-    (*projectionMatrix)[2][2] = C;
-    (*projectionMatrix)[3][2] = -1;
-    (*projectionMatrix)[2][3] = D;
-    (*projectionMatrix)[3][3] = 0;
-
+    *projectionMatrix = math3d::frustumMatrix(left, right, bottom, top, near, far);
     updateFrustumPlanes();
 }
 
 void Frustum::setOrtho(const float &left, const float &right, 
                        const float &bottom, const float &top, 
                        const float &near, const float &far) {
-
-    float right_left = right - left,
-          top_bottom = top - bottom,
-          far_near = far - near;
-    projectionMatrix->loadIdentity();
-    (*projectionMatrix)[0][0] = 2 / right_left;
-    (*projectionMatrix)[1][1] = 2 / top_bottom;
-    (*projectionMatrix)[2][2] = -2.0f / far_near;
-    
-    (*projectionMatrix)[0][3] = -(right + left) / right_left;
-    (*projectionMatrix)[1][3] = -(top + bottom) / top_bottom;
-    (*projectionMatrix)[2][3] = -(far + near) / far_near;
-    
+    *projectionMatrix = math3d::orthographicMatrix(left, right, bottom, top, near, far);
     updateFrustumPlanes();
 }
 
