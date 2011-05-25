@@ -4,6 +4,7 @@
 #define PBGE_CORE_WINDOW_H_
 
 #include <string>
+#include "pbge/core/EventHandler.h"
 
 namespace pbge {
     class GraphicAPI;
@@ -26,7 +27,7 @@ namespace pbge {
             ogl = NULL;
             scene = NULL;
             initializer = NULL;
-            keyboardEventHandler = NULL;
+            handler = new EventHandler(this);
         }
 
         ~Window();
@@ -73,11 +74,7 @@ namespace pbge {
         }
 
         void setKeyboardEventHandler(KeyboardEventHandler * newHandler) {
-            keyboardEventHandler = newHandler;
-        }
-
-        KeyboardEventHandler * getKeyboardEventHandler() {
-            return keyboardEventHandler;
+            handler->addKeyboardHandler(newHandler);
         }
 
         void setShowDebug(const bool & show) {
@@ -89,6 +86,10 @@ namespace pbge {
         }
 
         void displayWindow();
+
+        EventHandler * getEventHandler() {
+            return handler;
+        }
 
     private:
         std::string windowTitle;
@@ -113,7 +114,7 @@ namespace pbge {
 
         SceneInitializer * initializer;
 
-        KeyboardEventHandler * keyboardEventHandler;
+        EventHandler * handler;
     };
 }
 #endif

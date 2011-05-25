@@ -106,59 +106,51 @@ namespace {
 
     LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
         pbge::Window * window;
-        CREATESTRUCT * cs;
         pbge::GraphicAPI * ogl;
-        switch(msg) {
-            case WM_CREATE:
-                cs = (CREATESTRUCT*)lParam;
-                window = reinterpret_cast<pbge::Window*>(cs->lpCreateParams);
-                SetWindowLongPtr(hwnd, GWLP_USERDATA, (ULONG)window);
-                ogl = window->getGraphicAPI();
-                ogl->setContext(new WGLContext(GetDC(hwnd)));
-                if(window->getSceneInitializer() != NULL && window->getScene() == NULL) {
-                    pbge::SceneInitializer * initializer = window->getSceneInitializer();
-                    window->setScene((*initializer)(ogl));
-                    window->getRenderer()->setScene(window->getScene());
-                }
-                ogl->enableDrawBuffer(GL_BACK);
-                ogl->clearColor(0,0,0,1);
-                break;
-            case WM_KEYDOWN:
-                window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                if(window->getKeyboardEventHandler() != NULL /*&& !isRepeatedKey(lParam)*/) {
-                    pbge::KeyboardEventHandler * handler = window->getKeyboardEventHandler();
-                    handler->keyDown((char)wParam);
-                }
-                break;
-            case WM_KEYUP:
-                window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                if(window->getKeyboardEventHandler() != NULL) {
-                    pbge::KeyboardEventHandler * handler = window->getKeyboardEventHandler();
-                    handler->keyUp((char)wParam);
-                }
-                break;
-            case WM_CLOSE:
-                PostQuitMessage(0);
-                break;
-            case WM_DESTROY:
-                window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                ogl = window->getGraphicAPI();
-                ogl->releaseContext();
-                PostQuitMessage(0);
-                // find somewhere to delete OpenGL
-                break;
-            case WM_PAINT:
-                window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-                ogl = window->getGraphicAPI();
-                ogl->clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-                //if(window->getKeyboardEventHandler() != NULL) {
-                //    pbge::KeyboardEventHandler * keyboardHandler = window->getKeyboardEventHandler();
-                //}
-                window->getRenderer()->render();
-                ogl->swapBuffers();
-                return 0;
-            default:
-                break;
+        if(msg == WM_CREATE) {
+            CREATESTRUCT * cs = (CREATESTRUCT*)lParam;
+            window = reinterpret_cast<pbge::Window*>(cs->lpCreateParams);
+            SetWindowLongPtr(hwnd, GWLP_USERDATA, (ULONG)window);
+            ogl = window->getGraphicAPI();
+            ogl->setContext(new WGLContext(GetDC(hwnd)));
+            if(window->getSceneInitializer() != NULL && window->getScene() == NULL) {
+                pbge::SceneInitializer * initializer = window->getSceneInitializer();
+                window->setScene((*initializer)(ogl));
+                window->getRenderer()->setScene(window->getScene());
+            }
+            ogl->enableDrawBuffer(GL_BACK);
+            ogl->clearColor(0,0,0,1);
+        } else {
+            window = reinterpret_cast<pbge::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+            switch(msg) {
+                case WM_KEYDOWN:
+                    window->getEventHandler()->handleKeyDown((char)wParam);
+                    break;
+                case WM_KEYUP:
+                    window->getEventHandler()->handleKeyUp((char)wParam);
+                    break;
+                case WM_CLOSE:
+                    PostQuitMessage(0);
+                    break;
+                case WM_DESTROY:
+                    ogl = window->getGraphicAPI();
+                    ogl->releaseContext();
+                    PostQuitMessage(0);
+                    // find somewhere to delete OpenGL
+                    break;
+                case WM_SIZE:
+                    window->getEventHandler()->handleResize(LOWORD(lParam), HIWORD(lParam));
+                    break;
+                case WM_PAINT:
+                    ogl = window->getGraphicAPI();
+                    ogl->clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+                    window->getRenderer()->render();
+                    ogl->swapBuffers();
+                    return 0;
+                default:
+                    break;
+            }
+
         }
         return (DefWindowProc(hwnd, msg, wParam, lParam));
     }

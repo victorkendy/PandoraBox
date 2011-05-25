@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\core\EventHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Geometrics.cpp"
 				>
 			</File>
@@ -194,6 +198,10 @@
 			</File>
 			<File
 				RelativePath=".\src\gfx\OpenGL\GLDrawController.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\gfx\OpenGL\GLFramebufferObject.cpp"
 				>
 			</File>
 			<File
@@ -323,6 +331,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\core\EventHandler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\exceptions\exceptions.h"
 				>
 			</File>
@@ -331,11 +343,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\FramebufferObject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Geometrics.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\OpenGL\GLDrawController.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\OpenGL\GLFramebufferObject.h"
 				>
 			</File>
 			<File

@@ -158,8 +158,8 @@ void TensorModel::calculateEigenValues3dSymmetric() {
 
     this->eigenvalues = (float*)malloc(3*sizeof(float));
     this->eigenvalues[0] = i1/3 + 2*v_sqrt*cos(phi);
-    this->eigenvalues[1] = i1/3 - 2*v_sqrt*cos(PBGE_pi/3 + phi);
-    this->eigenvalues[2] = i1/3 - 2*v_sqrt*cos(PBGE_pi/3 - phi);
+    this->eigenvalues[1] = i1/3 - 2*v_sqrt*cos(pbge::pi/3 + phi);
+    this->eigenvalues[2] = i1/3 - 2*v_sqrt*cos(pbge::pi/3 - phi);
 }
 
 void TensorModel::calculateEigenVectors3dSymmetric() {

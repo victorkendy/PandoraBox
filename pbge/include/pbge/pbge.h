@@ -2,6 +2,7 @@
 #ifndef PBGE_PBGE_H_
 #define PBGE_PBGE_H_
 
+#include "pbge/core/definitions.h"
 #include "pbge/core/core.h"
 #include "pbge/core/Log.h"
 #include "pbge/core/File.h"

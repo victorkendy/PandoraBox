@@ -81,8 +81,7 @@ private:
     }
 
     void createSceneTransformations(pbge::SceneGraph * graph) {
-        const float m_pi = 3.1415f;
-        child = pbge::TransformationNode::rotation(m_pi/3, 0,0,20)->scale(0.5f, 0.5f, 0.5f);
+        child = pbge::TransformationNode::rotation(pbge::degToRad(60), 0,0,20)->scale(0.5f, 0.5f, 0.5f);
         graph->appendChildTo(pbge::SceneGraph::ROOT, child);
         
         light_parent = pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f);
@@ -103,7 +102,7 @@ private:
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
-    void keyDown(char key) {
+    bool keyDown(char key) {
         //pressedKeys.push_back(key);
 
         pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
@@ -117,14 +116,12 @@ public:
             case 'E': m[2][3] -= 0.1f; break;
         }
         cam_node->setTransformationMatrix(m);
+        return true;
     }
 
-    void keyUp(char key) {
-        //pressedKeys.erase(std::find(pressedKeys.begin(), pressedKeys.end(), key));
-        ;
+    bool keyUp(char key) {
+        return true;
     }
-//private:
-//    std::vector<char> pressedKeys;
 };
 
 int main(int argc, char ** argv) {

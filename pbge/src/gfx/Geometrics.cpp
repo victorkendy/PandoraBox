@@ -19,8 +19,8 @@ VBOModel * Geometrics::createCircunference(float radius, unsigned int slices, Gr
     }
     VertexBufferBuilder builder(slices);
     VertexAttribBuilder vertex = builder.addAttrib(4, VertexAttrib::VERTEX);
-    float param_step = 2 * PBGE_pi / slices;
-    for(float t = 0; t < 2 * PBGE_pi; t+=param_step) {
+    float param_step = 2 * pbge::pi / slices;
+    for(float t = 0; t < 2 * pbge::pi; t+=param_step) {
         builder.on(vertex).pushValue(radius * cos(t), radius * sin(t), 0.0f, 1.0f);
     }
     VertexBuffer * vbo = builder.done(Buffer::STATIC_DRAW, gfx);
@@ -34,12 +34,12 @@ VBOModel * Geometrics::createSphere(float radius, unsigned slices, GraphicAPI * 
     if(slices < 3) {
         throw IllegalArgumentException("there must be at least 3 slices");
     }
-    float param_step = 2 * PBGE_pi / slices;
+    float param_step = 2 * pbge::pi / slices;
     VertexBufferBuilder builder(slices * slices);
     VertexAttribBuilder vertex = builder.addAttrib(4, VertexAttrib::VERTEX);
     builder.on(vertex);
-    for(float phi = 0, next_phi = param_step; phi < 2 * PBGE_pi; phi = next_phi, next_phi += param_step) {
-        for(float theta = 0; theta < PBGE_pi; theta += param_step) {
+    for(float phi = 0, next_phi = param_step; phi < 2 * pbge::pi; phi = next_phi, next_phi += param_step) {
+        for(float theta = 0; theta < pbge::pi; theta += param_step) {
             builder.pushValue(radius * sin(theta) * cos(phi), radius * sin(theta) * sin(phi), radius * cos(theta), 1.0f);
             builder.pushValue(radius * sin(theta) * cos(next_phi), radius * sin(theta) * sin(next_phi), radius * cos(theta), 1.0f);
         }

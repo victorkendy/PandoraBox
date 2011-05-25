@@ -1,25 +1,20 @@
-#ifndef definitions_h_
-#define definitions_h_ 1
+#ifndef PBGE_CORE_DEFINITIONS_H_
+#define PBGE_CORE_DEFINITIONS_H_
 
-// MISC
-#define PBGE_KB 1024
+namespace pbge {
+    // MISC
+    const unsigned KB = 1024;
 
-// floatVector
-#define PBGE_FLOAT_VECTOR_SIZE 56
+    // Numeric constants
+    const float pi = 3.1415927f;
+    const float inverse_pi = 0.3183099f;
 
-// Boolean constants
-#define PBGE_true 1
-#define PBGE_false 0
+    inline const float degToRad(const float & angle) {
+        return (pbge::pi * (angle))/180.0f;
+    }
 
-// Numeric constants
-#define PBGE_pi 3.1415927f
-#define PBGE_1_pi 0.3183099f   // 1/PBGE_pi
-
-// Rotation stability constants
-#define PBGE_min_rotation 0.18f
-#define PBGE_max_rotation 3.125f
-
-
-#define degToRad(angle) ((PBGE_pi * (angle))/180.0f)
-
+    inline const float radToDeg(const float & angle) {
+        return (angle * 180.0f) / pbge::pi;
+    }
+}
 #endif
