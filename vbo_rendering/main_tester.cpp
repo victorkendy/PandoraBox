@@ -8,23 +8,54 @@
 #include "TensorModel.h"
 #include "Ellipses.h"
 
-int cam_node_name;
-pbge::SceneGraph * scene;
+class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
+public:
+    CustomKeyboardEventHandler(pbge::SceneGraph * graph, int cam_name) {
+        this->scene = graph;
+        this->cam_node_name = cam_name;
+    }
+
+    bool keyDown(char key) {
+        pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
+        math3d::matrix44 m = cam_node->getTransformationMatrix();
+        switch(key) {
+            case 'W': m[1][3] += 0.1f; break;
+            case 'S': m[1][3] -= 0.1f; break;
+            case 'A': m[0][3] -= 0.1f; break;
+            case 'D': m[0][3] += 0.1f; break;
+            case 'Q': m[2][3] += 0.1f; break;
+            case 'E': m[2][3] -= 0.1f; break;
+        }
+        cam_node->setTransformationMatrix(m);
+        return true;
+    }
+
+    bool keyUp(char key) {
+        return true;
+    }
+private:
+    pbge::SceneGraph * scene;
+    int cam_node_name;
+};
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
 
 public:
-    pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx) {
+    pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx, pbge::Window * window) {
+        pbge::SceneGraph * scene;
+        int cam_node_name;
         // FIXME: remove the state change line
         gfx->enableMode(pbge::GraphicAPI::DEPTH_TEST);
         scene = new pbge::SceneGraph(new pbge::TransformationNode);
         createSceneTransformations(scene);
-        createSceneLights(scene);
+        createSceneLights(scene, cam_node->getSceneGraphIndex());
         createSceneModels(scene, gfx);
         cam_node_name = cam_node->getSceneGraphIndex();
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(45, 1, 1.0f, 10);
+
+        window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_node_name));
         return scene;
     }
 private:
@@ -70,14 +101,14 @@ private:
         graph->appendChildTo(sphereParent, spheres);
     }
 
-    void createSceneLights(pbge::SceneGraph * graph) {
+    void createSceneLights(pbge::SceneGraph * graph, int cam_node_name) {
         pbge::Light * light1 = new pbge::PointLight;
         light1->setDiffuseColor(1,0,0,1);
         graph->appendChildTo(light_parent, light1);
 
         pbge::Light* light2 = new pbge::PointLight;
         light2->setDiffuseColor(0,1,1,1);
-        scene->appendChildTo(cam_node_name, light2);
+        graph->appendChildTo(cam_node_name, light2);
     }
 
     void createSceneTransformations(pbge::SceneGraph * graph) {
@@ -100,29 +131,7 @@ private:
     pbge::Node * sphereParent;
 };
 
-class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
-public:
-    bool keyDown(char key) {
-        //pressedKeys.push_back(key);
 
-        pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
-        math3d::matrix44 m = cam_node->getTransformationMatrix();
-        switch(key) {
-            case 'W': m[1][3] += 0.1f; break;
-            case 'S': m[1][3] -= 0.1f; break;
-            case 'A': m[0][3] -= 0.1f; break;
-            case 'D': m[0][3] += 0.1f; break;
-            case 'Q': m[2][3] += 0.1f; break;
-            case 'E': m[2][3] -= 0.1f; break;
-        }
-        cam_node->setTransformationMatrix(m);
-        return true;
-    }
-
-    bool keyUp(char key) {
-        return true;
-    }
-};
 
 int main(int argc, char ** argv) {
     pbge::Manager * manager = new pbge::Manager;
@@ -130,7 +139,6 @@ int main(int argc, char ** argv) {
     manager->setFullscreen(false);
     manager->setWindowTitle("vbo_rendering");
     manager->setSceneInitializer(new CustomSceneInitializer);
-    manager->setKeyboardEventHandler(new CustomKeyboardEventHandler);
     manager->printDebugInformation(true);
     manager->displayGraphics();
     delete manager;

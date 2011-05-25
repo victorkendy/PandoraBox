@@ -7,6 +7,9 @@
 #include "pbge/core/Log.h"
 #include "pbge/core/File.h"
 #include "pbge/core/Manager.h"
+#include "pbge/core/KeyboardEventHandler.h"
+#include "pbge/core/EventHandler.h"
+#include "pbge/core/Window.h"
 
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/Light.h"
@@ -24,7 +27,7 @@
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/UniformSet.h"
-#include "pbge/gfx/KeyboardEventHandler.h"
+
 
 
 

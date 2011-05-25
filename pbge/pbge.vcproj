@@ -383,7 +383,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\gfx\KeyboardEventHandler.h"
+				RelativePath=".\include\pbge\core\KeyboardEventHandler.h"
 				>
 			</File>
 			<File

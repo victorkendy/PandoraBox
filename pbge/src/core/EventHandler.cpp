@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "pbge/gfx/KeyboardEventHandler.h"
+#include "pbge/core/KeyboardEventHandler.h"
 #include "pbge/core/EventHandler.h"
 
 using namespace pbge;

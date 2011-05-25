@@ -15,7 +15,7 @@ namespace pbge {
 
             must return a valid scene graph
         */
-        virtual SceneGraph * operator () (GraphicAPI * ogl) = 0;
+        virtual SceneGraph * operator () (GraphicAPI * ogl, Window * window) = 0;
 
     };
 }

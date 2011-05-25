@@ -12,11 +12,13 @@
 #endif
 
 #include "pbge/core/Window.h"
+#include "pbge/core/KeyboardEventHandler.h"
+
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"
-#include "pbge/gfx/KeyboardEventHandler.h"
+
 
 #if defined (WIN32) || defined (_WIN32)
 
@@ -115,7 +117,7 @@ namespace {
             ogl->setContext(new WGLContext(GetDC(hwnd)));
             if(window->getSceneInitializer() != NULL && window->getScene() == NULL) {
                 pbge::SceneInitializer * initializer = window->getSceneInitializer();
-                window->setScene((*initializer)(ogl));
+                window->setScene((*initializer)(ogl, window));
                 window->getRenderer()->setScene(window->getScene());
             }
             ogl->enableDrawBuffer(GL_BACK);
