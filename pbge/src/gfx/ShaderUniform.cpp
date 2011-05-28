@@ -25,6 +25,10 @@ void UniformFloat::bindValueOn(GPUProgram *program, const UniformInfo & info, Gr
     program->bindFloat(info, ogl, values, std::min(getNumberOfElements(), info.getNumberOfElements()));
 }
 
+void UniformSampler1D::bindValueOn(GPUProgram *program, const UniformInfo &info, GraphicAPI *ogl) {
+    program->bindSampler1D(info, ogl, texture);
+}
+
 void UniformSampler2D::bindValueOn(GPUProgram *program, const UniformInfo &info, GraphicAPI *ogl) {
     program->bindSampler2D(info, ogl, texture);
 }

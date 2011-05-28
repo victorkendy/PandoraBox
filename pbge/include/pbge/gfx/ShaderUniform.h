@@ -13,7 +13,8 @@ namespace pbge {
 
     class GPUProgram;
     class GraphicAPI;
-    class Texture;
+    class Texture2D;
+    class Texture1D;
 
     typedef enum {
         INVALID, 
@@ -39,6 +40,7 @@ namespace pbge {
         FLOAT_MAT23,
         FLOAT_MAT24,
         
+        SAMPLER_1D,
         SAMPLER_2D,
         SAMPLER_3D,
         SAMPLER_CUBE,
@@ -279,25 +281,43 @@ namespace pbge {
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     };
 
+    class UniformSampler1D : public UniformValue {
+    public:
+        UniformSampler1D() : UniformValue() {
+            this->texture = NULL;
+        }
+        void setValue(Texture1D * tex) {
+            this->texture = tex;
+        }
+        UniformType getType() { return SAMPLER_1D; }
+
+        unsigned getTypeSize() {
+            return sizeof(Texture1D*);
+        }
+        void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
+    private:
+        Texture1D * texture;
+    };
+
     class UniformSampler2D : public UniformValue {
     public:
         UniformSampler2D() : UniformValue() {
             this->texture = NULL;
         }
 
-        void setValue(Texture * value) {
+        void setValue(Texture2D * value) {
             this->texture = value;
         }
         
         UniformType getType() { return SAMPLER_2D; }
 
         unsigned getTypeSize() {
-            return sizeof(Texture *);
+            return sizeof(Texture2D *);
         }
 
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     private:
-        Texture * texture;
+        Texture2D * texture;
     };
 
     class UniformMat4 : public UniformValue {

@@ -12,7 +12,8 @@
 namespace pbge {
 
     class FileReader;
-    class Texture;
+    class Texture1D;
+    class Texture2D;
 
     class PBGE_EXPORT Shader {
     public:
@@ -55,7 +56,9 @@ namespace pbge {
 
         virtual void bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) = 0;
 
-        virtual void bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture * tex) = 0;
+        virtual void bindSampler1D(const UniformInfo & info, GraphicAPI * ogl, Texture1D * tex) = 0;
+        
+        virtual void bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture2D * tex) = 0;
 
         virtual void bindMat4(const UniformInfo & info, GraphicAPI * ogl, const float * v) = 0;
     };
@@ -153,7 +156,9 @@ namespace pbge {
 
         void bindFloatVec4(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size);
 
-        void bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture * tex);
+        void bindSampler1D(const UniformInfo & info, GraphicAPI * ogl, Texture1D * tex);
+
+        void bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture2D * tex);
 
         void bindMat4(const UniformInfo & info, GraphicAPI * ogl, const float * v);
 

@@ -35,6 +35,7 @@ namespace {
             case GL_FLOAT_MAT4: return pbge::FLOAT_MAT4; break;
             case GL_FLOAT_MAT2x3: return pbge::FLOAT_MAT23; break;
             case GL_FLOAT_MAT2x4: return pbge::FLOAT_MAT24; break;
+            case GL_SAMPLER_1D: return pbge::SAMPLER_1D; break;
             case GL_SAMPLER_2D: return pbge::SAMPLER_2D; break;
             case GL_SAMPLER_3D: return pbge::SAMPLER_3D; break;
             case GL_SAMPLER_CUBE: return pbge::SAMPLER_CUBE; break;
@@ -236,7 +237,14 @@ namespace pbge {
         glUniform4fv(info.getLocation(), size, values);
     }
 
-    void GLProgram::bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture * tex) {
+    void GLProgram::bindSampler1D(const UniformInfo & info, GraphicAPI * ogl, Texture1D * tex) {
+        TextureUnit * unit = ogl->chooseTextureUnit(tex);
+        unit->setTexture(tex);
+        unit->makeChange(ogl);
+        glUniform1i(info.getLocation(), unit->getIndex());
+    }
+
+    void GLProgram::bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture2D * tex) {
         TextureUnit * unit = ogl->chooseTextureUnit(tex);
         unit->setTexture(tex);
         unit->makeChange(ogl);

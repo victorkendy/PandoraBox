@@ -64,7 +64,8 @@ namespace pbge {
             @enum Filter
         */
         typedef enum {
-            LINEAR = GL_LINEAR
+            LINEAR = GL_LINEAR,
+            NEAREST = GL_NEAREST
         } Filter;
 
         /** The allowed data types for the image raw data

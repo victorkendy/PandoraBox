@@ -44,7 +44,7 @@ namespace pbge {
         GLenum magFilter;
     };
 
-    class GLTexture2D : Texture2D {
+    class GLTexture2D : public Texture2D {
     public:
 
         friend GLObjectsFactory;
