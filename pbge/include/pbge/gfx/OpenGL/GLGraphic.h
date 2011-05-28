@@ -58,6 +58,8 @@ namespace pbge {
         void popUniforms();
 
         DrawController * getDrawController();
+
+        void setViewport(int x, int y, int w, int h);
  
     private:
         void createDefaultShaders();

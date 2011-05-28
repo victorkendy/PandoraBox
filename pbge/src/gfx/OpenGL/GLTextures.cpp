@@ -7,6 +7,44 @@
 
 using namespace pbge;
 
+GLTexture1D::GLTexture1D(GLGraphic * gl) {
+    this->ogl = gl;
+    this->data = NULL;
+    this->minFilter = GL_LINEAR;
+    this->magFilter = GL_LINEAR;
+}
+
+void GLTexture1D::setMinFilter(Texture::Filter filter) {
+    this->minFilter = filter;
+}
+
+void GLTexture1D::setMagFilter(Texture::Filter filter) {
+    this->magFilter = filter;
+}
+
+void GLTexture1D::bindTextureOn(TextureUnit * unit) {
+    glActiveTexture(unit->getIndex());
+    if(this->GLID != 0) {
+        glBindTexture(GL_TEXTURE_1D, this->GLID);
+    } else {
+        glGenTextures(1, &GLID);
+        glBindTexture(GL_TEXTURE_1D, this->GLID);
+        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, this->minFilter);
+        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, this->magFilter);
+        glTexImage1D(GL_TEXTURE_1D, 0, internalFormat, width, 0, dataFormat, dataType, data);
+    }
+}
+
+void GLTexture1D::setImageData(Texture::DataType type, Texture::Format _dataFormat, void * image, unsigned size, int _width, Texture::Format _internalFormat) {
+    this->dataType = type;
+    this->dataFormat = _dataFormat;
+    this->data = malloc(size);
+    memcpy(this->data, image, size);
+    this->width = _width;
+    this->internalFormat = _internalFormat;
+}
+
+
 GLTexture2D::GLTexture2D(GraphicAPI * gl) {
     this->ogl = gl;
     this->data = NULL;
@@ -71,7 +109,8 @@ void GLTexture2D::replaceInternalData(Texture::DataType type, Texture::Format da
     this->width = w;
     this->height = h;
     if(this->data != NULL) {
-        delete this->data;
+        free(this->data);
+        this->data = NULL;
     }
     data = malloc(size);
     memcpy(data, image, size);

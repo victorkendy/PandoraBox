@@ -42,7 +42,7 @@ public:
     MOCK_METHOD0(popUniforms, void());
     MOCK_METHOD1(bindVertexBuffer, void(pbge::VertexBuffer * vbo));
     MOCK_METHOD0(getDrawController, pbge::DrawController*());
-
+    MOCK_METHOD4(setViewport, void(int x, int y, int w, int h));
 
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
     MOCK_METHOD2(beginQuery, void(GLenum target, GLuint id));
@@ -54,7 +54,6 @@ public:
     MOCK_METHOD2(clipPlane, void(GLenum plane, const GLdouble * equation));
     MOCK_METHOD1(disable, void(GLenum mode));
     MOCK_METHOD1(enable, void(GLenum mode));
-    MOCK_METHOD4(viewport, void(GLint x, GLint y, GLint w, GLint h));
 };
 
 class MockGraphicFactory : public pbge::GraphicObjectsFactory {

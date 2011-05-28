@@ -108,6 +108,8 @@ namespace pbge {
         virtual void popUniforms() = 0;
 
         virtual DrawController * getDrawController() = 0;
+
+        virtual void setViewport(int x, int y, int w, int h) = 0;
         
         
         // raw OpenGL API calls
@@ -129,8 +131,7 @@ namespace pbge {
         virtual void disable(GLenum mode);
 
         virtual void enable(GLenum mode);
-
-        virtual void viewport(GLint x, GLint y, GLint w, GLint h);
+        
     };
 }
 

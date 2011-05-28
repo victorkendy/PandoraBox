@@ -11,7 +11,38 @@ namespace pbge {
     class Image;
     class TextureUnit;
     class GLObjectsFactory;
+    class GLGraphic;
 
+    class GLTexture1D : Texture1D {
+    public:
+        GLTexture1D(GLGraphic * gl);
+
+        void setImageData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, Texture::Format internalFormat);
+
+        void bindTextureOn(TextureUnit * unit);
+
+        void setMinFilter(Texture::Filter minFilter);
+
+        void setMagFilter(Texture::Filter magFilter);
+    private:
+        GLGraphic * ogl;
+
+        GLuint GLID;
+
+        GLsizei width;
+
+        GLenum dataType;
+
+        GLenum dataFormat;
+
+        GLvoid * data;
+
+        GLenum internalFormat;
+
+        GLenum minFilter;
+
+        GLenum magFilter;
+    };
 
     class GLTexture2D : Texture2D {
     public:

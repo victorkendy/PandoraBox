@@ -1,7 +1,5 @@
 #include <iostream>
-#include <cstdlib>
 #include <vector>
-#include <algorithm>
 #include "pbge/pbge.h"
 
 #include "vbo_setup.h"
@@ -11,22 +9,19 @@
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
     CustomKeyboardEventHandler(pbge::SceneGraph * graph, int cam_name) {
-        this->scene = graph;
-        this->cam_node_name = cam_name;
+        this->cam_node = dynamic_cast<pbge::TransformationNode*>(graph->getGraphNode(cam_name));
     }
 
     bool keyDown(char key) {
-        pbge::TransformationNode * cam_node = dynamic_cast<pbge::TransformationNode*>(scene->getGraphNode(cam_node_name));
         math3d::matrix44 m = cam_node->getTransformationMatrix();
         switch(key) {
-            case 'W': m[1][3] += 0.1f; break;
-            case 'S': m[1][3] -= 0.1f; break;
-            case 'A': m[0][3] -= 0.1f; break;
-            case 'D': m[0][3] += 0.1f; break;
-            case 'Q': m[2][3] += 0.1f; break;
-            case 'E': m[2][3] -= 0.1f; break;
+            case 'W': cam_node->translate(0, 0.1f, 0); break;
+            case 'S': cam_node->translate(0, -0.1f, 0); break;
+            case 'A': cam_node->translate(-0.1f, 0, 0); break;
+            case 'D': cam_node->translate(0.1f, 0, 0); break;
+            case 'Q': cam_node->translate(0, 0, 0.1f); break;
+            case 'E': cam_node->translate(0, 0, -0.1f); break;
         }
-        cam_node->setTransformationMatrix(m);
         return true;
     }
 
@@ -34,8 +29,7 @@ public:
         return true;
     }
 private:
-    pbge::SceneGraph * scene;
-    int cam_node_name;
+    pbge::TransformationNode * cam_node;
 };
 
 class CustomSceneInitializer : public pbge::SceneInitializer {

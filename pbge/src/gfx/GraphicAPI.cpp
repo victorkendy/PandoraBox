@@ -51,7 +51,3 @@ void GraphicAPI::enable(GLenum mode) {
     glEnable(mode);
 }
 
-void GraphicAPI::viewport(GLint x, GLint y, GLint w, GLint h) {
-    glViewport(x,y,w,h);
-}
-

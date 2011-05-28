@@ -22,12 +22,27 @@ namespace pbge {
 
         ~UniformStack();
 
+        /** Get the uniform set at the bottom of the stack
+            
+            @return The bottom of the uniform stack
+        */
         UniformSet * getGloabalUniforms();
 
+        /** Finds the closest uniform on the stack that matches info.
+            
+            @param info A uniform variable specification
+            @return The found uniform value (NULL if not found)
+        */
         UniformValue * findUniform(const UniformInfo & info);
 
+        /** Pushes a uniform set on top of the uniform stack.
+
+            @param uniforms A uniform set to be pushed
+        */
         void push(UniformSet * uniforms);
 
+        /** Removes the top of the uniform stack
+        */
         void pop();
 
     private:

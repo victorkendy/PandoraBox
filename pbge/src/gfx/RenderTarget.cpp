@@ -11,6 +11,6 @@ namespace pbge {
     }
 
     void Viewport::setRenderTarget(GraphicAPI * ogl){
-        ogl->viewport(this->posx, this->posy, getWidth(), getHeight());
+        ogl->setViewport(this->posx, this->posy, getWidth(), getHeight());
     }
 }

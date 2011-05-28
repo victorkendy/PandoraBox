@@ -11,8 +11,15 @@
 namespace pbge {
     class Image;
 
+    /** The interface that all textures must implement
+        
+        @author Victor Kendy Harada
+    */
     class Texture {
     public:
+        /** The allowed values for the texture internal format and data format
+            @enum Format
+        */
         typedef enum {
             COMPRESSED_RED = GL_COMPRESSED_RED,
             COMPRESSED_RG = GL_COMPRESSED_RG,
@@ -51,11 +58,18 @@ namespace pbge {
             BGRA = GL_BGRA
         } Format;
 
-        // TODO: others.....
+        
+        /** The allowed texture filtering functions
+            @todo Add NEAREST, ROUND and CLAMP filter types
+            @enum Filter
+        */
         typedef enum {
             LINEAR = GL_LINEAR
         } Filter;
 
+        /** The allowed data types for the image raw data
+            @enum DataType
+        */
         typedef enum {
             UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
             BYTE = GL_BYTE,
@@ -93,13 +107,29 @@ namespace pbge {
         virtual void bindTextureOn(TextureUnit * unit) = 0;
     };
 
+    class Texture1D : public Texture {
+    public: 
+    };
+
     class Texture2D : public Texture {
     public:
-        // replace the internal image of the texture object with given image
+        /** replace the internal image of the texture object with given image loader implementation.
+            
+            @param image an implementation of the image interface
+            @param format the desired internal representation of the texture on the graphic api
+        */
         virtual void setImage(Image * image, Texture::Format format) = 0;
         
-        // replace the internal image of the texture object with given raw data
-        // obeying the specified format
+        /** Replace the texture data with the given raw data obeying the specified format.
+
+            @param type
+            @param dataFormat
+            @param image
+            @param size
+            @param width
+            @param height
+            @param internalFormat
+        */
         virtual void setImageData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, int height, Texture::Format internalFormat) = 0;
     };        
 }

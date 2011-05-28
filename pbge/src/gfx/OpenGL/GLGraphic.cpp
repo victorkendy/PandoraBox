@@ -181,3 +181,6 @@ DrawController * GLGraphic::getDrawController() {
     return drawController;
 }
 
+void GLGraphic::setViewport(int x, int y, int w, int h) {
+    glViewport(x, y, w, h);
+}

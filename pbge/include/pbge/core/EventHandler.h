@@ -13,6 +13,8 @@ namespace pbge {
     public:
         EventHandler(Window * window);
 
+        ~EventHandler();
+
         void handleResize(unsigned newWidth, unsigned newHeight);
 
         void handleKeyDown(char key);
