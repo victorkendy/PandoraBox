@@ -7,11 +7,12 @@
 
 using namespace pbge;
 
-GLTexture1D::GLTexture1D(GLGraphic * gl) {
+GLTexture1D::GLTexture1D(GraphicAPI * gl) {
     this->ogl = gl;
     this->data = NULL;
     this->minFilter = GL_LINEAR;
     this->magFilter = GL_LINEAR;
+    this->GLID = 0;
 }
 
 void GLTexture1D::setMinFilter(Texture::Filter filter) {
@@ -23,7 +24,7 @@ void GLTexture1D::setMagFilter(Texture::Filter filter) {
 }
 
 void GLTexture1D::bindTextureOn(TextureUnit * unit) {
-    glActiveTexture(unit->getIndex());
+    glActiveTexture(GL_TEXTURE0 + unit->getIndex());
     if(this->GLID != 0) {
         glBindTexture(GL_TEXTURE_1D, this->GLID);
     } else {
@@ -45,9 +46,15 @@ void GLTexture1D::setImageData(Texture::DataType type, Texture::Format _dataForm
 }
 
 
+
+
+
+
+
 GLTexture2D::GLTexture2D(GraphicAPI * gl) {
     this->ogl = gl;
     this->data = NULL;
+    this->GLID = 0;
     this->minFilter = GL_LINEAR;
     this->magFilter = GL_LINEAR;
 }
@@ -72,7 +79,7 @@ void GLTexture2D::setImageData(Texture::DataType type, Texture::Format dataForma
 }
 
 void GLTexture2D::bindTextureOn(TextureUnit * unit) {
-    glActiveTexture(unit->getIndex());
+    glActiveTexture(GL_TEXTURE0 + unit->getIndex());
     if(this->GLID != 0) {
         glBindTexture(GL_TEXTURE_2D, this->GLID);
     } else {

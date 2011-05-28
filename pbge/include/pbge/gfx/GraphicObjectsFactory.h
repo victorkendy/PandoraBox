@@ -10,6 +10,7 @@
 
 namespace pbge {
     class Buffer;
+    class Texture1D;
     class Texture2D;
     class FileReader;
 
@@ -22,6 +23,12 @@ namespace pbge {
             @return The created buffer object
         */
         virtual Buffer * createBuffer(size_t size, Buffer::UsageHint usage) = 0;
+
+        /** Creates a API specific 1D texture object.
+
+            @return A new 1D texture object
+        */
+        virtual Texture1D * create1DTexture() = 0;
 
         /** Creates a API specific 2D texture object.
 

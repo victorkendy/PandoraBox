@@ -18,6 +18,10 @@ Buffer * GLObjectsFactory::createBuffer(size_t _size, Buffer::UsageHint _usage) 
     return new GLBuffer(_size, _usage, gl);
 }
 
+Texture1D * GLObjectsFactory::create1DTexture() {
+    return new GLTexture1D(gl);
+}
+
 Texture2D * GLObjectsFactory::create2DTexture() { 
     return new GLTexture2D(gl);
 }

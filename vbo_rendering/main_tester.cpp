@@ -50,6 +50,14 @@ public:
         cam->setPerspective(45, 1, 1.0f, 10);
 
         window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_node_name));
+
+        
+        pbge::Texture1D * tex = gfx->getFactory()->create1DTexture();
+
+        unsigned char data[] = {0,0,255, 255,0,0, 0,255,0, 255,255,0, 0,255,255,
+                                255,0,255, 255,255,255, 0,0,0, 128,128,128, 255,255,128};
+        tex->setImageData(pbge::Texture::UNSIGNED_BYTE, pbge::Texture::RGB, data, sizeof(data), 10, pbge::Texture::RGB);
+        tex->bindTextureOn(gfx->getState()->chooseTexUnit(tex));
         return scene;
     }
 private:

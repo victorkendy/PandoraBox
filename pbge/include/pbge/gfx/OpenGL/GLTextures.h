@@ -13,9 +13,9 @@ namespace pbge {
     class GLObjectsFactory;
     class GLGraphic;
 
-    class GLTexture1D : Texture1D {
+    class GLTexture1D : public Texture1D {
     public:
-        GLTexture1D(GLGraphic * gl);
+        GLTexture1D(GraphicAPI * gl);
 
         void setImageData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, Texture::Format internalFormat);
 
@@ -25,7 +25,7 @@ namespace pbge {
 
         void setMagFilter(Texture::Filter magFilter);
     private:
-        GLGraphic * ogl;
+        GraphicAPI * ogl;
 
         GLuint GLID;
 

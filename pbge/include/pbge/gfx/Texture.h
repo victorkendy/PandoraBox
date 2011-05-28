@@ -108,7 +108,17 @@ namespace pbge {
     };
 
     class Texture1D : public Texture {
-    public: 
+    public:
+        /** Replace the texture data with the given raw data obeying the specified format.
+            
+            @param type The representation of the image data
+            @param dataFormat The type of the image data
+            @param image The raw image data
+            @param size The size of the image data in bytes
+            @param width The number of pixels of the image data
+            @param internalFormat The desired internal representation that should be used on the graphic driver
+        */
+        virtual void setImageData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, Texture::Format internalFormat) = 0;
     };
 
     class Texture2D : public Texture {
