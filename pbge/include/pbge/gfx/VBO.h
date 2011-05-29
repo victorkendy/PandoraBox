@@ -15,6 +15,10 @@ namespace pbge {
     class VertexBuffer;
     class Buffer;
 
+    /** This class represents a vertex attribute of a vertex buffer
+
+        @author Victor Kendy Harada
+    */
     class PBGE_EXPORT VertexAttrib{
     public:
         typedef enum {
