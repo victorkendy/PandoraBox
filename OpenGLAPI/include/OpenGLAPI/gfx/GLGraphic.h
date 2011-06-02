@@ -2,6 +2,7 @@
 #ifndef PBGE_GFX_OPENGL_GLGRAPHIC_H
 #define PBGE_GFX_OPENGL_GLGRAPHIC_H
 
+#include "pbge/core/core.h"
 #include "pbge/gfx/GraphicAPI.h"
 
 namespace pbge {

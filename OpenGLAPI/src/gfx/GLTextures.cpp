@@ -1,5 +1,6 @@
+#include <GL/glew.h>
 
-#include "pbge/gfx/OpenGL/GLTextures.h"
+#include "OpenGLAPI/gfx/GLTextures.h"
 #include "pbge/internal/OpenGLStates.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/GraphicAPI.h"

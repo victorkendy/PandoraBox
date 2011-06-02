@@ -1,18 +1,21 @@
+
+
 #include <GL/glew.h>
 #include <iostream>
 
+#include "pbge/core/ExternalFactoryLoader.h"
 #include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/GraphicAPI.h"
-#include "pbge/gfx/OpenGL/GLGraphic.h"
 #include "pbge/gfx/Buffer.h"
-#include "pbge/gfx/OpenGL/GLBuffer.h"
 
 
 
 using namespace pbge;
+ExternalFactoryLoader<GraphicAPI> lib("OpenGLAPI.dll", "createInstance");
 
 GraphicAPI * GraphicAPI::createInstance() {
-    return new GLGraphic;
+    GraphicAPI * api = lib.instantiate();
+    return api;
 }
 
 void GraphicAPI::alphaFunc(GLenum func, GLclampf ref) {

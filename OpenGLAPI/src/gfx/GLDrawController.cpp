@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include <iostream>
 #include "GL/glew.h"
 
@@ -6,8 +7,8 @@
 #include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/UniformSet.h"
 
-#include "pbge/gfx/OpenGL/GLGraphic.h"
-#include "pbge/gfx/OpenGL/GLDrawController.h"
+#include "OpenGLAPI/gfx/GLGraphic.h"
+#include "OpenGLAPI/gfx/GLDrawController.h"
 
 using namespace pbge;
 

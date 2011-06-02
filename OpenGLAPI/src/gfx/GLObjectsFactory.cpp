@@ -1,11 +1,11 @@
-
+#include <GL/glew.h>
 #include <vector>
 
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/gfx/Shader.h"
-#include "pbge/gfx/OpenGL/GLObjectsFactory.h"
-#include "pbge/gfx/OpenGL/GLBuffer.h"
-#include "pbge/gfx/OpenGL/GLTextures.h"
+#include "OpenGLAPI/gfx/GLObjectsFactory.h"
+#include "OpenGLAPI/gfx/GLBuffer.h"
+#include "OpenGLAPI/gfx/GLTextures.h"
 
 
 using namespace pbge;

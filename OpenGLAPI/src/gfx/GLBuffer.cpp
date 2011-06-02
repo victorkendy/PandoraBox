@@ -1,6 +1,6 @@
+#include <GL/glew.h>
 
-
-#include "pbge/gfx/OpenGL/GLBuffer.h"
+#include "OpenGLAPI/gfx/GLBuffer.h"
 
 using namespace pbge;
 

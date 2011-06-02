@@ -1,10 +1,11 @@
+#include <GL/glew.h>
 #include <string>
 
 #include "pbge/gfx/VBO.h"
-#include "pbge/gfx/OpenGL/GLGraphic.h"
-#include "pbge/gfx/OpenGL/GLDrawController.h"
+#include "OpenGLAPI/gfx/GLGraphic.h"
+#include "OpenGLAPI/gfx/GLDrawController.h"
 #include "pbge/gfx/ResourceStorage.h"
-#include "pbge/gfx/OpenGL/GLObjectsFactory.h"
+#include "OpenGLAPI/gfx/GLObjectsFactory.h"
 #include "pbge/gfx/StateSet.h"
 
 using namespace pbge;

@@ -189,34 +189,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\gfx\OpenGL\GLBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\gfx\OpenGL\GLBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\gfx\OpenGL\GLDrawController.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\gfx\OpenGL\GLFramebufferObject.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\gfx\OpenGL\GLGraphic.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\gfx\OpenGL\GLObjectsFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\gfx\OpenGL\GLTextures.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\gfx\GraphicAPI.cpp"
 				>
 			</File>
@@ -339,6 +311,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\core\ExternalFactoryLoader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\core\File.h"
 				>
 			</File>
@@ -348,26 +324,6 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Geometrics.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\gfx\OpenGL\GLDrawController.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\gfx\OpenGL\GLFramebufferObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\gfx\OpenGL\GLGraphic.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\gfx\OpenGL\GLObjectsFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\gfx\OpenGL\GLTextures.h"
 				>
 			</File>
 			<File
