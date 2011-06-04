@@ -10,20 +10,6 @@ using namespace pbge;
 
 const unsigned NUMBER_OF_STATES = 17;
 
-class ChangeApplier {
-public:
-    ChangeApplier(GraphicAPI * _ogl) {
-        this->ogl = _ogl;
-    }
-
-    void operator () (State * state) {
-        state->applyChanges(ogl);
-    }
-private:
-    GraphicAPI * ogl;
-};
-
-
 StateSet::StateSet(GraphicAPI * ogl) {
     states = std::vector<State*>(NUMBER_OF_STATES);
     states[GraphicAPI::BLEND] = new StateEnabler(GL_BLEND);
@@ -66,8 +52,7 @@ StateSet::~StateSet() {
 }
 
 void StateSet::apply(GraphicAPI * ogl) {
-    ChangeApplier applier(ogl);
-    std::for_each(changes.begin(), changes.end(), applier);
+    std::for_each(changes.begin(), changes.end(), std::bind2nd(std::mem_fun(&State::applyChanges), ogl));
     changes.clear();
     if(this->boundProgram != NULL)
         this->boundProgram->updateUniforms(ogl);

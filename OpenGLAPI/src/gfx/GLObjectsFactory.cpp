@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include <vector>
+#include <iostream>
 
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/gfx/Shader.h"
@@ -10,8 +11,7 @@
 
 using namespace pbge;
 
-GLObjectsFactory::GLObjectsFactory(GraphicAPI * ogl) {
-    this->gl = ogl;
+GLObjectsFactory::GLObjectsFactory(GraphicAPI * ogl):gl(ogl) {
 }
 
 Buffer * GLObjectsFactory::createBuffer(size_t _size, Buffer::UsageHint _usage) {

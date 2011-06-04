@@ -24,16 +24,12 @@ GLenum translateUsageHint(Buffer::UsageHint usageHint) {
     return usage;
 }
 
-GLBuffer::GLBuffer(size_t _size, Buffer::UsageHint _usage, GraphicAPI * ogl) {
-    this->size = _size;
+GLBuffer::GLBuffer(size_t _size, Buffer::UsageHint _usage, GraphicAPI * ogl):size(_size), target(0), glID(0), gl(ogl) {
     this->usage = translateUsageHint(_usage);
-    this->target = 0;
     this->data = malloc(size);
     if (this->data == NULL) {
         // error
     }
-    this->glID = 0;
-    this->gl = ogl;
 } 
 
 void * GLBuffer::map(AccessPattern accessPattern) {

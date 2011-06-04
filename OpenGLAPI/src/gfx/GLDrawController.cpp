@@ -12,11 +12,7 @@
 
 using namespace pbge;
 
-GLDrawController::GLDrawController(GLGraphic * _ogl) {
-    this->ogl = _ogl;
-    coreSupported = false;
-    arbSupported = false;
-    extSupported = false;
+GLDrawController::GLDrawController(GLGraphic * _ogl):ogl(_ogl), coreSupported(false), arbSupported(false), extSupported(false) {
 }
 
 void GLDrawController::initialize() {
