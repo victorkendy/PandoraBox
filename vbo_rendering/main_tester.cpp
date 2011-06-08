@@ -100,6 +100,7 @@ private:
             "void main() {\n"
             "   gl_Position = ftransform() + gl_InstanceIDARB;\n"
             "}", ""));
+        spheres->setNumberOfInstances(3);
         graph->appendChildTo(sphereParent, spheres);
     }
 

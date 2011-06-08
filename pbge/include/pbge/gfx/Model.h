@@ -193,6 +193,10 @@ namespace pbge {
         ModelCollection(Model * _model);
 
         ~ModelCollection();
+
+        void setNumberOfInstances(int instances) {
+            this->numberOfInstances = instances;
+        }
     // Node interface methods
     public:
         void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {}
@@ -240,6 +244,8 @@ namespace pbge {
         UniformSet * uniforms;
 
         GPUProgram * depthProgram, * renderProgram;
+
+        int numberOfInstances;
     };
 }
 #endif

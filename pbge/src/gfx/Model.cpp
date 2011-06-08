@@ -88,6 +88,7 @@ ModelCollection::ModelCollection() {
     this->uniforms = new UniformSet();
     this->renderProgram = NULL;
     this->depthProgram = NULL;
+    this->numberOfInstances = 1;
 }
 
 ModelCollection::ModelCollection(Model * _model) {
@@ -95,6 +96,7 @@ ModelCollection::ModelCollection(Model * _model) {
     this->uniforms = new UniformSet();
     this->renderProgram = NULL;
     this->depthProgram = NULL;
+    this->numberOfInstances = 1;
 }
 
 ModelCollection::~ModelCollection() {
@@ -107,9 +109,9 @@ void ModelCollection::renderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
     gfx->updateState();
     VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
     if(vboModel == NULL)
-        gfx->getDrawController()->draw(model, 2);
+        gfx->getDrawController()->draw(model, this->numberOfInstances);
     else
-        gfx->getDrawController()->drawVBOModel(vboModel, 2);
+        gfx->getDrawController()->drawVBOModel(vboModel, this->numberOfInstances);
 }
 
 void ModelCollection::postRenderPass(RenderVisitor * visitor, GraphicAPI * gfx) {
@@ -122,9 +124,9 @@ void ModelCollection::depthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
     gfx->updateState();
     VBOModel * vboModel = dynamic_cast<VBOModel *>(model);
     if(vboModel == NULL)
-        gfx->getDrawController()->draw(model, 2);
+        gfx->getDrawController()->draw(model, this->numberOfInstances);
     else
-        gfx->getDrawController()->drawVBOModel(vboModel, 2);
+        gfx->getDrawController()->drawVBOModel(vboModel, this->numberOfInstances);
 }
 
 void ModelCollection::postDepthPass(RenderVisitor * visitor, GraphicAPI * gfx) {
