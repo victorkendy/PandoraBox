@@ -3,6 +3,8 @@
 #include "pbge/pbge.h"
 
 #include "vbo_setup.h"
+#include "TensorModel.h"
+#include "Ellipses.h"
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
@@ -98,8 +100,12 @@ private:
             "void main() {\n"
             "   gl_Position = ftransform() + gl_InstanceIDARB;\n"
             "}", ""));
-        spheres->setNumberOfInstances(3);
+        spheres->setNumberOfInstances(5);
         graph->appendChildTo(sphereParent, spheres);
+
+        Ellipses ellipses(gfx);
+        pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 1, 0))->done(gfx);
+        graph->appendChildTo(sphereParent, ellipsesCollection);
     }
 
     void createSceneLights(pbge::SceneGraph * graph, int cam_node_name) {

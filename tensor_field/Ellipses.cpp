@@ -29,7 +29,8 @@ Ellipses * Ellipses::createEllipses(unsigned n) {
 }
 
 Ellipses * Ellipses::addTransform(const math3d::matrix44 & m) {
-    this->matrices[current] = m;
+    // Store m in colmajor
+    this->matrices[current] = m.transpose();
     current++;
     return this;
 }
@@ -38,8 +39,36 @@ pbge::ModelCollection * Ellipses::done(pbge::GraphicAPI * gfx) {
     pbge::Texture1D * tex = gfx->getFactory()->create1DTexture();
     tex->setImageData(pbge::Texture::FLOAT, pbge::Texture::RGBA, matrices, numberOfEllipses * sizeof(math3d::matrix44), 4 * numberOfEllipses, pbge::Texture::RGBA);
     pbge::ModelCollection * ellipses = new pbge::ModelCollection(circle);
-    pbge::UniformSampler1D * uniform = dynamic_cast<pbge::UniformSampler1D *>(ellipses->getUniformSet()->getValue(pbge::UniformInfo("tex", pbge::SAMPLER_1D)));
+    ellipses->setNumberOfInstances(numberOfEllipses);
+    pbge::UniformSampler1D * uniform = ellipses->getUniformSet()->getSampler1D("transforms");
     uniform->setValue(tex);
+    ellipses->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
+        "#version 130\n"
+        "#extension GL_ARB_draw_instanced: enable\n"
+        "uniform sampler1D transforms;\n"
+        "void main() {\n"
+        "   int index = gl_InstanceIDARB * 4;\n"
+        "   vec4 col1 = texelFetch(transforms, index, 0);\n"
+        "   vec4 col2 = texelFetch(transforms, index + 1, 0);\n"
+        "   vec4 col3 = texelFetch(transforms, index + 2, 0);\n"
+        "   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
+        "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
+        "   gl_Position = gl_ModelViewProjectionMatrix * transformation * gl_Vertex;\n"
+        "   gl_FrontColor = vec4(1,1,1,1);\n"
+        "}", ""));
+    ellipses->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
+        "#version 130\n"
+        "#extension GL_ARB_draw_instanced: enable\n"
+        "uniform sampler1D transforms;\n"
+        "void main() {\n"
+        "   int index = gl_InstanceIDARB * 4;\n"
+        "   vec4 col1 = texelFetch(transforms, index, 0);\n"
+        "   vec4 col2 = texelFetch(transforms, index + 1, 0);\n"
+        "   vec4 col3 = texelFetch(transforms, index + 2, 0);\n"
+        "   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
+        "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
+        "   gl_Position = gl_ModelViewProjectionMatrix * transformation * gl_Vertex;\n"
+        "}", ""));
     return ellipses;
 }
 

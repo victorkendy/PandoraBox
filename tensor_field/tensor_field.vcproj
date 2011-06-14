@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vbo_rendering"
-	ProjectGUID="{12A78D53-E70E-420A-9365-494E98D36302}"
-	RootNamespace="tester"
+	Name="tensor_field"
+	ProjectGUID="{15EDC993-53DD-44AA-81CF-6C3B53C97A53}"
+	RootNamespace="tensor_field"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -92,8 +92,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)out\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -117,7 +117,6 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)pbge\include&quot;;&quot;$(SolutionDir)aditional_includes&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -136,9 +135,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="math3d.lib pbge.lib glew32.lib glew32s.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)libs\$(ConfigurationName)&quot;;&quot;$(SolutionDir)bin\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -177,7 +174,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Ellipses.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main_tester.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TensorFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TensorModel.cpp"
 				>
 			</File>
 			<File
@@ -190,6 +199,18 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Ellipses.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TensorFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TensorModel.h"
+				>
+			</File>
 			<File
 				RelativePath=".\vbo_setup.h"
 				>
