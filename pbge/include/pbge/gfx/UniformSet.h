@@ -75,6 +75,18 @@ namespace pbge {
             @return A instance of UniformMat4
         */
         UniformMat4 * getFloatMat4(const std::string & name);
+
+        /**
+            @param name The name of a uniform of type SAMPLER1D
+            @return A instance of UniformSampler1D
+        */
+        UniformSampler1D * getSampler1D(const std::string & name);
+
+        /**
+            @param name The name of a uniform of type SAMPLER2D
+            @return A instance of UniformSampler2D
+        */
+        UniformSampler2D * getSampler2D(const std::string & name);
     private:
         /** Instantiate and store a uniform specified by info
 

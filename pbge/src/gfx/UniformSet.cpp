@@ -82,3 +82,11 @@ UniformFloatVec4 * UniformSet::getFloatVec4(const std::string & name) {
 UniformMat4 * UniformSet::getFloatMat4(const std::string & name) {
     return dynamic_cast<UniformMat4 *>(this->getValue(UniformInfo(name, pbge::FLOAT_MAT4)));
 }
+
+UniformSampler1D * UniformSet::getSampler1D(const std::string & name) {
+    return dynamic_cast<UniformSampler1D *>(this->getValue(UniformInfo(name, pbge::SAMPLER_1D)));
+}
+
+UniformSampler2D * UniformSet::getSampler2D(const std::string & name) {
+    return dynamic_cast<UniformSampler2D *>(this->getValue(UniformInfo(name, pbge::SAMPLER_2D)));
+}
