@@ -5,6 +5,7 @@
 #include "vbo_setup.h"
 #include "TensorModel.h"
 #include "Ellipses.h"
+#include "Ellipsoids.h"
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
@@ -106,6 +107,10 @@ private:
         Ellipses ellipses(gfx);
         pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 1, 0))->done(gfx);
         graph->appendChildTo(sphereParent, ellipsesCollection);
+
+		Ellipsoids ellipsoids(gfx);
+        pbge::ModelCollection * ellipsoidsCollection = ellipsoids.createEllipsoids(2)->addTransform(math3d::translationMatrix(-1, 2.5, -0.5))->addTransform(math3d::translationMatrix(-1, 3.0, -0.5))->done(gfx);
+		graph->appendChildTo(sphereParent, ellipsoidsCollection);
     }
 
     void createSceneLights(pbge::SceneGraph * graph, int cam_node_name) {

@@ -1,5 +1,5 @@
-#ifndef VBO_RENDERING_ELLIPSES_H_
-#define VBO_RENDERING_ELLIPSES_H_
+#ifndef TENSOR_FIELD_ELLIPSES_H_
+#define TENSOR_FIELD_ELLIPSES_H_
 
 #include "pbge/pbge.h"
 #include "math3d/math3d.h"

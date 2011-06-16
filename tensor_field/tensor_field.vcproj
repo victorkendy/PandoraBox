@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Ellipsoids.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main_tester.cpp"
 				>
 			</File>
@@ -201,6 +205,10 @@
 			>
 			<File
 				RelativePath=".\Ellipses.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Ellipsoids.h"
 				>
 			</File>
 			<File
