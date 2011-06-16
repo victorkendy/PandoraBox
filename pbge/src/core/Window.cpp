@@ -4,6 +4,7 @@
 
 #if defined (WIN32) || defined (_WIN32)
     #include <windows.h>
+	#include <windowsx.h>
     #include <atlstr.h>
     const std::string _windowClassName = "pbge_window_class";
     const CString windowClassName = CString(_windowClassName.c_str());
@@ -13,6 +14,7 @@
 
 #include "pbge/core/Window.h"
 #include "pbge/core/KeyboardEventHandler.h"
+#include "pbge/core/MouseEventHandler.h"
 
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Renderer.h"
@@ -131,6 +133,21 @@ namespace {
                 case WM_KEYUP:
                     window->getEventHandler()->handleKeyUp((char)wParam);
                     break;
+				case WM_LBUTTONDOWN:
+					window->getEventHandler()->handleButtonDown(pbge::L_MOUSE_BUTTON, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					break;
+			    case WM_LBUTTONUP:
+					window->getEventHandler()->handleButtonUp(pbge::L_MOUSE_BUTTON, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					break;
+				case WM_RBUTTONDOWN:
+					window->getEventHandler()->handleButtonDown(pbge::R_MOUSE_BUTTON, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					break;
+				case WM_RBUTTONUP:
+					window->getEventHandler()->handleButtonUp(pbge::R_MOUSE_BUTTON, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					break;
+	            case WM_MOUSEMOVE:
+					window->getEventHandler()->handleMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+					break;
                 case WM_CLOSE:
                     PostQuitMessage(0);
                     break;

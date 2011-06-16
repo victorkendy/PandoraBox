@@ -12,6 +12,7 @@ namespace pbge {
     class SceneGraph;
     class SceneInitializer;
     class KeyboardEventHandler;
+	class MouseEventHandler;
 
     class Window {
     public:
@@ -75,6 +76,10 @@ namespace pbge {
 
         void setKeyboardEventHandler(KeyboardEventHandler * newHandler) {
             handler->addKeyboardHandler(newHandler);
+        }
+
+		void setMouseEventHandler(MouseEventHandler * newHandler) {
+            handler->addMouseHandler(newHandler);
         }
 
         void setShowDebug(const bool & show) {

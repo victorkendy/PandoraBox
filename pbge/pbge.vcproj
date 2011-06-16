@@ -363,6 +363,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\core\MouseEventHandler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Node.h"
 				>
 			</File>

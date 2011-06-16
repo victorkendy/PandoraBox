@@ -8,6 +8,7 @@
 #include "pbge/core/File.h"
 #include "pbge/core/Manager.h"
 #include "pbge/core/KeyboardEventHandler.h"
+#include "pbge/core/MouseEventHandler.h"
 #include "pbge/core/EventHandler.h"
 #include "pbge/core/Window.h"
 

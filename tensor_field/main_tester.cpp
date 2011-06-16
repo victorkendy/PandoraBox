@@ -33,6 +33,51 @@ private:
     pbge::TransformationNode * cam_node;
 };
 
+class CustomMouseEventHandler : public pbge::MouseEventHandler {
+public:
+    CustomMouseEventHandler(pbge::SceneGraph * graph, int cam_name) {
+        this->cam_node = dynamic_cast<pbge::TransformationNode*>(graph->getGraphNode(cam_name));
+		leftButtonDown = false;
+        rightButtonDown = false;
+        prev_x = 0;
+        prev_y = 0;
+    }
+
+    bool buttonDown(pbge::MouseButton button, int x, int y) {
+        if(button == pbge::L_MOUSE_BUTTON) {
+            leftButtonDown = true;
+            prev_x = x;
+            prev_y = y;
+        }
+        else if(button == pbge::R_MOUSE_BUTTON) rightButtonDown = true;
+		return true;
+    }
+    bool buttonUp(pbge::MouseButton button, int x, int y) {
+        if(button == pbge::L_MOUSE_BUTTON) {
+            leftButtonDown = false;
+            prev_x = 0;
+            prev_y = 0;
+        }
+        else if(button == pbge::R_MOUSE_BUTTON) rightButtonDown = false;
+		return true;
+    }
+    bool move(int x, int y) {
+        if(leftButtonDown) {
+            math3d::matrix44 m = cam_node->getTransformationMatrix();
+            m = math3d::rotationMatrix((prev_x - x) * 0.001f, 0, 1.0f, 0) * m;
+            m = math3d::rotationMatrix((prev_y - y) * 0.001f, 1.0f, 0, 0) * m;
+            cam_node->setTransformationMatrix(m);
+        }
+		return true;
+    }
+private:
+    bool leftButtonDown;
+    bool rightButtonDown;
+    int prev_x;
+    int prev_y;
+    pbge::TransformationNode * cam_node;
+};
+
 class CustomSceneInitializer : public pbge::SceneInitializer {
 
 public:
@@ -51,7 +96,7 @@ public:
         cam->setPerspective(45, 1, 1.0f, 10);
 
         window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_node_name));
-
+		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_node_name));
         
         pbge::Texture1D * tex = gfx->getFactory()->create1DTexture();
 
@@ -105,11 +150,11 @@ private:
         graph->appendChildTo(sphereParent, spheres);
 
         Ellipses ellipses(gfx);
-        pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 1, 0))->done(gfx);
+        pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 1, 1))->done(gfx);
         graph->appendChildTo(sphereParent, ellipsesCollection);
 
 		Ellipsoids ellipsoids(gfx);
-        pbge::ModelCollection * ellipsoidsCollection = ellipsoids.createEllipsoids(2)->addTransform(math3d::translationMatrix(-1, 2.5, -0.5))->addTransform(math3d::translationMatrix(-1, 3.0, -0.5))->done(gfx);
+        pbge::ModelCollection * ellipsoidsCollection = ellipsoids.createEllipsoids(1)->addTransform(math3d::scaleMatrix(1, 0.5, 0.2)*math3d::translationMatrix(1,1,1))->done(gfx);
 		graph->appendChildTo(sphereParent, ellipsoidsCollection);
     }
 
