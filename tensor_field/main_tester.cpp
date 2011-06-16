@@ -41,6 +41,9 @@ public:
         rightButtonDown = false;
         prev_x = 0;
         prev_y = 0;
+		vertical_rotation = 0;
+		horizontal_rotation = 0;
+		degreeScale = 0.03f;
     }
 
     bool buttonDown(pbge::MouseButton button, int x, int y) {
@@ -55,7 +58,9 @@ public:
     bool buttonUp(pbge::MouseButton button, int x, int y) {
         if(button == pbge::L_MOUSE_BUTTON) {
             leftButtonDown = false;
-            prev_x = 0;
+            horizontal_rotation += (prev_x - x) * degreeScale;
+			vertical_rotation += (prev_y - y) * degreeScale;
+			prev_x = 0;
             prev_y = 0;
         }
         else if(button == pbge::R_MOUSE_BUTTON) rightButtonDown = false;
@@ -63,10 +68,9 @@ public:
     }
     bool move(int x, int y) {
         if(leftButtonDown) {
-            math3d::matrix44 m = cam_node->getTransformationMatrix();
-            m = math3d::rotationMatrix((prev_x - x) * 0.001f, 0, 1.0f, 0) * m;
-            m = math3d::rotationMatrix((prev_y - y) * 0.001f, 1.0f, 0, 0) * m;
-            cam_node->setTransformationMatrix(m);
+			math3d::matrix44 rotation = math3d::rotationMatrix(horizontal_rotation + (prev_x - x) * degreeScale, 0, 1.0f, 0);
+            rotation = math3d::rotationMatrix(vertical_rotation + (prev_y - y) * degreeScale, 1.0f, 0, 0) * rotation;
+            cam_node->setTransformationMatrix(rotation);
         }
 		return true;
     }
@@ -75,6 +79,9 @@ private:
     bool rightButtonDown;
     int prev_x;
     int prev_y;
+	float vertical_rotation;
+	float horizontal_rotation;
+	float degreeScale;
     pbge::TransformationNode * cam_node;
 };
 
@@ -95,8 +102,8 @@ public:
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(45, 1, 1.0f, 10);
 
-        window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_node_name));
-		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_node_name));
+		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
+		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
         
         pbge::Texture1D * tex = gfx->getFactory()->create1DTexture();
 
@@ -154,7 +161,7 @@ private:
         graph->appendChildTo(sphereParent, ellipsesCollection);
 
 		Ellipsoids ellipsoids(gfx);
-        pbge::ModelCollection * ellipsoidsCollection = ellipsoids.createEllipsoids(1)->addTransform(math3d::scaleMatrix(1, 0.5, 0.2)*math3d::translationMatrix(1,1,1))->done(gfx);
+        pbge::ModelCollection * ellipsoidsCollection = ellipsoids.createEllipsoids(1)->addTransform(math3d::scaleMatrix(1, 0.5f, 0.2f)*math3d::translationMatrix(1,1,1))->done(gfx);
 		graph->appendChildTo(sphereParent, ellipsoidsCollection);
     }
 
@@ -175,16 +182,22 @@ private:
         light_parent = pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f);
         graph->appendChildTo(pbge::SceneGraph::ROOT, light_parent);
 
-        circle_parent = graph->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0));
+        circle_parent = graph->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0)); 
 
-        cam_node = graph->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f));
+		cam_rot_node = graph->appendChildTo(pbge::SceneGraph::ROOT, pbge::TransformationNode::translation(0.0f, 0.0f, 0.0f));
+
+		cam_trans_node = graph->appendChildTo(cam_rot_node, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f));
+
+		cam_node = graph->appendChildTo(cam_trans_node, pbge::TransformationNode::translation(0.0f, 0.0f, 0.0f));
 
         sphereParent = graph->appendChildTo(child, pbge::TransformationNode::translation(-1.5f, 0.0f, 0.0f));
     }
     pbge::Node * light_parent;
     pbge::Node * child;
     pbge::Node * circle_parent;
-    pbge::Node * cam_node;
+    pbge::Node * cam_trans_node;
+	pbge::Node * cam_rot_node;
+	pbge::Node * cam_node;
     pbge::Node * sphereParent;
 };
 
