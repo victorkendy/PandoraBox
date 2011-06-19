@@ -16,6 +16,8 @@ gtest*
 out/
 bin/Debug/tester.lib
 
+bin/*/OpenGLAPI*
+
 _*.cpp
 _*.h
 _*.txt

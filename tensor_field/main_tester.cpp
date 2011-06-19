@@ -104,13 +104,6 @@ public:
 
 		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
-        
-        pbge::Texture1D * tex = gfx->getFactory()->create1DTexture();
-
-        unsigned char data[] = {0,0,255, 255,0,0, 0,255,0, 255,255,0, 0,255,255,
-                                255,0,255, 255,255,255, 0,0,0, 128,128,128, 255,255,128};
-        tex->setImageData(pbge::Texture::UNSIGNED_BYTE, pbge::Texture::RGB, data, sizeof(data), 10, pbge::Texture::RGB);
-        tex->bindTextureOn(gfx->getState()->chooseTexUnit(tex));
         return scene;
     }
 private:
@@ -157,7 +150,7 @@ private:
         graph->appendChildTo(sphereParent, spheres);
 
         Ellipses ellipses(gfx);
-        pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 1, 1))->done(gfx);
+        pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 2.88f, 0) * math3d::scaleMatrix(0.3, 0.5, 1.0))->done(gfx);
         graph->appendChildTo(sphereParent, ellipsesCollection);
 
 		Ellipsoids ellipsoids(gfx);
