@@ -69,7 +69,7 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
         currentMatrixMode = initialMatrixMode;
         state = new StateSet(this);
-        drawController->initialize();
+        
         // Parse the version string?
         this->majorVersion = 1;
         if(GLEW_VERSION_2_0 || GLEW_VERSION_2_1) {
@@ -81,6 +81,8 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         if(GLEW_VERSION_4_0) {
             this->majorVersion = 4;
         }
+
+        drawController->initialize();
     }
 }
 

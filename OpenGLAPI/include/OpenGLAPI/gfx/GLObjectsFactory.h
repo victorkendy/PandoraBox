@@ -7,7 +7,6 @@
 
 namespace pbge {
     class GLGraphic;
-    class GraphicAPI;
 
     class GLObjectsFactory : public GraphicObjectsFactory {
     public:
