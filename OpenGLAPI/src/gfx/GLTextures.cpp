@@ -28,12 +28,9 @@ namespace {
 }
 using namespace pbge;
 
-GLTexture1D::GLTexture1D(GraphicAPI * gl) {
-    this->ogl = gl;
-    this->data = NULL;
+GLTexture1D::GLTexture1D(GraphicAPI * gl):ogl(gl), data(NULL), GLID(0) {
     this->minFilter = GL_LINEAR;
     this->magFilter = GL_LINEAR;
-    this->GLID = 0;
 }
 
 void GLTexture1D::setMinFilter(Texture::Filter filter) {
@@ -72,10 +69,7 @@ void GLTexture1D::setImageData(Texture::DataType type, Texture::Format _dataForm
 
 
 
-GLTexture2D::GLTexture2D(GraphicAPI * gl) {
-    this->ogl = gl;
-    this->data = NULL;
-    this->GLID = 0;
+GLTexture2D::GLTexture2D(GraphicAPI * gl): ogl(gl), data(NULL), GLID(0) {
     this->minFilter = GL_LINEAR;
     this->magFilter = GL_LINEAR;
 }
