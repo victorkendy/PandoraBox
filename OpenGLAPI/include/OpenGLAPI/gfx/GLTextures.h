@@ -7,7 +7,7 @@
 #include "pbge/gfx/Texture.h"
 
 namespace pbge {
-    class GraphicAPI;
+    class GLGraphic;
     class Image;
     class TextureUnit;
     class GLObjectsFactory;
@@ -15,7 +15,7 @@ namespace pbge {
 
     class GLTexture1D : public Texture1D {
     public:
-        GLTexture1D(GraphicAPI * gl);
+        GLTexture1D(GLGraphic * gl);
 
         void setImageData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, Texture::Format internalFormat);
 
@@ -25,7 +25,7 @@ namespace pbge {
 
         void setMagFilter(Texture::Filter magFilter);
     private:
-        GraphicAPI * ogl;
+        GLGraphic * ogl;
 
         GLuint GLID;
 
@@ -65,7 +65,7 @@ namespace pbge {
         void setMagFilter(Texture::Filter magFilter);
 
     private:
-        GLTexture2D (GraphicAPI * _gl); 
+        GLTexture2D (GLGraphic * _gl); 
         
         // Checks if this texture object is compatible with the specified image and format
         // the image is compatible if the format equal the internalFormat and the dimensions
@@ -81,7 +81,7 @@ namespace pbge {
         // representation of that object
         void replaceGLObjectData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, int width, int height, Texture::Format internalFormat);
 
-        GraphicAPI * ogl;
+        GLGraphic * ogl;
 
         GLuint GLID;
 

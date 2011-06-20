@@ -61,6 +61,14 @@ namespace pbge {
         DrawController * getDrawController();
 
         void setViewport(int x, int y, int w, int h);
+    public:
+        /** Calculates the major version of the OpenGL implementation
+            
+            @return The major version of the GL.
+        */
+        const unsigned getMajorVersion() {
+            return this->majorVersion;
+        }
  
     private:
         void createDefaultShaders();
@@ -80,6 +88,8 @@ namespace pbge {
         GraphicObjectsFactory * factory;
 
         GLDrawController * drawController;
+
+        unsigned majorVersion;
     };
 
 }

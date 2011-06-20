@@ -1,16 +1,16 @@
 #include <GL/glew.h>
 
+#include "OpenGLAPI/gfx/GLGraphic.h"
 #include "OpenGLAPI/gfx/GLTextures.h"
 #include "pbge/internal/OpenGLStates.h"
 #include "pbge/gfx/Texture.h"
-#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Image.h"
 
 namespace {
-    GLint choosePixelFormatFor(GLenum format, GLenum type) {
+    GLint choosePixelFormatFor(GLenum format, GLenum type, unsigned glVersion) {
         GLint rgba32f = format, rgb32f = format, rg32f = format, r32f = format;
         if(type != GL_FLOAT) return format;
-        if(GLEW_VERSION_3_0 || GLEW_VERSION_3_1 || GLEW_VERSION_3_2 || GLEW_VERSION_3_3 || GLEW_VERSION_4_0) {
+        if(glVersion >= 3) {
             rgba32f = GL_RGBA32F;
             rgb32f = GL_RGB32F;
             rg32f = GL_RG32F;
@@ -28,7 +28,7 @@ namespace {
 }
 using namespace pbge;
 
-GLTexture1D::GLTexture1D(GraphicAPI * gl):ogl(gl), data(NULL), GLID(0) {
+GLTexture1D::GLTexture1D(GLGraphic * gl):ogl(gl), data(NULL), GLID(0) {
     this->minFilter = GL_LINEAR;
     this->magFilter = GL_LINEAR;
 }
@@ -50,7 +50,7 @@ void GLTexture1D::bindTextureOn(TextureUnit * unit) {
         glBindTexture(GL_TEXTURE_1D, this->GLID);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, this->minFilter);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, this->magFilter);
-        glTexImage1D(GL_TEXTURE_1D, 0, choosePixelFormatFor(internalFormat, dataType), width, 0, dataFormat, dataType, data);
+        glTexImage1D(GL_TEXTURE_1D, 0, choosePixelFormatFor(internalFormat, dataType, ogl->getMajorVersion()), width, 0, dataFormat, dataType, data);
     }
 }
 
@@ -69,7 +69,7 @@ void GLTexture1D::setImageData(Texture::DataType type, Texture::Format _dataForm
 
 
 
-GLTexture2D::GLTexture2D(GraphicAPI * gl): ogl(gl), data(NULL), GLID(0) {
+GLTexture2D::GLTexture2D(GLGraphic * gl): ogl(gl), data(NULL), GLID(0) {
     this->minFilter = GL_LINEAR;
     this->magFilter = GL_LINEAR;
 }
@@ -102,7 +102,7 @@ void GLTexture2D::bindTextureOn(TextureUnit * unit) {
         glBindTexture(GL_TEXTURE_2D, this->GLID);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->minFilter);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->magFilter);
-        glTexImage2D(GL_TEXTURE_2D, 0, choosePixelFormatFor(internalFormat, dataType), width, height, 0, dataFormat, dataType, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, choosePixelFormatFor(internalFormat, dataType, ogl->getMajorVersion()), width, height, 0, dataFormat, dataType, data);
     }
 }
 
@@ -121,7 +121,7 @@ void GLTexture2D::replaceGLObjectData(Texture::DataType type, Texture::Format da
         if (this->isCompatibleWith(w, h, format)) {
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, dataFormat, dataType, data);
         } else {
-            glTexImage2D(GL_TEXTURE_2D, 0, choosePixelFormatFor(internalFormat, dataType), width, height, 0, dataFormat, dataType, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, choosePixelFormatFor(internalFormat, dataType, ogl->getMajorVersion()), width, height, 0, dataFormat, dataType, data);
         }
 }
 

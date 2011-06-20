@@ -204,10 +204,6 @@
 				RelativePath=".\src\OpenGLAPI.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\src\API\TextureAPI.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

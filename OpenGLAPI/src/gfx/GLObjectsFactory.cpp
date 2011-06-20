@@ -4,6 +4,7 @@
 
 #include "pbge/exceptions/exceptions.h"
 #include "pbge/gfx/Shader.h"
+#include "OpenGLAPI/gfx/GLGraphic.h"
 #include "OpenGLAPI/gfx/GLObjectsFactory.h"
 #include "OpenGLAPI/gfx/GLBuffer.h"
 #include "OpenGLAPI/gfx/GLTextures.h"
@@ -11,7 +12,7 @@
 
 using namespace pbge;
 
-GLObjectsFactory::GLObjectsFactory(GraphicAPI * ogl):gl(ogl) {
+GLObjectsFactory::GLObjectsFactory(GLGraphic * ogl):gl(ogl) {
 }
 
 Buffer * GLObjectsFactory::createBuffer(size_t _size, Buffer::UsageHint _usage) {
