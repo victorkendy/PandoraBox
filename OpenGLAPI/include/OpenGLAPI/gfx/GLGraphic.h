@@ -71,6 +71,8 @@ namespace pbge {
         }
  
     private:
+        void initContextVersion();
+
         void createDefaultShaders();
 
         bool projectionUpdated;

@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\StringSplitterTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VertexBufferObjectTest.cpp"
 				>
 			</File>

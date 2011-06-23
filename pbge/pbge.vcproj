@@ -423,6 +423,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\utils\StringSplitter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\Texture.h"
 				>
 			</File>

@@ -69,21 +69,24 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
         currentMatrixMode = initialMatrixMode;
         state = new StateSet(this);
-        
-        // Parse the version string?
-        this->majorVersion = 1;
-        if(GLEW_VERSION_2_0 || GLEW_VERSION_2_1) {
-            this->majorVersion = 2;
-        }
-        if(GLEW_VERSION_3_0 || GLEW_VERSION_3_1 || GLEW_VERSION_3_2 || GLEW_VERSION_3_3) {
-            this->majorVersion = 3;
-        }
-        if(GLEW_VERSION_4_0) {
-            this->majorVersion = 4;
-        }
-
+        initContextVersion();
         drawController->initialize();
     }
+}
+
+void GLGraphic::initContextVersion() {
+    // Parse the version string?
+    this->majorVersion = 1;
+    if(GLEW_VERSION_2_0 || GLEW_VERSION_2_1) {
+        this->majorVersion = 2;
+    }
+    if(GLEW_VERSION_3_0 || GLEW_VERSION_3_1 || GLEW_VERSION_3_2 || GLEW_VERSION_3_3) {
+        this->majorVersion = 3;
+    }
+    if(GLEW_VERSION_4_0) {
+        this->majorVersion = 4;
+    }
+    std::cout << "Detected version: " << majorVersion << std::endl;
 }
 
 GraphicContext * GLGraphic::getContext() {

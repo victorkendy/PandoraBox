@@ -11,6 +11,7 @@
     #pragma warning(disable: 4996)
     #pragma warning(disable: 4251)
     #pragma warning(disable: 4275)
+    #pragma warning(disable: 4100)
 
     #ifndef PBGE_LIBRARY
         #define PBGE_EXPORT __declspec(dllimport)
