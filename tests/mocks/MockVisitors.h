@@ -8,6 +8,7 @@
 
 class MockRenderVisitor : public pbge::RenderVisitor {
 public:
+    MockRenderVisitor():pbge::RenderVisitor(NULL, NULL){}
     MOCK_METHOD2(visit, void(pbge::Node * node, pbge::GraphicAPI * ogl));
 };
 
