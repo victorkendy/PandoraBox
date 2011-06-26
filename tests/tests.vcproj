@@ -186,6 +186,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FramebufferObjectTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GLStateTest.cpp"
 				>
 			</File>

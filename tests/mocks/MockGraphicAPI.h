@@ -78,4 +78,15 @@ public:
     MOCK_METHOD0(destroy, void());
 };
 
+class MockTexture : public pbge::Texture {
+public:
+    MOCK_METHOD1(initializeTexture, void(pbge::GraphicAPI * gl));
+
+    MOCK_METHOD1(setMinFilter, void(pbge::Texture::Filter filter));
+
+    MOCK_METHOD1(setMagFilter, void(pbge::Texture::Filter filter));
+
+    MOCK_METHOD1(bindTextureOn, void(pbge::TextureUnit * unit));
+};
+
 #endif //PBGE_TESTS_MOCKOPENGL_H_

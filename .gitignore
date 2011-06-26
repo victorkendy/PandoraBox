@@ -1,7 +1,10 @@
 *.exp
 *.ilk
+*.idb
 *.pdb
 *.exe
+*.htm
+*.obj
 *.pgd
 *.ncb
 *.suo

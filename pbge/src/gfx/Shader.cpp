@@ -137,13 +137,11 @@ namespace pbge {
         std::vector<GLShader*>::iterator it;
         if(programID == 0) programID = glCreateProgram();
         for(it = attachedShaders.begin(); it != attachedShaders.end(); it++) {
-            //if(!(*it)->isCompiled()) {
-                if(!(*it)->compile(gfx)) {
-                    std::cout << this->getInfoLog();
-                    return false;
-                }
-                glAttachShader(programID, (*it)->getID());
-            //}
+            if(!(*it)->compile(gfx)) {
+                std::cout << this->getInfoLog();
+                return false;
+            }
+            glAttachShader(programID, (*it)->getID());
         }
         glLinkProgram(programID);
         extractInfoLog();

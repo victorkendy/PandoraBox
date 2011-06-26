@@ -8,8 +8,6 @@ namespace pbge {
     class Texture2D;
 
     class GLFramebufferObject : public FramebufferObject {
-        void addRenderable(Texture2D * texture);
-
         void clearRenderables();
 
         void bind();

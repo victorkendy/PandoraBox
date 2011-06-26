@@ -5,10 +5,6 @@
 
 using namespace pbge;
 
-void GLFramebufferObject::addRenderable(Texture2D * tex) {
-
-}
-
 void GLFramebufferObject::clearRenderables() {
 
 }

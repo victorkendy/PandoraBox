@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include "pbge/pbge.h"
@@ -131,8 +132,6 @@ private:
     pbge::Node * cam_node;
     pbge::Node * sphereParent;
 };
-
-
 
 int main(int argc, char ** argv) {
     pbge::Manager * manager = new pbge::Manager;

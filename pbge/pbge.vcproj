@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\FramebufferObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Geometrics.cpp"
 				>
 			</File>

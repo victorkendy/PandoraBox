@@ -1,5 +1,7 @@
 #include <vector>
 #include <algorithm>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 
 #include "pbge/core/Manager.h"
 #include "pbge/exceptions/exceptions.h"
@@ -8,14 +10,45 @@
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Buffer.h"
 
+using namespace boost::lambda;
 using namespace pbge;
+
+namespace imp_detail {
+    class VertexAttribCreator {
+    public:
+        VertexAttribCreator(VertexBuffer* _vbo,int _stride):vbo(_vbo),offset(0),stride(_stride){}
+        inline void operator()(VertexAttribBuilder & attrib) {
+            vbo->addAttrib(attrib.createInstance(offset, stride));
+            offset += attrib.numberOfCoordinates() * sizeof(float);
+        }
+    private:
+        int offset;
+        int stride;
+        VertexBuffer * vbo;
+    };
+
+    class VertexBufferDataLogic {
+    public:
+        VertexBufferDataLogic(float * _data):data(_data),dataIndex(0){
+        }
+
+        // this method needs to be called with args by ref
+        inline void operator() (VertexAttribBuilder & attrib) {
+            float buf[4];
+            attrib.getNextElement(buf);
+            for(int j = 0; j < attrib.numberOfCoordinates(); j++)
+                data[dataIndex++] = buf[j];
+        }
+    private:
+        int dataIndex;
+        float * data;
+    };
+}
+
 
 bool VertexAttribBuilder::isValid() {
     unsigned short maxIndex = values.size() / 4 - 1;
-    std::vector<unsigned short>::iterator it;
-    for(it = indexes.begin(); it != indexes.end(); it++)
-        if(maxIndex < *it) return false;
-    return true;
+    return (std::find_if(indexes.begin(), indexes.end(), maxIndex < _1) == indexes.end());
 }
 
 void VertexAttribBuilder::getNextElement(float * elems) {
@@ -48,15 +81,12 @@ const VertexAttrib VertexAttribBuilder::createInstance(int offset, GLsizei strid
 VertexBufferBuilder & VertexBufferBuilder::pushValue(const VertexAttribBuilder & attrib, const float &x, const float & y, const float & z, const float & w) {
     if(curAttrib == NULL || !(*curAttrib == attrib)) {
         std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
-        if(it == attribs.end())
+        if(it == attribs.end()) {
             throw BuilderException("Attribute not defined");
-        else {
-            curAttrib = &(*it);
-            curAttrib->pushValue(x,y,z,w);
         }
-    } else {
-        curAttrib->pushValue(x,y,z,w);
+        curAttrib = &(*it);
     }
+    curAttrib->pushValue(x,y,z,w);
     return *this;
 }
 
@@ -64,10 +94,9 @@ VertexBufferBuilder & VertexBufferBuilder::setAttribIndex(const VertexAttribBuil
     std::vector<VertexAttribBuilder>::iterator it = std::find(attribs.begin(), attribs.end(), attrib);
     if(it == attribs.end()) {
         throw BuilderException("Attribute not defined");
-    } else {
-        curAttrib = &(*it);
-        curAttrib->setIndexes(indexes);
     }
+    curAttrib = &(*it);
+    curAttrib->setIndexes(indexes);
     return *this;
 }
 
@@ -78,50 +107,28 @@ VertexBufferBuilder & VertexBufferBuilder::setAttribIndex(const std::vector<unsi
 }
 
 
-GLsizei VertexBufferBuilder::calculateSize() {
+size_t VertexBufferBuilder::calculateSize() {
     unsigned size = 0;
-    std::vector<VertexAttribBuilder>::iterator it;
-    for(it = attribs.begin(); it != attribs.end(); it++)
-        size += it->numberOfCoordinates();
+    std::for_each(attribs.begin(), attribs.end(), 
+        var(size) += bind(&VertexAttribBuilder::numberOfCoordinates, _1));
     return size * nVertices;
 }
 
-void VertexBufferBuilder::validateAttribs() {
-    /*std::vector<VertexAttribBuilder>::iterator it;
-    for(it = attribs.begin(); it != attribs.end(); it++) {
-        if(!it->areIndexesAssigned()) {
-            throw BuilderValidationException("attrib has no index vector");
-        }
-    }*/
-}
-
 void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, GLsizei stride) {
-    std::vector<VertexAttribBuilder>::iterator it;
-    int offset = 0;
-    for(it = attribs.begin(); it != attribs.end(); it++) {
-        vbo->addAttrib(it->createInstance(offset, stride));
-        offset += it->numberOfCoordinates() * sizeof(float);
-    }
+    std::for_each(attribs.begin(), attribs.end(), imp_detail::VertexAttribCreator(vbo, stride));
 }
 
 VertexBuffer * VertexBufferBuilder::done(Buffer::UsageHint usage, GraphicAPI * ogl) {
-    validateAttribs();
     GLsizei size = calculateSize();
     GLsizei stride = size / nVertices;
     Buffer * buffer = ogl->getFactory()->createBuffer(size*sizeof(float), usage);
-    float * data = static_cast<float*>(buffer->map(Buffer::WRITE_ONLY));
-    std::vector<VertexAttribBuilder>::iterator it;
-    int dataIndex = 0;
-    float buf[4];
+    float * data = (float*) buffer->map(Buffer::WRITE_ONLY);
+    imp_detail::VertexBufferDataLogic logic = imp_detail::VertexBufferDataLogic(data);
     for(unsigned int i = 0; i < nVertices; i++) {
-        for(it = attribs.begin(); it != attribs.end(); it++) {
-            it->getNextElement(buf);
-            for(int j = 0; j < it->numberOfCoordinates(); j++)
-                data[dataIndex++] = buf[j];
-        }
+        // accumulates the result of the functor object
+        logic = std::for_each(attribs.begin(), attribs.end(), logic);
     }
     buffer->unmap();
-    data = NULL;
     VertexBuffer * vbo = new VertexBuffer(buffer, nVertices);
     createAttribs(vbo, stride * sizeof(float));
     return vbo;
