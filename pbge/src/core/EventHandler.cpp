@@ -35,50 +35,25 @@ void EventHandler::addMouseHandler(MouseEventHandler *handler) {
 
 void EventHandler::handleKeyDown(char key) {
     std::vector<KeyboardEventHandler *>::iterator it;
-    for(it = keyboardHandlers.begin(); it != keyboardHandlers.end(); it++) { 
-        bool handled = (*it)->keyDown(key);
-        if(handled) {
-            break;
-        }
-    }
+    for(it = keyboardHandlers.begin(); it != keyboardHandlers.end() && !(*it)->keyDown(key);it++);
 }
 
 void EventHandler::handleKeyUp(char key) {
     std::vector<KeyboardEventHandler *>::iterator it;
-    for(it = keyboardHandlers.begin(); it != keyboardHandlers.end(); it++) { 
-        bool handled = (*it)->keyUp(key);
-        if(handled) {
-            break;
-        }
-    }
+    for(it = keyboardHandlers.begin(); it != keyboardHandlers.end() && !(*it)->keyUp(key); it++);
 }
 
 void EventHandler::handleButtonDown(MouseButton button, int x, int y) {
 	std::vector<MouseEventHandler *>::iterator it;
-    for(it = mouseHandlers.begin(); it != mouseHandlers.end(); it++) { 
-		bool handled = (*it)->buttonDown(button, x, y);
-        if(handled) {
-            break;
-        }
-    }
+    for(it = mouseHandlers.begin(); it != mouseHandlers.end() && !(*it)->buttonDown(button, x, y); it++);
 }
 
 void EventHandler::handleButtonUp(MouseButton button, int x, int y) {
 	std::vector<MouseEventHandler *>::iterator it;
-    for(it = mouseHandlers.begin(); it != mouseHandlers.end(); it++) { 
-		bool handled = (*it)->buttonUp(button, x, y);
-        if(handled) {
-            break;
-        }
-    }
+    for(it = mouseHandlers.begin(); it != mouseHandlers.end() && (*it)->buttonUp(button, x, y); it++);
 }
 
 void EventHandler::handleMove(int x, int y) {
 	std::vector<MouseEventHandler *>::iterator it;
-    for(it = mouseHandlers.begin(); it != mouseHandlers.end(); it++) { 
-		bool handled = (*it)->move(x, y);
-        if(handled) {
-            break;
-        }
-    }
+    for(it = mouseHandlers.begin(); it != mouseHandlers.end() && !(*it)->move(x,y); it++);
 }

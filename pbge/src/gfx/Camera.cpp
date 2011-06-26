@@ -9,26 +9,22 @@
 
 using namespace pbge;
 
-Camera::Camera(){
+Camera::Camera():parent(NULL),viewport(NULL){
     this->upVector = new math3d::vector4;
     this->sideVector = new math3d::vector4;
     this->frontVector = new math3d::vector4;
     this->cameraTransformation = new math3d::matrix44;
     this->viewTransform = new math3d::matrix44;
     this->lookAt(math3d::vector4(0,1,0,0), math3d::vector4(0,0,-1,0));
-    parent = NULL;
-    viewport = NULL;
 }
 
-Camera::Camera(const math3d::vector4 & up, const math3d::vector4 & front){
+Camera::Camera(const math3d::vector4 & up, const math3d::vector4 & front):parent(NULL),viewport(NULL){
     this->upVector = new math3d::vector4(up);
     this->sideVector = new math3d::vector4;
     this->frontVector = new math3d::vector4(front);
     this->cameraTransformation = new math3d::matrix44;
     this->viewTransform = new math3d::matrix44;
     lookAt(up, front);
-    parent = NULL;
-    viewport = NULL;    
 }
 
 Camera::~Camera() {
