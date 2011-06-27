@@ -257,10 +257,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\internal\StateProxy.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\gfx\StateSet.cpp"
 				>
 			</File>
@@ -432,10 +428,6 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\ShaderUniform.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\internal\StateProxy.h"
 				>
 			</File>
 			<File

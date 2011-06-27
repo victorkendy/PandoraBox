@@ -36,8 +36,9 @@ namespace imp_detail {
         inline void operator() (VertexAttribBuilder & attrib) {
             float buf[4];
             attrib.getNextElement(buf);
-            for(int j = 0; j < attrib.numberOfCoordinates(); j++)
-                data[dataIndex++] = buf[j];
+            int n = attrib.numberOfCoordinates();
+            std::copy(buf, buf + n, data + dataIndex);
+            dataIndex += n;
         }
     private:
         int dataIndex;
@@ -52,23 +53,19 @@ bool VertexAttribBuilder::isValid() {
 }
 
 void VertexAttribBuilder::getNextElement(float * elems) {
+    std::vector<float>::iterator begin;
     int baseIndex;
     if(!this->indexesAssigned)
         baseIndex = currentElement++;
     else 
         baseIndex = indexes[currentElement++];
-    baseIndex *= 4;
-    for(int i = 0; i < 4; i++) {
-        elems[i] = values[baseIndex + i];
-    }
+    begin = values.begin() + baseIndex * 4;
+    std::copy(begin, begin + 4, elems);
 }
 
 bool VertexAttribBuilder::operator == (const VertexAttribBuilder & other) {
     if(type == VertexAttrib::CUSTOM_ATTRIB) {
-        if(other.type == type)
-            return (name == other.name && nCoord == other.nCoord);
-        else
-            return false;
+        return (other.type == type && nCoord == other.nCoord && name == other.name);
     }
     return (this->type == other.type && this->index == other.index && this->nCoord == other.nCoord);
 }

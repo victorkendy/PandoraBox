@@ -39,7 +39,7 @@ UniformValue * UniformSet::createUniform(const UniformInfo &info) {
         uniforms[info] = newValue;
         return newValue;
     } else {
-        return NULL;
+        throw 1;
     }
 }
 

@@ -16,11 +16,17 @@ namespace pbge {
     public:
         void addRenderable(Texture2D * texture, const std::string & name) {
             renderables[name] = texture;
+            unsync_added.insert(texture);
         }
         void removeRenderable(const std::string & name) {
-            renderables.erase(name);
+            std::map<std::string,Texture2D *>::iterator i = renderables.find(name);
+            if(i != renderables.end()) {
+                unsync_added.erase(unsync_added.find(i->second));
+                renderables.erase(name);
+            }
         }
         void clearRenderables() {
+            unsync_added.clear();
             renderables.clear();
         }
         void bind();
@@ -34,7 +40,8 @@ namespace pbge {
         virtual void unbindFramebuffer() = 0;
     private:
         std::map<std::string,Texture2D *> renderables;
-        std::set<Texture2D*> toAdd;
+        std::set<Texture2D *> unsync_added;
+        std::set<Texture2D*> added;
     };
 }
 
