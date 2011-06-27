@@ -1,18 +1,16 @@
 #ifndef PBGE_GFX_MATRIXSTACK_H_
 #define PBGE_GFX_MATRIXSTACK_H_
 
+#include <boost/smart_ptr/scoped_array.hpp>
+
 #include "math3d/math3d.h"
 
 namespace pbge {
     class MatrixStack {
     public:
-        MatrixStack() {
-            size = 16;
-            index = -1;
-            matrices = new math3d::matrix44[size];
+        MatrixStack():size(16),index(-1),matrices(new math3d::matrix44[size]){
         }
         ~MatrixStack() {
-            delete [] matrices;
         }
         void push(const math3d::matrix44 & m);
         void pop();
@@ -25,7 +23,7 @@ namespace pbge {
 
         unsigned size;
         
-        math3d::matrix44 * matrices;
+        boost::scoped_array<math3d::matrix44> matrices;
     };
 }
 

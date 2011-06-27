@@ -9,17 +9,6 @@
 
 using namespace pbge;
 
-template<typename K, typename V>
-class MapValue {
-public:
-    MapValue(boost::function1<void,V> op):operation(op) {}
-    void operator()(const std::pair<K,V> & p) {
-        operation(p.second);
-    }
-private:
-    boost::function1<void,V> operation;
-};
-
 void FramebufferObject::bind() {
     if(!isInitialized()) {
         initialize();
