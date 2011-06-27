@@ -1,5 +1,8 @@
-#ifndef pbge_manager
-#define pbge_manager 1
+#ifndef PBGE_CORE_MANAGER_H_
+#define PBGE_CORE_MANAGER_H_
+
+#include <boost/smart_ptr/scoped_ptr.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 #include "pbge/core/Log.h"
 #include "pbge/core/core.h"
@@ -42,7 +45,7 @@ namespace pbge {
         }
         
         GraphicAPI * getGraphicAPI() {
-            return ogl;
+            return ogl.get();
         }
 
     // public window initialization functions
@@ -68,9 +71,9 @@ namespace pbge {
         void displayGraphics();
 
     private:
-        Window * window;
+        boost::scoped_ptr<Window> window;
         Log * log;
-        GraphicAPI * ogl;
+        boost::shared_ptr<GraphicAPI> ogl;
         std::vector<std::string> shaderDirectories;
     };
 }
