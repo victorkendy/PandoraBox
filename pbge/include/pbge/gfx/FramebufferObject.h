@@ -14,14 +14,24 @@ namespace pbge {
     // Experimental class with testable template methods
     class PBGE_EXPORT FramebufferObject {
     public:
+        FramebufferObject():bound(false){}
+
         void addRenderable(Texture2D * texture, const std::string & name) {
             renderables[name] = texture;
             unsync_added.insert(texture);
+            if(isBound()) {
+                attachRenderable(texture);
+                added.insert(texture);
+            }
         }
         void removeRenderable(const std::string & name) {
             std::map<std::string,Texture2D *>::iterator i = renderables.find(name);
             if(i != renderables.end()) {
                 unsync_added.erase(unsync_added.find(i->second));
+                if(isBound()) {
+                    added.erase(added.find(i->second));
+                    dettachRenderable(i->second);
+                }
                 renderables.erase(name);
             }
         }
@@ -31,6 +41,9 @@ namespace pbge {
         }
         void bind();
         void unbind();
+        bool isBound() {
+            return bound;
+        }
     protected:
         virtual bool isInitialized() = 0;
         virtual void initialize() = 0;
@@ -42,6 +55,7 @@ namespace pbge {
         std::map<std::string,Texture2D *> renderables;
         std::set<Texture2D *> unsync_added;
         std::set<Texture2D*> added;
+        bool bound;
     };
 }
 

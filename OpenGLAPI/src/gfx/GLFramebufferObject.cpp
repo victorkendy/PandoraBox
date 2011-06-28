@@ -5,14 +5,26 @@
 
 using namespace pbge;
 
-void GLFramebufferObject::clearRenderables() {
-
+bool GLFramebufferObject::isInitialized() {
+    return GLID != 0;
 }
 
-void GLFramebufferObject::bind() {
-
+void GLFramebufferObject::initialize() {
+    glGenFramebuffersEXT(1, &GLID);    
 }
 
-void GLFramebufferObject::unbind() {
+void GLFramebufferObject::bindFramebuffer() {
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, GLID);
+}
+
+void GLFramebufferObject::unbindFramebuffer() {
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+}
+
+void GLFramebufferObject::attachRenderable(pbge::Texture2D *texture) {
+    
+}
+
+void GLFramebufferObject::dettachRenderable(pbge::Texture2D *texture) {
 
 }

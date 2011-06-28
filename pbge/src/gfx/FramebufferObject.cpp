@@ -13,7 +13,10 @@ void FramebufferObject::bind() {
     if(!isInitialized()) {
         initialize();
     }
-    bindFramebuffer();
+    if(!bound) {
+        bindFramebuffer();
+        bound = true;
+    }
     std::vector<Texture2D*> diff(std::max(added.size(), unsync_added.size()));
     std::vector<Texture2D*>::iterator end;
     // Add the new renderables
@@ -27,6 +30,9 @@ void FramebufferObject::bind() {
 }
 
 void FramebufferObject::unbind() {
-    unbindFramebuffer();
+    if(bound) {
+        unbindFramebuffer();
+        bound = false;
+    }
 }
 

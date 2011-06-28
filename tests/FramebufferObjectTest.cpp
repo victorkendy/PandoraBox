@@ -44,7 +44,9 @@ TEST(FramebufferObject, shouldntInitializeIfAlreadyInitialized) {
 
 TEST(FramebufferObject, shouldCallUnbindFramebufferOnUnbind) {
     FakeFramebufferObject fbo;
+    EXPECT_CALL(fbo, bindFramebuffer());
     EXPECT_CALL(fbo, unbindFramebuffer());
+    fbo.bind();
     fbo.unbind();
 }
 
@@ -76,14 +78,16 @@ TEST_F(FramebufferObjectTest, shouldUpdateRenderablesOnBind) {
     fbo.bind();
 }
 
-TEST_F(FramebufferObjectTest, shouldUseRenderablesOnlyOnce) {
+TEST_F(FramebufferObjectTest, shouldUseRenderablesOnlyOnceBetweenBinds) {
     MockTexture2D tex, tex2;
     EXPECT_CALL(fbo, attachRenderable(&tex)).Times(1);
     EXPECT_CALL(fbo, attachRenderable(&tex2)).Times(1);
     EXPECT_CALL(fbo, bindFramebuffer()).Times(2);
+    EXPECT_CALL(fbo, unbindFramebuffer()).Times(1);
     fbo.addRenderable(&tex, "tex");
     fbo.addRenderable(&tex2, "tex2");
     fbo.bind();
+    fbo.unbind();
     fbo.addRenderable(&tex, "tex");
     fbo.addRenderable(&tex2, "tex2");
     fbo.bind();
@@ -96,9 +100,45 @@ TEST_F(FramebufferObjectTest, shouldRemoveARenderableOnNextBind) {
     EXPECT_CALL(fbo, dettachRenderable(&tex)).Times(1);
     EXPECT_CALL(fbo, dettachRenderable(&tex2)).Times(0);
     EXPECT_CALL(fbo, bindFramebuffer()).Times(2);
+    EXPECT_CALL(fbo, unbindFramebuffer()).Times(1);
     fbo.addRenderable(&tex, "tex");
     fbo.addRenderable(&tex2, "tex2");
     fbo.bind();
+    fbo.unbind();
     fbo.removeRenderable("tex");
     fbo.bind();
+}
+
+TEST_F(FramebufferObjectTest, shouldClearAllRenderablesOnNextBind) {
+    MockTexture2D tex, tex2;
+    EXPECT_CALL(fbo, attachRenderable(&tex)).Times(1);
+    EXPECT_CALL(fbo, attachRenderable(&tex2)).Times(1);
+    EXPECT_CALL(fbo, dettachRenderable(&tex)).Times(1);
+    EXPECT_CALL(fbo, dettachRenderable(&tex2)).Times(1);
+    EXPECT_CALL(fbo, bindFramebuffer()).Times(2);
+    EXPECT_CALL(fbo, unbindFramebuffer()).Times(1);
+    fbo.addRenderable(&tex, "tex");
+    fbo.addRenderable(&tex2, "tex2");
+    fbo.bind();
+    fbo.unbind();
+    fbo.clearRenderables();
+    fbo.bind();
+}
+
+TEST_F(FramebufferObjectTest, shouldAttachARenderableImmediatelyIfTheFBOIsBound) {
+    MockTexture2D tex;
+    EXPECT_CALL(fbo, bindFramebuffer()).Times(1);
+    fbo.bind();
+    EXPECT_CALL(fbo, attachRenderable(&tex)).Times(1);
+    fbo.addRenderable(&tex, "tex");
+}
+
+TEST_F(FramebufferObjectTest, shouldDettachARenderableImmediatelyIfTheFBOIsBound) {
+    MockTexture2D tex;
+    EXPECT_CALL(fbo, bindFramebuffer()).Times(1);
+    EXPECT_CALL(fbo, attachRenderable(&tex)).Times(1);
+    fbo.addRenderable(&tex, "tex");
+    fbo.bind();
+    EXPECT_CALL(fbo, dettachRenderable(&tex)).Times(1);
+    fbo.removeRenderable("tex");
 }
