@@ -38,6 +38,7 @@ Ellipsoids * Ellipsoids::addTransform(const math3d::matrix44 & m) {
 
 pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
     pbge::Texture1D * tex = gfx->getFactory()->create1DTexture();
+	numberOfEllipsoids = current;
     tex->setImageData(pbge::Texture::FLOAT, pbge::Texture::RGBA, matrices, numberOfEllipsoids * sizeof(math3d::matrix44), 4 * numberOfEllipsoids, pbge::Texture::RGBA);
     pbge::ModelCollection * ellipsoids = new pbge::ModelCollection(sphere);
     ellipsoids->setNumberOfInstances(numberOfEllipsoids);

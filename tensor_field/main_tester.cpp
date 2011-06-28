@@ -6,6 +6,7 @@
 #include "TensorModel.h"
 #include "Ellipses.h"
 #include "Ellipsoids.h"
+#include "FieldReader.h"
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
@@ -115,7 +116,11 @@ public:
     }
 private:
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
-        pbge::VBOModel * bezier = pbge::Geometrics::createBezier(
+        AnalyzeReader aReader(gfx);
+        aReader.loadField("./Resources/dhelix_dti_tensor");
+        aReader.generateFieldOn(graph, light_parent);
+		
+		pbge::VBOModel * bezier = pbge::Geometrics::createBezier(
             math3d::vector4(-1,0,0,1), math3d::vector4(2,-2,0,1), 
             math3d::vector4(-2,-2,0,1), math3d::vector4(1,0,0,1), 100, gfx);
         graph->appendChildTo(light_parent, new pbge::ModelInstance(bezier));
@@ -138,7 +143,7 @@ private:
         graph->appendChildTo(circle_parent, circle_instance);
 
         pbge::ModelInstance * vboModel = createVBOInstance(gfx);
-        graph->appendChildTo(child, vboModel);
+        //graph->appendChildTo(child, vboModel);
 
         pbge::Model * sphereModel = pbge::Geometrics::createSphere(1.0f, 100, gfx);
         pbge::ModelCollection * spheres = new pbge::ModelCollection(sphereModel);
@@ -154,15 +159,15 @@ private:
             "   gl_Position = ftransform() + gl_InstanceIDARB;\n"
             "}", ""));
         spheres->setNumberOfInstances(5);
-        graph->appendChildTo(sphereParent, spheres);
+        //graph->appendChildTo(sphereParent, spheres);
 
         Ellipses ellipses(gfx);
         pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 1, 1))->done(gfx);
-        graph->appendChildTo(sphereParent, ellipsesCollection);
+        //graph->appendChildTo(sphereParent, ellipsesCollection);
 
 		Ellipsoids ellipsoids(gfx);
         pbge::ModelCollection * ellipsoidsCollection = ellipsoids.createEllipsoids(1)->addTransform(math3d::scaleMatrix(1, 0.5f, 0.2f)*math3d::translationMatrix(1,1,1))->done(gfx);
-		graph->appendChildTo(sphereParent, ellipsoidsCollection);
+		//graph->appendChildTo(sphereParent, ellipsoidsCollection);
     }
 
     void createSceneLights(pbge::SceneGraph * graph, int cam_node_name) {
@@ -207,7 +212,7 @@ int main(int argc, char ** argv) {
     pbge::Manager * manager = new pbge::Manager;
     manager->setWindowDimensions(500, 500);
     manager->setFullscreen(false);
-    manager->setWindowTitle("vbo_rendering");
+    manager->setWindowTitle("tensor_field");
     manager->setSceneInitializer(new CustomSceneInitializer);
     manager->printDebugInformation(true);
     manager->displayGraphics();
