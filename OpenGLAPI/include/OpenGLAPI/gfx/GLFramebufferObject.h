@@ -3,6 +3,7 @@
 #define PBGE_GFX_OPENGL_GLFRAMEBUFFEROBJECT_H_
 
 #include <GL/glew.h>
+#include <vector>
 #include "pbge/gfx/FramebufferObject.h"
 
 namespace pbge {
@@ -10,7 +11,7 @@ namespace pbge {
 
     class GLFramebufferObject : public FramebufferObject {
     public:
-        GLFramebufferObject():FramebufferObject(),GLID(0){}
+        GLFramebufferObject():FramebufferObject(),GLID(0),renderables(16,NULL){}
     protected:
         bool isInitialized();
         void initialize();
@@ -20,6 +21,7 @@ namespace pbge {
         void unbindFramebuffer();
     private:
         GLuint GLID;
+        std::vector<Texture2D*> renderables;
     };
 }
 

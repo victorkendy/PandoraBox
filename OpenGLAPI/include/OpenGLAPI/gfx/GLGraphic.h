@@ -2,6 +2,9 @@
 #ifndef PBGE_GFX_OPENGL_GLGRAPHIC_H
 #define PBGE_GFX_OPENGL_GLGRAPHIC_H
 
+#include <boost/smart_ptr/scoped_array.hpp>
+#include <boost/smart_ptr/scoped_ptr.hpp>
+
 #include "pbge/core/core.h"
 #include "pbge/gfx/GraphicAPI.h"
 
@@ -77,19 +80,19 @@ namespace pbge {
 
         bool projectionUpdated;
 
-        math3d::matrix44 * matrices;
+        boost::scoped_array<math3d::matrix44> matrices;
 
         GLenum currentMatrixMode;
 
-        StateSet * state;
+        boost::scoped_ptr<StateSet> state;
 
-        ResourceStorage * storage;
+        boost::scoped_ptr<ResourceStorage> storage;
 
-        GraphicContext * context;
+        boost::scoped_ptr<GraphicContext> context;
 
-        GraphicObjectsFactory * factory;
+        boost::scoped_ptr<GraphicObjectsFactory> factory;
 
-        GLDrawController * drawController;
+        boost::scoped_ptr<GLDrawController> drawController;
 
         unsigned majorVersion;
     };

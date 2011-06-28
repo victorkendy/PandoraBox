@@ -64,6 +64,10 @@ namespace pbge {
         // check the documentation of the Texture interface
         void setMagFilter(Texture::Filter magFilter);
 
+        GLuint getId() {
+            return GLID;
+        }
+
     private:
         GLTexture2D (GLGraphic * _gl); 
         

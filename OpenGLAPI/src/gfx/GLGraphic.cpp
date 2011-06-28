@@ -12,15 +12,12 @@ using namespace pbge;
 
 GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(new ResourceStorage), context(NULL), projectionUpdated(true), majorVersion(0) {
     matrices[2] = math3d::identity44;
-    this->factory = new GLObjectsFactory(this);
-    this->drawController = new GLDrawController(this);
+    factory.reset(new GLObjectsFactory(this));
+    drawController.reset(new GLDrawController(this));
     createDefaultShaders();
 }
 
 GLGraphic::~GLGraphic() {
-    delete [] matrices;
-    delete state;
-    delete context;
 }
 
 void GLGraphic::createDefaultShaders() {
@@ -61,14 +58,14 @@ void GLGraphic::createDefaultShaders() {
 }
 
 void GLGraphic::setContext(GraphicContext * newContext) {
-    this->context = newContext;
+    context.reset(newContext);
     if(context != NULL) {
         context->makeCurrent();
         glewInit();
         GLint initialMatrixMode;
         glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
         currentMatrixMode = initialMatrixMode;
-        state = new StateSet(this);
+        state.reset(new StateSet(this));
         initContextVersion();
         drawController->initialize();
     }
@@ -90,13 +87,13 @@ void GLGraphic::initContextVersion() {
 }
 
 GraphicContext * GLGraphic::getContext() {
-    return context;
+    return context.get();
 }
 
 void GLGraphic::releaseContext() {
     if(context != NULL) {
         context->release();
-        context = NULL;
+        context.reset(NULL);
     }
 }
 
@@ -138,7 +135,7 @@ void GLGraphic::updateState() {
 }
 
 GraphicObjectsFactory * GLGraphic::getFactory() {
-    return this->factory;
+    return factory.get();
 }
 
 UniformValue * GLGraphic::getUniformValue(const UniformInfo & info) {
@@ -164,11 +161,11 @@ void GLGraphic::enableDrawBuffer(GLenum buffer) {
 }
 
 StateSet * GLGraphic::getState() { 
-    return state; 
+    return state.get();
 }
 
 ResourceStorage * GLGraphic::getStorage() { 
-    return storage; 
+    return storage.get();
 }
 
 TextureUnit * GLGraphic::chooseTextureUnit(Texture * texture) {
@@ -190,7 +187,7 @@ void GLGraphic::popUniforms() {
 }
 
 DrawController * GLGraphic::getDrawController() {
-    return drawController;
+    return drawController.get();
 }
 
 void GLGraphic::setViewport(int x, int y, int w, int h) {
