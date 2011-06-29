@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="math3d.lib glew32.lib glew32s.lib OpenGL32.lib Devil.lib ilu.lib ilut.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Users\victor\Documents\Visual Studio 2008\Projects\PandoraBox\libs\Debug&quot;"
+				AdditionalLibraryDirectories="C:\Users\Toshi\workspace\PBGE\PandoraBox\libs\Debug;&quot;C:\Users\victor\Documents\Visual Studio 2008\Projects\PandoraBox\libs\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
