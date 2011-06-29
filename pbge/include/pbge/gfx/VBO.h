@@ -30,12 +30,10 @@ namespace pbge {
             CUSTOM_ATTRIB
         } Type;
 
-        VertexAttrib(int _nCoord, int _offset, GLsizei _stride, Type _type) {
-            nCoord = _nCoord;
-            offset = _offset;
-            stride = _stride;
-            type = _type;
-        }
+        VertexAttrib(int _nCoord, int _offset, GLsizei _stride, Type _type):nCoord(_nCoord),
+                        offset(_offset),
+                        stride(_stride),
+                        type(_type) {}
 
         int getOffset() {
             return offset;
@@ -57,9 +55,7 @@ namespace pbge {
 
     class PBGE_EXPORT VertexBuffer {
     public:
-        VertexBuffer(Buffer * _buffer, unsigned _nVertices) {
-            buffer = _buffer;
-            nVertices = _nVertices;
+        VertexBuffer(Buffer * _buffer, unsigned _nVertices):buffer(_buffer), nVertices(_nVertices){
         }
 
         ~VertexBuffer() {
@@ -92,23 +88,18 @@ namespace pbge {
 
     class PBGE_EXPORT VertexAttribBuilder {
     public:
-        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, int _index = -1) {
-            nCoord = _nCoord;
-            type = _type;
-            index = _index;
-            indexesAssigned = false;
-            currentElement = 0;
-            name = "";
-        }
+        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, int _index = -1):nCoord(_nCoord),
+                             type(_type),
+                             index(_index),
+                             indexesAssigned(false),
+                             currentElement(0),name("") {}
 
-        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, const std::string & _name) {
-            nCoord = _nCoord;
-            type = _type;
-            index = -1;
-            indexesAssigned = false;
-            currentElement = 0;
-            name = _name;
-        }
+        VertexAttribBuilder(unsigned _nCoord, VertexAttrib::Type _type, const std::string & _name):nCoord(_nCoord),
+                               type(_type),
+                               index(-1),
+                               indexesAssigned(false),
+                               currentElement(0),
+                               name(_name) {}
 
         void pushValue(const float x, const float y, const float z, const float w) {
             values.push_back(x);
@@ -156,10 +147,7 @@ namespace pbge {
 
     class PBGE_EXPORT VertexBufferBuilder {
     public:
-        VertexBufferBuilder(unsigned _nVertices) {
-            nVertices = _nVertices;
-            curAttrib = NULL;
-        }
+        VertexBufferBuilder(unsigned _nVertices):nVertices(_nVertices),curAttrib(NULL) {}
 
         const VertexAttribBuilder addAttrib(unsigned _nElements, VertexAttrib::Type _type, int _index=-1) {
             VertexAttribBuilder attrib(_nElements, _type, _index);
@@ -188,9 +176,7 @@ namespace pbge {
         VertexBuffer * done(Buffer::UsageHint usage, GraphicAPI * gfx);
 
     private:
-        void validateAttribs();
-
-        GLsizei calculateSize();
+        size_t calculateSize();
 
         VertexAttribBuilder * curAttrib;
 

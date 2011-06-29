@@ -10,22 +10,14 @@
 
 using namespace pbge;
 
-GLGraphic::GLGraphic() {
-    matrices = new math3d::matrix44[3];
+GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(new ResourceStorage), context(NULL), projectionUpdated(true), majorVersion(0) {
     matrices[2] = math3d::identity44;
-    this->state = NULL;
-    storage = new ResourceStorage;
-    this->context = NULL;
-    this->factory = new GLObjectsFactory(this);
-    this->projectionUpdated = true;
-    this->drawController = new GLDrawController(this);
+    factory.reset(new GLObjectsFactory(this));
+    drawController.reset(new GLDrawController(this));
     createDefaultShaders();
 }
 
 GLGraphic::~GLGraphic() {
-    delete [] matrices;
-    delete state;
-    delete context;
 }
 
 void GLGraphic::createDefaultShaders() {
@@ -66,26 +58,42 @@ void GLGraphic::createDefaultShaders() {
 }
 
 void GLGraphic::setContext(GraphicContext * newContext) {
-    this->context = newContext;
+    context.reset(newContext);
     if(context != NULL) {
         context->makeCurrent();
         glewInit();
         GLint initialMatrixMode;
         glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
         currentMatrixMode = initialMatrixMode;
-        state = new StateSet(this);
+        state.reset(new StateSet(this));
+        initContextVersion();
         drawController->initialize();
     }
 }
 
+void GLGraphic::initContextVersion() {
+    // Parse the version string?
+    this->majorVersion = 1;
+    if(GLEW_VERSION_2_0 || GLEW_VERSION_2_1) {
+        this->majorVersion = 2;
+    }
+    if(GLEW_VERSION_3_0 || GLEW_VERSION_3_1 || GLEW_VERSION_3_2 || GLEW_VERSION_3_3) {
+        this->majorVersion = 3;
+    }
+    if(GLEW_VERSION_4_0) {
+        this->majorVersion = 4;
+    }
+    std::cout << "Detected version: " << majorVersion << std::endl;
+}
+
 GraphicContext * GLGraphic::getContext() {
-    return context;
+    return context.get();
 }
 
 void GLGraphic::releaseContext() {
     if(context != NULL) {
         context->release();
-        context = NULL;
+        context.reset(NULL);
     }
 }
 
@@ -127,7 +135,7 @@ void GLGraphic::updateState() {
 }
 
 GraphicObjectsFactory * GLGraphic::getFactory() {
-    return this->factory;
+    return factory.get();
 }
 
 UniformValue * GLGraphic::getUniformValue(const UniformInfo & info) {
@@ -153,11 +161,11 @@ void GLGraphic::enableDrawBuffer(GLenum buffer) {
 }
 
 StateSet * GLGraphic::getState() { 
-    return state; 
+    return state.get();
 }
 
 ResourceStorage * GLGraphic::getStorage() { 
-    return storage; 
+    return storage.get();
 }
 
 TextureUnit * GLGraphic::chooseTextureUnit(Texture * texture) {
@@ -179,7 +187,7 @@ void GLGraphic::popUniforms() {
 }
 
 DrawController * GLGraphic::getDrawController() {
-    return drawController;
+    return drawController.get();
 }
 
 void GLGraphic::setViewport(int x, int y, int w, int h) {

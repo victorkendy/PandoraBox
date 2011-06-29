@@ -16,7 +16,7 @@ GLDrawController::GLDrawController(GLGraphic * _ogl):ogl(_ogl), coreSupported(fa
 }
 
 void GLDrawController::initialize() {
-    if(GLEW_VERSION_3_1 || GLEW_VERSION_3_2 || GLEW_VERSION_3_3 || GLEW_VERSION_4_0) {
+    if((ogl->getMajorVersion() == 3 && !GLEW_VERSION_3_0) || ogl->getMajorVersion() >= 4) {
         coreSupported = true;
     }
     if(GLEW_ARB_draw_instanced) {

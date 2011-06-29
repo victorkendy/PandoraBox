@@ -214,6 +214,5 @@ Window::~Window() {
     delete initializer;
     delete scene;
     delete renderer;
-    delete handler;
 }
 

@@ -4,6 +4,7 @@
 
 #include <windows.h>
 #include <atlstr.h>
+#include "pbge/exceptions/exceptions.h"
 
 namespace pbge {
 
@@ -33,6 +34,9 @@ namespace pbge {
                 } else {
                     std::cout << GetLastError() << std::endl;
                 }
+            } else {
+                std::cout << "The library at " + libraryPath + " was not found" << std::endl;
+                throw Exception("The library at " + libraryPath + " was not found");
             }
         }
 

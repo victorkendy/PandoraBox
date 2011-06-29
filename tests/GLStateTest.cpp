@@ -53,16 +53,7 @@ TEST(UniformInfoTest, smokeTest) {
 }
 
 
-class MockTexture : public pbge::Texture {
-public:
-    MOCK_METHOD1(initializeTexture, void(pbge::GraphicAPI * gl));
 
-    MOCK_METHOD1(setMinFilter, void(pbge::Texture::Filter filter));
-
-    MOCK_METHOD1(setMagFilter, void(pbge::Texture::Filter filter));
-
-    MOCK_METHOD1(bindTextureOn, void(pbge::TextureUnit * unit));
-};
 
 TEST(StateSetTest, ifAllUnitsAreFreeReturnsAFreeUnit) {
     MockGraphicAPI ogl;

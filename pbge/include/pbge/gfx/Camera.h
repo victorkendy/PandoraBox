@@ -3,6 +3,8 @@
 #define PBGE_GFX_CAMERA_H_
 
 #include <string>
+#include <boost/smart_ptr/scoped_ptr.hpp>
+#include <boost/smart_ptr/scoped_array.hpp>
 
 #include "math3d/math3d.h"
 
@@ -15,10 +17,7 @@ namespace pbge {
 
     class PBGE_EXPORT Frustum {
     public:
-        Frustum() {
-            this->frustumPlanes = new math3d::vector4[6];
-            this->frustumPoints = new math3d::vector4[8];
-            this->projectionMatrix = new math3d::matrix44;
+        Frustum():frustumPlanes(new math3d::vector4[6]),frustumPoints(new math3d::vector4[8]),projectionMatrix(new math3d::matrix44) {
         }
 
         ~Frustum();
@@ -44,9 +43,9 @@ namespace pbge {
         void updatePerspectivePoints();
         void updateOrthoPoints();
         void updateFrustumPoints();
-        math3d::vector4  * frustumPlanes;
-        math3d::vector4  * frustumPoints;
-        math3d::matrix44 * projectionMatrix;
+        boost::scoped_array<math3d::vector4> frustumPlanes;
+        boost::scoped_array<math3d::vector4> frustumPoints;
+        boost::scoped_ptr<math3d::matrix44> projectionMatrix;
     };
 
 
@@ -84,11 +83,11 @@ namespace pbge {
     protected:
         CameraNode * parent;
         Viewport * viewport;
-        math3d::vector4 * upVector;
-        math3d::vector4 * frontVector;
-        math3d::vector4 * sideVector;
-        math3d::matrix44 * cameraTransformation;
-        math3d::matrix44 * viewTransform;
+        boost::scoped_ptr<math3d::vector4> upVector;
+        boost::scoped_ptr<math3d::vector4> frontVector;
+        boost::scoped_ptr<math3d::vector4> sideVector;
+        boost::scoped_ptr<math3d::matrix44> cameraTransformation;
+        boost::scoped_ptr<math3d::matrix44> viewTransform;
         void setCameraTransformation ();
         int is_valid;
     };

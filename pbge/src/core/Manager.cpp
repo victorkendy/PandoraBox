@@ -12,7 +12,7 @@
 
 namespace pbge {
     
-    Manager::Manager() {
+    Manager::Manager() : window(new Window){
         log = new LogTerminal();
         // Get the installation directory of the PBGE_HOME
         char * installDir = getenv("PBGE_HOME");
@@ -27,9 +27,7 @@ namespace pbge {
         } else {
             log->write("Environment Variable PBGE_HOME not found");
         }
-        this->ogl = GraphicAPI::createInstance();
-        this->window = new Window;
-
+        ogl.reset(GraphicAPI::createInstance());
         window->setGraphicAPI(ogl);
         shaderDirectories.push_back(std::string("./shaders/"));
     }
@@ -48,40 +46,38 @@ namespace pbge {
     }
 
     Manager::~Manager() {
-        delete ogl;
         delete log;
-        delete window;
     }
 
     void Manager::setWindowDimensions(const unsigned & w, const unsigned & h) {
-        this->window->setWindowDimensions(w, h);
+        window->setWindowDimensions(w, h);
     }
 
     void Manager::setFullscreen(const bool & fullscreen) {
-        this->window->setFullscreen(fullscreen);
+        window->setFullscreen(fullscreen);
     }
 
     void Manager::setWindowTitle(const std::string title) {
-        this->window->setTitle(title);
+        window->setTitle(title);
     }
 
     void Manager::displayGraphics() {
-        this->window->displayWindow();
+        window->displayWindow();
     }
 
     void Manager::setSceneInitializer(SceneInitializer * initializer) {
-        this->window->setSceneInitializer(initializer);
+        window->setSceneInitializer(initializer);
     }
 
     void Manager::setKeyboardEventHandler(KeyboardEventHandler * handler) {
-        this->window->setKeyboardEventHandler(handler);
+        window->setKeyboardEventHandler(handler);
     }
 
     void Manager::setMainSceneGraph(SceneGraph * scene) {
-        this->window->setScene(scene);
+        window->setScene(scene);
     }
 
     void Manager::printDebugInformation(const bool & showInfo) {
-        this->window->setShowDebug(showInfo);
+        window->setShowDebug(showInfo);
     }
 }

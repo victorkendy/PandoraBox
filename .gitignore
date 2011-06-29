@@ -1,7 +1,10 @@
 *.exp
 *.ilk
+*.idb
 *.pdb
 *.exe
+*.htm
+*.obj
 *.pgd
 *.ncb
 *.suo
@@ -15,6 +18,8 @@ gmock*
 gtest*
 out/
 bin/Debug/tester.lib
+
+bin/*/OpenGLAPI*
 
 _*.cpp
 _*.h

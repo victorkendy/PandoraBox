@@ -3,6 +3,9 @@
 #ifndef PBGE_CORE_WINDOW_H_
 #define PBGE_CORE_WINDOW_H_
 
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/smart_ptr/scoped_ptr.hpp>
+
 #include <string>
 #include "pbge/core/EventHandler.h"
 
@@ -16,7 +19,7 @@ namespace pbge {
 
     class Window {
     public:
-        Window () {
+        Window() {
             showDebug = false;
             fullscreen = false;
             width = 500;
@@ -25,10 +28,9 @@ namespace pbge {
             positionY = 0;
             windowTitle = "";
             renderer = NULL;
-            ogl = NULL;
             scene = NULL;
             initializer = NULL;
-            handler = new EventHandler(this);
+            handler.reset(new EventHandler(this));
         }
 
         ~Window();
@@ -46,12 +48,12 @@ namespace pbge {
             windowTitle = title;
         }
 
-        void setGraphicAPI(GraphicAPI * openGL) {
-            this->ogl = openGL;
+        void setGraphicAPI(boost::shared_ptr<GraphicAPI> & gfx) {
+            this->ogl = gfx;
         }
 
         GraphicAPI * getGraphicAPI () {
-            return ogl;
+            return ogl.get();
         }
 
         Renderer * getRenderer () {
@@ -93,7 +95,7 @@ namespace pbge {
         void displayWindow();
 
         EventHandler * getEventHandler() {
-            return handler;
+            return handler.get();
         }
 
     private:
@@ -113,13 +115,13 @@ namespace pbge {
 
         Renderer * renderer;
 
-        GraphicAPI * ogl;
+        boost::shared_ptr<GraphicAPI> ogl;
 
         SceneGraph * scene;
 
         SceneInitializer * initializer;
 
-        EventHandler * handler;
+        boost::scoped_ptr<EventHandler> handler;
     };
 }
 #endif

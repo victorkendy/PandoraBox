@@ -35,7 +35,6 @@ void MatrixStack::clear() {
 void MatrixStack::resize() {
     unsigned newSize = 2 * size;
     math3d::matrix44 * newMatrices = new math3d::matrix44[newSize];
-    memcpy(newMatrices, matrices, sizeof(math3d::matrix44) * size);
-    delete [] matrices;
-    matrices = newMatrices;
+    memcpy(newMatrices, matrices.get(), sizeof(math3d::matrix44) * size);
+    matrices.reset(newMatrices);
 }

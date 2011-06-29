@@ -3,11 +3,12 @@
 #ifndef PBGE_GFX_SHADERUNIFORM_H_
 #define PBGE_GFX_SHADERUNIFORM_H_
 #include <cstring>
-
 #include <string>
 #include <sstream>
 
 #include "math3d/math3d.h"
+
+#include "pbge/core/PairCompare.h"
 
 namespace pbge {
 
@@ -76,7 +77,7 @@ namespace pbge {
         }
         
         bool operator < (const UniformInfo other) const {
-            return (this->getType() < other.getType() || (this->getType() == other.getType() && this->getName() < other.getName()));
+            return PairCompare<UniformType, std::string>::less(getType(), other.getType(), getName(), other.getName());
         }
 
         std::string toString() { 

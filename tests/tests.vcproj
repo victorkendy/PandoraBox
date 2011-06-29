@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)pbge\include&quot;;&quot;$(SolutionDir)aditional_includes&quot;"
+				AdditionalIncludeDirectories="C:\boost_1_46_1;&quot;$(SolutionDir)pbge\include&quot;;&quot;$(SolutionDir)aditional_includes&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -182,6 +182,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConvertersTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FramebufferObjectTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GLStateTest.cpp"
 				>
 			</File>
@@ -191,6 +199,18 @@
 			</File>
 			<File
 				RelativePath=".\RenderTargetTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ShaderBuilderTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\StringSplitterTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UniformStackTest.cpp"
 				>
 			</File>
 			<File

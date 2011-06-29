@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="math3d.lib glew32.lib glew32s.lib OpenGL32.lib Devil.lib ilu.lib ilut.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)libs\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="C:\Users\Toshi\workspace\PBGE\PandoraBox\libs\Debug;&quot;C:\Users\victor\Documents\Visual Studio 2008\Projects\PandoraBox\libs\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\FramebufferObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\Geometrics.cpp"
 				>
 			</File>
@@ -241,15 +245,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\utils\ShaderBuilder.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\ShaderHelper.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\gfx\ShaderUniform.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\internal\StateProxy.cpp"
 				>
 			</File>
 			<File
@@ -288,6 +292,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Camera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\utils\converters.h"
 				>
 			</File>
 			<File
@@ -379,6 +387,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\core\PairCompare.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\pbge.h"
 				>
 			</File>
@@ -407,6 +419,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\utils\ShaderBuilder.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\ShaderHelper.h"
 				>
 			</File>
@@ -415,11 +431,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\internal\StateProxy.h"
+				RelativePath=".\include\pbge\gfx\StateSet.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\gfx\StateSet.h"
+				RelativePath=".\include\pbge\utils\StringSplitter.h"
 				>
 			</File>
 			<File
