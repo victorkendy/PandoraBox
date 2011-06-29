@@ -71,6 +71,7 @@ void Symmetric3DTensorFieldReader::generateFieldOn(pbge::SceneGraph *scene, int 
 void Symmetric3DTensorFieldReader::generateFieldOn(pbge::SceneGraph *scene, pbge::Node *parent) {
 	if(!this->description_file.is_open()) throw std::exception("No tensor field description file loaded");
     pbge::Node * field_parent = scene->appendChildTo(parent, pbge::TransformationNode::translation(0,0,0));
+	this->tensorFactory->createTensors(this->n_x*this->n_y*this->n_z);
     for(int k = 0; k < this->n_z; k++) {
         //pbge::Node * z_axis = scene->appendChildTo(field_parent, pbge::TransformationNode::translation(0, 0, -(k * this->d_z)));
         math3d::matrix44 kTranslation = math3d::translationMatrix(0, 0, -(k * this->d_z));
@@ -109,7 +110,7 @@ bool is_zero_matrix(float **matrix) {
     float epsilon = 0.001f;
     for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 3; j++) {
-            if(matrix[i][j] > epsilon || matrix[i][j] < -epsilon) return false;
+			if(matrix[i][j] > epsilon || matrix[i][j] < -epsilon) return false;
         }
     }
     return true;
