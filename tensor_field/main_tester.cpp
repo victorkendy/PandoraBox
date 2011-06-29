@@ -101,7 +101,8 @@ public:
         cam_node_name = cam_node->getSceneGraphIndex();
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
-        cam->setPerspective(45, 1, 1.0f, 10);
+        //cam->setPerspective(45, 1, 1.0f, 10);
+        cam->setPerspective(90, 1, 16.0f, 48.0f);
 
 		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
@@ -111,12 +112,12 @@ private:
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
         AnalyzeReader aReader(gfx);
         aReader.loadField("./Resources/dhelix_dti_tensor");
-//        aReader.generateFieldOn(graph, light_parent);
+        aReader.generateFieldOn(graph, light_parent);
 		
 		pbge::VBOModel * bezier = pbge::Geometrics::createBezier(
             math3d::vector4(-1,0,0,1), math3d::vector4(2,-2,0,1), 
             math3d::vector4(-2,-2,0,1), math3d::vector4(1,0,0,1), 100, gfx);
-        graph->appendChildTo(light_parent, new pbge::ModelInstance(bezier));
+//        graph->appendChildTo(light_parent, new pbge::ModelInstance(bezier));
 
         pbge::VBOModel * circle = pbge::Geometrics::createCircunference(1.0f, 100, gfx);
         pbge::ModelInstance * circle_instance = new pbge::ModelInstance(circle);
@@ -133,7 +134,7 @@ private:
                 "}"
             );
         helper->setPrograms(circle_instance);
-        graph->appendChildTo(circle_parent, circle_instance);
+//        graph->appendChildTo(circle_parent, circle_instance);
 
         pbge::ModelInstance * vboModel = createVBOInstance(gfx);
         //graph->appendChildTo(child, vboModel);
@@ -157,7 +158,7 @@ private:
         Ellipses ellipses(gfx);
 
         pbge::ModelCollection * ellipsesCollection = ellipses.createEllipses(1)->addTransform(math3d::translationMatrix(-1, 2.88f, 0) * math3d::scaleMatrix(0.3, 0.5, 1.0))->done(gfx);
-        graph->appendChildTo(sphereParent, ellipsesCollection);
+//        graph->appendChildTo(sphereParent, ellipsesCollection);
 
 		Ellipsoids ellipsoids(gfx);
         pbge::ModelCollection * ellipsoidsCollection = ellipsoids.createEllipsoids(1)->addTransform(math3d::scaleMatrix(1, 0.5f, 0.2f)*math3d::translationMatrix(1,1,1))->done(gfx);

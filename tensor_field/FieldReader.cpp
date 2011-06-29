@@ -106,7 +106,7 @@ void AnalyzeReader::generateFieldOn(pbge::SceneGraph *scene, int index) {
 }
 
 bool is_zero_matrix(float **matrix) {
-    float epsilon = 0.0001f;
+    float epsilon = 0.001f;
     for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 3; j++) {
             if(matrix[i][j] > epsilon || matrix[i][j] < -epsilon) return false;
