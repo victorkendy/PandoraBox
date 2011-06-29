@@ -15,7 +15,7 @@ void MatrixStack::push(const math3d::matrix44 & m) {
 }
 
 void MatrixStack::pop() {
-    if(index > 0) {
+    if(index >= 0) {
         index--;
     }
 }

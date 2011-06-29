@@ -5,8 +5,10 @@
 
 #include "math3d/math3d.h"
 
+#include "pbge/core/core.h"
+
 namespace pbge {
-    class MatrixStack {
+    class PBGE_EXPORT MatrixStack {
     public:
         MatrixStack():size(16),index(-1),matrices(new math3d::matrix44[size]){
         }
@@ -19,7 +21,7 @@ namespace pbge {
     private:
         void resize(void);
 
-        unsigned index;
+        int index;
 
         unsigned size;
         

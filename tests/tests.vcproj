@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MatrixStackTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NodeTest.cpp"
 				>
 			</File>
