@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UniformSetTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UniformStackTest.cpp"
 				>
 			</File>
