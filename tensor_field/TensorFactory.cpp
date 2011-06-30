@@ -5,7 +5,7 @@
 
 #define TENSOR_FACTORY_PI 3.14159f
 
-Tensor3DProcessor::Tensor3DProcessor(float ** _tensor) {
+Tensor3DProcessor::Tensor3DProcessor(float * _tensor) {
     this->tensor = _tensor;
     calculateEigenValues();
     calculateEigenVectors();
@@ -21,8 +21,9 @@ void Tensor3DProcessor::calculateEigenValues() {
 }
 
 void Tensor3DProcessor::calculateEigenValuesForDiagonalTensor() {
-    for(int i = 0; i < 3; i++) {
-        float value = this->tensor[i][i];
+	int positions[3] = {0, 3, 5};
+	for(int i = 0; i < 3; i++) {
+        float value = this->tensor[positions[i]];
         //Should this happen?
         if(value == 0) value = 0.05f;
         this->eigenvalues[i] = value;
@@ -30,19 +31,19 @@ void Tensor3DProcessor::calculateEigenValuesForDiagonalTensor() {
 }
 
 void Tensor3DProcessor::calculateEigenValuesForNonDiagonalTensor() {
-    float dxx = this->tensor[0][0];
-    float dyy = this->tensor[1][1];
-    float dzz = this->tensor[2][2];
-    float dxy = this->tensor[0][1];
-    float dxz = this->tensor[0][2];
-    float dyz = this->tensor[1][2];
+    float dxx = this->tensor[0];
+    float dyy = this->tensor[3];
+    float dzz = this->tensor[5];
+    float dxy = this->tensor[1];
+    float dxz = this->tensor[2];
+    float dyz = this->tensor[4];
     float i1 = dxx + dyy + dzz;
     float i2 = dxx*dyy + dyy*dzz + dzz*dxx - (dxy*dxy + dxz*dxz + dyz*dyz);
     float i3 = dxx*dyy*dzz + 2*dxy*dxz*dyz - (dzz*dxy*dxy + dyy*dxz*dxz + dxx*dyz*dyz);
     float v_sqrt = sqrt((i1/3)*(i1/3) - i2/3);
     float s = (i1/3)*(i1/3)*(i1/3) - i1*i2/6 + i3/2;
     float phi_aux = s/(v_sqrt*v_sqrt*v_sqrt);
-    //Correcting precision problems for acos function
+    //Adjustment due to precision problems for acos function
     if(phi_aux > 1.0) phi_aux = 1.0f;
     else if(phi_aux < -1.0) phi_aux = -1.0f;
     float phi = acos(phi_aux)/3;
@@ -53,7 +54,7 @@ void Tensor3DProcessor::calculateEigenValuesForNonDiagonalTensor() {
 }
 
 bool Tensor3DProcessor::isTensorDiagonal() {
-    return tensor[1][0] == 0.0f && tensor[2][0] == 0.0f && tensor[2][1] == 0.0f;
+    return tensor[1] == 0.0f && tensor[2] == 0.0f && tensor[4] == 0.0f;
 }
 
 void Tensor3DProcessor::calculateEigenVectors() {
@@ -78,12 +79,12 @@ void Tensor3DProcessor::calculateEigenVectorsForDiagonalTensor() {
 }
 
 void Tensor3DProcessor::calculateEigenVectorsForNonDiagonalTensor() {
-    float dxx = this->tensor[0][0];
-    float dyy = this->tensor[1][1];
-    float dzz = this->tensor[2][2];
-    float dxy = this->tensor[0][1];
-    float dxz = this->tensor[0][2];
-    float dyz = this->tensor[1][2];
+    float dxx = this->tensor[0];
+    float dyy = this->tensor[3];
+    float dzz = this->tensor[5];
+    float dxy = this->tensor[1];
+    float dxz = this->tensor[2];
+    float dyz = this->tensor[4];
     for(int i = 0; i < 3; i++) {
         float eigenvalue = this->eigenvalues[i];
         float a = dxx - eigenvalue;
@@ -113,11 +114,6 @@ void Tensor3DProcessor::calculateEigenVectorsForNonDiagonalTensor() {
     }
 }
 
-Tensor3DProcessor::~Tensor3DProcessor() {
-    for(int i = 0; i < 3; i++) free(tensor[i]);
-    free(tensor);
-}
-
 float * Tensor3DProcessor::getEigenValues() {
     return this->eigenvalues;
 }
@@ -139,7 +135,7 @@ void TensorFactory::createTensors(unsigned n) {
 	this->numberOfTensorsIsSet = true;
 }
 
-void TensorFactory::addTensor(float **tensor, int order, int slices, const math3d::matrix44 & transformation) {
+void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d::matrix44 & transformation) {
 	if(!this->numberOfTensorsIsSet) throw std::exception("Number of tensors to be created is not set. Call createTensors first");
 	if(order == 3) {
         Tensor3DProcessor * processor = new Tensor3DProcessor(tensor);

@@ -6,14 +6,13 @@
 
 class Tensor3DProcessor {
 public:
-    Tensor3DProcessor(float ** tensor);
-    ~Tensor3DProcessor();
+    Tensor3DProcessor(float * tensor);
 
     float * getEigenValues();
     float * getEigenvector(int index);
 
 private:
-    float ** tensor;
+    float * tensor;
     float eigenvalues[3];
     float eigenvector1[3];
     float eigenvector2[3];
@@ -34,7 +33,7 @@ public:
 
 	void createTensors(unsigned n);
     // slices is not being used yet!
-    void addTensor(float ** tensor, int order, int slices, const math3d::matrix44 & transformation);
+    void addTensor(float * tensor, int order, int slices, const math3d::matrix44 & transformation);
 	pbge::ModelCollection * done();
 private:
     pbge::GraphicAPI * gfx;
