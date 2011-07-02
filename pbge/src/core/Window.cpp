@@ -18,6 +18,7 @@
 
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Renderer.h"
+#include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"
 

@@ -14,13 +14,12 @@
 
 using namespace pbge;
 
-Renderer::Renderer(GraphicAPI * _ogl){
-    this->ogl = _ogl;
-    this->updater = new UpdaterVisitor;
-    this->renderer = new ColorPassVisitor;
-    this->depthRenderer = new DepthPassVisitor;
-    this->lightPassVisitor = new LightPassVisitor;
-}
+Renderer::Renderer(GraphicAPI * _ogl): updater(new UpdaterVisitor),
+                        renderer(new ColorPassVisitor),
+                        depthRenderer(new DepthPassVisitor),
+                        lightPassVisitor(new LightPassVisitor),
+                        ogl(_ogl) {}
+
 
 void Renderer::setScene(const SceneGraph * scene_graph) {
     scene = const_cast<SceneGraph *>(scene_graph);

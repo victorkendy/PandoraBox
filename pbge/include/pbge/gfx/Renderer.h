@@ -4,7 +4,7 @@
 #define PBGE_GFX_RENDERER_H_
 
 #include <vector>
-#include <GL/glew.h>
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
 #include "pbge/core/core.h"
 
@@ -33,13 +33,13 @@ namespace pbge {
 
         SceneGraph * scene;
 
-        UpdaterVisitor * updater;
+        boost::scoped_ptr<UpdaterVisitor> updater;
 
-        RenderVisitor * renderer;
+        boost::scoped_ptr<RenderVisitor> renderer;
 
-        RenderVisitor * depthRenderer;
+        boost::scoped_ptr<RenderVisitor> depthRenderer;
 
-        LightPassVisitor * lightPassVisitor;
+        boost::scoped_ptr<LightPassVisitor> lightPassVisitor;
 
         GraphicAPI * ogl;
     };
