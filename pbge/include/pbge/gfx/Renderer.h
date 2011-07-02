@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <boost/smart_ptr/scoped_ptr.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 #include "pbge/core/core.h"
 
@@ -19,9 +20,9 @@ namespace pbge {
 
     class PBGE_EXPORT Renderer{
     public:
-        Renderer(GraphicAPI * _ogl);
+        Renderer(boost::shared_ptr<GraphicAPI> _ogl);
 
-        void setScene(const SceneGraph * scene_manager);
+        void setScene(boost::shared_ptr<SceneGraph> & scene_manager);
 
         SceneGraph * getScene();
 
@@ -31,7 +32,7 @@ namespace pbge {
     private:
         void renderWithCamera(Camera * camera, Node * root);
 
-        SceneGraph * scene;
+        boost::shared_ptr<SceneGraph> scene;
 
         boost::scoped_ptr<UpdaterVisitor> updater;
 
@@ -41,7 +42,7 @@ namespace pbge {
 
         boost::scoped_ptr<LightPassVisitor> lightPassVisitor;
 
-        GraphicAPI * ogl;
+        boost::shared_ptr<GraphicAPI> ogl;
     };
 }
 #endif

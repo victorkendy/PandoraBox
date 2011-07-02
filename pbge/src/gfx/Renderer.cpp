@@ -1,3 +1,4 @@
+#include <boost/smart_ptr/shared_ptr.hpp>
 #include <GL/glew.h>
 #include <string>
 #include <cstring>
@@ -14,31 +15,31 @@
 
 using namespace pbge;
 
-Renderer::Renderer(GraphicAPI * _ogl): updater(new UpdaterVisitor),
+Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisitor),
                         renderer(new ColorPassVisitor),
                         depthRenderer(new DepthPassVisitor),
                         lightPassVisitor(new LightPassVisitor),
                         ogl(_ogl) {}
 
 
-void Renderer::setScene(const SceneGraph * scene_graph) {
-    scene = const_cast<SceneGraph *>(scene_graph);
+void Renderer::setScene(boost::shared_ptr<SceneGraph> & scene_graph) {
+    scene = scene_graph;
 }
 
 SceneGraph * Renderer::getScene() {
-    return scene;
+    return scene.get();
 }
 
 void Renderer::updateScene(){
-    updater->visit(scene->getSceneGraphRoot(), ogl);
+    updater->visit(scene->getSceneGraphRoot(), ogl.get());
 }
 
 void Renderer::renderWithCamera(Camera * camera, Node * root) {
-    camera->setCamera(ogl);
+    camera->setCamera(ogl.get());
 
     
     ogl->disableDrawBuffer();
-    depthRenderer->visit(root, ogl);
+    depthRenderer->visit(root, ogl.get());
     ogl->enableDrawBuffer(GL_BACK);
     ogl->depthMask(GL_FALSE);
 
@@ -50,15 +51,15 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
     lightPassVisitor->setCurrentCamera(camera);
     for(it = updater->getActiveLights().begin(); it != updater->getActiveLights().end(); it++) {
         lightPassVisitor->setCurrentLight(*it);
-        lightPassVisitor->visit(root, ogl);
+        lightPassVisitor->visit(root, ogl.get());
     }
     ogl->blendFunc(GL_DST_COLOR, GL_ZERO);
     
     ogl->getState()->useProgram(NULL);
-    renderer->visit(root, ogl);
+    renderer->visit(root, ogl.get());
     
     ogl->disable(GL_BLEND);
-    camera->unsetCamera(ogl);
+    camera->unsetCamera(ogl.get());
 }
 
 void Renderer::render(){

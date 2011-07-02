@@ -63,6 +63,8 @@ namespace pbge {
     public:
         static GraphicAPI * createInstance();
 
+        virtual ~GraphicAPI(){};
+
         virtual void setContext(GraphicContext * newContext) = 0;
 
         virtual GraphicContext * getContext() = 0;
