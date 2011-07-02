@@ -3,16 +3,19 @@
 #ifndef PBGE_GFX_VBO_H_
 #define PBGE_GFX_VBO_H_
 
+#include <cstddef>
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
 #include "pbge/core/core.h"
-#include "pbge/gfx/GraphicAPI.h"
+#include "pbge/gfx/Buffer.h"
 #include "pbge/exceptions/exceptions.h"
 
 namespace pbge {
     class VertexBuffer;
+    class GraphicAPI;
     class Buffer;
 
     /** This class represents a vertex attribute of a vertex buffer
@@ -30,7 +33,7 @@ namespace pbge {
             CUSTOM_ATTRIB
         } Type;
 
-        VertexAttrib(int _nCoord, int _offset, GLsizei _stride, Type _type):nCoord(_nCoord),
+        VertexAttrib(int _nCoord, int _offset, size_t _stride, Type _type):nCoord(_nCoord),
                         offset(_offset),
                         stride(_stride),
                         type(_type) {}
@@ -50,7 +53,7 @@ namespace pbge {
     private:
         Type type;
         int nCoord, offset;
-        GLsizei stride;
+        size_t stride;
     };
 
     class PBGE_EXPORT VertexBuffer {
@@ -59,7 +62,6 @@ namespace pbge {
         }
 
         ~VertexBuffer() {
-            delete buffer;
         }
 
         void addAttrib(VertexAttrib attrib) {
@@ -71,7 +73,7 @@ namespace pbge {
         }
 
         Buffer * getBuffer() {
-            return buffer;
+            return buffer.get();
         }
 
         unsigned getNVertices() {
@@ -79,7 +81,7 @@ namespace pbge {
         }
     
     private:
-        Buffer * buffer;
+        boost::scoped_ptr<Buffer> buffer;
         unsigned nVertices;
         std::vector<VertexAttrib> attribs;
     };
@@ -131,7 +133,7 @@ namespace pbge {
 
         bool isValid();
 
-        const VertexAttrib createInstance(int offset, GLsizei stride);
+        const VertexAttrib createInstance(int offset, size_t stride);
 
     private:
         std::string name;
@@ -180,7 +182,7 @@ namespace pbge {
 
         VertexAttribBuilder * curAttrib;
 
-        void createAttribs(VertexBuffer * vbo, GLsizei stride);
+        void createAttribs(VertexBuffer * vbo, size_t stride);
 
         unsigned nVertices;
 
