@@ -2,7 +2,7 @@
 #define PBGE_GFX_OPENGL_GLOBJECTSFACTORY_H
 
 #include <vector>
-
+#include <iostream>
 #include "pbge/gfx/GraphicObjectsFactory.h"
 
 namespace pbge {

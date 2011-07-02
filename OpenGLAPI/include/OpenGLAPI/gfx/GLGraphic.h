@@ -10,6 +10,7 @@
 
 namespace pbge {
     class GLDrawController;
+    class GLObjectsFactory;
 
     class GLGraphic : public GraphicAPI {
     public:
@@ -90,7 +91,7 @@ namespace pbge {
 
         boost::scoped_ptr<GraphicContext> context;
 
-        boost::scoped_ptr<GraphicObjectsFactory> factory;
+        boost::scoped_ptr<GLObjectsFactory> factory;
 
         boost::scoped_ptr<GLDrawController> drawController;
 
