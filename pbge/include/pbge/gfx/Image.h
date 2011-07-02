@@ -3,6 +3,7 @@
 #ifndef PBGE_GFX_IMAGE_H_
 #define PBGE_GFX_IMAGE_H_
 
+#include <cstddef>
 #include "pbge/gfx/Texture.h"
 
 namespace pbge {
