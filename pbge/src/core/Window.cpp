@@ -16,6 +16,7 @@
 #include "pbge/core/KeyboardEventHandler.h"
 #include "pbge/core/MouseEventHandler.h"
 
+#include "pbge/gfx/FramebufferObject.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/NodeVisitors.h"

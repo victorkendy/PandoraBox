@@ -18,6 +18,8 @@ namespace pbge {
 
         Texture2D * create2DTexture();
 
+        FramebufferObject * createFramebuffer();
+
         Shader * createShaderFromFile(FileReader * file, Shader::ShaderType type);
 
         Shader * createShaderFromString(const std::string & source, Shader::ShaderType type);

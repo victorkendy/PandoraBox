@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "pbge/gfx/Shader.h"
+#include "pbge/gfx/Texture.h"
 #include "pbge/gfx/Camera.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/Renderer.h"
@@ -12,6 +13,7 @@
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/core/Manager.h"
+#include "pbge/internal/OpenGLStates.h"
 
 using namespace pbge;
 
@@ -36,7 +38,6 @@ void Renderer::updateScene(){
 
 void Renderer::renderWithCamera(Camera * camera, Node * root) {
     camera->setCamera(ogl.get());
-
     
     ogl->disableDrawBuffer();
     depthRenderer->visit(root, ogl.get());

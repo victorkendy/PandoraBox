@@ -8,6 +8,7 @@
 #include "OpenGLAPI/gfx/GLObjectsFactory.h"
 #include "OpenGLAPI/gfx/GLBuffer.h"
 #include "OpenGLAPI/gfx/GLTextures.h"
+#include "OpenGLAPI/gfx/GLFramebufferObject.h"
 
 
 using namespace pbge;
@@ -25,6 +26,10 @@ Texture1D * GLObjectsFactory::create1DTexture() {
 
 Texture2D * GLObjectsFactory::create2DTexture() { 
     return new GLTexture2D(gl);
+}
+
+FramebufferObject * GLObjectsFactory::createFramebuffer() {
+    return new GLFramebufferObject();
 }
 
 Shader * GLObjectsFactory::createShaderFromFile(FileReader * file, Shader::ShaderType type) {

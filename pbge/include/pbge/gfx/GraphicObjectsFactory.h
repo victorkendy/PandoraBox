@@ -13,6 +13,7 @@ namespace pbge {
     class Texture1D;
     class Texture2D;
     class FileReader;
+    class FramebufferObject;
 
     class GraphicObjectsFactory {
     public:
@@ -35,6 +36,12 @@ namespace pbge {
             @return A new 2D texture object
         */
         virtual Texture2D * create2DTexture() = 0;
+
+        /** Creates a virtual Framebuffer.
+
+            @return A new instance of FramebufferObject
+        */
+        virtual FramebufferObject * createFramebuffer() = 0;
 
         /** Creates a new shader with the source code from a specified file.
 

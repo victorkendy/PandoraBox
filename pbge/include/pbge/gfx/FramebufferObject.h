@@ -16,6 +16,8 @@ namespace pbge {
     public:
         FramebufferObject():bound(false){}
 
+        virtual ~FramebufferObject(){}
+
         void addRenderable(Texture2D * texture, const std::string & name) {
             renderables[name] = texture;
             unsync_added.insert(texture);
