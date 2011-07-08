@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iterator>
 #include <vector>
 #include <GL/glew.h>
 
@@ -17,7 +18,16 @@ void GLFramebufferObject::initialize() {
 }
 
 void GLFramebufferObject::bindFramebuffer() {
+	GLenum * bindingPoints = new GLenum [renderables.size()];
+	int i = 0;
+	for(std::vector<Texture2D*>::iterator it = renderables.begin(); it != renderables.end(); it++) {
+		if(*it != NULL) {
+			bindingPoints[i++] = GL_COLOR_ATTACHMENT0_EXT + std::distance(renderables.begin(), it);
+		}
+	}
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, GLID);
+	glDrawBuffers(i, bindingPoints);
+	delete [] bindingPoints;
 }
 
 void GLFramebufferObject::unbindFramebuffer() {

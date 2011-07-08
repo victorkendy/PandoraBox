@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 #include <vector>
+#include <cstddef>
 #include <iostream>
 
 #include "pbge/exceptions/exceptions.h"
@@ -28,8 +29,8 @@ Texture2D * GLObjectsFactory::create2DTexture() {
     return new GLTexture2D(gl);
 }
 
-FramebufferObject * GLObjectsFactory::createFramebuffer() {
-    return new GLFramebufferObject();
+FramebufferObject * GLObjectsFactory::createFramebuffer(size_t width, size_t height) {
+    return new GLFramebufferObject(width, height);
 }
 
 Shader * GLObjectsFactory::createShaderFromFile(FileReader * file, Shader::ShaderType type) {

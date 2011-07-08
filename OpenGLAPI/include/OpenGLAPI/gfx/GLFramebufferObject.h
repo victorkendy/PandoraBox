@@ -2,6 +2,7 @@
 #ifndef PBGE_GFX_OPENGL_GLFRAMEBUFFEROBJECT_H_
 #define PBGE_GFX_OPENGL_GLFRAMEBUFFEROBJECT_H_
 
+#include <cstddef>
 #include <GL/glew.h>
 #include <vector>
 #include "pbge/gfx/FramebufferObject.h"
@@ -11,7 +12,7 @@ namespace pbge {
 
     class GLFramebufferObject : public FramebufferObject {
     public:
-        GLFramebufferObject():FramebufferObject(),GLID(0),renderables(16,NULL){}
+        GLFramebufferObject(size_t w, size_t h):FramebufferObject(w,h),GLID(0),renderables(16,NULL){}
     protected:
         bool isInitialized();
         void initialize();

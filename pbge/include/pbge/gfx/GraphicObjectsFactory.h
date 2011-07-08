@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <cstddef>
 
 #include "pbge/core/core.h"
 #include "pbge/gfx/Shader.h"
@@ -39,9 +40,11 @@ namespace pbge {
 
         /** Creates a virtual Framebuffer.
 
+			@param w The desired initial width of the framebuffer object
+			@param h The desired initial height of the framebuffer object
             @return A new instance of FramebufferObject
         */
-        virtual FramebufferObject * createFramebuffer() = 0;
+        virtual FramebufferObject * createFramebuffer(size_t w, size_t h) = 0;
 
         /** Creates a new shader with the source code from a specified file.
 

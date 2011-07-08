@@ -4,6 +4,7 @@
 
 #include "pbge/core/core.h"
 
+#include <cstddef>
 #include <string>
 #include <set>
 #include <map>
@@ -14,7 +15,7 @@ namespace pbge {
     // Experimental class with testable template methods
     class PBGE_EXPORT FramebufferObject {
     public:
-        FramebufferObject():bound(false){}
+        FramebufferObject(size_t w, size_t h):bound(false),width(w),height(h){}
 
         virtual ~FramebufferObject(){}
 
@@ -22,7 +23,7 @@ namespace pbge {
             renderables[name] = texture;
             unsync_added.insert(texture);
             if(isBound()) {
-                attachRenderable(texture);
+                validateAndAttachRenderable(texture);
                 added.insert(texture);
             }
         }
@@ -54,9 +55,11 @@ namespace pbge {
         virtual void bindFramebuffer() = 0;
         virtual void unbindFramebuffer() = 0;
     private:
+		void validateAndAttachRenderable(Texture2D * tex);
         std::map<std::string,Texture2D *> renderables;
         std::set<Texture2D *> unsync_added;
         std::set<Texture2D*> added;
+		size_t width, height;
         bool bound;
     };
 }

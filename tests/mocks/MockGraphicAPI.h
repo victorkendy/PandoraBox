@@ -61,7 +61,7 @@ public:
     MOCK_METHOD2(createBuffer, pbge::Buffer*(size_t _size, pbge::Buffer::UsageHint _usage));
     MOCK_METHOD0(create1DTexture, pbge::Texture1D*());
     MOCK_METHOD0(create2DTexture, pbge::Texture2D*());
-    MOCK_METHOD0(createFramebuffer, pbge::FramebufferObject*());
+    MOCK_METHOD2(createFramebuffer, pbge::FramebufferObject*(size_t w, size_t h));
     MOCK_METHOD2(createShaderFromFile, pbge::Shader*(pbge::FileReader * file, pbge::Shader::ShaderType type));
     MOCK_METHOD2(createShaderFromString, pbge::Shader*(const std::string & source, pbge::Shader::ShaderType type));
     MOCK_METHOD0(createProgram, pbge::GPUProgram*());

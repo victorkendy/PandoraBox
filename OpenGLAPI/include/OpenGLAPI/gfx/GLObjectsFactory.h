@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <cstddef>
 #include "pbge/gfx/GraphicObjectsFactory.h"
 
 namespace pbge {
@@ -18,7 +19,7 @@ namespace pbge {
 
         Texture2D * create2DTexture();
 
-        FramebufferObject * createFramebuffer();
+        FramebufferObject * createFramebuffer(size_t w, size_t h);
 
         Shader * createShaderFromFile(FileReader * file, Shader::ShaderType type);
 

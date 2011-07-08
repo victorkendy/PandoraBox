@@ -2,6 +2,7 @@
 #ifndef PBGE_GFX_OPENGL_GLTEXTURES_H_
 #define PBGE_GFX_OPENGL_GLTEXTURES_H_
 
+#include <cstddef>
 #include <GL/glew.h>
 
 #include "pbge/gfx/Texture.h"
@@ -48,6 +49,14 @@ namespace pbge {
     public:
 
         friend GLObjectsFactory;
+
+		const size_t getWidth() const {
+			return width;
+		}
+
+		const size_t getHeight() const {
+			return height;
+		}
 
         // check the documentation of the Texture2D interface
         void setImage(Image * img, Texture::Format format);
