@@ -41,6 +41,9 @@ namespace pbge {
         void clearRenderables() {
             unsync_added.clear();
             renderables.clear();
+			if(isBound()) {
+				synchronize();
+			}
         }
         void bind();
         void unbind();
@@ -56,6 +59,7 @@ namespace pbge {
         virtual void unbindFramebuffer() = 0;
     private:
 		void validateAndAttachRenderable(Texture2D * tex);
+		void synchronize();
         std::map<std::string,Texture2D *> renderables;
         std::set<Texture2D *> unsync_added;
         std::set<Texture2D*> added;

@@ -55,16 +55,21 @@ TEST(FramebufferObject, shouldCallUnbindFramebufferOnUnbind) {
 
 class MockTexture2D : public pbge::Texture2D {
 public:
-	MockTexture2D(size_t w=500, size_t h=500):width(w),height(h) {}
+	MockTexture2D(size_t w=500, size_t h=500):width(w),height(h),initialized(false) {}
     void setMinFilter(pbge::Texture::Filter filter){}
     void setMagFilter(pbge::Texture::Filter filter){}
-    void bindTextureOn(pbge::TextureUnit * unit){}
+    MOCK_METHOD1(bindTextureOn, void(pbge::TextureUnit * unit));
     void setImage(pbge::Image * image, pbge::Texture::Format format){}
     void setImageData(pbge::Texture::DataType type, pbge::Texture::Format dataFormat, void * image, unsigned size, int width, int height, pbge::Texture::Format internalFormat){}
 	const size_t getWidth() const {return width;}
 	const size_t getHeight() const {return height;}
+	void setInitialized(bool b) {initialized = b;}
+	const bool isInitialized() const {return initialized;}
+	MOCK_METHOD0(initialize, void());
+
 private:
 	size_t width, height;
+	bool initialized;
 };
 
 class FramebufferObjectTest : public testing::Test {
@@ -75,6 +80,38 @@ public:
     }
     FakeFramebufferObject fbo;
 };
+
+TEST_F(FramebufferObjectTest, shouldInitializeUnitializedTexturesOnBind) {
+	MockTexture2D tex;
+	fbo.addRenderable(&tex, "tex");
+	EXPECT_CALL(tex, initialize()).Times(1);
+	EXPECT_CALL(fbo, attachRenderable(&tex));
+    EXPECT_CALL(fbo, bindFramebuffer());
+	fbo.bind();
+}
+
+TEST_F(FramebufferObjectTest, shouldInitializeUnitializedTexturesOnAddIfAlreadyBound) {
+	MockTexture2D tex;
+	EXPECT_CALL(fbo, bindFramebuffer());
+	fbo.bind();
+	EXPECT_CALL(tex, initialize());
+	EXPECT_CALL(fbo, attachRenderable(&tex));
+	fbo.addRenderable(&tex, "tex");
+}
+
+TEST_F(FramebufferObjectTest, shouldUnbindBoundTexturesOnBind) {
+	MockTexture2D tex;
+	fbo.addRenderable(&tex,"tex");
+	EXPECT_CALL(tex, bindTextureOn(NULL)).Times(1);
+	fbo.bind();
+}
+
+TEST_F(FramebufferObjectTest, shouldUnibindBoundTexturesOnAddIfAlreadyBound) {
+	MockTexture2D tex;
+	fbo.bind();
+	EXPECT_CALL(tex, bindTextureOn(NULL));
+	fbo.addRenderable(&tex, "tex");
+}
 
 TEST_F(FramebufferObjectTest, shouldUpdateRenderablesOnBind) {
     MockTexture2D tex, tex2;
@@ -149,6 +186,21 @@ TEST_F(FramebufferObjectTest, shouldDettachARenderableImmediatelyIfTheFBOIsBound
     fbo.bind();
     EXPECT_CALL(fbo, dettachRenderable(&tex)).Times(1);
     fbo.removeRenderable("tex");
+}
+
+TEST_F(FramebufferObjectTest, shouldClearAllRenderablesImmediatellyIfBound) {
+	MockTexture2D tex;
+	MockTexture2D tex2;
+    EXPECT_CALL(fbo, bindFramebuffer()).Times(1);
+    EXPECT_CALL(fbo, attachRenderable(&tex)).Times(1);
+	EXPECT_CALL(fbo, attachRenderable(&tex2)).Times(1);
+    fbo.addRenderable(&tex, "tex");
+	fbo.addRenderable(&tex2, "tex2");
+    fbo.bind();
+	EXPECT_CALL(fbo, dettachRenderable(&tex)).Times(1);
+    EXPECT_CALL(fbo, dettachRenderable(&tex2)).Times(1);
+	fbo.clearRenderables();
+    
 }
 
 TEST_F(FramebufferObjectTest, shouldCheckIfTheRenderablesSizeIsTheSameAsTheFBOOnBind) {

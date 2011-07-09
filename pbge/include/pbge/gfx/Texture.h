@@ -148,6 +148,11 @@ namespace pbge {
             @param image an implementation of the image interface
             @param format the desired internal representation of the texture on the graphic api
         */
+
+		virtual const bool isInitialized() const = 0;
+
+		virtual void initialize() = 0;
+
         virtual void setImage(Image * image, Texture::Format format) = 0;
         
         /** Replace the texture data with the given raw data obeying the specified format.

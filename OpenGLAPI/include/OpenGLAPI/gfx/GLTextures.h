@@ -58,6 +58,10 @@ namespace pbge {
 			return height;
 		}
 
+		const bool isInitialized() const;
+
+		void initialize();
+
         // check the documentation of the Texture2D interface
         void setImage(Image * img, Texture::Format format);
 

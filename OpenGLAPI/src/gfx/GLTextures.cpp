@@ -72,6 +72,16 @@ void GLTexture1D::setImageData(Texture::DataType type, Texture::Format _dataForm
 GLTexture2D::GLTexture2D(GLGraphic * gl): ogl(gl), data(NULL), GLID(0) {
     this->minFilter = GL_LINEAR;
     this->magFilter = GL_LINEAR;
+	width = 0;
+	height = 0;
+}
+
+const bool GLTexture2D::isInitialized() const {
+	return GLID != 0;
+}
+
+void GLTexture2D::initialize() {
+	throw "need implementation!!";
 }
 
 void GLTexture2D::setImage(Image * image, Texture::Format format) {
@@ -94,16 +104,20 @@ void GLTexture2D::setImageData(Texture::DataType type, Texture::Format dataForma
 }
 
 void GLTexture2D::bindTextureOn(TextureUnit * unit) {
-    glActiveTexture(GL_TEXTURE0 + unit->getIndex());
-    if(this->GLID != 0) {
-        glBindTexture(GL_TEXTURE_2D, this->GLID);
-    } else {
-        glGenTextures(1, &GLID);
-        glBindTexture(GL_TEXTURE_2D, this->GLID);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->minFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->magFilter);
-        glTexImage2D(GL_TEXTURE_2D, 0, choosePixelFormatFor(internalFormat, dataType, ogl->getMajorVersion()), width, height, 0, dataFormat, dataType, data);
-    }
+	if(unit != NULL) {
+		glActiveTexture(GL_TEXTURE0 + unit->getIndex());
+		if(this->GLID != 0) {
+			glBindTexture(GL_TEXTURE_2D, this->GLID);
+		} else {
+			glGenTextures(1, &GLID);
+			glBindTexture(GL_TEXTURE_2D, this->GLID);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->minFilter);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->magFilter);
+			glTexImage2D(GL_TEXTURE_2D, 0, choosePixelFormatFor(internalFormat, dataType, ogl->getMajorVersion()), width, height, 0, dataFormat, dataType, data);
+		}
+	} else {
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 }
 
 void GLTexture2D::setMinFilter(Texture::Filter filter) {

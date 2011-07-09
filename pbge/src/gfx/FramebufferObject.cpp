@@ -19,7 +19,11 @@ void FramebufferObject::bind() {
         bindFramebuffer();
         bound = true;
     }
-    std::vector<Texture2D*> diff(std::max(added.size(), unsync_added.size()));
+    synchronize();
+}
+
+void FramebufferObject::synchronize() {
+	std::vector<Texture2D*> diff(std::max(added.size(), unsync_added.size()));
     std::vector<Texture2D*>::iterator end;
     // Add the new renderables
     end = std::set_difference(unsync_added.begin(), unsync_added.end(), added.begin(), added.end(), diff.begin());
@@ -32,7 +36,14 @@ void FramebufferObject::bind() {
 }
 
 void FramebufferObject::validateAndAttachRenderable(Texture2D * texture) {
+	if(texture->getWidth() == 0 && texture->getHeight() == 0) {
+		texture->setImageData(pbge::Texture::UNSIGNED_BYTE, pbge::Texture::RGBA, NULL, 0, width, height, pbge::Texture::RGBA);
+	}
 	if(texture->getWidth() == width && texture->getHeight() == height) {
+		if (!texture->isInitialized()) { 
+			texture->initialize();
+		}
+		texture->bindTextureOn(NULL);
 		attachRenderable(texture);
 	} else {
 		throw pbge::IllegalArgumentException("The renderable size is not valid for this FBO");
