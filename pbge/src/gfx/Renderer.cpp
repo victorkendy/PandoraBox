@@ -3,6 +3,8 @@
 #include <string>
 #include <cstring>
 
+#include "pbge/gfx/FramebufferObject.h"
+#include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/Camera.h"
@@ -37,6 +39,12 @@ void Renderer::updateScene(){
 }
 
 void Renderer::renderWithCamera(Camera * camera, Node * root) {
+	/*if(fbo.get() == NULL) { 
+		Texture2D * tex = ogl->getFactory()->create2DTexture();
+		fbo.reset(ogl->getFactory()->createFramebuffer(500,500));
+		fbo->addRenderable(tex, "tex");
+		fbo->bind();
+	}*/
     camera->setCamera(ogl.get());
     
     ogl->disableDrawBuffer();

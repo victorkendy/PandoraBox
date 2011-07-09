@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <GL/glew.h>
 #include <vector>
+#include <boost/smart_ptr/scoped_array.hpp>
 #include "pbge/gfx/FramebufferObject.h"
 
 namespace pbge {
@@ -12,7 +13,7 @@ namespace pbge {
 
     class GLFramebufferObject : public FramebufferObject {
     public:
-        GLFramebufferObject(size_t w, size_t h):FramebufferObject(w,h),GLID(0),renderables(16,NULL){}
+        GLFramebufferObject(size_t w, size_t h):FramebufferObject(w,h),GLID(0),renderables(16,NULL),bindingPoints(new GLenum[16]){}
     protected:
         bool isInitialized();
         void initialize();
@@ -21,7 +22,10 @@ namespace pbge {
         void bindFramebuffer();
         void unbindFramebuffer();
     private:
+		void calculateBindingPoints();
         GLuint GLID;
+		int numberOfBindings;
+		boost::scoped_array<GLenum> bindingPoints;
         std::vector<Texture2D*> renderables;
     };
 }

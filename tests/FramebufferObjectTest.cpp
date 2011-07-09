@@ -60,7 +60,7 @@ public:
     void setMagFilter(pbge::Texture::Filter filter){}
     MOCK_METHOD1(bindTextureOn, void(pbge::TextureUnit * unit));
     void setImage(pbge::Image * image, pbge::Texture::Format format){}
-    void setImageData(pbge::Texture::DataType type, pbge::Texture::Format dataFormat, void * image, unsigned size, int width, int height, pbge::Texture::Format internalFormat){}
+    MOCK_METHOD7(setImageData, void(pbge::Texture::DataType type, pbge::Texture::Format dataFormat, void * image, unsigned size, int width, int height, pbge::Texture::Format internalFormat));
 	const size_t getWidth() const {return width;}
 	const size_t getHeight() const {return height;}
 	void setInitialized(bool b) {initialized = b;}
@@ -89,7 +89,27 @@ TEST_F(FramebufferObjectTest, shouldInitializeUnitializedTexturesOnBind) {
     EXPECT_CALL(fbo, bindFramebuffer());
 	fbo.bind();
 }
+/* need some equivalent to do answer...
+TEST_F(FramebufferObjectTest, shouldInitializeTextureWithNoImageOnBind){
+	MockTexture2D tex(0,0);
+	EXPECT_CALL(fbo, bindFramebuffer());
+	EXPECT_CALL(tex, setImageData(pbge::Texture::UNSIGNED_BYTE, pbge::Texture::RGBA, NULL, 0, 500, 500, pbge::Texture::RGBA));
+	EXPECT_CALL(tex, initialize());
+	EXPECT_CALL(fbo, attachRenderable(&tex));
+	fbo.addRenderable(&tex, "tex");
+	fbo.bind();
+}
 
+TEST_F(FramebufferObjectTest, shouldInitializeTextureOnAddIfBound) {
+	MockTexture2D tex(0,0);
+	EXPECT_CALL(fbo, bindFramebuffer());
+	fbo.bind();
+	EXPECT_CALL(tex, setImageData(pbge::Texture::UNSIGNED_BYTE, pbge::Texture::RGBA, NULL, 0, 500, 500, pbge::Texture::RGBA));
+	EXPECT_CALL(tex, initialize());
+	EXPECT_CALL(fbo, attachRenderable(&tex));
+	fbo.addRenderable(&tex, "tex");
+}
+*/
 TEST_F(FramebufferObjectTest, shouldInitializeUnitializedTexturesOnAddIfAlreadyBound) {
 	MockTexture2D tex;
 	EXPECT_CALL(fbo, bindFramebuffer());
@@ -200,7 +220,6 @@ TEST_F(FramebufferObjectTest, shouldClearAllRenderablesImmediatellyIfBound) {
 	EXPECT_CALL(fbo, dettachRenderable(&tex)).Times(1);
     EXPECT_CALL(fbo, dettachRenderable(&tex2)).Times(1);
 	fbo.clearRenderables();
-    
 }
 
 TEST_F(FramebufferObjectTest, shouldCheckIfTheRenderablesSizeIsTheSameAsTheFBOOnBind) {

@@ -17,6 +17,7 @@ namespace pbge {
     class LightPassVisitor;
     class SceneGraph;
     class Node;
+	class FramebufferObject;
 
     class PBGE_EXPORT Renderer{
     public:
@@ -43,6 +44,8 @@ namespace pbge {
         boost::scoped_ptr<LightPassVisitor> lightPassVisitor;
 
         boost::shared_ptr<GraphicAPI> ogl;
+
+		boost::scoped_ptr<FramebufferObject> fbo;
     };
 }
 #endif

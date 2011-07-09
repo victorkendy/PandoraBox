@@ -81,7 +81,9 @@ const bool GLTexture2D::isInitialized() const {
 }
 
 void GLTexture2D::initialize() {
-	throw "need implementation!!";
+	pbge::TextureUnit * unit = ogl->chooseTextureUnit(this);
+	bindTextureOn(unit);
+	unit->applyChanges(ogl);
 }
 
 void GLTexture2D::setImage(Image * image, Texture::Format format) {
@@ -139,17 +141,22 @@ void GLTexture2D::replaceGLObjectData(Texture::DataType type, Texture::Format da
         }
 }
 
-void GLTexture2D::replaceInternalData(Texture::DataType type, Texture::Format dataFormat, void * image, unsigned size, 
+void GLTexture2D::replaceInternalData(Texture::DataType type, Texture::Format _dataFormat, void * image, unsigned size, 
                                       int w, int h, Texture::Format format) {
     this->internalFormat = format;
     this->width = w;
     this->height = h;
+	this->dataFormat = _dataFormat;
     if(this->data != NULL) {
         free(this->data);
         this->data = NULL;
     }
-    data = malloc(size);
-    memcpy(data, image, size);
+	if(image != NULL) {
+		data = malloc(size);
+		memcpy(data, image, size);
+	} else {
+		data = NULL;
+	}
     this->dataType = type;
 }
 

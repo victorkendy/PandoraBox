@@ -18,16 +18,9 @@ void GLFramebufferObject::initialize() {
 }
 
 void GLFramebufferObject::bindFramebuffer() {
-	GLenum * bindingPoints = new GLenum [renderables.size()];
-	int i = 0;
-	for(std::vector<Texture2D*>::iterator it = renderables.begin(); it != renderables.end(); it++) {
-		if(*it != NULL) {
-			bindingPoints[i++] = GL_COLOR_ATTACHMENT0_EXT + std::distance(renderables.begin(), it);
-		}
-	}
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, GLID);
-	glDrawBuffers(i, bindingPoints);
-	delete [] bindingPoints;
+	calculateBindingPoints();
+	glDrawBuffers(numberOfBindings, bindingPoints.get());
 }
 
 void GLFramebufferObject::unbindFramebuffer() {
@@ -41,6 +34,8 @@ void GLFramebufferObject::attachRenderable(pbge::Texture2D *texture) {
     GLTexture2D * tex = dynamic_cast<GLTexture2D*>(texture);
     // bind the texture to GL_COLOR_ATTACHMENTi_EXT where i = position of the texture in the vector
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + (i - renderables.begin()), GL_TEXTURE_2D, tex->getId(), 0);
+	calculateBindingPoints();
+	glDrawBuffers(numberOfBindings, bindingPoints.get());
 }
 
 void GLFramebufferObject::dettachRenderable(pbge::Texture2D *texture) {
@@ -48,4 +43,15 @@ void GLFramebufferObject::dettachRenderable(pbge::Texture2D *texture) {
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + (i - renderables.begin()), GL_TEXTURE_2D, 0, 0);
     // Release the binding point
     *i = NULL;
+	calculateBindingPoints();
+	glDrawBuffers(numberOfBindings, bindingPoints.get());
+}
+
+void GLFramebufferObject::calculateBindingPoints() {
+	numberOfBindings = 0;
+	for(std::vector<Texture2D*>::iterator it = renderables.begin(); it != renderables.end(); it++) {
+		if(*it != NULL) {
+			bindingPoints[numberOfBindings++] = GL_COLOR_ATTACHMENT0_EXT + std::distance(renderables.begin(), it);
+		}
+	}
 }
