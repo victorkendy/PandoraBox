@@ -19,6 +19,7 @@ namespace pbge {
         void initialize();
         void attachRenderable(Texture2D * texture);
         void dettachRenderable(Texture2D * texture);
+		void attachDepthRenderable(Texture2D * tex);
         void bindFramebuffer();
         void unbindFramebuffer();
     private:

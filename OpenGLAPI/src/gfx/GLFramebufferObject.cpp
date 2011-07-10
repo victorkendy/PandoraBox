@@ -55,3 +55,12 @@ void GLFramebufferObject::calculateBindingPoints() {
 		}
 	}
 }
+
+void GLFramebufferObject::attachDepthRenderable(Texture2D * texture) {
+	if(texture == NULL) {
+		GLTexture2D * depthTexture = dynamic_cast<GLTexture2D*>(texture);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthTexture->getId(), 0);
+	} else {
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, 0, 0);
+	}
+}

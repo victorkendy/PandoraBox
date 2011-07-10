@@ -15,7 +15,7 @@ namespace pbge {
     // Experimental class with testable template methods
     class PBGE_EXPORT FramebufferObject {
     public:
-        FramebufferObject(size_t w, size_t h):bound(false),width(w),height(h){}
+        FramebufferObject(size_t w, size_t h):bound(false),width(w),height(h),depth(NULL), boundDepth(NULL){}
 
         virtual ~FramebufferObject(){}
 
@@ -50,16 +50,25 @@ namespace pbge {
         bool isBound() {
             return bound;
         }
+		void setDepthRenderable(Texture2D * depthTexture);
+		void enableDepthTesting() {}
+		void disableDepthTesting() {}
+		void enableDepthWrite() {}
+		void disableDepthWrite() {}
+		void enableColorWrite() {}
+		void disableColorWrite() {}
     protected:
         virtual bool isInitialized() = 0;
         virtual void initialize() = 0;
         virtual void attachRenderable(Texture2D * texture) = 0;
         virtual void dettachRenderable(Texture2D * texture) = 0;
+		virtual void attachDepthRenderable(Texture2D * texture) = 0;
         virtual void bindFramebuffer() = 0;
         virtual void unbindFramebuffer() = 0;
     private:
 		void validateAndAttachRenderable(Texture2D * tex);
 		void synchronize();
+		Texture2D * depth, * boundDepth;
         std::map<std::string,Texture2D *> renderables;
         std::set<Texture2D *> unsync_added;
         std::set<Texture2D*> added;

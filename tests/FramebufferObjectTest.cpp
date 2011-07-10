@@ -20,6 +20,7 @@ public:
     MOCK_METHOD1(dettachRenderable, void(pbge::Texture2D *tex));
     MOCK_METHOD0(bindFramebuffer, void());
     MOCK_METHOD0(unbindFramebuffer, void());
+	MOCK_METHOD1(attachDepthRenderable, void(pbge::Texture2D * tex));
 };
 
 TEST(FramebufferObject, shouldCallBindFramebufferOnBind) {
@@ -234,4 +235,23 @@ TEST_F(FramebufferObjectTest, shouldCheckIfTheRenderablesSizeIsTheSameAsTheFBOIf
 	fbo.bind();
 	EXPECT_TRUE(fbo.isBound());
 	EXPECT_THROW(fbo.addRenderable(&tex, "tex"), pbge::IllegalArgumentException);
+}
+
+TEST_F(FramebufferObjectTest, shouldntAllowUseOfDepthRenderableWithTheDimensionOfTheFBO) {
+	MockTexture2D tex(100, 200);
+	EXPECT_THROW(fbo.setDepthRenderable(&tex), pbge::IllegalArgumentException);
+}
+
+TEST_F(FramebufferObjectTest, shouldAllowUseOfDepthRenderableWithTheDimensionOfTheFBO) {
+	MockTexture2D tex(500, 500);
+	fbo.setDepthRenderable(&tex);
+	EXPECT_CALL(fbo, attachDepthRenderable(&tex)).Times(1);
+	fbo.bind();
+}
+
+TEST_F(FramebufferObjectTest, shouldChangeTheDepthRenderableImmediatellyIfBound) {
+	MockTexture2D tex(500, 500);
+	fbo.bind();
+	EXPECT_CALL(fbo, attachDepthRenderable(&tex)).Times(1);
+	fbo.setDepthRenderable(&tex);
 }

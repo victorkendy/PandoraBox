@@ -33,6 +33,10 @@ void FramebufferObject::synchronize() {
     std::for_each(diff.begin(), end, std::bind1st(std::mem_fun(&FramebufferObject::dettachRenderable), this));
     // Synchronize the sets
     added = unsync_added;
+	if(boundDepth != depth) {
+		boundDepth = depth;
+		attachDepthRenderable(depth);
+	}
 }
 
 void FramebufferObject::validateAndAttachRenderable(Texture2D * texture) {
@@ -57,3 +61,14 @@ void FramebufferObject::unbind() {
     }
 }
 
+void FramebufferObject::setDepthRenderable(Texture2D * tex) {
+	if(tex->getWidth() == width && tex->getHeight() == height) {
+		depth = tex;
+		if(isBound()) {
+			boundDepth = depth;
+			attachDepthRenderable(depth);
+		}
+	} else {
+		throw pbge::IllegalArgumentException("The depth renderable size is not valid for this FBO");
+	}
+}
