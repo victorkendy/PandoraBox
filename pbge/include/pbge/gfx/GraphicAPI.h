@@ -20,9 +20,11 @@ namespace pbge {
     class Texture;
     class UniformValue;
     class UniformSet;
+    class GPUProgram;
     class GraphicObjectsFactory;
     class VertexBuffer;
     class DrawController;
+    class FramebufferObject;
 
     class GraphicContext {
     public:
@@ -112,7 +114,10 @@ namespace pbge {
         virtual DrawController * getDrawController() = 0;
 
         virtual void setViewport(int x, int y, int w, int h) = 0;
-        
+
+        virtual void bindFramebufferObject(FramebufferObject * fbo) = 0;
+
+        virtual GPUProgram * getCurrentProgram() = 0;
         
         // raw OpenGL API calls
         // TODO: remove all this....

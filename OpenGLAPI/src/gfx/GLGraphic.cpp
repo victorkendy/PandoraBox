@@ -6,6 +6,7 @@
 #include "OpenGLAPI/gfx/GLGraphic.h"
 #include "OpenGLAPI/gfx/GLDrawController.h"
 #include "pbge/gfx/ResourceStorage.h"
+#include "pbge/gfx/FramebufferObject.h"
 #include "OpenGLAPI/gfx/GLObjectsFactory.h"
 #include "pbge/gfx/StateSet.h"
 
@@ -193,4 +194,12 @@ DrawController * GLGraphic::getDrawController() {
 
 void GLGraphic::setViewport(int x, int y, int w, int h) {
     glViewport(x, y, w, h);
+}
+
+void GLGraphic::bindFramebufferObject(FramebufferObject * fbo) {
+    state->useFBO(fbo);
+}
+
+GPUProgram * GLGraphic::getCurrentProgram() {
+    return this->state->currentProgram();
 }

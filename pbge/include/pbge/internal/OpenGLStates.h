@@ -42,9 +42,28 @@ namespace pbge {
 
         void updateUniforms(GraphicAPI * ogl);
 
+        GPUProgram * getCurrent() {
+            return current;
+        }
+
     private:
         GPUProgram * current;
         GPUProgram * next;
+    };
+
+    class BoundFBO : public State {
+    public:
+        BoundFBO() {
+            current = next = NULL;
+        }
+        bool shouldChange(GraphicAPI * api);
+        void makeChange(GraphicAPI * api);
+        void changeFBO(FramebufferObject * fbo) {
+            next = fbo;
+        }
+    private:
+        FramebufferObject * current;
+        FramebufferObject * next;
     };
 
     class PBGE_EXPORT TextureUnit : public State{

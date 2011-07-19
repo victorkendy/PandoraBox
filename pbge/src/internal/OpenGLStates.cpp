@@ -1,6 +1,7 @@
 
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Shader.h"
+#include "pbge/gfx/FramebufferObject.h"
 #include "pbge/internal/OpenGLStates.h"
 #include "pbge/gfx/Texture.h"
 
@@ -71,3 +72,15 @@ void BoundProgram::updateUniforms(GraphicAPI * ogl) {
     }
 }
 
+bool BoundFBO::shouldChange(GraphicAPI * api) {
+    return current != next;
+}
+
+void BoundFBO::makeChange(GraphicAPI * api) {
+    if(next != NULL) {
+        next->bind(api);
+    } else {
+        current->unbind();
+    }
+    current = next;
+}

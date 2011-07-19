@@ -11,6 +11,7 @@
 
 namespace pbge {
     class Texture2D;
+    class GraphicAPI;
     
     // Experimental class with testable template methods
     class PBGE_EXPORT FramebufferObject {
@@ -45,7 +46,7 @@ namespace pbge {
 				synchronize();
 			}
         }
-        void bind();
+        void bind(GraphicAPI * api);
         void unbind();
         bool isBound() {
             return bound;
@@ -57,6 +58,8 @@ namespace pbge {
 		void disableDepthWrite() {}
 		void enableColorWrite() {}
 		void disableColorWrite() {}
+        size_t getWidth() {return width;}
+        size_t getHeight() {return height;}
     protected:
         virtual bool isInitialized() = 0;
         virtual void initialize() = 0;
@@ -65,9 +68,11 @@ namespace pbge {
 		virtual void attachDepthRenderable(Texture2D * texture) = 0;
         virtual void bindFramebuffer() = 0;
         virtual void unbindFramebuffer() = 0;
+        virtual void useRenderables(const std::vector<Texture2D*> & textures) = 0;
     private:
 		void validateAndAttachRenderable(Texture2D * tex);
 		void synchronize();
+        void bindRenderablesToOutput(GraphicAPI * api);
 		Texture2D * depth, * boundDepth;
         std::map<std::string,Texture2D *> renderables;
         std::set<Texture2D *> unsync_added;

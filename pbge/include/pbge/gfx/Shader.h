@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <map>
 
 #include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/GraphicAPI.h"
@@ -46,6 +47,13 @@ namespace pbge {
         virtual void updateUniforms(GraphicAPI * ogl) = 0;
 
         virtual const std::vector<Shader*> getShaderOfType(Shader::ShaderType type) = 0;
+
+        /** Return the index of the program output variable named name
+
+            @param name The name of the shader output variable
+            @return The 0 indexed location of the output variable or -1 if the output name does not exist
+        */
+        virtual int getOutputLocation(const std::string & name) = 0;
 
     public: // Uniform binding
         virtual void bindFloat(const UniformInfo & info, GraphicAPI * ogl, const float * values, const unsigned size) = 0;
@@ -138,6 +146,8 @@ namespace pbge {
         bool isLinked() {
             return linked;
         }
+        
+        int getOutputLocation(const std::string & name);
 
         const std::vector<Shader*> getShaderOfType(Shader::ShaderType type);
 
@@ -176,7 +186,11 @@ namespace pbge {
 
         std::string infoLog;
 
+        std::vector<std::string> output;
+
         std::vector<UniformInfo> uniforms;
+
+        std::map<std::string, int> outputLocations;
     };
 }
 

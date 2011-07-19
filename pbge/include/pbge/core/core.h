@@ -20,8 +20,8 @@
         #define PBGE_EXPORT __declspec(dllexport)
         #define EXP_TEMPLATE
     #endif
-    EXP_TEMPLATE template class PBGE_EXPORT std::allocator<std::string>; 
-   // EXP_TEMPLATE template class PBGE_EXPORT std::vector<std::string>;
+   //EXP_TEMPLATE template class PBGE_EXPORT std::allocator<std::string>; 
+   //EXP_TEMPLATE template class PBGE_EXPORT std::vector<std::string>;
 #else
     #define PBGE_EXPORT 
 #endif

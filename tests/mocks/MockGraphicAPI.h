@@ -43,6 +43,8 @@ public:
     MOCK_METHOD1(bindVertexBuffer, void(pbge::VertexBuffer * vbo));
     MOCK_METHOD0(getDrawController, pbge::DrawController*());
     MOCK_METHOD4(setViewport, void(int x, int y, int w, int h));
+    MOCK_METHOD1(bindFramebufferObject, void(pbge::FramebufferObject * fbo));
+    MOCK_METHOD0(getCurrentProgram, pbge::GPUProgram *());
 
     MOCK_METHOD2(alphaFunc, void(GLenum func, GLclampf ref));
     MOCK_METHOD2(beginQuery, void(GLenum target, GLuint id));

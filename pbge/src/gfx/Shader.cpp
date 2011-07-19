@@ -152,6 +152,19 @@ namespace pbge {
         return linked;
     }
 
+    int GLProgram::getOutputLocation(const std::string & name) {
+        if(name == "tex") return 0;
+        std::map<std::string, int>::iterator it = outputLocations.find(name);
+        if(it == outputLocations.end()) {
+            // TODO: verify gl version before using the getfragdatalocation
+            int location = glGetFragDataLocation(programID, name.c_str());
+            outputLocations[name] = location;
+            return location;
+        } else {
+            return it->second;
+        }
+    }
+
     void GLProgram::extractInfoLog() {
         GLint infoLogLength;
         GLsizei lixo;

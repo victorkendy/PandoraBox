@@ -32,6 +32,7 @@ StateSet::StateSet(GraphicAPI * ogl) {
 
     boundProgram = new BoundProgram;
     uniformStack = new UniformStack;
+    boundFBO = new BoundFBO;
 
     int numberOfTextureUnits = ogl->numberOfTextureUnits();
     for (int i = 0; i < numberOfTextureUnits; i++)
@@ -49,6 +50,7 @@ StateSet::~StateSet() {
     }
 
     delete boundProgram;
+    delete boundFBO;
 }
 
 void StateSet::apply(GraphicAPI * ogl) {
@@ -71,6 +73,15 @@ void StateSet::disable(GraphicAPI::Mode mode) {
 void StateSet::useProgram(GPUProgram * program) {
     this->boundProgram->changeProgram(program);
     changes.insert(boundProgram);
+}
+
+void StateSet::useFBO(FramebufferObject * fbo) {
+    boundFBO->changeFBO(fbo);
+    changes.insert(boundFBO);
+}
+
+GPUProgram * StateSet::currentProgram() {
+    return boundProgram->getCurrent();
 }
 
 UniformValue * StateSet::getUniformValue(const UniformInfo & info) {

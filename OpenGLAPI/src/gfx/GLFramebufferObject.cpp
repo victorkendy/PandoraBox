@@ -19,8 +19,6 @@ void GLFramebufferObject::initialize() {
 
 void GLFramebufferObject::bindFramebuffer() {
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, GLID);
-	calculateBindingPoints();
-	glDrawBuffers(numberOfBindings, bindingPoints.get());
 }
 
 void GLFramebufferObject::unbindFramebuffer() {
@@ -34,8 +32,6 @@ void GLFramebufferObject::attachRenderable(pbge::Texture2D *texture) {
     GLTexture2D * tex = dynamic_cast<GLTexture2D*>(texture);
     // bind the texture to GL_COLOR_ATTACHMENTi_EXT where i = position of the texture in the vector
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + (i - renderables.begin()), GL_TEXTURE_2D, tex->getId(), 0);
-	calculateBindingPoints();
-	glDrawBuffers(numberOfBindings, bindingPoints.get());
 }
 
 void GLFramebufferObject::dettachRenderable(pbge::Texture2D *texture) {
@@ -43,17 +39,6 @@ void GLFramebufferObject::dettachRenderable(pbge::Texture2D *texture) {
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + (i - renderables.begin()), GL_TEXTURE_2D, 0, 0);
     // Release the binding point
     *i = NULL;
-	calculateBindingPoints();
-	glDrawBuffers(numberOfBindings, bindingPoints.get());
-}
-
-void GLFramebufferObject::calculateBindingPoints() {
-	numberOfBindings = 0;
-	for(std::vector<Texture2D*>::iterator it = renderables.begin(); it != renderables.end(); it++) {
-		if(*it != NULL) {
-			bindingPoints[numberOfBindings++] = GL_COLOR_ATTACHMENT0_EXT + std::distance(renderables.begin(), it);
-		}
-	}
 }
 
 void GLFramebufferObject::attachDepthRenderable(Texture2D * texture) {
@@ -63,4 +48,18 @@ void GLFramebufferObject::attachDepthRenderable(Texture2D * texture) {
 	} else {
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, 0, 0);
 	}
+}
+
+void GLFramebufferObject::useRenderables(const std::vector<Texture2D *> & textures) {
+    std::vector<Texture2D*>::const_iterator it, begin = textures.begin();
+    int i = 0;
+    for(it = textures.begin(); it != textures.end(); it++) {
+        std::vector<Texture2D*>::const_iterator position = std::find(renderables.begin(), renderables.end(), *it);
+        bindingPoints[i++] = GL_COLOR_ATTACHMENT0_EXT + (position - renderables.begin());
+        std::cout << "GL_COLOR_ATTACHMENT" << position - renderables.begin() << "_EXT na posicao: " << i - 1 << std::endl; 
+    }
+    glDrawBuffers(i, bindingPoints.get());
+    glViewport(0,0, getWidth(), getHeight());
+    if(glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) == GL_FRAMEBUFFER_COMPLETE_EXT)
+        std::cout << "ok framebuffer complete" << std::endl;
 }

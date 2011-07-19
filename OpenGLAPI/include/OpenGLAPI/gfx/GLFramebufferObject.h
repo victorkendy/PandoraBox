@@ -10,7 +10,9 @@
 
 namespace pbge {
     class Texture2D;
+    
 
+    // TODO: think about renderable change...
     class GLFramebufferObject : public FramebufferObject {
     public:
         GLFramebufferObject(size_t w, size_t h):FramebufferObject(w,h),GLID(0),renderables(16,NULL),bindingPoints(new GLenum[16]){}
@@ -22,8 +24,8 @@ namespace pbge {
 		void attachDepthRenderable(Texture2D * tex);
         void bindFramebuffer();
         void unbindFramebuffer();
+        void useRenderables(const std::vector<Texture2D *> & textures);
     private:
-		void calculateBindingPoints();
         GLuint GLID;
 		int numberOfBindings;
 		boost::scoped_array<GLenum> bindingPoints;

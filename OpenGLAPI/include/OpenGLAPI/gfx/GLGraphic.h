@@ -65,6 +65,10 @@ namespace pbge {
         DrawController * getDrawController();
 
         void setViewport(int x, int y, int w, int h);
+
+        void bindFramebufferObject(FramebufferObject * fbo);
+
+        GPUProgram * getCurrentProgram();
     public:
         /** Calculates the major version of the OpenGL implementation
             
@@ -94,6 +98,8 @@ namespace pbge {
         boost::scoped_ptr<GLObjectsFactory> factory;
 
         boost::scoped_ptr<GLDrawController> drawController;
+
+        FramebufferObject * currentFBO;
 
         unsigned majorVersion;
     };

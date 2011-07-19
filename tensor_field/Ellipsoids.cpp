@@ -57,7 +57,12 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
         "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
         "   gl_Position = gl_ModelViewProjectionMatrix * transformation * gl_Vertex;\n"
         "   gl_FrontColor = vec4(1,1,1,1);\n"
-        "}", ""));
+        "}", 
+        
+        "void main() {\n"
+        "   gl_FragData[0] = vec4(0,1,0,1);\n"
+        "}"
+        ));
     ellipsoids->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"
         "#extension GL_ARB_draw_instanced: enable\n"

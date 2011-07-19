@@ -17,6 +17,8 @@ namespace pbge {
     class Texture;
     class TextureUnit;
     class BoundProgram;
+    class FramebufferObject;
+    class BoundFBO;
     class GPUProgram;
     class UniformStack;
 
@@ -47,6 +49,10 @@ namespace pbge {
 
         void useProgram(GPUProgram * program);
 
+        void useFBO(FramebufferObject * fbo);
+
+        GPUProgram * currentProgram();
+
         void enable(GraphicAPI::Mode mode);
 
         void disable(GraphicAPI::Mode mode);
@@ -66,6 +72,8 @@ namespace pbge {
         std::vector<State *> states;
 
         BoundProgram * boundProgram;
+
+        BoundFBO * boundFBO;
 
         UniformStack * uniformStack;
 

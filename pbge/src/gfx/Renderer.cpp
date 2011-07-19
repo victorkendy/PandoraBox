@@ -39,18 +39,18 @@ void Renderer::updateScene(){
 }
 
 void Renderer::renderWithCamera(Camera * camera, Node * root) {
-	/*if(fbo.get() == NULL) { 
+	if(fbo.get() == NULL) { 
 		Texture2D * tex = ogl->getFactory()->create2DTexture();
 		fbo.reset(ogl->getFactory()->createFramebuffer(500,500));
 		fbo->addRenderable(tex, "tex");
-		fbo->bind();
-	}*/
+        ogl->bindFramebufferObject(fbo.get());
+	}
     camera->setCamera(ogl.get());
     
-    ogl->disableDrawBuffer();
-    depthRenderer->visit(root, ogl.get());
-    ogl->enableDrawBuffer(GL_BACK);
-    ogl->depthMask(GL_FALSE);
+    //ogl->disableDrawBuffer();
+    //depthRenderer->visit(root, ogl.get());
+    //ogl->enableDrawBuffer(GL_BACK);
+    //ogl->depthMask(GL_FALSE);
 
     
     

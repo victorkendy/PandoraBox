@@ -6,12 +6,13 @@
 #include <boost/function.hpp>
 
 #include "pbge/exceptions/exceptions.h"
+#include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/FramebufferObject.h"
 
 using namespace pbge;
 
-void FramebufferObject::bind() {
+void FramebufferObject::bind(GraphicAPI * api) {
     if(!isInitialized()) {
         initialize();
     }
@@ -20,6 +21,7 @@ void FramebufferObject::bind() {
         bound = true;
     }
     synchronize();
+    bindRenderablesToOutput(api);
 }
 
 void FramebufferObject::synchronize() {
@@ -52,6 +54,24 @@ void FramebufferObject::validateAndAttachRenderable(Texture2D * texture) {
 	} else {
 		throw pbge::IllegalArgumentException("The renderable size is not valid for this FBO");
 	}
+}
+
+void FramebufferObject::bindRenderablesToOutput (GraphicAPI * api) {
+    GPUProgram* program = api->getCurrentProgram();
+    // TODO: remove the hard coded 16
+    std::vector<Texture2D*> textures(16);
+    if(program == NULL) return;
+    int boundNames = 0;
+    std::map<std::string,Texture2D*>::iterator it;
+    for(it = renderables.begin(); it != renderables.end(); it++) {
+        int location = program->getOutputLocation(it->first);
+        if(location != -1) {
+            textures[location] = it->second;
+            boundNames++;
+        }
+    }
+    textures.resize(boundNames);
+    useRenderables(textures);
 }
 
 void FramebufferObject::unbind() {
