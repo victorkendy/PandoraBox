@@ -76,7 +76,7 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
         "   vec4 col1 = texelFetch(transforms, index, 0);\n"
         "   vec4 col2 = texelFetch(transforms, index + 1, 0);\n"
         "   vec4 col3 = texelFetch(transforms, index + 2, 0);\n"
-        "   vec4 col4 = vec4(0,0,0,1);\n"
+        "   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
 		"   col1 = vec4(col1.xyz, 0);\n"
 		"   col2 = vec4(col2.xyz, 0);\n"
 		"   col3 = vec4(col3.xyz, 0);\n"
