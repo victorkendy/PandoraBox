@@ -37,7 +37,7 @@ void Tensor3DProcessor::calculateEigenValuesForNonDiagonalTensor() {
     float dxy = this->tensor[1];
     float dxz = this->tensor[2];
     float dyz = this->tensor[4];
-    float i1 = dxx + dyy + dzz;
+	float i1 = dxx + dyy + dzz;
     float i2 = dxx*dyy + dyy*dzz + dzz*dxx - (dxy*dxy + dxz*dxz + dyz*dyz);
     float i3 = dxx*dyy*dzz + 2*dxy*dxz*dyz - (dzz*dxy*dxy + dyy*dxz*dxz + dxx*dyz*dyz);
     float v_sqrt = sqrt((i1/3)*(i1/3) - i2/3);
@@ -48,7 +48,7 @@ void Tensor3DProcessor::calculateEigenValuesForNonDiagonalTensor() {
     else if(phi_aux < -1.0) phi_aux = -1.0f;
     float phi = acos(phi_aux)/3;
 
-    this->eigenvalues[0] = i1/3 + 2*v_sqrt*cos(phi);
+	this->eigenvalues[0] = i1/3 + 2*v_sqrt*cos(phi);
     this->eigenvalues[1] = i1/3 - 2*v_sqrt*cos(TENSOR_FACTORY_PI/3 + phi);
     this->eigenvalues[2] = i1/3 - 2*v_sqrt*cos(TENSOR_FACTORY_PI/3 - phi);
 }
@@ -130,9 +130,10 @@ TensorFactory::TensorFactory(pbge::GraphicAPI * _gfx) {
 	this->numberOfTensorsIsSet = true;
 }
 
-void TensorFactory::createTensors(unsigned n) {
+void TensorFactory::createTensors(unsigned n, float _scale_factor) {
 	this->ellipsoids->createEllipsoids(n);
 	this->numberOfTensorsIsSet = true;
+	this->scale_factor = _scale_factor;
 }
 
 void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d::matrix44 & transformation) {
@@ -148,9 +149,12 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
                                                            eigenvectors[0][1], eigenvectors[1][1], eigenvectors[2][1], 0,
                                                            eigenvectors[0][2], eigenvectors[1][2], eigenvectors[2][2], 0,
                                                            0, 0, 0, 1);
-		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[0], eigenvalues[1], eigenvalues[2]);
+		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[0]/10, eigenvalues[1]/10, eigenvalues[2]/10) * this->scale_factor;
+		//printf("%f %f %f\n\n", eigenvalues[0], eigenvalues[1], eigenvalues[2]);
 		math3d::matrix44 transform = transformation * (*rotation) * scale;
 		this->ellipsoids->addTransform(transform);
+		//math3d::matrix44 scale = math3d::scaleMatrix(0.1, 0.1, 0.1);
+		//this->ellipsoids->addTransform(transformation*scale);
     }
 }
 
