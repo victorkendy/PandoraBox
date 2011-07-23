@@ -12,7 +12,7 @@ public:
 
     Ellipsoids * createEllipsoids(unsigned n);
 
-    Ellipsoids * addTransform(const math3d::matrix44 & m);
+    Ellipsoids * addTransform(const math3d::matrix44 & m, const float & color_factor);
 
     pbge::ModelCollection * done(pbge::GraphicAPI * gfx);
 private:
@@ -20,8 +20,9 @@ private:
     pbge::GPUProgram * shader;
 
     math3d::matrix44 * matrices;
-    unsigned numberOfEllipsoids;
+	unsigned numberOfEllipsoids;
     int current;
+	int current_color;
 };
 
 #endif

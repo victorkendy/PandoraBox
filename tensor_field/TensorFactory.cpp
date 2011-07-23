@@ -130,10 +130,15 @@ TensorFactory::TensorFactory(pbge::GraphicAPI * _gfx) {
 	this->numberOfTensorsIsSet = true;
 }
 
-void TensorFactory::createTensors(unsigned n, float _scale_factor) {
+void TensorFactory::createTensors(unsigned n, float _scale_factor, float _max_entry) {
 	this->ellipsoids->createEllipsoids(n);
 	this->numberOfTensorsIsSet = true;
 	this->scale_factor = _scale_factor;
+	this->max_entry = _max_entry;
+}
+
+float mean(float a, float b, float c) {
+	return (a+b+c)/3.0f;
 }
 
 void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d::matrix44 & transformation) {
@@ -149,10 +154,11 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
                                                            eigenvectors[0][1], eigenvectors[1][1], eigenvectors[2][1], 0,
                                                            eigenvectors[0][2], eigenvectors[1][2], eigenvectors[2][2], 0,
                                                            0, 0, 0, 1);
-		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[0]/10, eigenvalues[1]/10, eigenvalues[2]/10) * this->scale_factor;
+		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
 		//printf("%f %f %f\n\n", eigenvalues[0], eigenvalues[1], eigenvalues[2]);
 		math3d::matrix44 transform = transformation * (*rotation) * scale;
-		this->ellipsoids->addTransform(transform);
+		this->ellipsoids->addTransform(transform, mean(eigenvalues[0], eigenvalues[1], eigenvalues[2])/this->max_entry);
+		//printf("%f\n", mean(eigenvalues[0], eigenvalues[1], eigenvalues[2])/max_entry);
 		//math3d::matrix44 scale = math3d::scaleMatrix(0.1, 0.1, 0.1);
 		//this->ellipsoids->addTransform(transformation*scale);
     }
