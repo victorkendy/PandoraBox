@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iterator>
 #include <vector>
 #include <GL/glew.h>
 
@@ -18,6 +19,8 @@ void GLFramebufferObject::initialize() {
 
 void GLFramebufferObject::bindFramebuffer() {
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, GLID);
+	calculateBindingPoints();
+	glDrawBuffers(numberOfBindings, bindingPoints.get());
 }
 
 void GLFramebufferObject::unbindFramebuffer() {
@@ -31,6 +34,8 @@ void GLFramebufferObject::attachRenderable(pbge::Texture2D *texture) {
     GLTexture2D * tex = dynamic_cast<GLTexture2D*>(texture);
     // bind the texture to GL_COLOR_ATTACHMENTi_EXT where i = position of the texture in the vector
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + (i - renderables.begin()), GL_TEXTURE_2D, tex->getId(), 0);
+	calculateBindingPoints();
+	glDrawBuffers(numberOfBindings, bindingPoints.get());
 }
 
 void GLFramebufferObject::dettachRenderable(pbge::Texture2D *texture) {
@@ -38,4 +43,24 @@ void GLFramebufferObject::dettachRenderable(pbge::Texture2D *texture) {
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + (i - renderables.begin()), GL_TEXTURE_2D, 0, 0);
     // Release the binding point
     *i = NULL;
+	calculateBindingPoints();
+	glDrawBuffers(numberOfBindings, bindingPoints.get());
+}
+
+void GLFramebufferObject::calculateBindingPoints() {
+	numberOfBindings = 0;
+	for(std::vector<Texture2D*>::iterator it = renderables.begin(); it != renderables.end(); it++) {
+		if(*it != NULL) {
+			bindingPoints[numberOfBindings++] = GL_COLOR_ATTACHMENT0_EXT + std::distance(renderables.begin(), it);
+		}
+	}
+}
+
+void GLFramebufferObject::attachDepthRenderable(Texture2D * texture) {
+	if(texture == NULL) {
+		GLTexture2D * depthTexture = dynamic_cast<GLTexture2D*>(texture);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthTexture->getId(), 0);
+	} else {
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, 0, 0);
+	}
 }

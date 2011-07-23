@@ -70,7 +70,7 @@ bool VertexAttribBuilder::operator == (const VertexAttribBuilder & other) {
     return (this->type == other.type && this->index == other.index && this->nCoord == other.nCoord);
 }
 
-const VertexAttrib VertexAttribBuilder::createInstance(int offset, GLsizei stride) {
+const VertexAttrib VertexAttribBuilder::createInstance(int offset, size_t stride) {
     return VertexAttrib(nCoord, offset, stride, type);
 }
 
@@ -111,13 +111,13 @@ size_t VertexBufferBuilder::calculateSize() {
     return size * nVertices;
 }
 
-void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, GLsizei stride) {
+void VertexBufferBuilder::createAttribs(VertexBuffer * vbo, size_t stride) {
     std::for_each(attribs.begin(), attribs.end(), imp_detail::VertexAttribCreator(vbo, stride));
 }
 
 VertexBuffer * VertexBufferBuilder::done(Buffer::UsageHint usage, GraphicAPI * ogl) {
-    GLsizei size = calculateSize();
-    GLsizei stride = size / nVertices;
+    size_t size = calculateSize();
+    size_t stride = size / nVertices;
     Buffer * buffer = ogl->getFactory()->createBuffer(size*sizeof(float), usage);
     float * data = (float*) buffer->map(Buffer::WRITE_ONLY);
     imp_detail::VertexBufferDataLogic logic = imp_detail::VertexBufferDataLogic(data);

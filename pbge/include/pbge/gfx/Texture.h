@@ -1,6 +1,7 @@
 #ifndef PBGE_GFX_TEXTURE_H_
 #define PBGE_GFX_TEXTURE_H_
 
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -124,11 +125,34 @@ namespace pbge {
 
     class Texture2D : public Texture {
     public:
+		/** Calculates the width of the texture object.
+			
+			The width of the texture object is the width of the internal representation of the image in the texture object and 
+			may not correspond to the width of the last assigned image
+
+			@return The width of the texture object
+		*/
+		virtual const size_t getWidth() const = 0;
+
+		/** Calculates the height of the texture object.
+			
+			The height of the texture object is the height of the internal representation of the image in the texture object and 
+			may not correspond to the height of the last assigned image
+
+			@return The width of the texture object
+		*/
+		virtual const size_t getHeight() const = 0;
+
         /** replace the internal image of the texture object with given image loader implementation.
             
             @param image an implementation of the image interface
             @param format the desired internal representation of the texture on the graphic api
         */
+
+		virtual const bool isInitialized() const = 0;
+
+		virtual void initialize() = 0;
+
         virtual void setImage(Image * image, Texture::Format format) = 0;
         
         /** Replace the texture data with the given raw data obeying the specified format.

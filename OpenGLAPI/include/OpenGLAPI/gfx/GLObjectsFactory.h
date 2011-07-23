@@ -2,7 +2,8 @@
 #define PBGE_GFX_OPENGL_GLOBJECTSFACTORY_H
 
 #include <vector>
-
+#include <iostream>
+#include <cstddef>
 #include "pbge/gfx/GraphicObjectsFactory.h"
 
 namespace pbge {
@@ -17,6 +18,8 @@ namespace pbge {
         Texture1D * create1DTexture();
 
         Texture2D * create2DTexture();
+
+        FramebufferObject * createFramebuffer(size_t w, size_t h);
 
         Shader * createShaderFromFile(FileReader * file, Shader::ShaderType type);
 

@@ -4,6 +4,7 @@
 
 #include "pbge/core/core.h"
 
+#include <cstddef>
 #include <string>
 #include <set>
 #include <map>
@@ -14,13 +15,15 @@ namespace pbge {
     // Experimental class with testable template methods
     class PBGE_EXPORT FramebufferObject {
     public:
-        FramebufferObject():bound(false){}
+        FramebufferObject(size_t w, size_t h):bound(false),width(w),height(h),depth(NULL), boundDepth(NULL){}
+
+        virtual ~FramebufferObject(){}
 
         void addRenderable(Texture2D * texture, const std::string & name) {
             renderables[name] = texture;
             unsync_added.insert(texture);
             if(isBound()) {
-                attachRenderable(texture);
+                validateAndAttachRenderable(texture);
                 added.insert(texture);
             }
         }
@@ -38,23 +41,38 @@ namespace pbge {
         void clearRenderables() {
             unsync_added.clear();
             renderables.clear();
+			if(isBound()) {
+				synchronize();
+			}
         }
         void bind();
         void unbind();
         bool isBound() {
             return bound;
         }
+		void setDepthRenderable(Texture2D * depthTexture);
+		void enableDepthTesting() {}
+		void disableDepthTesting() {}
+		void enableDepthWrite() {}
+		void disableDepthWrite() {}
+		void enableColorWrite() {}
+		void disableColorWrite() {}
     protected:
         virtual bool isInitialized() = 0;
         virtual void initialize() = 0;
         virtual void attachRenderable(Texture2D * texture) = 0;
         virtual void dettachRenderable(Texture2D * texture) = 0;
+		virtual void attachDepthRenderable(Texture2D * texture) = 0;
         virtual void bindFramebuffer() = 0;
         virtual void unbindFramebuffer() = 0;
     private:
+		void validateAndAttachRenderable(Texture2D * tex);
+		void synchronize();
+		Texture2D * depth, * boundDepth;
         std::map<std::string,Texture2D *> renderables;
         std::set<Texture2D *> unsync_added;
         std::set<Texture2D*> added;
+		size_t width, height;
         bool bound;
     };
 }

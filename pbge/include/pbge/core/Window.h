@@ -28,7 +28,6 @@ namespace pbge {
             positionY = 0;
             windowTitle = "";
             renderer = NULL;
-            scene = NULL;
             initializer = NULL;
             handler.reset(new EventHandler(this));
         }
@@ -61,10 +60,10 @@ namespace pbge {
         }
 
         void setScene(SceneGraph * sceneGraph) {
-            scene = sceneGraph;
+            scene.reset(sceneGraph);
         }
 
-        SceneGraph * getScene() {
+        boost::shared_ptr<SceneGraph> & getScene() {
             return scene;
         }
 
@@ -117,7 +116,7 @@ namespace pbge {
 
         boost::shared_ptr<GraphicAPI> ogl;
 
-        SceneGraph * scene;
+        boost::shared_ptr<SceneGraph> scene;
 
         SceneInitializer * initializer;
 

@@ -16,8 +16,10 @@
 #include "pbge/core/KeyboardEventHandler.h"
 #include "pbge/core/MouseEventHandler.h"
 
+#include "pbge/gfx/FramebufferObject.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Renderer.h"
+#include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"
 
@@ -179,7 +181,7 @@ namespace {
 using namespace pbge;
 
 void Window::displayWindow() {
-    this->renderer = new Renderer(this->getGraphicAPI());
+    this->renderer = new Renderer(this->ogl);
 
     #if defined (WIN32) || defined (_WIN32) // code for win32 system
 
@@ -212,7 +214,6 @@ void Window::displayWindow() {
 
 Window::~Window() {
     delete initializer;
-    delete scene;
     delete renderer;
 }
 

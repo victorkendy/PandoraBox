@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <cstddef>
 
 #include "pbge/core/core.h"
 #include "pbge/gfx/Shader.h"
@@ -13,6 +14,7 @@ namespace pbge {
     class Texture1D;
     class Texture2D;
     class FileReader;
+    class FramebufferObject;
 
     class GraphicObjectsFactory {
     public:
@@ -35,6 +37,14 @@ namespace pbge {
             @return A new 2D texture object
         */
         virtual Texture2D * create2DTexture() = 0;
+
+        /** Creates a virtual Framebuffer.
+
+			@param w The desired initial width of the framebuffer object
+			@param h The desired initial height of the framebuffer object
+            @return A new instance of FramebufferObject
+        */
+        virtual FramebufferObject * createFramebuffer(size_t w, size_t h) = 0;
 
         /** Creates a new shader with the source code from a specified file.
 
