@@ -69,3 +69,15 @@ VBOModel * Geometrics::createBezier(const math3d::vector4 &p0, const math3d::vec
     }
     return new VBOModel(builder.done(Buffer::STATIC_DRAW, gfx), GL_LINE_STRIP);
 }
+
+VBOModel * Geometrics::createSquare(const float & side, GraphicAPI * gfx) {
+    VertexBufferBuilder builder(4);
+    VertexAttribBuilder vertex = builder.addAttrib(4, VertexAttrib::VERTEX);
+    builder.on(vertex);
+    float side_2 = side / 2.0f;
+    builder.pushValue(-side_2, side_2, 0.0f, 1.0f);
+    builder.pushValue(side_2, side_2, 0.0f, 1.0f);
+    builder.pushValue(side_2, -side_2, 0.0f, 1.0f);
+    builder.pushValue(-side_2, -side_2, 0.0f, 1.0f);
+    return new VBOModel(builder.done(Buffer::STATIC_DRAW, gfx), GL_QUADS);
+}

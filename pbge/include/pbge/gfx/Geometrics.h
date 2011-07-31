@@ -42,6 +42,7 @@ namespace pbge {
                                        const math3d::vector4 & p2, const math3d::vector4 & p3, 
                                        unsigned slices, GraphicAPI * gfx);
 
+        static VBOModel * createSquare(const float & side, GraphicAPI * gfx);
     };
 
 }

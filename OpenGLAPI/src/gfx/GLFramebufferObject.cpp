@@ -56,10 +56,7 @@ void GLFramebufferObject::useRenderables(const std::vector<Texture2D *> & textur
     for(it = textures.begin(); it != textures.end(); it++) {
         std::vector<Texture2D*>::const_iterator position = std::find(renderables.begin(), renderables.end(), *it);
         bindingPoints[i++] = GL_COLOR_ATTACHMENT0_EXT + (position - renderables.begin());
-        std::cout << "GL_COLOR_ATTACHMENT" << position - renderables.begin() << "_EXT na posicao: " << i - 1 << std::endl; 
     }
     glDrawBuffers(i, bindingPoints.get());
     glViewport(0,0, getWidth(), getHeight());
-    if(glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) == GL_FRAMEBUFFER_COMPLETE_EXT)
-        std::cout << "ok framebuffer complete" << std::endl;
 }

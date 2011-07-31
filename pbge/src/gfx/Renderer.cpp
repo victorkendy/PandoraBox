@@ -3,7 +3,10 @@
 #include <string>
 #include <cstring>
 
+#include "pbge/gfx/DrawController.h"
 #include "pbge/gfx/FramebufferObject.h"
+#include "pbge/gfx/Geometrics.h"
+#include "pbge/gfx/Model.h"
 #include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Texture.h"
@@ -13,6 +16,7 @@
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/StateSet.h"
+#include "pbge/gfx/Shader.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/core/Manager.h"
 #include "pbge/internal/OpenGLStates.h"
@@ -23,7 +27,24 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
                         renderer(new ColorPassVisitor),
                         depthRenderer(new DepthPassVisitor),
                         lightPassVisitor(new LightPassVisitor),
-                        ogl(_ogl) {}
+                        ogl(_ogl) {
+    Texture2D * colorOut = ogl->getFactory()->create2DTexture();
+    renderables["color"] = colorOut;
+    fbo.reset(ogl->getFactory()->createFramebuffer(500,500));
+    fbo->addRenderable(colorOut, "color");
+    quad.reset(Geometrics::createSquare(2.0f, ogl.get()));
+    blitter.reset(ogl->getFactory()->createProgramFromString(
+        "varying vec2 position;\n"
+        "void main() {\n"
+        "   gl_Position=gl_Vertex;\n"
+        "   position = 0.5 * gl_Vertex.xy + 0.5;"
+        "}", 
+        "varying vec2 position;\n"
+        "uniform sampler2D color;\n"
+        "void main(){\n"
+        "   gl_FragColor = texture2D(color, position);\n"
+        "}"));
+}
 
 
 void Renderer::setScene(boost::shared_ptr<SceneGraph> & scene_graph) {
@@ -39,21 +60,11 @@ void Renderer::updateScene(){
 }
 
 void Renderer::renderWithCamera(Camera * camera, Node * root) {
-	if(fbo.get() == NULL) { 
-		Texture2D * tex = ogl->getFactory()->create2DTexture();
-		fbo.reset(ogl->getFactory()->createFramebuffer(500,500));
-		fbo->addRenderable(tex, "tex");
-        ogl->bindFramebufferObject(fbo.get());
-	}
     camera->setCamera(ogl.get());
-    
     //ogl->disableDrawBuffer();
     //depthRenderer->visit(root, ogl.get());
     //ogl->enableDrawBuffer(GL_BACK);
     //ogl->depthMask(GL_FALSE);
-
-    
-    
     ogl->enable(GL_BLEND);
     ogl->blendFunc(GL_ONE, GL_ONE);
     std::vector<Light*>::iterator it;
@@ -72,9 +83,10 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
 }
 
 void Renderer::render(){
+    ogl->bindFramebufferObject(fbo.get());
+    ogl->updateState();
     ogl->depthMask(GL_TRUE);
     ogl->depthFunc(GL_LEQUAL);
-    
     
     ogl->clear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     Node * root = this->getScene()->getSceneGraphRoot();
@@ -86,5 +98,13 @@ void Renderer::render(){
     for(camera = activeCameras.begin(); camera != activeCameras.end(); camera++) {
         renderWithCamera(*camera, root);
     }
+    ogl->bindFramebufferObject(NULL);
+    glDisable(GL_DEPTH_TEST);
+    UniformSampler2D* sampler = dynamic_cast<UniformSampler2D*>(ogl->getUniformValue(UniformInfo("color", pbge::SAMPLER_2D)));
+    sampler->setValue(renderables["color"]);
+    ogl->getState()->useProgram(blitter.get());
+    ogl->updateState();
+    ogl->getDrawController()->drawVBOModel(quad.get());
+    glEnable(GL_DEPTH_TEST);
 }
 

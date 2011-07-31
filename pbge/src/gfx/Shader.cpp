@@ -153,7 +153,7 @@ namespace pbge {
     }
 
     int GLProgram::getOutputLocation(const std::string & name) {
-        if(name == "tex") return 0;
+        if(name == "color") return 0;
         std::map<std::string, int>::iterator it = outputLocations.find(name);
         if(it == outputLocations.end()) {
             // TODO: verify gl version before using the getfragdatalocation
