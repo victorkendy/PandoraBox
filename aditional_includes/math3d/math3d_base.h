@@ -17,12 +17,16 @@ namespace math3d {
             internal_free(p);
         }
 
+        /** Allocs a big chunk of memory with 16 bytes alignment
+
+            return a 16 aligned memory chunk
+        */
         void * operator new[] (size_t size) {
-            return internal_malloc(size, 16);
+            return aligned_malloc(size, 16);
         }
 
         void operator delete[] (void * p) {
-            internal_free(p);
+            aligned_free(p);
         }
     };
 }

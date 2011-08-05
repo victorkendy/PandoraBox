@@ -4,8 +4,6 @@
  * This file is a shortcut for the include files
  */
 
-#ifndef MATH3D_MATH3D
-#define MATH3D_MATH3D
 
 // Include the core functionality
 #include "math3d/core/core.h"
@@ -22,5 +20,3 @@
 
 // Useful constants
 #include "math3d/constants.h"
-
-#endif

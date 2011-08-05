@@ -2,6 +2,8 @@
 #include <fstream>
 #include <exception>
 #include <algorithm>
+#include <cmath>
+#include <typeinfo>
 
 #include "FieldReader.h"
 
@@ -32,14 +34,16 @@ void AnalyzeReader::generateFieldOn(pbge::SceneGraph *scene, pbge::Node *parent)
 	read_field_with_right_type();
     int count = 0;
 	pbge::Node * field_parent = scene->appendChildTo(parent, pbge::TransformationNode::translation((float)-this->header.dime.dim[1]/2,(float)this->header.dime.dim[2]/2,(float)this->header.dime.dim[3]/2));
-	this->tensorFactory->createTensors(this->header.dime.dim[1]*this->header.dime.dim[2]*this->header.dime.dim[3]);
+	this->tensorFactory->createTensors(this->header.dime.dim[1]*this->header.dime.dim[2]*this->header.dime.dim[3], std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])/(2*this->max_entry), this->max_entry);
 	std::for_each(this->tensors.begin(), this->tensors.end(), std::bind1st(std::mem_fun(&AnalyzeReader::add_tensor), this));
 	scene->appendChildTo(field_parent, this->tensorFactory->done());
 }
 
 void AnalyzeReader::add_tensor(TensorData tensor) {
-	if(!tensor.is_zero())
+	if(!tensor.is_zero()){
+		//printf("%f %f %f %f %f %f\n\n", tensor.getValues()[0], tensor.getValues()[1], tensor.getValues()[2], tensor.getValues()[3], tensor.getValues()[4], tensor.getValues()[5]);
 		this->tensorFactory->addTensor(tensor.getValues(), 3, 16, tensor.getTranslationToPosition());
+	}
 }
 
 void AnalyzeReader::read_field_with_right_type() {
@@ -96,22 +100,25 @@ template <class T> void AnalyzeReader::read_field() {
     short int number_of_slices = this->header.dime.dim[3];
     int slice_size = row_size * rows_per_slice;
     T * slice_buffer;
-    slice_buffer = (T*)malloc(slice_size * sizeof(T));
+	slice_buffer = (T*)malloc(slice_size * sizeof(T));
     int number_of_components = 6;
-    
+	float abs_val;
+
     description_file.open(img.c_str(), std::ifstream::in | std::ifstream::binary);
-    for(int component = 0; component < number_of_components; component++) {
+	for(int component = 0; component < number_of_components; component++) {
         for(int slice = 0; slice < number_of_slices; slice++) {
             description_file.read(reinterpret_cast<char *>(slice_buffer), slice_size*sizeof(T));
             for(int row = 0; row < rows_per_slice; row++) {
                 for(int column = 0; column < row_size; column++) {
                     T entry = slice_buffer[row*row_size + column];
 					this->tensors[index_of(column, row, slice)].setComponent(component, (float)entry);
+					abs_val = std::abs((float)entry);
+					if(abs_val > this->max_entry) this->max_entry = abs_val;
                 }
             }
         }
     }
-    
+	
     description_file.close();
     free(slice_buffer);
 }
@@ -138,6 +145,8 @@ const math3d::matrix44 TensorData::getTranslationToPosition() {
 }
 
 bool TensorData::is_zero() {
+	//if(this->values[0] > 0.5) return false;
+	//else return true;
 	float epsilon = 0.001f;
     for(int i = 0; i < 6; i++) {
 		if(this->values[i] > epsilon || this->values[i] < -epsilon) return false;

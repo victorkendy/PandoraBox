@@ -44,6 +44,7 @@ private:
 	std::vector<TensorData> tensors;
     struct analyze_dsr header;
     TensorFactory * tensorFactory;
+	float max_entry;
     
     template <class T> void read_field();
 	void read_field_with_right_type();

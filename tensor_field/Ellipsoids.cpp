@@ -25,13 +25,16 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * gfx) {
 Ellipsoids * Ellipsoids::createEllipsoids(unsigned n) {
     numberOfEllipsoids = n;
     this->matrices = new math3d::matrix44[n];
-    current = 0;
+	current = 0;
+	current_color = 0;
     return this;
 }
 
-Ellipsoids * Ellipsoids::addTransform(const math3d::matrix44 & m) {
-    // Store m in colmajor
-    this->matrices[current] = m.transpose();
+Ellipsoids * Ellipsoids::addTransform(const math3d::matrix44 & m, const float & color_factor) {
+	// Store m in colmajor
+	math3d::matrix44 copy = m;
+	copy.setRow(3, math3d::vector4(1 - color_factor, color_factor, 0, 1));
+	this->matrices[current] = copy.transpose();
     current++;
     return this;
 }
@@ -44,23 +47,28 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
     ellipsoids->setNumberOfInstances(numberOfEllipsoids);
     pbge::UniformSampler1D * uniform = ellipsoids->getUniformSet()->getSampler1D("transforms");
     uniform->setValue(tex);
-    ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
+	
+	ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"
         "#extension GL_ARB_draw_instanced: enable\n"
         "uniform sampler1D transforms;\n"
-        "void main() {\n"
+		"void main() {\n"
         "   int index = gl_InstanceIDARB * 4;\n"
         "   vec4 col1 = texelFetch(transforms, index, 0);\n"
         "   vec4 col2 = texelFetch(transforms, index + 1, 0);\n"
         "   vec4 col3 = texelFetch(transforms, index + 2, 0);\n"
-        "   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
-        "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
+		"   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
+		"   vec4 color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
+		"   col1 = vec4(col1.xyz, 0);\n"
+		"   col2 = vec4(col2.xyz, 0);\n"
+		"   col3 = vec4(col3.xyz, 0);\n"
+		"   col4 = vec4(col4.xyz, 1);\n"
+		"   mat4 transformation = mat4(col1, col2, col3, col4);\n"
         "   gl_Position = gl_ModelViewProjectionMatrix * transformation * gl_Vertex;\n"
-        "   gl_FrontColor = vec4(1,1,1,1);\n"
+        "   gl_FrontColor = color;\n"
         "}", 
-        
         "void main() {\n"
-        "   gl_FragData[0] = vec4(0,1,0,1);\n"
+        "   gl_FragData[0] = gl_Color;\n"
         "}"
         ));
     ellipsoids->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
@@ -73,6 +81,10 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
         "   vec4 col2 = texelFetch(transforms, index + 1, 0);\n"
         "   vec4 col3 = texelFetch(transforms, index + 2, 0);\n"
         "   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
+		"   col1 = vec4(col1.xyz, 0);\n"
+		"   col2 = vec4(col2.xyz, 0);\n"
+		"   col3 = vec4(col3.xyz, 0);\n"
+		"   col4 = vec4(col4.xyz, 1);\n"
         "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
         "   gl_Position = gl_ModelViewProjectionMatrix * transformation * gl_Vertex;\n"
         "}", ""));

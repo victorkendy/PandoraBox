@@ -31,7 +31,7 @@ class TensorFactory {
 public:
     TensorFactory(pbge::GraphicAPI * gfx);
 
-	void createTensors(unsigned n);
+	void createTensors(unsigned n, float scale_factor, float max_entry);
     // slices is not being used yet!
     void addTensor(float * tensor, int order, int slices, const math3d::matrix44 & transformation);
 	pbge::ModelCollection * done();
@@ -39,6 +39,8 @@ private:
     pbge::GraphicAPI * gfx;
 	Ellipsoids * ellipsoids;
 	bool numberOfTensorsIsSet;
+	float scale_factor;
+	float max_entry;
 };
 
 #endif
