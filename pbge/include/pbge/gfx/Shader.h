@@ -12,6 +12,7 @@
 namespace pbge {
 
     class FileReader;
+    class Texture;
     class Texture1D;
     class Texture2D;
     class TextureBuffer;
@@ -169,6 +170,8 @@ namespace pbge {
 
         void updateUniforms(GraphicAPI * ogl);
     private:
+        void bindSampler(const UniformInfo & info, GraphicAPI * ogl, Texture * tex);
+
         void extractInfoLog();
 
         void extractUniformInformation(GraphicAPI * ogl);

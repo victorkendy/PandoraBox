@@ -236,25 +236,23 @@ namespace pbge {
         glUniform4fv(info.getLocation(), size, values);
     }
 
-    void GLProgram::bindBufferSampler(const UniformInfo & info, GraphicAPI * ogl, TextureBuffer * tex) {
+    void GLProgram::bindSampler(const UniformInfo & info, GraphicAPI * ogl, Texture * tex) {
         TextureUnit * unit = ogl->chooseTextureUnit(tex);
         unit->setTexture(tex);
         unit->makeChange(ogl);
         glUniform1i(info.getLocation(), unit->getIndex());
+    }
+
+    void GLProgram::bindBufferSampler(const UniformInfo & info, GraphicAPI * ogl, TextureBuffer * tex) {
+        bindSampler(info, ogl, tex);
     }
 
     void GLProgram::bindSampler1D(const UniformInfo & info, GraphicAPI * ogl, Texture1D * tex) {
-        TextureUnit * unit = ogl->chooseTextureUnit(tex);
-        unit->setTexture(tex);
-        unit->makeChange(ogl);
-        glUniform1i(info.getLocation(), unit->getIndex());
+        bindSampler(info, ogl, tex);
     }
 
     void GLProgram::bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture2D * tex) {
-        TextureUnit * unit = ogl->chooseTextureUnit(tex);
-        unit->setTexture(tex);
-        unit->makeChange(ogl);
-        glUniform1i(info.getLocation(), unit->getIndex());
+        bindSampler(info, ogl, tex);
     }
 
     void GLProgram::bindMat4(const UniformInfo & info, GraphicAPI * ogl, const float * v) {

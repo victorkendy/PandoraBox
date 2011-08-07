@@ -193,14 +193,6 @@
 				RelativePath=".\TensorFactory.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\TensorModel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\vbo_setup.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -221,14 +213,6 @@
 			</File>
 			<File
 				RelativePath=".\TensorFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TensorModel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\vbo_setup.h"
 				>
 			</File>
 			<File
