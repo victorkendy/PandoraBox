@@ -8,7 +8,6 @@
 #include "FieldReader.h"
 
 #include "pbge/pbge.h"
-#include "TensorModel.h"
 #include "TensorFactory.h"
 
 #include "vtkmsqAnalyzeHeader.h"

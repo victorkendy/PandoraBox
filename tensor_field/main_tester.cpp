@@ -2,8 +2,6 @@
 #include <vector>
 #include "pbge/pbge.h"
 
-#include "vbo_setup.h"
-#include "TensorModel.h"
 #include "Ellipsoids.h"
 #include "FieldReader.h"
 
