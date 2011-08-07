@@ -4,7 +4,6 @@
 
 #include "vbo_setup.h"
 #include "TensorModel.h"
-#include "Ellipses.h"
 #include "Ellipsoids.h"
 #include "FieldReader.h"
 
