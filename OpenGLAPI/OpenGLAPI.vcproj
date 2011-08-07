@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\GLExtensions.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\GLFramebufferObject.cpp"
 				>
 			</File>
@@ -216,6 +220,10 @@
 			</File>
 			<File
 				RelativePath=".\include\OpenGLAPI\gfx\GLDrawController.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\OpenGLAPI\gfx\GLExtensions.h"
 				>
 			</File>
 			<File

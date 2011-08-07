@@ -7,12 +7,12 @@
 #include "pbge/gfx/Buffer.h"
 
 namespace pbge {
-    class GraphicAPI;
+    class GLGraphic;
     class GLObjectsFactory;
 
 
     // TODO: make changes to the buffer interface
-    class GLBuffer : Buffer {
+    class GLBuffer : public Buffer {
     public:
         friend GLObjectsFactory;
 
@@ -30,13 +30,13 @@ namespace pbge {
         }
     private:
         // retirei o target
-        GLBuffer(size_t _size, Buffer::UsageHint _usage, GraphicAPI * _gl);
+        GLBuffer(size_t _size, Buffer::UsageHint _usage, GLGraphic * _gl);
         
         void destroy();
 
         void initialize();
         
-        GraphicAPI * gl;
+        GLGraphic * gl;
 
         GLenum usage;
 

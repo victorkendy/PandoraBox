@@ -35,6 +35,7 @@ namespace {
             case GL_FLOAT_MAT4: return pbge::FLOAT_MAT4; break;
             case GL_FLOAT_MAT2x3: return pbge::FLOAT_MAT23; break;
             case GL_FLOAT_MAT2x4: return pbge::FLOAT_MAT24; break;
+            case GL_SAMPLER_BUFFER: return pbge::BUFFER_SAMPLER; break;
             case GL_SAMPLER_1D: return pbge::SAMPLER_1D; break;
             case GL_SAMPLER_2D: return pbge::SAMPLER_2D; break;
             case GL_SAMPLER_3D: return pbge::SAMPLER_3D; break;
@@ -248,18 +249,23 @@ namespace pbge {
         glUniform4fv(info.getLocation(), size, values);
     }
 
-    void GLProgram::bindSampler1D(const UniformInfo & info, GraphicAPI * ogl, Texture1D * tex) {
+    void GLProgram::bindSampler(const UniformInfo & info, GraphicAPI * ogl, Texture * tex) {
         TextureUnit * unit = ogl->chooseTextureUnit(tex);
         unit->setTexture(tex);
         unit->makeChange(ogl);
         glUniform1i(info.getLocation(), unit->getIndex());
     }
 
+    void GLProgram::bindBufferSampler(const UniformInfo & info, GraphicAPI * ogl, TextureBuffer * tex) {
+        bindSampler(info, ogl, tex);
+    }
+
+    void GLProgram::bindSampler1D(const UniformInfo & info, GraphicAPI * ogl, Texture1D * tex) {
+        bindSampler(info, ogl, tex);
+    }
+
     void GLProgram::bindSampler2D(const UniformInfo & info, GraphicAPI * ogl, Texture2D * tex) {
-        TextureUnit * unit = ogl->chooseTextureUnit(tex);
-        unit->setTexture(tex);
-        unit->makeChange(ogl);
-        glUniform1i(info.getLocation(), unit->getIndex());
+        bindSampler(info, ogl, tex);
     }
 
     void GLProgram::bindMat4(const UniformInfo & info, GraphicAPI * ogl, const float * v) {

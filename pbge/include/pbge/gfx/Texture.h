@@ -108,6 +108,45 @@ namespace pbge {
         // binds the texture object to a given texture unit
         virtual void bindTextureOn(TextureUnit * unit) = 0;
     };
+    
+
+    /** A adaptor for the texture buffer object gpu extension.
+
+        Texture buffer objects are large arrays of texels (that can be much larger than a 
+        normal 1D Texture or an array of uniform values).
+        
+        This texture type can only be used inside shaders, don't support filtering and are
+        not compatible with the fixed pipeline model.
+        
+        Texture buffers have a associated buffer object that will map the texels of the texture.
+
+        @todo some major refactor of the text...........
+    */
+    class TextureBuffer : public Texture {
+    public:
+        /** Get the buffer object associated with this texture object
+            
+            @return A instance of buffer
+        */
+        virtual Buffer * getBuffer() = 0;
+
+        /** Do nothing since filtering is not supported
+        */
+        void setMinFilter(Texture::Filter) {}
+
+        /** Do nothing since filtering is not supported
+        */
+        void setMagFilter(Texture::Filter) {}
+
+        /** set the representation of the texel data
+        */
+        virtual void setInternalFormat(Texture::DataType type, Texture::Format format) = 0;
+
+        /** binds the texture to the texture unit
+        */
+        virtual void bindTextureOn(TextureUnit * unit) = 0;
+
+    };
 
     class Texture1D : public Texture {
     public:

@@ -13,6 +13,7 @@ namespace pbge {
     class Buffer;
     class Texture1D;
     class Texture2D;
+    class TextureBuffer;
     class FileReader;
     class FramebufferObject;
 
@@ -26,6 +27,14 @@ namespace pbge {
         */
         virtual Buffer * createBuffer(size_t size, Buffer::UsageHint usage) = 0;
 
+        /** Creates a buffered texture
+
+            @param The size of the texture in bytes
+            @return A instance of the texture object
+
+            @todo think about the size argument maybe it should be format, datatype, number of texels
+        */
+        virtual TextureBuffer * createTextureBuffer(size_t size) = 0;
         /** Creates a API specific 1D texture object.
 
             @return A new 1D texture object

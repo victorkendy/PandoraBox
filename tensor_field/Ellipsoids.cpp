@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 #include "math3d/math3d.h"
 
 #include "pbge/pbge.h"
@@ -40,24 +41,29 @@ Ellipsoids * Ellipsoids::addTransform(const math3d::matrix44 & m, const float & 
 }
 
 pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
-    pbge::Texture1D * tex = gfx->getFactory()->create1DTexture();
 	numberOfEllipsoids = current;
-    tex->setImageData(pbge::Texture::FLOAT, pbge::Texture::RGBA, matrices, numberOfEllipsoids * sizeof(math3d::matrix44), 4 * numberOfEllipsoids, pbge::Texture::RGBA);
+    pbge::TextureBuffer * tex = gfx->getFactory()->createTextureBuffer(numberOfEllipsoids * sizeof(math3d::matrix44));
+    void * texData = tex->getBuffer()->map(pbge::Buffer::WRITE_ONLY);
+    memcpy(texData, matrices, numberOfEllipsoids * sizeof(math3d::matrix44));
+    tex->getBuffer()->unmap();
+    texData = NULL;
+    tex->setInternalFormat(pbge::Texture::FLOAT, pbge::Texture::RGBA);
     pbge::ModelCollection * ellipsoids = new pbge::ModelCollection(sphere);
     ellipsoids->setNumberOfInstances(numberOfEllipsoids);
-    pbge::UniformSampler1D * uniform = ellipsoids->getUniformSet()->getSampler1D("transforms");
+
+    pbge::UniformBufferSampler * uniform = ellipsoids->getUniformSet()->getBufferSampler("transforms");
     uniform->setValue(tex);
 	
 	ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"
         "#extension GL_ARB_draw_instanced: enable\n"
-        "uniform sampler1D transforms;\n"
+        "uniform samplerBuffer transforms;\n"
 		"void main() {\n"
         "   int index = gl_InstanceIDARB * 4;\n"
-        "   vec4 col1 = texelFetch(transforms, index, 0);\n"
-        "   vec4 col2 = texelFetch(transforms, index + 1, 0);\n"
-        "   vec4 col3 = texelFetch(transforms, index + 2, 0);\n"
-		"   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
+        "   vec4 col1 = texelFetch(transforms, index);\n"
+        "   vec4 col2 = texelFetch(transforms, index + 1);\n"
+        "   vec4 col3 = texelFetch(transforms, index + 2);\n"
+		"   vec4 col4 = texelFetch(transforms, index + 3);\n"
 		"   vec4 color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
 		"   col1 = vec4(col1.xyz, 0);\n"
 		"   col2 = vec4(col2.xyz, 0);\n"
@@ -74,13 +80,13 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
     ellipsoids->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"
         "#extension GL_ARB_draw_instanced: enable\n"
-        "uniform sampler1D transforms;\n"
+        "uniform samplerBuffer transforms;\n"
         "void main() {\n"
         "   int index = gl_InstanceIDARB * 4;\n"
-        "   vec4 col1 = texelFetch(transforms, index, 0);\n"
-        "   vec4 col2 = texelFetch(transforms, index + 1, 0);\n"
-        "   vec4 col3 = texelFetch(transforms, index + 2, 0);\n"
-        "   vec4 col4 = texelFetch(transforms, index + 3, 0);\n"
+        "   vec4 col1 = texelFetch(transforms, index);\n"
+        "   vec4 col2 = texelFetch(transforms, index + 1);\n"
+        "   vec4 col3 = texelFetch(transforms, index + 2);\n"
+        "   vec4 col4 = texelFetch(transforms, index + 3);\n"
 		"   col1 = vec4(col1.xyz, 0);\n"
 		"   col2 = vec4(col2.xyz, 0);\n"
 		"   col3 = vec4(col3.xyz, 0);\n"

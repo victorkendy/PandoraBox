@@ -76,6 +76,7 @@ namespace pbge {
         */
         UniformMat4 * getFloatMat4(const std::string & name);
 
+        UniformBufferSampler * getBufferSampler(const std::string & name);
         /**
             @param name The name of a uniform of type SAMPLER1D
             @return A instance of UniformSampler1D

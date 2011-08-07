@@ -24,11 +24,12 @@ namespace pbge {
             VertexBuffer=4,
             IndexBuffer,
             PixelReadBackBuffer,
-            PixelSendBuffer
+            PixelSendBuffer,
+            BufferTextureStorage
         } Target;
 
         typedef enum {
-            STREAM_DRAW = 8, 
+            STREAM_DRAW = 9, 
             STREAM_READ, 
             STREAM_COPY,
             STATIC_DRAW, 
