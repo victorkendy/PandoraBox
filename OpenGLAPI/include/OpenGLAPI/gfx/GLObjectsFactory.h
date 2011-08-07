@@ -14,6 +14,8 @@ namespace pbge {
         GLObjectsFactory(GLGraphic * gl);
 
         Buffer * createBuffer(size_t _size, Buffer::UsageHint _usage);
+
+        TextureBuffer * createTextureBuffer(size_t size);
         
         Texture1D * create1DTexture();
 

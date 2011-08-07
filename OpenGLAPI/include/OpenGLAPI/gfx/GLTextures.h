@@ -7,12 +7,32 @@
 
 #include "pbge/gfx/Texture.h"
 
+#include "OpenGLAPI/gfx/GLBuffer.h"
+
 namespace pbge {
     class GLGraphic;
     class Image;
     class TextureUnit;
     class GLObjectsFactory;
     class GLGraphic;
+
+    class GLTextureBuffer : public TextureBuffer {
+    public:
+        GLTextureBuffer(GLGraphic * ogl, size_t _size);
+        Buffer * getBuffer() {
+            return buffer;
+        }
+        void setInternalFormat(Texture::DataType type, Texture::Format format);
+
+        void bindTextureOn(TextureUnit * unit);
+    private:
+        GLuint GLID;
+        GLenum bindingPoint;
+        GLGraphic * ogl;
+        GLBuffer * buffer;
+        GLenum internalFormat;
+        size_t size;
+    };
 
     class GLTexture1D : public Texture1D {
     public:

@@ -5,8 +5,12 @@
 #include <boost/smart_ptr/scoped_array.hpp>
 #include <boost/smart_ptr/scoped_ptr.hpp>
 
+#include <GL/glew.h>
+
 #include "pbge/core/core.h"
 #include "pbge/gfx/GraphicAPI.h"
+
+#include "OpenGLAPI/gfx/GLExtensions.h"
 
 namespace pbge {
     class GLDrawController;
@@ -73,6 +77,10 @@ namespace pbge {
         const unsigned getMajorVersion() {
             return this->majorVersion;
         }
+
+        GLExtensions & getExtensions() {
+            return *extensions;
+        }
  
     private:
         void initContextVersion();
@@ -96,6 +104,8 @@ namespace pbge {
         boost::scoped_ptr<GLDrawController> drawController;
 
         unsigned majorVersion;
+
+        boost::scoped_ptr<GLExtensions> extensions;
     };
 
 }

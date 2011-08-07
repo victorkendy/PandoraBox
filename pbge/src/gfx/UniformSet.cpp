@@ -26,6 +26,9 @@ UniformValue * UniformSet::createUniform(const UniformInfo &info) {
     else if(type == FLOAT) {
         newValue = new UniformFloat;
     }
+    else if(type == BUFFER_SAMPLER) {
+        newValue = new UniformBufferSampler;
+    }
     else if(type == SAMPLER_1D) {
         newValue = new UniformSampler1D;
     }
@@ -81,6 +84,10 @@ UniformFloatVec4 * UniformSet::getFloatVec4(const std::string & name) {
 
 UniformMat4 * UniformSet::getFloatMat4(const std::string & name) {
     return dynamic_cast<UniformMat4 *>(this->getValue(UniformInfo(name, pbge::FLOAT_MAT4)));
+}
+
+UniformBufferSampler * UniformSet::getBufferSampler(const std::string & name) {
+    return dynamic_cast<UniformBufferSampler*>(this->getValue(UniformInfo(name, pbge::BUFFER_SAMPLER)));
 }
 
 UniformSampler1D * UniformSet::getSampler1D(const std::string & name) {

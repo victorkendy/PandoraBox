@@ -1,5 +1,6 @@
 #include <GL/glew.h>
 
+#include "OpenGLAPI/gfx/GLGraphic.h"
 #include "OpenGLAPI/gfx/GLBuffer.h"
 
 using namespace pbge;
@@ -18,13 +19,12 @@ GLenum translateUsageHint(Buffer::UsageHint usageHint) {
         case Buffer::DYNAMIC_COPY: usage = GL_DYNAMIC_COPY; break;
         case Buffer::DYNAMIC_DRAW: usage = GL_DYNAMIC_DRAW; break;
         case Buffer::DYNAMIC_READ: usage = GL_DYNAMIC_READ; break;
-
         default: throw 1;
     }
     return usage;
 }
 
-GLBuffer::GLBuffer(size_t _size, Buffer::UsageHint _usage, GraphicAPI * ogl):size(_size), target(0), glID(0), gl(ogl) {
+GLBuffer::GLBuffer(size_t _size, Buffer::UsageHint _usage, GLGraphic * ogl):size(_size), target(0), glID(0), gl(ogl) {
     this->usage = translateUsageHint(_usage);
     this->data = malloc(size);
     if (this->data == NULL) {
@@ -54,14 +54,16 @@ void GLBuffer::unmap() {
 }
 
 void GLBuffer::bindOn(Target _target) {
-    GLenum bindPoint;
+    GLenum bindPoint = 0;
     switch(_target) {
         case Buffer::VertexBuffer: bindPoint = GL_ARRAY_BUFFER; break;
         case Buffer::IndexBuffer: bindPoint = GL_ELEMENT_ARRAY_BUFFER; break;
         case Buffer::PixelReadBackBuffer: bindPoint = GL_PIXEL_PACK_BUFFER; break;
         case Buffer::PixelSendBuffer: bindPoint = GL_PIXEL_UNPACK_BUFFER; break;
-        // TODO: log error
-        default: throw 1;
+        case Buffer::BufferTextureStorage: bindPoint = gl->getExtensions().getBufferTextureInfo().bufferBinding;
+    }
+    if(bindPoint == 0) {
+        throw 1;
     }
     // the default target will be the target of the first bind
     if (this->target == 0) {

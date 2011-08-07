@@ -11,7 +11,7 @@
 
 using namespace pbge;
 
-GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(new ResourceStorage), context(NULL), projectionUpdated(true), majorVersion(0) {
+GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(new ResourceStorage), context(NULL), projectionUpdated(true), majorVersion(0){
     matrices[2] = math3d::identity44;
     factory.reset(new GLObjectsFactory(this));
     drawController.reset(new GLDrawController(this));
@@ -69,6 +69,7 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         state.reset(new StateSet(this));
         initContextVersion();
         drawController->initialize();
+        extensions.reset(new GLExtensions(this));
     }
 }
 

@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <cstddef>
 #include <gmock/gmock.h>
 
 #include "pbge/core/File.h"
@@ -59,6 +60,7 @@ public:
 class MockGraphicFactory : public pbge::GraphicObjectsFactory {
 public:
     MOCK_METHOD2(createBuffer, pbge::Buffer*(size_t _size, pbge::Buffer::UsageHint _usage));
+    MOCK_METHOD1(createTextureBuffer, pbge::TextureBuffer*(size_t size));
     MOCK_METHOD0(create1DTexture, pbge::Texture1D*());
     MOCK_METHOD0(create2DTexture, pbge::Texture2D*());
     MOCK_METHOD2(createFramebuffer, pbge::FramebufferObject*(size_t w, size_t h));
