@@ -37,7 +37,7 @@ void FramebufferObject::synchronize() {
     added = unsync_added;
 	if(boundDepth != depth) {
 		boundDepth = depth;
-		attachDepthRenderable(depth);
+		validateAndAttachDepthRenderable(depth);
 	}
 }
 
@@ -52,6 +52,21 @@ void FramebufferObject::validateAndAttachRenderable(Texture2D * texture) {
 		texture->bindTextureOn(NULL);
 		attachRenderable(texture);
 	} else {
+		throw pbge::IllegalArgumentException("The renderable size is not valid for this FBO");
+	}
+}
+
+void FramebufferObject::validateAndAttachDepthRenderable(Texture2D * depthTexture) {
+    if(depthTexture->getWidth() == 0 && depthTexture->getHeight() == 0) {
+        depthTexture->setImageData(pbge::Texture::UNSIGNED_BYTE, pbge::Texture::DEPTH_COMPONENT, NULL, 0, width, height, pbge::Texture::DEPTH_COMPONENT);
+    }
+    if(depthTexture->getWidth() == width && depthTexture->getHeight() == height) {
+        if(!depthTexture->isInitialized()) {
+            depthTexture->initialize();
+        }
+        depthTexture->bindTextureOn(NULL);
+        attachDepthRenderable(depthTexture);
+    } else {
 		throw pbge::IllegalArgumentException("The renderable size is not valid for this FBO");
 	}
 }
@@ -82,13 +97,9 @@ void FramebufferObject::unbind() {
 }
 
 void FramebufferObject::setDepthRenderable(Texture2D * tex) {
-	if(tex->getWidth() == width && tex->getHeight() == height) {
-		depth = tex;
-		if(isBound()) {
-			boundDepth = depth;
-			attachDepthRenderable(depth);
-		}
-	} else {
-		throw pbge::IllegalArgumentException("The depth renderable size is not valid for this FBO");
+	depth = tex;
+	if(isBound()) {
+		boundDepth = depth;
+		validateAndAttachDepthRenderable(depth);
 	}
 }

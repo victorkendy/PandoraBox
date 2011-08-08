@@ -71,6 +71,7 @@ namespace pbge {
         virtual void useRenderables(const std::vector<Texture2D*> & textures) = 0;
     private:
 		void validateAndAttachRenderable(Texture2D * tex);
+        void validateAndAttachDepthRenderable(Texture2D * depthTexture);
 		void synchronize();
         void bindRenderablesToOutput(GraphicAPI * api);
 		Texture2D * depth, * boundDepth;

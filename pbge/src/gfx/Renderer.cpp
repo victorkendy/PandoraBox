@@ -29,9 +29,12 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
                         lightPassVisitor(new LightPassVisitor),
                         ogl(_ogl) {
     Texture2D * colorOut = ogl->getFactory()->create2DTexture();
+    Texture2D * depthOut = ogl->getFactory()->create2DTexture();
     renderables["color"] = colorOut;
+    renderables["depth"] = depthOut;
     fbo.reset(ogl->getFactory()->createFramebuffer(500,500));
     fbo->addRenderable(colorOut, "color");
+    fbo->setDepthRenderable(depthOut);
     quad.reset(Geometrics::createSquare(2.0f, ogl.get()));
     blitter.reset(ogl->getFactory()->createProgramFromString(
         "varying vec2 position;\n"
