@@ -10,10 +10,8 @@
 namespace pbge {
     class PBGE_EXPORT MatrixStack {
     public:
-        MatrixStack():size(16),index(-1),matrices(new math3d::matrix44[size]){
-        }
-        ~MatrixStack() {
-        }
+        MatrixStack();
+        ~MatrixStack();
         void push(const math3d::matrix44 & m);
         void pop();
         const math3d::matrix44 peek() const;
