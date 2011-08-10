@@ -108,6 +108,7 @@ private:
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
         AnalyzeReader aReader(gfx);
         aReader.loadField("./Resources/dhelix_dti_tensor");
+		//aReader.loadField("./Resources/dti_axial_6dir_dti_tensor");
         aReader.generateFieldOn(graph, light_parent);
     }
 
