@@ -56,7 +56,8 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
 	
 	ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"
-        "#extension GL_ARB_draw_instanced: enable\n"
+        "#extension GL_EXT_gpu_shader4: enable\n"
+		"#extension GL_ARB_draw_instanced: enable\n"
         "uniform samplerBuffer transforms;\n"
 		"void main() {\n"
         "   int index = gl_InstanceIDARB * 4;\n"
@@ -79,6 +80,7 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
         ));
     ellipsoids->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"
+		"#extension GL_EXT_gpu_shader4: enable\n"
         "#extension GL_ARB_draw_instanced: enable\n"
         "uniform samplerBuffer transforms;\n"
         "void main() {\n"

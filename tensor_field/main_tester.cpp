@@ -14,12 +14,12 @@ public:
     bool keyDown(char key) {
         math3d::matrix44 m = cam_node->getTransformationMatrix();
         switch(key) {
-            case 'W': cam_node->translate(0, 0.1f, 0); break;
-            case 'S': cam_node->translate(0, -0.1f, 0); break;
-            case 'A': cam_node->translate(-0.1f, 0, 0); break;
-            case 'D': cam_node->translate(0.1f, 0, 0); break;
-            case 'Q': cam_node->translate(0, 0, 0.1f); break;
-            case 'E': cam_node->translate(0, 0, -0.1f); break;
+            case 'W': cam_node->translate(0, 1.0f, 0); break;
+            case 'S': cam_node->translate(0, -1.0f, 0); break;
+            case 'A': cam_node->translate(-1.0f, 0, 0); break;
+            case 'D': cam_node->translate(1.0f, 0, 0); break;
+            case 'Q': cam_node->translate(0, 0, 1.0f); break;
+            case 'E': cam_node->translate(0, 0, -1.0f); break;
         }
         return true;
     }
@@ -98,7 +98,7 @@ public:
         cam_node_name = cam_node->getSceneGraphIndex();
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
-        cam->setPerspective(45.0f, 1.0f, 1.0f, 100.0f);
+        cam->setPerspective(20.0f, 1.0f, 1.0f, 1000.0f);
 
 		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
@@ -107,8 +107,8 @@ public:
 private:
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
         AnalyzeReader aReader(gfx);
-        aReader.loadField("./Resources/dhelix_dti_tensor");
-		//aReader.loadField("./Resources/dti_axial_6dir_dti_tensor");
+        //aReader.loadField("./Resources/dhelix_dti_tensor");
+		aReader.loadField("./Resources/dti_axial_6dir_dti_tensor");
         aReader.generateFieldOn(graph, light_parent);
     }
 
