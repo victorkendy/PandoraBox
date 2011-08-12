@@ -10,6 +10,43 @@
 
 using namespace pbge;
 
+template<class F>
+VertexBuffer * meshgrid(int m, int n, F & f, GraphicAPI* gfx) {
+    VertexBufferBuilder builder(4 * m * n);
+    VertexAttribBuilder vertex = builder.addAttrib(4, VertexAttrib::VERTEX);
+    builder.on(vertex);
+    float value[4];
+    float dx = 1.0f/m, dy = 1.0f/n;
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            f(i*dx, j*dy, value);
+            builder.pushValue(value[0], value[1], value[2], value[3]);
+            f((i+1)*dx, j*dy, value);
+            builder.pushValue(value[0], value[1], value[2], value[3]);
+            f((i+1)*dx, (j+1)*dy, value);
+            builder.pushValue(value[0], value[1], value[2], value[3]);
+            f(i*dx, (j+1)*dy, value);
+            builder.pushValue(value[0], value[1], value[2], value[3]);
+        }
+    }
+    return builder.done(Buffer::STATIC_DRAW, gfx);
+}
+
+class SphereEvaluator {
+public:
+    SphereEvaluator(float r):radius(r){}
+    void operator () (float s, float t, float values[]) {
+        float theta = s * pbge::pi * 2;
+        float phi = t * pbge::pi;
+        values[0] = radius * cos(theta) * sin(phi);
+        values[1] = radius * sin(theta) * sin(phi);
+        values[2] = radius * cos(phi);
+        values[3] = 1.0f;
+    }
+private:
+    float radius;
+};
+
 VBOModel * Geometrics::createCircunference(float radius, unsigned int slices, GraphicAPI * gfx) {
     if(radius <= 0) {
         throw IllegalArgumentException("radius must have a positive value");
@@ -28,23 +65,8 @@ VBOModel * Geometrics::createCircunference(float radius, unsigned int slices, Gr
 }
 
 VBOModel * Geometrics::createSphere(float radius, unsigned slices, GraphicAPI * gfx) {
-    if(radius <= 0) {
-        throw IllegalArgumentException("radius must have a positive value");
-    }
-    if(slices < 3) {
-        throw IllegalArgumentException("there must be at least 3 slices");
-    }
-    float param_step = 2 * pbge::pi / slices;
-    VertexBufferBuilder builder(slices * slices);
-    VertexAttribBuilder vertex = builder.addAttrib(4, VertexAttrib::VERTEX);
-    builder.on(vertex);
-    for(float phi = 0, next_phi = param_step; phi < 2 * pbge::pi; phi = next_phi, next_phi += param_step) {
-        for(float theta = 0; theta < pbge::pi; theta += param_step) {
-            builder.pushValue(radius * sin(theta) * cos(phi), radius * sin(theta) * sin(phi), radius * cos(theta), 1.0f);
-            builder.pushValue(radius * sin(theta) * cos(next_phi), radius * sin(theta) * sin(next_phi), radius * cos(theta), 1.0f);
-        }
-    }
-    return new VBOModel(builder.done(Buffer::STATIC_DRAW, gfx), GL_QUAD_STRIP);
+    VertexBuffer * vbo = meshgrid(slices, slices, SphereEvaluator(radius), gfx);
+    return new VBOModel(vbo, GL_QUADS);
 }
 
 VBOModel * Geometrics::createBezier(const math3d::vector4 &p0, const math3d::vector4 &p1, 
