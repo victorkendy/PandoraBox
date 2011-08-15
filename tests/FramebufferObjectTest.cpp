@@ -47,6 +47,8 @@ public:
 
     void bindFloatVec4(const pbge::UniformInfo & info, pbge::GraphicAPI * ogl, const float * values, const unsigned size) {}
 
+    void bindBufferSampler(const pbge::UniformInfo & info, pbge::GraphicAPI * ogl, pbge::TextureBuffer * tex) {}
+
     void bindSampler1D(const pbge::UniformInfo & info, pbge::GraphicAPI * ogl, pbge::Texture1D * tex){}
     
     void bindSampler2D(const pbge::UniformInfo & info, pbge::GraphicAPI * ogl, pbge::Texture2D * tex) {}

@@ -19,7 +19,7 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * gfx) {
             "   gl_FrontColor = vec4(1,1,1,1);\n"
             "}";
 
-    this->sphere = pbge::Geometrics::createSphere(1.0f, 10, gfx);
+    this->sphere = pbge::Geometrics::createSphere(1.0f, 5, gfx);
     this->shader = gfx->getFactory()->createProgramFromString(vertexShader, "");
 }
 

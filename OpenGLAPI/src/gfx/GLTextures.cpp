@@ -3,7 +3,7 @@
 #include "OpenGLAPI/gfx/GLGraphic.h"
 #include "OpenGLAPI/gfx/GLObjectsFactory.h"
 #include "OpenGLAPI/gfx/GLTextures.h"
-#include "pbge/internal/OpenGLStates.h"
+#include "pbge/gfx/states/TextureUnits.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/Image.h"
 

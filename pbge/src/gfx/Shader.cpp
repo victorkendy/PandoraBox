@@ -10,7 +10,7 @@
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Texture.h"
 
-#include "pbge/internal/OpenGLStates.h"
+#include "pbge/gfx/states/TextureUnits.h"
 
 
 using std::string;

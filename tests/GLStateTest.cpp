@@ -6,7 +6,7 @@
 
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Texture.h"
-#include "pbge/internal/OpenGLStates.h"
+#include "pbge/gfx/states/TextureUnits.h"
 
 using ::testing::Return;
 using ::testing::_;
@@ -54,59 +54,4 @@ TEST(UniformInfoTest, smokeTest) {
 
 
 
-
-TEST(StateSetTest, ifAllUnitsAreFreeReturnsAFreeUnit) {
-    MockGraphicAPI ogl;
-    MockTexture texture;
-    EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
-    
-    pbge::StateSet stateSet(&ogl);
-    pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
-    ASSERT_EQ(NULL, unit->getCurrentTexture());
-}
-
-TEST(StateSetTest, ifTheTextureIsBoundToAUnitReturnsTheUnitThatIsBoundToTheTexture) {
-    MockGraphicAPI ogl;
-    MockTexture texture;
-    EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
-    pbge::StateSet stateSet(&ogl);
-    pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
-    unit->setTexture(&texture);
-    ASSERT_TRUE(unit->shouldChange(&ogl));
-    unit->makeChange(&ogl);
-    ASSERT_EQ(&texture, stateSet.chooseTexUnit(&texture)->getCurrentTexture());
-}
-
-void bindTexOnUnit(pbge::TextureUnit * unit, MockTexture & texture, MockGraphicAPI & ogl) {
-    unit->setTexture(&texture);
-    ASSERT_TRUE(unit->shouldChange(&ogl));
-    unit->makeChange(&ogl);
-}
-
-TEST(StateSetTest, ifThereIsAFreeUnitAndTheTextureIsNotBoundReturnTheFreeUnit) {
-    MockGraphicAPI ogl;
-    MockTexture texture;
-    MockTexture texture2;
-    EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
-    pbge::StateSet stateSet(&ogl);
-    pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
-    bindTexOnUnit(unit, texture, ogl);
-    ASSERT_EQ(NULL, stateSet.chooseTexUnit(&texture2)->getCurrentTexture());
-}
-
-
-TEST(StateSetTest, ifThereAreNoFreeUnitsChooseTextureUnitReturnsTheUnitWithTheOldestBinding) {
-    MockGraphicAPI ogl;
-    MockTexture texture;
-    MockTexture texture2;
-    MockTexture texture3;
-
-    EXPECT_CALL(ogl, numberOfTextureUnits()).Times(1).WillOnce(Return(2));
-    pbge::StateSet stateSet(&ogl);
-    pbge::TextureUnit * unit = stateSet.chooseTexUnit(&texture);
-    bindTexOnUnit(unit, texture, ogl);
-    
-    unit = stateSet.chooseTexUnit(&texture2);
-    bindTexOnUnit(unit, texture2, ogl);
-}
 

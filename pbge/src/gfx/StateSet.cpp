@@ -1,10 +1,14 @@
 #include <vector>
 #include <algorithm>
+
 #include "pbge/gfx/GraphicAPI.h"
-#include "pbge/internal/OpenGLStates.h"
+
 #include "pbge/gfx/UniformStack.h"
 #include "pbge/gfx/UniformSet.h"
 #include "pbge/gfx/StateSet.h"
+#include "pbge/gfx/states/TextureUnits.h"
+#include "pbge/gfx/states/BoundProgram.h"
+#include "pbge/internal/OpenGLStates.h"
 
 using namespace pbge;
 
@@ -32,11 +36,8 @@ StateSet::StateSet(GraphicAPI * ogl) {
 
     boundProgram = new BoundProgram;
     uniformStack = new UniformStack;
+    textureUnits = new TextureUnits(ogl);
     boundFBO = new BoundFBO;
-
-    int numberOfTextureUnits = ogl->numberOfTextureUnits();
-    for (int i = 0; i < numberOfTextureUnits; i++)
-        textureUnits.push_back(new TextureUnit(ogl, i));
 }
 
 StateSet::~StateSet() {
@@ -45,11 +46,8 @@ StateSet::~StateSet() {
     for(it = states.begin(); it != states.end(); it++) {
         delete *it;
     }
-    for(texIt = textureUnits.begin(); texIt != textureUnits.end(); texIt++) {
-        delete *texIt;
-    }
-
     delete boundProgram;
+    delete textureUnits;
     delete boundFBO;
 }
 
@@ -94,16 +92,7 @@ UniformValue * StateSet::searchUniform(const UniformInfo & info) {
 }
 
 TextureUnit * StateSet::chooseTexUnit(Texture * texture) {
-    std::vector<TextureUnit*>::iterator unit;
-    TextureUnit * chosen = NULL;
-    for(unit = textureUnits.begin(); unit != textureUnits.end(); unit++) {
-        if((*unit)->getCurrentTexture() == texture) {
-            chosen = *unit;
-            break;
-        } else if(((*unit)->getCurrentTexture() == NULL) && (chosen == NULL))
-            chosen = *unit;
-    }
-    return chosen;
+    return textureUnits->unitFor(texture);
 }
 
 void StateSet::pushUniformSet(UniformSet * uniforms) {

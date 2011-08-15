@@ -9,36 +9,19 @@
 
 #include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/GraphicAPI.h"
+#include "pbge/gfx/State.h"
+#include "pbge/gfx/states/BoundProgram.h"
+#include "pbge/gfx/states/TextureUnits.h"
 #include "pbge/core/core.h"
 
 #include <vector>
 
 namespace pbge {
     class Texture;
-    class TextureUnit;
-    class BoundProgram;
     class FramebufferObject;
     class BoundFBO;
-    class GPUProgram;
     class UniformStack;
 
-    class PBGE_EXPORT State {
-    public: 
-        void applyChanges(GraphicAPI * ogl) {
-            if(shouldChange(ogl)) {
-                makeChange(ogl);
-            }
-        }
-
-        virtual void makeChange(GraphicAPI * ogl) = 0;
-
-        virtual bool shouldChange(GraphicAPI * ogl) = 0;
-    };
-
-
-    /*
-        
-    */
     class PBGE_EXPORT StateSet {
     public:
         StateSet(GraphicAPI * ogl);
@@ -75,9 +58,9 @@ namespace pbge {
 
         BoundFBO * boundFBO;
 
-        UniformStack * uniformStack;
+        TextureUnits * textureUnits;
 
-        std::vector<TextureUnit*> textureUnits;
+        UniformStack * uniformStack;
 
         std::set<State*> changes;
     };
