@@ -2,6 +2,7 @@
 #include <iostream>
 #include "boost/regex.hpp"
 
+#include "pbge/graph/TypedGraph.h"
 #include "pbge/utils/ShaderBuilder.h"
 
 using namespace pbge;
@@ -23,3 +24,4 @@ void ShaderBuilder::generateShaderParameters() {
         }
     }
 }
+

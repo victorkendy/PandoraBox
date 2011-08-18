@@ -443,6 +443,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\graph\TypedGraph.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\UniformSet.h"
 				>
 			</File>
