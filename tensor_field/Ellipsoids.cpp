@@ -19,7 +19,7 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * gfx) {
             "   gl_FrontColor = vec4(1,1,1,1);\n"
             "}";
 
-    this->sphere = pbge::Geometrics::createSphere(1.0f, 5, gfx);
+    this->sphere = pbge::Geometrics::createSphere(1.0f, 3, gfx);
     this->shader = gfx->getFactory()->createProgramFromString(vertexShader, "");
 }
 
@@ -56,27 +56,45 @@ pbge::ModelCollection * Ellipsoids::done(pbge::GraphicAPI * gfx) {
 	
 	ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"
-        "#extension GL_EXT_gpu_shader4: enable\n"
+		"#extension GL_EXT_gpu_shader4: enable\n"
+		"#extension GL_ARB_gpu_shader5: enable\n"
 		"#extension GL_ARB_draw_instanced: enable\n"
-        "uniform samplerBuffer transforms;\n"
+		"uniform samplerBuffer transforms;\n"
+		"\n"
+		"out vec4 position;\n"
+		"out vec3 normal;\n"
+		"out vec4 lightPosition;\n"
 		"void main() {\n"
-        "   int index = gl_InstanceIDARB * 4;\n"
-        "   vec4 col1 = texelFetch(transforms, index);\n"
-        "   vec4 col2 = texelFetch(transforms, index + 1);\n"
-        "   vec4 col3 = texelFetch(transforms, index + 2);\n"
+		"   const vec4 light_position = vec4(16,16,16,1);\n"
+		"   int index = gl_InstanceIDARB * 4;\n"
+		"   vec4 col1 = texelFetch(transforms, index);\n"
+		"   vec4 col2 = texelFetch(transforms, index + 1);\n"
+		"   vec4 col3 = texelFetch(transforms, index + 2);\n"
 		"   vec4 col4 = texelFetch(transforms, index + 3);\n"
-		"   vec4 color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
+		"   vec3 color = vec3(col1.w,col2.w,col3.w);\n"
 		"   col1 = vec4(col1.xyz, 0);\n"
 		"   col2 = vec4(col2.xyz, 0);\n"
 		"   col3 = vec4(col3.xyz, 0);\n"
 		"   col4 = vec4(col4.xyz, 1);\n"
 		"   mat4 transformation = mat4(col1, col2, col3, col4);\n"
-        "   gl_Position = gl_ModelViewProjectionMatrix * transformation * gl_Vertex;\n"
-        "   gl_FrontColor = color;\n"
-        "}", 
-        "void main() {\n"
-        "   gl_FragData[0] = gl_Color;\n"
-        "}"
+		"   mat4 t = gl_ModelViewMatrix * transformation;\n"
+		"   vec4 _normal = inverse(transpose(t)) * gl_Vertex;\n"
+		"   normal = normalize(_normal.xyz);\n"
+		"   position = t * gl_Vertex;\n"
+		"   lightPosition = t * light_position;\n"
+		"   gl_Position = gl_ProjectionMatrix * position;\n"
+		"   gl_FrontColor = vec4(color, 1.0);\n"
+		"}",
+        "in vec4 position;\n"
+		"in vec3 normal;\n"
+		"in vec4 lightPosition;\n"
+		"void main() {\n"
+		"   vec4 diffuseColor = gl_Color;\n"
+		"   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
+		"   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
+		"   float intensity = max(0.0, dot(lightDir, normal));\n"
+		"   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity, gl_Color.a);\n"
+		"}"
         ));
     ellipsoids->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 130\n"

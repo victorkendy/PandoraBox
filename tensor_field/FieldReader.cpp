@@ -40,7 +40,6 @@ void AnalyzeReader::generateFieldOn(pbge::SceneGraph *scene, pbge::Node *parent)
 
 void AnalyzeReader::add_tensor(TensorData tensor) {
 	if(!tensor.is_zero()){
-		//printf("%f %f %f %f %f %f\n\n", tensor.getValues()[0], tensor.getValues()[1], tensor.getValues()[2], tensor.getValues()[3], tensor.getValues()[4], tensor.getValues()[5]);
 		this->tensorFactory->addTensor(tensor.getValues(), 3, 16, tensor.getTranslationToPosition());
 	}
 }

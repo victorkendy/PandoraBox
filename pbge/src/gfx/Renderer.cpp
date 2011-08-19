@@ -45,7 +45,8 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
         "varying vec2 position;\n"
         "uniform sampler2D color;\n"
         "void main(){\n"
-        "   gl_FragColor = texture2D(color, position);\n"
+		"	vec2 x = 2 * position - 1.0;\n"
+		"   gl_FragColor = texture2D(color, 0.5 + 0.5 * sin(1.5 * x));\n"
         "}"));
 }
 
