@@ -31,10 +31,10 @@ Ellipsoids * Ellipsoids::createEllipsoids(unsigned n) {
     return this;
 }
 
-Ellipsoids * Ellipsoids::addTransform(const math3d::matrix44 & m, const float & color_factor) {
+Ellipsoids * Ellipsoids::addTransform(const math3d::matrix44 & m, const float & r, const float & g, const float & b, const float & a) {
 	// Store m in colmajor
 	math3d::matrix44 copy = m;
-	copy.setRow(3, math3d::vector4(1 - color_factor, color_factor, 0, 1));
+	copy.setRow(3, math3d::vector4(r, g, b, a));
 	this->matrices[current] = copy.transpose();
     current++;
     return this;

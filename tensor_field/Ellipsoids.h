@@ -12,7 +12,7 @@ public:
 
     Ellipsoids * createEllipsoids(unsigned n);
 
-    Ellipsoids * addTransform(const math3d::matrix44 & m, const float & color_factor);
+    Ellipsoids * addTransform(const math3d::matrix44 & m, const float & r, const float & g, const float & b, const float & a = 1.0f);
 
     pbge::ModelCollection * done(pbge::GraphicAPI * gfx);
 private:

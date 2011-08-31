@@ -157,7 +157,8 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
 		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
 		//printf("%f %f %f\n\n", eigenvalues[0], eigenvalues[1], eigenvalues[2]);
 		math3d::matrix44 transform = transformation * (*rotation) * scale;
-		this->ellipsoids->addTransform(transform, mean(eigenvalues[0], eigenvalues[1], eigenvalues[2])/this->max_entry);
+		//this->ellipsoids->addTransform(transform, mean(eigenvalues[0], eigenvalues[1], eigenvalues[2])/this->max_entry);
+		this->ellipsoids->addTransform(transform, eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2]);
 		//printf("%f\n", mean(eigenvalues[0], eigenvalues[1], eigenvalues[2])/max_entry);
 		//math3d::matrix44 scale = math3d::scaleMatrix(0.1, 0.1, 0.1);
 		//this->ellipsoids->addTransform(transformation*scale);

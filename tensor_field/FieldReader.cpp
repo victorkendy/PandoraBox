@@ -33,7 +33,10 @@ void AnalyzeReader::generateFieldOn(pbge::SceneGraph *scene, pbge::Node *parent)
 	read_field_with_right_type();
     int count = 0;
 	pbge::Node * field_parent = scene->appendChildTo(parent, pbge::TransformationNode::translation((float)-this->header.dime.dim[1]/2,(float)this->header.dime.dim[2]/2,(float)this->header.dime.dim[3]/2));
-	this->tensorFactory->createTensors(this->header.dime.dim[1]*this->header.dime.dim[2]*this->header.dime.dim[3], std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])/(2*this->max_entry), this->max_entry);
+	int number_of_tensors = this->header.dime.dim[1]*this->header.dime.dim[2]*this->header.dime.dim[3];
+	float scale_factor = std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])/(2*this->max_entry);
+	scale_factor *= 2;
+	this->tensorFactory->createTensors(number_of_tensors, scale_factor, this->max_entry);
 	std::for_each(this->tensors.begin(), this->tensors.end(), std::bind1st(std::mem_fun(&AnalyzeReader::add_tensor), this));
 	scene->appendChildTo(field_parent, this->tensorFactory->done());
 }
