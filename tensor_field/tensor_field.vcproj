@@ -174,6 +174,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\CompiledFieldReader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Ellipses.cpp"
 				>
 			</File>
@@ -182,15 +186,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FieldReader.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main_tester.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TensorFactory.cpp"
 				>
 			</File>
 		</Filter>
@@ -200,23 +196,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\CompiledFieldReader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Ellipses.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Ellipsoids.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FieldReader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TensorFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\vtkmsqAnalyzeHeader.h"
 				>
 			</File>
 		</Filter>

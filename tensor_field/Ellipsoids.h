@@ -8,21 +8,11 @@ class Ellipsoids {
 public:
     Ellipsoids(pbge::GraphicAPI * gfx);
 
-    pbge::ModelInstance * createEllipsoid(float x_semi_axis, float y_semi_axis, float z_semi_axis);
-
-    Ellipsoids * createEllipsoids(unsigned n);
-
-    Ellipsoids * addTransform(const math3d::matrix44 & m, const float & r, const float & g, const float & b, const float & a = 1.0f);
-
-    pbge::ModelCollection * done(pbge::GraphicAPI * gfx);
+    pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms);
 private:
     pbge::VBOModel * sphere;
-    pbge::GPUProgram * shader;
-
-    math3d::matrix44 * matrices;
-	unsigned numberOfEllipsoids;
-    int current;
-	int current_color;
+    
+    pbge::GraphicAPI * gfx;
 };
 
 #endif

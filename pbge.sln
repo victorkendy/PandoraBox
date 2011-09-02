@@ -20,9 +20,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLAPI", "OpenGLAPI\Open
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tensor_field", "tensor_field\tensor_field.vcproj", "{15EDC993-53DD-44AA-81CF-6C3B53C97A53}"
 	ProjectSection(ProjectDependencies) = postProject
+		{0ED7064F-999C-4702-BC48-776B217E5801} = {0ED7064F-999C-4702-BC48-776B217E5801}
 		{7DAB104F-CFFC-4112-941E-EEC8D7396FD3} = {7DAB104F-CFFC-4112-941E-EEC8D7396FD3}
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24} = {A00997BD-6986-44D1-8A7A-61A68CC8BE24}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "field_compiler", "field_compiler\field_compiler.vcproj", "{0ED7064F-999C-4702-BC48-776B217E5801}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,7 +38,6 @@ Global
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24}.Release|Win32.ActiveCfg = Release|Win32
 		{A00997BD-6986-44D1-8A7A-61A68CC8BE24}.Release|Win32.Build.0 = Release|Win32
 		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Debug|Win32.Build.0 = Debug|Win32
 		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Release|Win32.ActiveCfg = Release|Win32
 		{9A38E760-BB96-4B54-A9F9-8CC3CE62D881}.Release|Win32.Build.0 = Release|Win32
 		{12A78D53-E70E-420A-9365-494E98D36302}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -49,6 +51,10 @@ Global
 		{15EDC993-53DD-44AA-81CF-6C3B53C97A53}.Debug|Win32.Build.0 = Debug|Win32
 		{15EDC993-53DD-44AA-81CF-6C3B53C97A53}.Release|Win32.ActiveCfg = Release|Win32
 		{15EDC993-53DD-44AA-81CF-6C3B53C97A53}.Release|Win32.Build.0 = Release|Win32
+		{0ED7064F-999C-4702-BC48-776B217E5801}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0ED7064F-999C-4702-BC48-776B217E5801}.Debug|Win32.Build.0 = Debug|Win32
+		{0ED7064F-999C-4702-BC48-776B217E5801}.Release|Win32.ActiveCfg = Release|Win32
+		{0ED7064F-999C-4702-BC48-776B217E5801}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
