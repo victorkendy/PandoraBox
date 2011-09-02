@@ -24,8 +24,6 @@ namespace pbge {
 
         virtual const std::string getInfoLog() = 0;
 
-        virtual unsigned getId() = 0;
-
         virtual void updateUniforms(GraphicAPI * ogl) = 0;
 
         /** Return the index of the program output variable named name
