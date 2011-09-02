@@ -13,9 +13,7 @@ namespace pbge {
 
     class GLProgram : public GPUProgram{
     public:
-        GLProgram() {
-            programID = 0;
-            linked = false;
+        GLProgram() : programID(0), linked(false) {
         }
 
         void bind(GraphicAPI * ogl);
@@ -35,13 +33,7 @@ namespace pbge {
             return shadersInfoLog + "\n" + infoLog;
         }
 
-        bool isLinked() {
-            return linked;
-        }
-        
         int getOutputLocation(const std::string & name);
-
-        const std::vector<Shader*> getShaderOfType(Shader::ShaderType type);
 
         static GLProgram * fromString(const std::string &vertexShader, const std::string &fragmentShader);
 

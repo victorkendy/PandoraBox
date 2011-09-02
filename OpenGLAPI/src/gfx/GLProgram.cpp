@@ -50,7 +50,7 @@ void GLProgram::bind(GraphicAPI * gfx){
     if(!linked) {
         link(gfx);
         if(!linked)
-            return;
+            throw 1;
     }
     glUseProgram(programID);
     updateUniforms(gfx);
@@ -68,16 +68,6 @@ void GLProgram::updateUniforms(GraphicAPI * gfx) {
             value->bindValueOn(this, *it, gfx);
         }
     }
-}
-
-const std::vector<Shader*> GLProgram::getShaderOfType(Shader::ShaderType type) {
-    std::vector<Shader*> shaders;
-    std::vector<GLShader*>::iterator shader;
-    for(shader = attachedShaders.begin(); shader != attachedShaders.end(); shader++) {
-        if((*shader)->getType() == type)
-            shaders.push_back(*shader);
-    }
-    return shaders;
 }
 
 bool GLProgram::link(GraphicAPI * gfx){

@@ -22,15 +22,11 @@ namespace pbge {
 
         virtual bool link(GraphicAPI * ogl) = 0;
 
-        virtual bool isLinked() = 0;
-
         virtual const std::string getInfoLog() = 0;
 
         virtual unsigned getId() = 0;
 
         virtual void updateUniforms(GraphicAPI * ogl) = 0;
-
-        virtual const std::vector<Shader*> getShaderOfType(Shader::ShaderType type) = 0;
 
         /** Return the index of the program output variable named name
 
