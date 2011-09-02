@@ -2,8 +2,7 @@
 #include <vector>
 #include "pbge/pbge.h"
 
-#include "Ellipsoids.h"
-#include "FieldReader.h"
+#include "CompiledFieldReader.h"
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
@@ -106,10 +105,10 @@ public:
     }
 private:
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
-        AnalyzeReader aReader(gfx);
-        //aReader.loadField("./Resources/dhelix_dti_tensor");
-		aReader.loadField("./Resources/dti_axial_6dir_dti_tensor");
-        aReader.generateFieldOn(graph, light_parent);
+        CompiledFieldReader reader;
+        //reader.read("./Resources/dhelix_dti_tensor.ctf");
+        reader.read("./Resources/dti_axial_6dir_dti_tensor.ctf");
+        reader.generateFieldOn(light_parent, gfx);
     }
 
     void createSceneLights(pbge::SceneGraph * graph, int cam_node_name) {
