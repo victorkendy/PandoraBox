@@ -2,6 +2,7 @@
 #include <cstdlib>
 
 #include "pbge/gfx/GraphicAPI.h"
+#include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/Shader.h"
@@ -22,7 +23,7 @@ void PointLight::updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {
     (*position)[3] = m[3][3];
 }
 
-Shader * PointLight::getDefaultLightPassVS(GraphicAPI * ogl) {
+std::string PointLight::defaultVertexShader() {
     const std::string pointLightVSSource =
         "uniform vec4 light_position;\n"
         "varying vec3 normal;\n"
@@ -35,15 +36,10 @@ Shader * PointLight::getDefaultLightPassVS(GraphicAPI * ogl) {
         "   lightDir = (light_position - position).xyz;\n"
         "}\n";
 
-    Shader * shader = ogl->getStorage()->getNamedShader("pbge.defaultPointLightVertexShader");
-    if(shader == NULL) {
-        shader = GLShader::loadSource(pointLightVSSource, Shader::VERTEX_SHADER);
-        ogl->getStorage()->storeNamedShader("pbge.defaultPointLightVertexShader", shader);
-    }
-    return shader;
+    return pointLightVSSource;
 }
 
-Shader * PointLight::getDefaultLightPassFS(GraphicAPI * ogl) {
+std::string PointLight::defaultFragmentShader() {
     const std::string pointLightFSSource = 
         "uniform vec4 light_diffuseColor;\n"
         "varying vec3 normal;\n"
@@ -58,22 +54,16 @@ Shader * PointLight::getDefaultLightPassFS(GraphicAPI * ogl) {
         "   gl_FragColor = lightColor * ndotd;\n"
         "}\n";
 
-    Shader * shader = ogl->getStorage()->getNamedShader("pbge.defaultPointLightFragmentShader");
-    if(shader == NULL) {
-        shader = GLShader::loadSource(pointLightFSSource, Shader::FRAGMENT_SHADER);
-        ogl->getStorage()->storeNamedShader("pbge.defaultPointLightFragmentShader", shader);
-    }
-    return shader;
+    return pointLightFSSource;
 }
 
 GPUProgram * PointLight::getDefaultLightPassProgram(GraphicAPI * ogl) {
     GPUProgram * program = ogl->getStorage()->getNamedProgram("pbge.defaultPointLightProgram");
     if(program == NULL) {
-        GLProgram * glProgram = new GLProgram;
-        glProgram->attachShader(dynamic_cast<GLShader*>(PointLight::getDefaultLightPassVS(ogl)));
-        glProgram->attachShader(dynamic_cast<GLShader*>(PointLight::getDefaultLightPassFS(ogl)));
-        ogl->getStorage()->storeNamedProgram("pbge.defaultPointLightProgram", glProgram);
-        program = glProgram;
+        program = ogl->getFactory()->createProgramFromString(
+            PointLight::defaultVertexShader(), 
+            PointLight::defaultFragmentShader());
+        ogl->getStorage()->storeNamedProgram("pbge.defaultPointLightProgram", program);
     }
     return program;
 }

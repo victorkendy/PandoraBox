@@ -91,9 +91,9 @@ namespace pbge {
         }
 
     public:
-        static Shader * getDefaultLightPassVS(GraphicAPI * ogl);
+        static std::string defaultVertexShader();
 
-        static Shader * getDefaultLightPassFS(GraphicAPI * ogl);
+        static std::string defaultFragmentShader();
 
         static GPUProgram * getDefaultLightPassProgram(GraphicAPI * ogl);
 
