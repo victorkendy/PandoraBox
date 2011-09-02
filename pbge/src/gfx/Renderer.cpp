@@ -16,7 +16,7 @@
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/StateSet.h"
-#include "pbge/gfx/Shader.h"
+#include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/core/Manager.h"
 #include "pbge/internal/OpenGLStates.h"

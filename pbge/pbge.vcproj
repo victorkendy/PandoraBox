@@ -245,10 +245,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\gfx\Shader.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\utils\ShaderBuilder.cpp"
 				>
 			</File>
@@ -344,6 +340,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Geometrics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\GPUProgram.h"
 				>
 			</File>
 			<File
@@ -459,11 +459,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\graph\TypedGraph.h"
+				RelativePath=".\include\pbge\gfx\states\TextureUnits.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\pbge\gfx\states\TextureUnits.h"
+				RelativePath=".\include\pbge\graph\TypedGraph.h"
 				>
 			</File>
 			<File

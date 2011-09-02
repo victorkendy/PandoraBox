@@ -10,7 +10,8 @@
 
 #include "pbge/core/core.h"
 #include "pbge/gfx/Model.h"
-#include "pbge/gfx/Shader.h"
+#include "pbge/gfx/GPUProgram.h"
+
 
 namespace pbge {
     class UpdaterVisitor;
@@ -21,7 +22,6 @@ namespace pbge {
     class SceneGraph;
     class Texture2D;
     class Node;
-    class GPUProgram;
 	class FramebufferObject;
 
     class PBGE_EXPORT Renderer{

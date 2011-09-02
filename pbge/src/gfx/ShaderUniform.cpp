@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "pbge/gfx/Shader.h"
+#include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/ShaderUniform.h"
 
 using namespace pbge;

@@ -1,5 +1,5 @@
 #include "pbge/gfx/GraphicAPI.h"
-#include "pbge/gfx/Shader.h"
+#include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/states/BoundProgram.h"
 
 using namespace pbge;

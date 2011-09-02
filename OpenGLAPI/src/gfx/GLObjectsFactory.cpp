@@ -4,7 +4,8 @@
 #include <iostream>
 
 #include "pbge/exceptions/exceptions.h"
-#include "pbge/gfx/Shader.h"
+#include "OpenGLAPI/gfx/GLShader.h"
+#include "OpenGLAPI/gfx/GLProgram.h"
 #include "OpenGLAPI/gfx/GLGraphic.h"
 #include "OpenGLAPI/gfx/GLObjectsFactory.h"
 #include "OpenGLAPI/gfx/GLBuffer.h"

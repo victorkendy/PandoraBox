@@ -6,7 +6,7 @@
 #include <boost/function.hpp>
 
 #include "pbge/exceptions/exceptions.h"
-#include "pbge/gfx/Shader.h"
+#include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/FramebufferObject.h"
 

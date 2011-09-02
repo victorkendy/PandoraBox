@@ -201,6 +201,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\GLProgram.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\gfx\GLShader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\GLTextures.cpp"
 				>
 			</File>
@@ -236,6 +244,14 @@
 			</File>
 			<File
 				RelativePath=".\include\OpenGLAPI\gfx\GLObjectsFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\OpenGLAPI\gfx\GLProgram.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\OpenGLAPI\gfx\GLShader.h"
 				>
 			</File>
 			<File

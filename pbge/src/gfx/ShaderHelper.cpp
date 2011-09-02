@@ -7,6 +7,7 @@
 #include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/ResourceStorage.h"
 #include "pbge/gfx/Shader.h"
+#include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/ShaderHelper.h"
 
 using namespace pbge;
