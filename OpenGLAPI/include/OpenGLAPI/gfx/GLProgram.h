@@ -2,6 +2,7 @@
 #define PBGE_GFX_OPENGL_GLPROGRAM_H
 
 #include <string>
+#include <map>
 #include <vector>
 
 #include "pbge/gfx/GPUProgram.h"
@@ -59,6 +60,8 @@ namespace pbge {
         void bindMat4(const UniformInfo & info, GraphicAPI * ogl, const float * v);
 
         void updateUniforms(GraphicAPI * ogl);
+
+        void bindAttrib(VertexAttrib * attr);
     private:
         void bindSampler(const UniformInfo & info, GraphicAPI * ogl, Texture * tex);
 

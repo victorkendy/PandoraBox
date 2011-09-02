@@ -26,6 +26,8 @@ namespace pbge {
 
         void updateUniforms(GraphicAPI * ogl);
 
+        void updateAttributes(VertexBuffer * vertexBuffer);
+
         GPUProgram * getCurrent() {
             return current;
         }

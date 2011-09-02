@@ -52,6 +52,7 @@ namespace pbge {
         }
     private:
         Type type;
+        std::string name;
         int nCoord, offset;
         size_t stride;
     };

@@ -2,13 +2,14 @@
 #define PBGE_GFX_GPUPROGRAM_H
 
 #include <string>
-#include <vector>
 
 #include "pbge/core/core.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/Shader.h"
 
 namespace pbge {
+    class VertexAttrib;
+
     class Texture1D;
     class Texture2D;
     class TextureBuffer;
@@ -25,6 +26,8 @@ namespace pbge {
         virtual const std::string getInfoLog() = 0;
 
         virtual void updateUniforms(GraphicAPI * ogl) = 0;
+
+        virtual void bindAttrib(VertexAttrib * attr) = 0;
 
         /** Return the index of the program output variable named name
 

@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\states\CurrentVertexBuffer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\core\EventHandler.cpp"
 				>
 			</File>
@@ -308,6 +312,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\core\core.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\states\CurrentVertexBuffer.h"
 				>
 			</File>
 			<File

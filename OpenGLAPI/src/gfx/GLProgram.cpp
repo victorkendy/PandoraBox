@@ -1,5 +1,3 @@
-#include <cstdio>
-#include <cstring>
 #include <string>
 #include <vector>
 #include <set>
@@ -56,7 +54,7 @@ void GLProgram::bind(GraphicAPI * gfx){
     updateUniforms(gfx);
 }
 
-void GLProgram::unbind(GraphicAPI * ogl){
+void GLProgram::unbind(GraphicAPI * ogl){   
     glUseProgram(0);
 }
 
@@ -68,6 +66,10 @@ void GLProgram::updateUniforms(GraphicAPI * gfx) {
             value->bindValueOn(this, *it, gfx);
         }
     }
+}
+
+void GLProgram::bindAttrib(VertexAttrib * attr) {
+    
 }
 
 bool GLProgram::link(GraphicAPI * gfx){
