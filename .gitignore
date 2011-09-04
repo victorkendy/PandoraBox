@@ -10,6 +10,9 @@
 *.suo
 *.user
 *.pgd
+*.manifest
+*.res
+*.dep
 
 pbge.dll
 pbge.lib
