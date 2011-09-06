@@ -79,6 +79,11 @@ void StateSet::useFBO(FramebufferObject * fbo) {
     changes.insert(boundFBO);
 }
 
+void StateSet::useVertexBuffer(VertexBuffer * buffer) {
+    vertexBuffer->changeVBO(buffer);
+    changes.insert(vertexBuffer);
+}
+
 GPUProgram * StateSet::currentProgram() {
     return boundProgram->getCurrent();
 }

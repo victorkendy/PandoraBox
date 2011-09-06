@@ -22,6 +22,7 @@ namespace pbge {
     class FramebufferObject;
     class BoundFBO;
     class UniformStack;
+    class VertexBuffer;
 
     class PBGE_EXPORT StateSet {
     public:
@@ -34,6 +35,8 @@ namespace pbge {
         void useProgram(GPUProgram * program);
 
         void useFBO(FramebufferObject * fbo);
+
+        void useVertexBuffer(VertexBuffer * buffer);
 
         GPUProgram * currentProgram();
 

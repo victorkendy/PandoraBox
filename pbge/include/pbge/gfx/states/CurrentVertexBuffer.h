@@ -18,6 +18,8 @@ namespace pbge {
 
         VertexBuffer * getCurrent();
 
+        void changeVBO(VertexBuffer * buffer);
+
     private:
         VertexBuffer * current;
 
