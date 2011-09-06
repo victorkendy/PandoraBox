@@ -131,10 +131,6 @@ TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry) 
     max_entry(_max_entry),
     last_position(0) {}
 
-float mean(float a, float b, float c) {
-	return (a+b+c)/3.0f;
-}
-
 void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d::matrix44 & transformation) {
 	if(!this->numberOfTensorsIsSet) throw std::exception("Number of tensors to be created is not set. Call createTensors first");
 	if(order == 3) {
@@ -149,14 +145,9 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
                                                            eigenvectors[0][2], eigenvectors[1][2], eigenvectors[2][2], 0,
                                                            0, 0, 0, 1);
 		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
-		//printf("%f %f %f\n\n", eigenvalues[0], eigenvalues[1], eigenvalues[2]);
 		math3d::matrix44 transform = transformation * (*rotation) * scale;
-		//this->ellipsoids->addTransform(transform, mean(eigenvalues[0], eigenvalues[1], eigenvalues[2])/this->max_entry);
-        transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], 0.2f));
+		transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], 0.2f));
         this->transforms[this->last_position++] = transform.transpose();
-        //printf("%f\n", mean(eigenvalues[0], eigenvalues[1], eigenvalues[2])/max_entry);
-		//math3d::matrix44 scale = math3d::scaleMatrix(0.1, 0.1, 0.1);
-		//this->ellipsoids->addTransform(transformation*scale);
     }
 }
 
