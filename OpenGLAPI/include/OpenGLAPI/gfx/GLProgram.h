@@ -9,8 +9,13 @@
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/ShaderUniform.h"
 
+#include "OpenGLAPI/gfx/GLShader.h"
+
 namespace pbge {
     class GraphicAPI;
+    class VertexBuffer;
+    class FileReader;
+    class AttrBinder;
 
     class GLProgram : public GPUProgram{
     public:
@@ -61,13 +66,15 @@ namespace pbge {
 
         void updateUniforms(GraphicAPI * ogl);
 
-        void bindAttrib(VertexAttrib * attr);
+        void setAttributes(VertexBuffer * attr);
     private:
         void bindSampler(const UniformInfo & info, GraphicAPI * ogl, Texture * tex);
 
         void extractInfoLog();
 
         void extractUniformInformation(GraphicAPI * ogl);
+
+        void extractAttribs();
 
         bool linked;
 
@@ -80,6 +87,8 @@ namespace pbge {
         std::vector<std::string> output;
 
         std::vector<UniformInfo> uniforms;
+
+        std::vector<AttrBinder *> binders;
 
         std::map<std::string, int> outputLocations;
     };

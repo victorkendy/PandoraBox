@@ -25,7 +25,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
     uniform->setValue(tex);
 	
 	ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
-        "#version 130\n"
+        "#version 140\n"
 		"#extension GL_EXT_gpu_shader4: enable\n"
 		"#extension GL_ARB_gpu_shader5: enable\n"
 		"#extension GL_ARB_draw_instanced: enable\n"
@@ -67,7 +67,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 		"}"
         ));
     ellipsoids->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
-        "#version 130\n"
+        "#version 140\n"
 		"#extension GL_EXT_gpu_shader4: enable\n"
         "#extension GL_ARB_draw_instanced: enable\n"
         "uniform samplerBuffer transforms;\n"

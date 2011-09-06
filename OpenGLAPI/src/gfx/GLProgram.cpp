@@ -8,6 +8,7 @@
 
 #include "OpenGLAPI/gfx/GLShader.h"
 #include "OpenGLAPI/gfx/GLProgram.h"
+#include "OpenGLAPI/gfx/AttrBinders.h"
 
 
 namespace {
@@ -54,7 +55,12 @@ void GLProgram::bind(GraphicAPI * gfx){
     updateUniforms(gfx);
 }
 
-void GLProgram::unbind(GraphicAPI * ogl){   
+void GLProgram::unbind(GraphicAPI * ogl){
+    std::vector<AttrBinder *>::iterator binder;
+    // unbind all bound attributes
+    for(binder = binders.begin(); binder != binders.end(); binder++) {
+        (*binder)->unbind();
+    }
     glUseProgram(0);
 }
 
@@ -68,8 +74,11 @@ void GLProgram::updateUniforms(GraphicAPI * gfx) {
     }
 }
 
-void GLProgram::bindAttrib(VertexAttrib * attr) {
-    
+void GLProgram::setAttributes(VertexBuffer * attr) {
+    std::vector<AttrBinder *>::iterator binder;
+    for(binder = binders.begin(); binder != binders.end(); binder++) {
+        (*binder)->bind(attr);
+    }
 }
 
 bool GLProgram::link(GraphicAPI * gfx){
@@ -87,8 +96,11 @@ bool GLProgram::link(GraphicAPI * gfx){
     extractInfoLog();
     glGetProgramiv(programID, GL_LINK_STATUS, &status);
     linked = (status == GL_TRUE);
-    if(linked)
+    if(linked) {
+        glUseProgram(programID);
         extractUniformInformation(gfx);
+        extractAttribs();
+    }
     return linked;
 }
 
@@ -122,7 +134,6 @@ void GLProgram::extractUniformInformation(GraphicAPI * ogl) {
     GLint uniformSize;
     GLenum uniformType;
     GLchar * name;
-    glUseProgram(programID);
     glGetProgramiv(programID, GL_ACTIVE_UNIFORMS, &numberOfActiveUniforms);
     glGetProgramiv(programID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameSize);
     name = new GLchar [maxUniformNameSize];
@@ -134,6 +145,25 @@ void GLProgram::extractUniformInformation(GraphicAPI * ogl) {
             UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), glGetUniformLocation(programID, name), uniformSize);
             uniforms.push_back(info);
             std::cout << "found uniform: " << info.toString() << std::endl;
+        }
+    }
+    delete [] name;
+}
+
+void GLProgram::extractAttribs() {
+    GLint numberOfAttrs;
+    GLint maxAttrNameSize;
+    GLint attrSize;
+    GLenum attrType;
+    GLchar * name;
+    glGetProgramiv(programID, GL_ACTIVE_ATTRIBUTES, &numberOfAttrs);
+    glGetProgramiv(programID, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttrNameSize);
+    name = new GLchar[maxAttrNameSize];
+    for(int index = 0; index < numberOfAttrs; index++) {
+        glGetActiveAttrib(programID, index, maxAttrNameSize, NULL, &attrSize, &attrType, name);
+        AttrBinder * binder = AttrBinders::binderFor(name, glGetAttribLocation(programID, name));
+        if(binder != NULL) { // some attributes are implementation dependent and aren't meant to be used by the api
+            binders.push_back(binder);
         }
     }
     delete [] name;

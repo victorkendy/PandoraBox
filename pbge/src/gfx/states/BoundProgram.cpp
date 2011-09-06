@@ -27,8 +27,6 @@ void BoundProgram::updateAttributes(VertexBuffer * vertexBuffer) {
     std::vector<VertexAttrib>::iterator it;
     if(this->current != NULL && vertexBuffer != NULL) {
         GPUProgram * program = this->current;
-        for(it = vertexBuffer->getAttribs().begin(); it != vertexBuffer->getAttribs().end(); it++) {
-            program->bindAttrib(&(*it));
-        }
+        program->setAttributes(vertexBuffer);
     }
 }

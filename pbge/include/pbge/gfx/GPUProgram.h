@@ -8,7 +8,7 @@
 #include "pbge/gfx/Shader.h"
 
 namespace pbge {
-    class VertexAttrib;
+    class VertexBuffer;
 
     class Texture1D;
     class Texture2D;
@@ -27,7 +27,7 @@ namespace pbge {
 
         virtual void updateUniforms(GraphicAPI * ogl) = 0;
 
-        virtual void bindAttrib(VertexAttrib * attr) = 0;
+        virtual void setAttributes(VertexBuffer * attr) = 0;
 
         /** Return the index of the program output variable named name
 
