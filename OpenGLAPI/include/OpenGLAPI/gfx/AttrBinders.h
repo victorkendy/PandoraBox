@@ -31,6 +31,20 @@ namespace pbge {
         void unbind();
     };
 
+    class DeprColorBinder : public AttrBinder {
+    public:
+        void bind(VertexBuffer * attrs);
+
+        void unbind();
+    };
+
+    class DeprSecondaryColorBinder : public AttrBinder {
+    public:
+        void bind(VertexBuffer * attrs);
+
+        void unbind();
+    };
+
     class CustomAttrBinder : public AttrBinder {
     public:
         CustomAttrBinder(std::string attrName, GLint attrLocation) : name(attrName), location(attrLocation) {}

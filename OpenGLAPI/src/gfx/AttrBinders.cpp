@@ -31,6 +31,26 @@ void DeprNormalBinder::unbind() {
     glDisableClientState(GL_NORMAL_ARRAY);
 }
 
+void DeprColorBinder::bind(VertexBuffer * attrs) {
+    VertexAttrib * attr = attrs->findByType(VertexAttrib::COLOR);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glColorPointer(attr->getNCoord(), GL_FLOAT, attr->getStride(), ATTRIB_POINTER_OFFSET(attr->getOffset()));
+}
+
+void DeprColorBinder::unbind() {
+    glDisableClientState(GL_COLOR_ARRAY);
+}
+
+void DeprSecondaryColorBinder::bind(VertexBuffer * attrs) {
+    VertexAttrib * attr = attrs->findByType(VertexAttrib::SECONDARY_COLOR);
+    glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
+    glSecondaryColorPointer(3, GL_FLOAT, attr->getStride(), ATTRIB_POINTER_OFFSET(attr->getOffset()));
+}
+
+void DeprSecondaryColorBinder::unbind() {
+    glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
+}
+
 void CustomAttrBinder::bind(pbge::VertexBuffer *attrs) {
     VertexAttrib * attr = attrs->findByName(name);
     // missing arguments?
@@ -65,6 +85,10 @@ AttrBinder * AttrBinders::constructCustomAttrib(const std::string & name, GLint 
         return new SemanticAttribBinder(VertexAttrib::VERTEX, location);
     } else if (name == "pbge_Normal") {
         return new SemanticAttribBinder(VertexAttrib::NORMAL, location);
+    } else if (name == "pbge_Color") {
+        return new SemanticAttribBinder(VertexAttrib::COLOR, location);
+    } else if (name == "pbge_SecondaryColor") {
+        return new SemanticAttribBinder(VertexAttrib::SECONDARY_COLOR, location);
     } else if(location != -1) { // check if attr is valid
         return new CustomAttrBinder(name, location);
     } else {
@@ -77,6 +101,10 @@ AttrBinder * AttrBinders::constructGLBuiltIn(const std::string & name) {
         return new DeprVertexBinder;
     } else if (name == "gl_Normal") {
         return new DeprNormalBinder;
+    } else if (name == "gl_Color") {
+        return new DeprColorBinder;
+    } else if (name == "gl_SecondaryColor") {
+        return new DeprSecondaryColorBinder;
     } else {
         return NULL;
     }
