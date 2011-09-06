@@ -119,7 +119,15 @@ void AnalyzeReader::build_tensor_vector() {
 	for(int slice = 0; slice < this->header.dime.dim[3]; slice++) {
         for(int row = 0; row < this->header.dime.dim[2]; row++) {
             for(int column = 0; column < this->header.dime.dim[1]; column++) {
-				tensors.push_back(TensorData(row, column, slice, this->header.dime.pixdim[1], this->header.dime.pixdim[2], this->header.dime.pixdim[3])); 
+                Field_Dimensions dim(this->header.dime.pixdim,
+                                     this->header.dime.dim[1],
+                                     this->header.dime.dim[2],
+                                     this->header.dime.dim[3]);
+
+                tensors.push_back(TensorData(row, 
+                                             column, 
+                                             slice,
+                                             dim)); 
             }
         }
     }
@@ -130,10 +138,11 @@ int AnalyzeReader::index_of(int column, int row, int slice) {
 }
 
 const math3d::matrix44 TensorData::getTranslationToPosition() {
-	math3d::matrix44 sliceTranslation = math3d::translationMatrix(0, 0, -(slice * pixdim[2]));
-	math3d::matrix44 rowTranslation = math3d::translationMatrix(0, -(row * pixdim[1]), 0);
-	math3d::matrix44 columnTranslation = math3d::translationMatrix(column * pixdim[0], 0, 0);
-	return rowTranslation*columnTranslation*sliceTranslation;
+    float x, y, z;
+    x = (column - dim.fielddim[0]/2) * dim.pixdim[0];
+    y = (dim.fielddim[1]/2 - row) * dim.pixdim[1];
+    z = (dim.fielddim[2]/2 - slice) * dim.pixdim[2];
+	return math3d::translationMatrix(x, y, z);
 }
 
 bool TensorData::is_zero() {

@@ -114,8 +114,6 @@ private:
     std::string filename;
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
         CompiledFieldReader reader;
-        //reader.read("./Resources/dhelix_dti_tensor.ctf");
-        reader.read("./Resources/dti_axial_6dir_dti_tensor.ctf");
         reader.read(filename.c_str());
         reader.generateFieldOn(light_parent, gfx);
     }
@@ -134,7 +132,7 @@ private:
         child = pbge::TransformationNode::rotation(pbge::degToRad(60), 0,0,20)->scale(0.5f, 0.5f, 0.5f);
         graph->appendChildTo(pbge::SceneGraph::ROOT, child);
         
-        light_parent = pbge::TransformationNode::translation(0.0f, 1.0f, 0.0f);
+        light_parent = pbge::TransformationNode::translation(0.0f, 0.0f, 0.0f);
         graph->appendChildTo(pbge::SceneGraph::ROOT, light_parent);
 
         circle_parent = graph->appendChildTo(light_parent, pbge::TransformationNode::translation(1, 1, 0)); 
@@ -163,7 +161,7 @@ std::string choose_field(int argc, char ** argv) {
     switch(argc) {
         case 1:
             while(!option_chosen) {
-                std::cout << "Choose the field to be compiled:" << std::endl
+                std::cout << "Choose the field to be read:" << std::endl
                       << " (1) - Double helix" << std::endl 
                       << " (2) - Brain" << std::endl << std::endl;
                 scanf("%d", &option);
