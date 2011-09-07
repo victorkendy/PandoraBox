@@ -2,6 +2,7 @@
 #define PBGE_TENSOR_FIELD_TENSORFACTORY_H_
 
 #include <vector>
+#include <cstdio>
 #include <string>
 #include <boost/smart_ptr/scoped_array.hpp>
 
@@ -44,7 +45,7 @@ private:
 	float max_entry;
     unsigned last_position;
 
-    void sort_transforms();
+    void write_sorted_transforms(FILE * outputfile);
 };
 
 #endif

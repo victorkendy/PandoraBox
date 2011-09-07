@@ -1,11 +1,10 @@
-#include <cstdio>
 #include <cmath>
 #include <algorithm>
 
 #include "TensorFactory.h"
 
 #define TENSOR_FACTORY_PI 3.14159f
-#define PASS 1000000
+#define STEP_SIZE 100000
 
 Tensor3DProcessor::Tensor3DProcessor(float * _tensor) {
     this->tensor = _tensor;
@@ -148,16 +147,17 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
                                                            0, 0, 0, 1);
 		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
 		math3d::matrix44 transform = transformation * (*rotation) * scale;
-		transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], 0.2f));
+		transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], 1.0f));
         this->transforms[this->last_position++] = transform.transpose();
     }
 }
 
 void TensorFactory::done(const std::string & filename) {
-    //sort_transforms();
     FILE * outputfile = fopen(filename.c_str(), "wb");
+    unsigned step_size = STEP_SIZE;
     fwrite(&last_position, sizeof(unsigned), 1, outputfile);
-    fwrite(transforms.get(), sizeof(math3d::matrix44), last_position, outputfile);
+    fwrite(&step_size, sizeof(unsigned), 1, outputfile);
+    write_sorted_transforms(outputfile);
     fclose(outputfile);
 }
 
@@ -182,7 +182,7 @@ private:
     math3d::vector4 pivot;
 };
 
-void TensorFactory::sort_transforms() {
+void TensorFactory::write_sorted_transforms(FILE * outputfile) {
     Comparator comparator;
     math3d::matrix44 * first = transforms.get();
     math3d::matrix44 * last = first + last_position;
@@ -190,8 +190,9 @@ void TensorFactory::sort_transforms() {
 
     while(current_pos < last_position) {
         comparator = Comparator(first[0]);
-        std::sort(transforms.get(), transforms.get() + last_position, comparator);
-        current_pos += PASS;
-        first += PASS;
+        std::sort(first, last, comparator);
+        fwrite(first, sizeof(math3d::matrix44), std::min((unsigned)STEP_SIZE,last_position-current_pos), outputfile);
+        current_pos += STEP_SIZE;
+        first += STEP_SIZE;
     }
 }

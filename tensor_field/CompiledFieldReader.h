@@ -14,6 +14,7 @@ public:
 private:
     boost::scoped_array<math3d::matrix44> transforms;
     unsigned number_of_tensors;
+    unsigned step_size;
 };
 
 #endif
