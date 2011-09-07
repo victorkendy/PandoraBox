@@ -10,6 +10,9 @@ bool BoundProgram::shouldChange(GraphicAPI * ogl) {
 }
 
 void BoundProgram::makeChange(GraphicAPI * ogl) {
+    if(current != NULL) {
+        current->unbind(ogl);
+    }
     if(this->next == NULL)
         glUseProgram(0);
     else

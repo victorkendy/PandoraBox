@@ -48,7 +48,7 @@ void DeprSecondaryColorBinder::bind(VertexBuffer * attrs) {
 }
 
 void DeprSecondaryColorBinder::unbind() {
-    glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
+    glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
 }
 
 void CustomAttrBinder::bind(pbge::VertexBuffer *attrs) {

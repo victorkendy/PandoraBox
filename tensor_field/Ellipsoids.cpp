@@ -26,7 +26,6 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 	
 	ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
         "#version 150\n"
-		"#extension GL_ARB_draw_instanced: enable\n"
 		"uniform samplerBuffer transforms;\n"
         "uniform mat4 pbge_ModelViewMatrix;\n"
         "uniform mat4 pbge_ProjectionMatrix;\n"
@@ -36,7 +35,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
         "in  vec4 pbge_Vertex;\n"
 		"void main() {\n"
 		"   const vec4 light_position = vec4(16,16,16,1);\n"
-		"   int index = gl_InstanceIDARB * 4;\n"
+		"   int index = gl_InstanceID * 4;\n"
 		"   vec4 col1 = texelFetch(transforms, index);\n"
 		"   vec4 col2 = texelFetch(transforms, index + 1);\n"
 		"   vec4 col3 = texelFetch(transforms, index + 2);\n"
