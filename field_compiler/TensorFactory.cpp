@@ -1,9 +1,11 @@
 #include <cstdio>
 #include <cmath>
+#include <algorithm>
 
 #include "TensorFactory.h"
 
 #define TENSOR_FACTORY_PI 3.14159f
+#define PASS 1000000
 
 Tensor3DProcessor::Tensor3DProcessor(float * _tensor) {
     this->tensor = _tensor;
@@ -152,8 +154,44 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
 }
 
 void TensorFactory::done(const std::string & filename) {
+    //sort_transforms();
     FILE * outputfile = fopen(filename.c_str(), "wb");
     fwrite(&last_position, sizeof(unsigned), 1, outputfile);
     fwrite(transforms.get(), sizeof(math3d::matrix44), last_position, outputfile);
     fclose(outputfile);
+}
+
+class Comparator {
+public:
+    Comparator(const math3d::matrix44 & _pivot) {
+        this->pivot = math3d::vector4(_pivot[0][3], _pivot[1][3], _pivot[2][3]);
+    }
+
+    Comparator() {}
+
+    bool operator()(const math3d::matrix44 & _first, const math3d::matrix44 & _second) {
+        math3d::vector4 first(_first[0][3], _first[1][3], _first[2][3]);
+        math3d::vector4 second(_second[0][3], _second[1][3], _second[2][3]);
+        
+        if((first - pivot).size() < (second - pivot).size()) {
+            return true;
+        }
+        return false;
+    }
+private:
+    math3d::vector4 pivot;
+};
+
+void TensorFactory::sort_transforms() {
+    Comparator comparator;
+    math3d::matrix44 * first = transforms.get();
+    math3d::matrix44 * last = first + last_position;
+    unsigned current_pos = 0;
+
+    while(current_pos < last_position) {
+        comparator = Comparator(first[0]);
+        std::sort(transforms.get(), transforms.get() + last_position, comparator);
+        current_pos += PASS;
+        first += PASS;
+    }
 }

@@ -43,6 +43,8 @@ private:
 	float scale_factor;
 	float max_entry;
     unsigned last_position;
+
+    void sort_transforms();
 };
 
 #endif
