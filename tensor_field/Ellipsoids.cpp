@@ -62,7 +62,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 		"   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		"   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		"   float intensity = max(0.0, dot(lightDir, normal));\n"
-		"   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity, gl_Color.a);\n"
+		"   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, gl_Color.a);\n"
 		"}"
         ));
     ellipsoids->setDepthPassProgram(gfx->getFactory()->createProgramFromString(
