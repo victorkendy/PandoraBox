@@ -13,9 +13,7 @@ void BoundProgram::makeChange(GraphicAPI * ogl) {
     if(current != NULL) {
         current->unbind(ogl);
     }
-    if(this->next == NULL)
-        glUseProgram(0);
-    else
+    if(this->next != NULL)
         next->bind(ogl);
     current = next;
 }
