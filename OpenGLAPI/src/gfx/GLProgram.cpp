@@ -1,5 +1,7 @@
 #include <string>
 #include <vector>
+#include <functional>
+#include <algorithm>
 #include <set>
 
 #include "pbge/gfx/GraphicAPI.h"
@@ -56,11 +58,7 @@ void GLProgram::bind(GraphicAPI * gfx){
 }
 
 void GLProgram::unbind(GraphicAPI * ogl){
-    std::vector<AttrBinder *>::iterator binder;
-    // unbind all bound attributes
-    for(binder = binders.begin(); binder != binders.end(); binder++) {
-        (*binder)->unbind();
-    }
+    std::for_each(binders.begin(), binders.end(), std::mem_fun(&AttrBinder::unbind));
     glUseProgram(0);
 }
 
@@ -75,10 +73,7 @@ void GLProgram::updateUniforms(GraphicAPI * gfx) {
 }
 
 void GLProgram::setAttributes(VertexBuffer * attr) {
-    std::vector<AttrBinder *>::iterator binder;
-    for(binder = binders.begin(); binder != binders.end(); binder++) {
-        (*binder)->bind(attr);
-    }
+    std::for_each(binders.begin(), binders.end(), std::bind2nd(std::mem_fun(&AttrBinder::bind), attr));
 }
 
 bool GLProgram::link(GraphicAPI * gfx){
