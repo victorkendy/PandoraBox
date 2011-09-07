@@ -11,6 +11,7 @@
 #include "OpenGLAPI/gfx/GLShader.h"
 #include "OpenGLAPI/gfx/GLProgram.h"
 #include "OpenGLAPI/gfx/AttrBinders.h"
+#include "OpenGLAPI/gfx/BuiltInUniformBinders.h"
 
 
 namespace {
@@ -58,7 +59,9 @@ void GLProgram::bind(GraphicAPI * gfx){
 }
 
 void GLProgram::unbind(GraphicAPI * ogl){
-    std::for_each(binders.begin(), binders.end(), std::mem_fun(&AttrBinder::unbind));
+    std::for_each(attrBinders.begin(),
+                  attrBinders.end(), 
+                  std::mem_fun(&AttrBinder::unbind));
     glUseProgram(0);
 }
 
@@ -70,10 +73,15 @@ void GLProgram::updateUniforms(GraphicAPI * gfx) {
             value->bindValueOn(this, *it, gfx);
         }
     }
+    std::for_each(builtInUniforms.begin(), 
+                  builtInUniforms.end(), 
+                  std::bind2nd(std::mem_fun(&BuiltInUniformBinder::bind), gfx));
 }
 
 void GLProgram::setAttributes(VertexBuffer * attr) {
-    std::for_each(binders.begin(), binders.end(), std::bind2nd(std::mem_fun(&AttrBinder::bind), attr));
+    std::for_each(attrBinders.begin(), 
+                  attrBinders.end(), 
+                  std::bind2nd(std::mem_fun(&AttrBinder::bind), attr));
 }
 
 bool GLProgram::link(GraphicAPI * gfx){
@@ -135,9 +143,14 @@ void GLProgram::extractUniformInformation(GraphicAPI * ogl) {
     for(int uniformIndex = 0; uniformIndex < numberOfActiveUniforms; ++uniformIndex) {
         glGetActiveUniform(programID, uniformIndex, maxUniformNameSize, NULL, &uniformSize, &uniformType, name);
         std::string uniformName = name;
-        // don't include reserved names
-        if(static_cast<int>(uniformName.find("gl_")) != 0) {
-            UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), glGetUniformLocation(programID, name), uniformSize);
+        GLint location = glGetUniformLocation(programID, name);
+        if(location == -1 || uniformName.find("pbge_") == 0) {
+            BuiltInUniformBinder * binder = BuiltInUniformBinders::binderFor(uniformName, location);
+            if(binder != NULL) {
+                builtInUniforms.push_back(binder);
+            }
+        } else {
+            UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), location, uniformSize);
             uniforms.push_back(info);
             std::cout << "found uniform: " << info.toString() << std::endl;
         }
@@ -158,7 +171,7 @@ void GLProgram::extractAttribs() {
         glGetActiveAttrib(programID, index, maxAttrNameSize, NULL, &attrSize, &attrType, name);
         AttrBinder * binder = AttrBinders::binderFor(name, glGetAttribLocation(programID, name));
         if(binder != NULL) { // some attributes are implementation dependent and aren't meant to be used by the api
-            binders.push_back(binder);
+            attrBinders.push_back(binder);
         }
     }
     delete [] name;

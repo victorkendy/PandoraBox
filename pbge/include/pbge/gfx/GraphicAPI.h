@@ -77,13 +77,17 @@ namespace pbge {
 
         virtual void swapBuffers() = 0;
 
-        virtual void setMatrixMode(GLenum mode) = 0;
-
         virtual void loadViewMatrix(const math3d::matrix44 & m) = 0;
 
         virtual void loadProjectionMatrix(const math3d::matrix44 & m) = 0;
 
         virtual void loadModelMatrix(const math3d::matrix44 & m) = 0;
+
+        virtual const math3d::matrix44 getModelMatrix() = 0;
+
+        virtual const math3d::matrix44 getViewMatrix() = 0;
+
+        virtual const math3d::matrix44 getProjectionMatrix() = 0;
 
         virtual void updateState() = 0;
 

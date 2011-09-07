@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\BuiltInUniformBinders.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\GLBuffer.cpp"
 				>
 			</File>
@@ -228,6 +232,10 @@
 			>
 			<File
 				RelativePath=".\include\OpenGLAPI\gfx\AttrBinders.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\OpenGLAPI\gfx\BuiltInUniformBinders.h"
 				>
 			</File>
 			<File

@@ -40,6 +40,18 @@ namespace pbge {
 
         void loadModelMatrix(const math3d::matrix44 & m);
 
+        const math3d::matrix44 getModelMatrix() {
+            return matrices[2];
+        }
+
+        const math3d::matrix44 getProjectionMatrix() {
+            return matrices[1];
+        }
+
+        const math3d::matrix44 getViewMatrix() {
+            return matrices[0];
+        }
+
         void updateState();
 
         GraphicObjectsFactory * getFactory();
@@ -91,11 +103,7 @@ namespace pbge {
 
         void createDefaultShaders();
 
-        bool projectionUpdated;
-
         boost::scoped_array<math3d::matrix44> matrices;
-
-        GLenum currentMatrixMode;
 
         boost::scoped_ptr<StateSet> state;
 

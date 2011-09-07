@@ -25,12 +25,11 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
     uniform->setValue(tex);
 	
 	ellipsoids->setRenderPassProgram(gfx->getFactory()->createProgramFromString(
-        "#version 140\n"
-		"#extension GL_EXT_gpu_shader4: enable\n"
-		"#extension GL_ARB_gpu_shader5: enable\n"
+        "#version 150\n"
 		"#extension GL_ARB_draw_instanced: enable\n"
 		"uniform samplerBuffer transforms;\n"
-		"\n"
+        "uniform mat4 pbge_ModelViewMatrix;\n"
+        "uniform mat4 pbge_ProjectionMatrix;\n"
 		"out vec4 position;\n"
 		"out vec3 normal;\n"
 		"out vec4 lightPosition;\n"
@@ -48,12 +47,12 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 		"   col3 = vec4(col3.xyz, 0);\n"
 		"   col4 = vec4(col4.xyz, 1);\n"
 		"   mat4 transformation = mat4(col1, col2, col3, col4);\n"
-		"   mat4 t = gl_ModelViewMatrix * transformation;\n"
+		"   mat4 t = pbge_ModelViewMatrix * transformation;\n"
 		"   vec4 _normal = inverse(transpose(t)) * pbge_Vertex;\n"
 		"   normal = normalize(_normal.xyz);\n"
 		"   position = t * pbge_Vertex;\n"
 		"   lightPosition = t * light_position;\n"
-		"   gl_Position = gl_ProjectionMatrix * position;\n"
+		"   gl_Position = pbge_ProjectionMatrix * position;\n"
 		"   gl_FrontColor = vec4(color, 1.0);\n"
 		"}",
         "in vec4 position;\n"
@@ -72,6 +71,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 		"#extension GL_EXT_gpu_shader4: enable\n"
         "#extension GL_ARB_draw_instanced: enable\n"
         "uniform samplerBuffer transforms;\n"
+        "uniform mat4 pbge_ModelViewProjectionMatrix;\n"
         "in  vec4 pbge_Vertex;\n"
         "void main() {\n"
         "   int index = gl_InstanceIDARB * 4;\n"
@@ -84,7 +84,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 		"   col3 = vec4(col3.xyz, 0);\n"
 		"   col4 = vec4(col4.xyz, 1);\n"
         "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
-        "   gl_Position = gl_ModelViewProjectionMatrix * transformation * pbge_Vertex;\n"
+        "   gl_Position = pbge_ModelViewProjectionMatrix * transformation * pbge_Vertex;\n"
         "}", ""));
     return ellipsoids;
 }

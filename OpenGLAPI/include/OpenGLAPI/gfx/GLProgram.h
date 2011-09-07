@@ -16,6 +16,7 @@ namespace pbge {
     class VertexBuffer;
     class FileReader;
     class AttrBinder;
+    class BuiltInUniformBinder;
 
     class GLProgram : public GPUProgram{
     public:
@@ -88,7 +89,9 @@ namespace pbge {
 
         std::vector<UniformInfo> uniforms;
 
-        std::vector<AttrBinder *> binders;
+        std::vector<AttrBinder *> attrBinders;
+
+        std::vector<BuiltInUniformBinder*> builtInUniforms;
 
         std::map<std::string, int> outputLocations;
     };

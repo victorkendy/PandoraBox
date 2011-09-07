@@ -12,7 +12,7 @@
 
 using namespace pbge;
 
-GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(new ResourceStorage), context(NULL), projectionUpdated(true), majorVersion(0){
+GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(new ResourceStorage), context(NULL), majorVersion(0){
     matrices[2] = math3d::identity44;
     factory.reset(new GLObjectsFactory(this));
     drawController.reset(new GLDrawController(this));
@@ -64,9 +64,6 @@ void GLGraphic::setContext(GraphicContext * newContext) {
     if(context != NULL) {
         context->makeCurrent();
         glewInit();
-        GLint initialMatrixMode;
-        glGetIntegerv(GL_MATRIX_MODE, &initialMatrixMode);
-        currentMatrixMode = initialMatrixMode;
         state.reset(new StateSet(this));
         initContextVersion();
         drawController->initialize();
@@ -108,18 +105,11 @@ void GLGraphic::swapBuffers() {
     context->swapBuffers();
 }
 
-void GLGraphic::setMatrixMode(GLenum mode) {
-    if(currentMatrixMode != mode)
-        glMatrixMode(mode);
-    currentMatrixMode = mode;
-}
-
 void GLGraphic::loadViewMatrix(const math3d::matrix44 & m) {
     matrices[0] = m;
 }
 
 void GLGraphic::loadProjectionMatrix(const math3d::matrix44 & m) {
-    projectionUpdated = true;
     matrices[1] = m;
 }
 
@@ -128,12 +118,6 @@ void GLGraphic::loadModelMatrix(const math3d::matrix44 & m) {
 }
 
 void GLGraphic::updateState() {
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf((matrices[0]*matrices[2]).transpose());
-    if(projectionUpdated) {
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(matrices[1].transpose());
-    }
     this->state->apply(this);
 }
 
