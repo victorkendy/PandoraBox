@@ -33,10 +33,12 @@ namespace pbge {
             CUSTOM_ATTRIB
         } Type;
 
-        VertexAttrib(int _nCoord, int _offset, size_t _stride, Type _type):nCoord(_nCoord),
-                        offset(_offset),
-                        stride(_stride),
-                        type(_type) {}
+        VertexAttrib(int _nCoord, int _offset, size_t _stride, Type _type, const std::string & _name)
+                        :nCoord(_nCoord),
+                         offset(_offset),
+                         stride(_stride),
+                         type(_type),
+                         name(_name) {}
 
         int getOffset() {
             return offset;
@@ -50,14 +52,20 @@ namespace pbge {
         Type getType() {
             return type;
         }
+        std::string getName() {
+            return name;
+        }
     private:
         Type type;
+        std::string name;
         int nCoord, offset;
         size_t stride;
     };
 
     class PBGE_EXPORT VertexBuffer {
     public:
+        typedef std::vector<VertexAttrib>::iterator AttrIter;
+
         VertexBuffer(Buffer * _buffer, unsigned _nVertices):buffer(_buffer), nVertices(_nVertices){
         }
 
@@ -70,6 +78,22 @@ namespace pbge {
 
         std::vector<VertexAttrib> & getAttribs() {
             return attribs;
+        }
+
+        VertexAttrib * findByType(VertexAttrib::Type type) {
+            for(AttrIter it = attribs.begin(); it != attribs.end(); it++) {
+                if(it->getType() == type)
+                    return &(*it);
+            }
+            return NULL;
+        }
+
+        VertexAttrib * findByName(const std::string & name) {
+            for(AttrIter it = attribs.begin(); it != attribs.end(); it++) {
+                if(it->getName() == name) 
+                    return &(*it);
+            }
+            return NULL;
         }
 
         Buffer * getBuffer() {

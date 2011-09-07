@@ -2,11 +2,7 @@
 #define PBGE_GFX_SHADER_H_ 1
 
 #include <string>
-#include <vector>
-#include <set>
-#include <map>
 
-#include "pbge/gfx/ShaderUniform.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/core/core.h"
 

@@ -71,7 +71,7 @@ bool VertexAttribBuilder::operator == (const VertexAttribBuilder & other) {
 }
 
 const VertexAttrib VertexAttribBuilder::createInstance(int offset, size_t stride) {
-    return VertexAttrib(nCoord, offset, stride, type);
+    return VertexAttrib(nCoord, offset, stride, type, name);
 }
 
 

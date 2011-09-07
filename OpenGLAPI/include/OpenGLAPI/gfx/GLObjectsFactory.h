@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstddef>
 #include "pbge/gfx/GraphicObjectsFactory.h"
+#include "pbge/gfx/GPUProgram.h"
 
 namespace pbge {
     class GLGraphic;
@@ -35,6 +36,7 @@ namespace pbge {
 
         GPUProgram * createProgramFromString(const std::string & vsSource, const std::string & fsSource);
     private:
+        
         GLGraphic * gl;
     };
 }

@@ -38,6 +38,7 @@ StateSet::StateSet(GraphicAPI * ogl) {
     uniformStack = new UniformStack;
     textureUnits = new TextureUnits(ogl);
     boundFBO = new BoundFBO;
+    vertexBuffer = new CurrentVertexBuffer;
 }
 
 StateSet::~StateSet() {
@@ -54,8 +55,8 @@ StateSet::~StateSet() {
 void StateSet::apply(GraphicAPI * ogl) {
     std::for_each(changes.begin(), changes.end(), std::bind2nd(std::mem_fun(&State::applyChanges), ogl));
     changes.clear();
-    if(this->boundProgram != NULL)
-        this->boundProgram->updateUniforms(ogl);
+    boundProgram->updateUniforms(ogl);
+    boundProgram->updateAttributes(vertexBuffer->getCurrent());
 }
 
 void StateSet::enable(GraphicAPI::Mode mode) {
@@ -76,6 +77,11 @@ void StateSet::useProgram(GPUProgram * program) {
 void StateSet::useFBO(FramebufferObject * fbo) {
     boundFBO->changeFBO(fbo);
     changes.insert(boundFBO);
+}
+
+void StateSet::useVertexBuffer(VertexBuffer * buffer) {
+    vertexBuffer->changeVBO(buffer);
+    changes.insert(vertexBuffer);
 }
 
 GPUProgram * StateSet::currentProgram() {

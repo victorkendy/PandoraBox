@@ -107,7 +107,6 @@ void Renderer::render(){
     UniformSampler2D* sampler = dynamic_cast<UniformSampler2D*>(ogl->getUniformValue(UniformInfo("color", pbge::SAMPLER_2D)));
     sampler->setValue(renderables["color"]);
     ogl->getState()->useProgram(blitter.get());
-    ogl->updateState();
     ogl->getDrawController()->drawVBOModel(quad.get());
     glEnable(GL_DEPTH_TEST);
 }

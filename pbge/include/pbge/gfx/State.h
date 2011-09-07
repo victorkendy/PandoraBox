@@ -5,17 +5,19 @@
 #include "pbge/core/core.h"
 
 namespace pbge {
+    class GraphicAPI;
+    
     class PBGE_EXPORT State {
     public: 
-        void applyChanges(GraphicAPI * ogl) {
-            if(shouldChange(ogl)) {
-                makeChange(ogl);
+        void applyChanges(GraphicAPI * gfx) {
+            if(shouldChange(gfx)) {
+                makeChange(gfx);
             }
         }
 
-        virtual void makeChange(GraphicAPI * ogl) = 0;
+        virtual void makeChange(GraphicAPI * gfx) = 0;
 
-        virtual bool shouldChange(GraphicAPI * ogl) = 0;
+        virtual bool shouldChange(GraphicAPI * gfx) = 0;
     };
 }
 

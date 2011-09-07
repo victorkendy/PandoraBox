@@ -12,6 +12,7 @@
 #include "pbge/gfx/State.h"
 #include "pbge/gfx/states/BoundProgram.h"
 #include "pbge/gfx/states/TextureUnits.h"
+#include "pbge/gfx/states/CurrentVertexBuffer.h"
 #include "pbge/core/core.h"
 
 #include <vector>
@@ -21,6 +22,7 @@ namespace pbge {
     class FramebufferObject;
     class BoundFBO;
     class UniformStack;
+    class VertexBuffer;
 
     class PBGE_EXPORT StateSet {
     public:
@@ -33,6 +35,8 @@ namespace pbge {
         void useProgram(GPUProgram * program);
 
         void useFBO(FramebufferObject * fbo);
+
+        void useVertexBuffer(VertexBuffer * buffer);
 
         GPUProgram * currentProgram();
 
@@ -63,6 +67,8 @@ namespace pbge {
         UniformStack * uniformStack;
 
         std::set<State*> changes;
+
+        CurrentVertexBuffer * vertexBuffer;
     };
 }
 

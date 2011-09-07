@@ -1,7 +1,7 @@
-#include <cstdio>
-#include <cstring>
 #include <string>
 #include <vector>
+#include <functional>
+#include <algorithm>
 #include <set>
 
 #include "pbge/gfx/GraphicAPI.h"
@@ -10,6 +10,8 @@
 
 #include "OpenGLAPI/gfx/GLShader.h"
 #include "OpenGLAPI/gfx/GLProgram.h"
+#include "OpenGLAPI/gfx/AttrBinders.h"
+#include "OpenGLAPI/gfx/BuiltInUniformBinders.h"
 
 
 namespace {
@@ -57,6 +59,9 @@ void GLProgram::bind(GraphicAPI * gfx){
 }
 
 void GLProgram::unbind(GraphicAPI * ogl){
+    std::for_each(attrBinders.begin(),
+                  attrBinders.end(), 
+                  std::mem_fun(&AttrBinder::unbind));
     glUseProgram(0);
 }
 
@@ -68,6 +73,15 @@ void GLProgram::updateUniforms(GraphicAPI * gfx) {
             value->bindValueOn(this, *it, gfx);
         }
     }
+    std::for_each(builtInUniforms.begin(), 
+                  builtInUniforms.end(), 
+                  std::bind2nd(std::mem_fun(&BuiltInUniformBinder::bind), gfx));
+}
+
+void GLProgram::setAttributes(VertexBuffer * attr) {
+    std::for_each(attrBinders.begin(), 
+                  attrBinders.end(), 
+                  std::bind2nd(std::mem_fun(&AttrBinder::bind), attr));
 }
 
 bool GLProgram::link(GraphicAPI * gfx){
@@ -85,8 +99,11 @@ bool GLProgram::link(GraphicAPI * gfx){
     extractInfoLog();
     glGetProgramiv(programID, GL_LINK_STATUS, &status);
     linked = (status == GL_TRUE);
-    if(linked)
+    if(linked) {
+        glUseProgram(programID);
         extractUniformInformation(gfx);
+        extractAttribs();
+    }
     return linked;
 }
 
@@ -120,18 +137,41 @@ void GLProgram::extractUniformInformation(GraphicAPI * ogl) {
     GLint uniformSize;
     GLenum uniformType;
     GLchar * name;
-    glUseProgram(programID);
     glGetProgramiv(programID, GL_ACTIVE_UNIFORMS, &numberOfActiveUniforms);
     glGetProgramiv(programID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameSize);
     name = new GLchar [maxUniformNameSize];
     for(int uniformIndex = 0; uniformIndex < numberOfActiveUniforms; ++uniformIndex) {
         glGetActiveUniform(programID, uniformIndex, maxUniformNameSize, NULL, &uniformSize, &uniformType, name);
         std::string uniformName = name;
-        // don't include reserved names
-        if(static_cast<int>(uniformName.find("gl_")) != 0) {
-            UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), glGetUniformLocation(programID, name), uniformSize);
+        GLint location = glGetUniformLocation(programID, name);
+        if(location == -1 || uniformName.find("pbge_") == 0) {
+            BuiltInUniformBinder * binder = BuiltInUniformBinders::binderFor(uniformName, location);
+            if(binder != NULL) {
+                builtInUniforms.push_back(binder);
+            }
+        } else {
+            UniformInfo info = UniformInfo(uniformName, translateGLType(uniformType), location, uniformSize);
             uniforms.push_back(info);
             std::cout << "found uniform: " << info.toString() << std::endl;
+        }
+    }
+    delete [] name;
+}
+
+void GLProgram::extractAttribs() {
+    GLint numberOfAttrs;
+    GLint maxAttrNameSize;
+    GLint attrSize;
+    GLenum attrType;
+    GLchar * name;
+    glGetProgramiv(programID, GL_ACTIVE_ATTRIBUTES, &numberOfAttrs);
+    glGetProgramiv(programID, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttrNameSize);
+    name = new GLchar[maxAttrNameSize];
+    for(int index = 0; index < numberOfAttrs; index++) {
+        glGetActiveAttrib(programID, index, maxAttrNameSize, NULL, &attrSize, &attrType, name);
+        AttrBinder * binder = AttrBinders::binderFor(name, glGetAttribLocation(programID, name));
+        if(binder != NULL) { // some attributes are implementation dependent and aren't meant to be used by the api
+            attrBinders.push_back(binder);
         }
     }
     delete [] name;

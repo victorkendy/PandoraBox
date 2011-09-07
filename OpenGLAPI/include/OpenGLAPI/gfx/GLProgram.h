@@ -2,14 +2,21 @@
 #define PBGE_GFX_OPENGL_GLPROGRAM_H
 
 #include <string>
+#include <map>
 #include <vector>
 
 #include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/ShaderUniform.h"
 
+#include "OpenGLAPI/gfx/GLShader.h"
+
 namespace pbge {
     class GraphicAPI;
+    class VertexBuffer;
+    class FileReader;
+    class AttrBinder;
+    class BuiltInUniformBinder;
 
     class GLProgram : public GPUProgram{
     public:
@@ -59,12 +66,16 @@ namespace pbge {
         void bindMat4(const UniformInfo & info, GraphicAPI * ogl, const float * v);
 
         void updateUniforms(GraphicAPI * ogl);
+
+        void setAttributes(VertexBuffer * attr);
     private:
         void bindSampler(const UniformInfo & info, GraphicAPI * ogl, Texture * tex);
 
         void extractInfoLog();
 
         void extractUniformInformation(GraphicAPI * ogl);
+
+        void extractAttribs();
 
         bool linked;
 
@@ -77,6 +88,10 @@ namespace pbge {
         std::vector<std::string> output;
 
         std::vector<UniformInfo> uniforms;
+
+        std::vector<AttrBinder *> attrBinders;
+
+        std::vector<BuiltInUniformBinder*> builtInUniforms;
 
         std::map<std::string, int> outputLocations;
     };
