@@ -32,7 +32,7 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
     Texture2D * depthOut = ogl->getFactory()->create2DTexture();
     renderables["color"] = colorOut;
     renderables["depth"] = depthOut;
-    fbo.reset(ogl->getFactory()->createFramebuffer(500,500));
+    fbo.reset(ogl->getFactory()->createFramebuffer(1024,768));
     fbo->addRenderable(colorOut, "color");
     fbo->setDepthRenderable(depthOut);
     quad.reset(Geometrics::createSquare(2.0f, ogl.get()));

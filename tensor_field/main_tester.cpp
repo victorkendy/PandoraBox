@@ -191,7 +191,7 @@ std::string choose_field(int argc, char ** argv) {
 
 int main(int argc, char ** argv) {
     pbge::Manager * manager = new pbge::Manager;
-    manager->setWindowDimensions(500, 500);
+    manager->setWindowDimensions(1024, 768);
     manager->setFullscreen(false);
     manager->setWindowTitle("tensor_field");
     manager->setSceneInitializer(new CustomSceneInitializer(choose_field(argc, argv)));

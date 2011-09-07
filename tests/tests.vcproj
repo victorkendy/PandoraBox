@@ -182,10 +182,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ConvertersTest.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GLStateTest.cpp"
 				>
 			</File>
@@ -199,14 +195,6 @@
 			</File>
 			<File
 				RelativePath=".\RenderTargetTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ShaderBuilderTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\StringSplitterTest.cpp"
 				>
 			</File>
 			<File
