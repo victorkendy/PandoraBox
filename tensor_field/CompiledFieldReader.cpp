@@ -15,7 +15,7 @@ void CompiledFieldReader::read(const std::string & filename) {
 }
 
 void CompiledFieldReader::generateFieldOn(pbge::Node * parent, pbge::GraphicAPI * gfx) {
-    Ellipsoids ellipsoids(gfx);
+    Ellipsoids ellipsoids(gfx, this->number_of_tensors);
     for(unsigned i = 0; i < number_of_tensors; i += step_size) {
         unsigned size;
         if((int)number_of_tensors - (int)(i + step_size) >= 0) {

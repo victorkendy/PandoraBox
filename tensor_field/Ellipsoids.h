@@ -6,7 +6,7 @@
 
 class Ellipsoids {
 public:
-    Ellipsoids(pbge::GraphicAPI * gfx);
+    Ellipsoids(pbge::GraphicAPI * gfx, int total_ellipsoids);
 
     pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms);
 private:
@@ -21,6 +21,10 @@ private:
     pbge::GPUProgram * get_render_pass_program();
 
     pbge::GPUProgram * get_depth_pass_program();
+
+    pbge::TextureBuffer * tex;
+
+    int added_ellipsoids;
 };
 
 #endif

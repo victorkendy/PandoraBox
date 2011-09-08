@@ -6,17 +6,18 @@
 
 #include "Ellipsoids.h"
 
-Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx) {
+Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx, int total_ellipsoids) {
     this->sphere = pbge::Geometrics::createSphere(1.0f, 3, _gfx);
     this->gfx = _gfx;
+    this->tex = gfx->getFactory()->createTextureBuffer(total_ellipsoids * sizeof(math3d::matrix44));
+    this->added_ellipsoids = 0;
     this->render_pass_program = NULL;
     this->depth_pass_program = NULL;
 }
 
 pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms) {
-    pbge::TextureBuffer * tex = gfx->getFactory()->createTextureBuffer(number_of_ellipsoids * sizeof(math3d::matrix44));
     void * texData = tex->getBuffer()->map(pbge::Buffer::WRITE_ONLY);
-    memcpy(texData, transforms, number_of_ellipsoids * sizeof(math3d::matrix44));
+    memcpy((unsigned char *)texData + this->added_ellipsoids * sizeof(math3d::matrix44), transforms, number_of_ellipsoids * sizeof(math3d::matrix44));
     tex->getBuffer()->unmap();
     texData = NULL;
     tex->setInternalFormat(pbge::Texture::FLOAT, pbge::Texture::RGBA);
@@ -25,6 +26,10 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 
     pbge::UniformBufferSampler * uniform = ellipsoids->getUniformSet()->getBufferSampler("transforms");
     uniform->setValue(tex);
+
+    pbge::UniformFloat * base_instance = ellipsoids->getUniformSet()->getFloat("base_instance");
+    base_instance->setValue((float)this->added_ellipsoids);
+    this->added_ellipsoids += number_of_ellipsoids;
 	
 	ellipsoids->setRenderPassProgram(get_render_pass_program());
     ellipsoids->setDepthPassProgram(get_depth_pass_program());
@@ -36,6 +41,7 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
         this->render_pass_program = gfx->getFactory()->createProgramFromString(
             "#version 150\n"
 		    "uniform samplerBuffer transforms;\n"
+            "uniform float base_instance;\n"
             "uniform mat4 pbge_ModelViewMatrix;\n"
             "uniform mat4 pbge_ProjectionMatrix;\n"
 		    "out vec4 position;\n"
@@ -44,7 +50,7 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
             "in  vec4 pbge_Vertex;\n"
 		    "void main() {\n"
 		    "   const vec4 light_position = vec4(16,16,16,1);\n"
-		    "   int index = gl_InstanceID * 4;\n"
+            "   int index = (int(base_instance) + gl_InstanceID) * 4;\n"
 		    "   vec4 col1 = texelFetch(transforms, index);\n"
 		    "   vec4 col2 = texelFetch(transforms, index + 1);\n"
 		    "   vec4 col3 = texelFetch(transforms, index + 2);\n"
@@ -85,10 +91,11 @@ pbge::GPUProgram * Ellipsoids::get_depth_pass_program() {
 		    "#extension GL_EXT_gpu_shader4: enable\n"
             "#extension GL_ARB_draw_instanced: enable\n"
             "uniform samplerBuffer transforms;\n"
+            "uniform float base_instance;\n"
             "uniform mat4 pbge_ModelViewProjectionMatrix;\n"
             "in  vec4 pbge_Vertex;\n"
             "void main() {\n"
-            "   int index = gl_InstanceIDARB * 4;\n"
+            "   int index = (int(base_instance) + gl_InstanceIDARB) * 4;\n"
             "   vec4 col1 = texelFetch(transforms, index);\n"
             "   vec4 col2 = texelFetch(transforms, index + 1);\n"
             "   vec4 col3 = texelFetch(transforms, index + 2);\n"
