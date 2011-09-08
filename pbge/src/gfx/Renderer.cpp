@@ -1,14 +1,9 @@
-#include <boost/smart_ptr/shared_ptr.hpp>
 #include <GL/glew.h>
+#include <algorithm>
 #include <string>
-#include <cstring>
 
-#include "pbge/gfx/DrawController.h"
 #include "pbge/gfx/FramebufferObject.h"
-#include "pbge/gfx/Geometrics.h"
-#include "pbge/gfx/Model.h"
 #include "pbge/gfx/GraphicObjectsFactory.h"
-#include "pbge/gfx/Shader.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/Camera.h"
 #include "pbge/gfx/SceneGraph.h"
@@ -16,12 +11,41 @@
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/StateSet.h"
-#include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/core/Manager.h"
 #include "pbge/internal/OpenGLStates.h"
 
+
+#include "pbge/gfx/processors/BlitToFramebuffer.h"
+
 using namespace pbge;
+
+class PostProcessorExecutor {
+public:
+    inline PostProcessorExecutor(GraphicAPI * _gfx, Renderer * _renderer)
+        :gfx(_gfx), renderer(_renderer) {}
+    inline void operator () (ScenePostProcessor * processor) {
+        if(processor->isActive()) {
+            processor->process(gfx, renderer);
+        }
+    }
+private:
+    GraphicAPI * gfx;
+    Renderer * renderer;
+};
+class PostProcessorInitializer {
+public:
+    inline PostProcessorInitializer(GraphicAPI * _gfx, Renderer * _renderer)
+        :gfx(_gfx), renderer(_renderer) {}
+    inline void operator() (ScenePostProcessor * processor) {
+        if(!processor->isInitialized(gfx)) {
+            processor->initialize(gfx, renderer);
+        }
+    }
+private:
+    GraphicAPI * gfx;
+    Renderer * renderer;
+};
 
 Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisitor),
                         renderer(new ColorPassVisitor),
@@ -35,21 +59,15 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
     fbo.reset(ogl->getFactory()->createFramebuffer(1024,768));
     fbo->addRenderable(colorOut, "color");
     fbo->setDepthRenderable(depthOut);
-    quad.reset(Geometrics::createSquare(2.0f, ogl.get()));
-    blitter.reset(ogl->getFactory()->createProgramFromString(
-        "varying vec2 position;\n"
-        "void main() {\n"
-        "   gl_Position=gl_Vertex;\n"
-        "   position = 0.5 * gl_Vertex.xy + 0.5;"
-        "}", 
-        "varying vec2 position;\n"
-        "uniform sampler2D color;\n"
-        "void main(){\n"
-		"	vec2 x = 2 * position - 1.0;\n"
-		"   gl_FragColor = texture2D(color, 0.5 + 0.5 * sin(1.5 * x));\n"
-        "}"));
 }
 
+void Renderer::initialize() {
+    std::for_each(postProcessors.begin(), postProcessors.end(), PostProcessorInitializer(ogl.get(), this));
+}
+
+Texture2D * Renderer::getColorTexture() {
+    return renderables["color"];
+}
 
 void Renderer::setScene(boost::shared_ptr<SceneGraph> & scene_graph) {
     scene = scene_graph;
@@ -102,12 +120,6 @@ void Renderer::render(){
     for(camera = activeCameras.begin(); camera != activeCameras.end(); camera++) {
         renderWithCamera(*camera, root);
     }
-    ogl->bindFramebufferObject(NULL);
-    glDisable(GL_DEPTH_TEST);
-    UniformSampler2D* sampler = dynamic_cast<UniformSampler2D*>(ogl->getUniformValue(UniformInfo("color", pbge::SAMPLER_2D)));
-    sampler->setValue(renderables["color"]);
-    ogl->getState()->useProgram(blitter.get());
-    ogl->getDrawController()->drawVBOModel(quad.get());
-    glEnable(GL_DEPTH_TEST);
+    std::for_each(postProcessors.begin(), postProcessors.end(), PostProcessorExecutor(ogl.get(), this));
 }
 

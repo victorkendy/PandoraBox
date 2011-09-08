@@ -123,6 +123,7 @@ namespace {
                 pbge::SceneInitializer * initializer = window->getSceneInitializer();
                 window->setScene((*initializer)(ogl, window));
                 window->getRenderer()->setScene(window->getScene());
+                window->getRenderer()->initialize();
             }
             ogl->enableDrawBuffer(GL_BACK);
             ogl->clearColor(0,0,0,1);

@@ -5,24 +5,24 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <boost/smart_ptr/scoped_ptr.hpp>
 #include <boost/smart_ptr/shared_ptr.hpp>
 
 #include "pbge/core/core.h"
+#include "pbge/gfx/FramebufferObject.h"
+#include "pbge/gfx/NodeVisitors.h"
 #include "pbge/gfx/Model.h"
+#include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/GPUProgram.h"
+#include "pbge/gfx/ScenePostProcessor.h"
 
 
 namespace pbge {
-    class UpdaterVisitor;
-    class RenderVisitor;
     class Camera;
-    class GraphicAPI;
-    class LightPassVisitor;
     class SceneGraph;
     class Texture2D;
     class Node;
-	class FramebufferObject;
 
     class PBGE_EXPORT Renderer{
     public:
@@ -35,6 +35,14 @@ namespace pbge {
         void updateScene();
 
         void render();
+
+        void initialize();
+
+        void addPostProcessor(ScenePostProcessor * processor) {
+            postProcessors.push_back(processor);
+        }
+
+        Texture2D * getColorTexture();
     private:
         void renderWithCamera(Camera * camera, Node * root);
 
@@ -52,11 +60,9 @@ namespace pbge {
 
 		boost::scoped_ptr<FramebufferObject> fbo;
 
-        boost::scoped_ptr<VBOModel> quad;
-
-        boost::scoped_ptr<GPUProgram> blitter;
-
         std::map<std::string, Texture2D*> renderables;
+
+        std::vector<ScenePostProcessor*> postProcessors;
     };
 }
 #endif

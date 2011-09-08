@@ -22,12 +22,15 @@
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/SceneGraph.h"
 #include "pbge/gfx/SceneInitializer.h"
+#include "pbge/gfx/ScenePostProcessor.h"
 #include "pbge/gfx/Shader.h"
 #include "pbge/gfx/ShaderHelper.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/UniformSet.h"
+
+#include "pbge/gfx/processors/BlitToFramebuffer.h"
 
 
 
