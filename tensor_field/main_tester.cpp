@@ -93,6 +93,7 @@ class CustomSceneInitializer : public pbge::SceneInitializer {
 public:
     CustomSceneInitializer(std::string _filename) : filename(_filename) {}
     pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx, pbge::Window * window) {
+        window->getRenderer()->addPostProcessor(new pbge::BlitToFramebuffer);
         pbge::SceneGraph * scene;
         int cam_node_name;
         // FIXME: remove the state change line
