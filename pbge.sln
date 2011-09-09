@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tensor_field", "tensor_fiel
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "field_compiler", "field_compiler\field_compiler.vcproj", "{0ED7064F-999C-4702-BC48-776B217E5801}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pinball", "pinball\pinball.vcproj", "{DB1087E6-6349-4D06-9B80-B4FB33A332D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -54,6 +56,10 @@ Global
 		{0ED7064F-999C-4702-BC48-776B217E5801}.Debug|Win32.ActiveCfg = Debug|Win32
 		{0ED7064F-999C-4702-BC48-776B217E5801}.Release|Win32.ActiveCfg = Release|Win32
 		{0ED7064F-999C-4702-BC48-776B217E5801}.Release|Win32.Build.0 = Release|Win32
+		{DB1087E6-6349-4D06-9B80-B4FB33A332D6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DB1087E6-6349-4D06-9B80-B4FB33A332D6}.Debug|Win32.Build.0 = Debug|Win32
+		{DB1087E6-6349-4D06-9B80-B4FB33A332D6}.Release|Win32.ActiveCfg = Release|Win32
+		{DB1087E6-6349-4D06-9B80-B4FB33A332D6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
