@@ -1,37 +1,34 @@
+#ifndef PBGE_GFX_FRAMEBUFFERIMAGEPROCESSOR_H
+#define PBGE_GFX_FRAMEBUFFERIMAGEPROCESSOR_H
 
-#ifndef PBGE_GFX_PROCESSORS_BLITTOFRAMEBUFFER_H
-#define PBGE_GFX_PROCESSORS_BLITTOFRAMEBUFFER_H
-
+#include <string>
 #include <boost/smart_ptr/scoped_ptr.hpp>
 #include "pbge/core/core.h"
-#include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/ScenePostProcessor.h"
+#include "pbge/gfx/GPUProgram.h"
 
 namespace pbge {
-    class PBGE_EXPORT BlitToFramebuffer : public ScenePostProcessor {
+    class PBGE_EXPORT FramebufferImageProcessor : public ScenePostProcessor {
     public:
+        FramebufferImageProcessor(const std::string & fs);
+
         void initialize(GraphicAPI * gfx, Renderer * renderer);
 
         void process(GraphicAPI * gfx, Renderer * renderer);
 
         bool isInitialized(GraphicAPI * gfx) {
-            // It's initialized if it has a valid blitter
-            return blitter.get() != NULL;
+            return program.get() != NULL;
         }
-
         bool isActive() {
             return active;
         }
-
         void toggle() {
             active = !active;
         }
     private:
-        
-
-        boost::scoped_ptr<GPUProgram> blitter;
-
+        std::string fragShader;
         bool active;
+        boost::scoped_ptr<GPUProgram> program;
     };
 }
 

@@ -31,6 +31,7 @@
 #include "pbge/gfx/UniformSet.h"
 
 #include "pbge/gfx/processors/BlitToFramebuffer.h"
+#include "pbge/gfx/processors/FramebufferImageProcessor.h"
 
 
 

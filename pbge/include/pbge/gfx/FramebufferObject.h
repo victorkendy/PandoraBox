@@ -58,6 +58,9 @@ namespace pbge {
 		void disableDepthWrite() {}
 		void enableColorWrite() {}
 		void disableColorWrite() {}
+        void update(GraphicAPI * gfx) {
+            bindRenderablesToOutput(gfx);
+        }
         size_t getWidth() {return width;}
         size_t getHeight() {return height;}
     protected:

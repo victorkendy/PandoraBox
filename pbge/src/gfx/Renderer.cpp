@@ -6,7 +6,9 @@
 #include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/Camera.h"
+#include "pbge/gfx/Geometrics.h"
 #include "pbge/gfx/SceneGraph.h"
+#include "pbge/gfx/DrawController.h"
 #include "pbge/gfx/Renderer.h"
 #include "pbge/gfx/Node.h"
 #include "pbge/gfx/NodeVisitors.h"
@@ -52,6 +54,7 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
                         depthRenderer(new DepthPassVisitor),
                         lightPassVisitor(new LightPassVisitor),
                         ogl(_ogl) {
+    quad.reset(Geometrics::createSquare(2.0f, ogl.get()));
     Texture2D * colorOut = ogl->getFactory()->create2DTexture();
     Texture2D * depthOut = ogl->getFactory()->create2DTexture();
     renderables["color"] = colorOut;
@@ -120,6 +123,13 @@ void Renderer::render(){
     for(camera = activeCameras.begin(); camera != activeCameras.end(); camera++) {
         renderWithCamera(*camera, root);
     }
+    glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
     std::for_each(postProcessors.begin(), postProcessors.end(), PostProcessorExecutor(ogl.get(), this));
+    glEnable(GL_DEPTH_TEST);
 }
 
+void Renderer::renderScreenQuad(GPUProgram * program) {
+    ogl->getState()->useProgram(program);
+    ogl->getDrawController()->drawVBOModel(quad.get());
+}

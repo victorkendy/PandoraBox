@@ -23,6 +23,7 @@ namespace pbge {
     class SceneGraph;
     class Texture2D;
     class Node;
+    class GPUProgram;
 
     class PBGE_EXPORT Renderer{
     public:
@@ -42,7 +43,17 @@ namespace pbge {
             postProcessors.push_back(processor);
         }
 
+        std::map<std::string, Texture2D*> & getRenderables() {
+            return renderables;
+        }
+
+        FramebufferObject * getFramebufferObject() {
+            return fbo.get();
+        }
+
         Texture2D * getColorTexture();
+
+        void renderScreenQuad(GPUProgram * program);
     private:
         void renderWithCamera(Camera * camera, Node * root);
 
@@ -63,6 +74,8 @@ namespace pbge {
         std::map<std::string, Texture2D*> renderables;
 
         std::vector<ScenePostProcessor*> postProcessors;
+
+        boost::scoped_ptr<VBOModel> quad;
     };
 }
 #endif

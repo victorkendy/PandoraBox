@@ -36,6 +36,31 @@ private:
     pbge::TransformationNode * cam_node;
 };
 
+class EffectToggler : public pbge::KeyboardEventHandler {
+public:
+    EffectToggler(pbge::FramebufferImageProcessor * _inversor,
+        pbge::FramebufferImageProcessor * _redder) {
+        inversor = _inversor;
+        redder = _redder;
+    }
+    bool keyDown(char key) {
+        return false;
+    }
+    bool keyUp(char key) {
+        if(key == '1') {
+            inversor->toggle();
+            return true;
+        } else if (key == '2') {
+            redder->toggle();
+            return true;
+        }
+        return false;
+    }
+private:
+    pbge::FramebufferImageProcessor * inversor;
+    pbge::FramebufferImageProcessor * redder;
+};
+
 class CustomMouseEventHandler : public pbge::MouseEventHandler {
 public:
     CustomMouseEventHandler(pbge::SceneGraph * graph, int cam_name) {
@@ -92,7 +117,27 @@ class CustomSceneInitializer : public pbge::SceneInitializer {
 
 public:
     CustomSceneInitializer(std::string _filename) : filename(_filename) {}
+    
     pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx, pbge::Window * window) {
+        pbge::FramebufferImageProcessor * inversor = new pbge::FramebufferImageProcessor(
+            "uniform sampler2D color;\n"
+            "varying vec2 position;\n"
+            "void main() {\n"
+            "   vec3 color = (texture2D(color, position.xy)).rgb;\n"
+            "   color = 1 - color;\n"
+            "   gl_FragColor = vec4(color, 1);\n"
+            "}\n"
+        );
+        pbge::FramebufferImageProcessor * redder = new pbge::FramebufferImageProcessor(
+        "uniform sampler2D color;\n"
+            "varying vec2 position;\n"
+            "void main() {\n"
+            "   float r = (texture2D(color, position.xy)).r;\n"
+            "   gl_FragColor = vec4(r, 0, 0, 1);\n"
+            "}\n"
+        );
+        window->getRenderer()->addPostProcessor(inversor);
+        window->getRenderer()->addPostProcessor(redder);
         window->getRenderer()->addPostProcessor(new pbge::BlitToFramebuffer);
         pbge::SceneGraph * scene;
         int cam_node_name;
@@ -106,7 +151,7 @@ public:
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(20.0f, 1.0f, 1.0f, 1000.0f);
-
+        window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder));
 		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
         return scene;
