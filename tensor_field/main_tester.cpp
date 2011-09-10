@@ -136,6 +136,7 @@ public:
             "   gl_FragColor = vec4(r, 0, 0, 1);\n"
             "}\n"
         );
+        window->getRenderer()->addSceneProcessor(new pbge::RenderPassProcessor);
         window->getRenderer()->addPostProcessor(inversor);
         window->getRenderer()->addPostProcessor(redder);
         window->getRenderer()->addPostProcessor(new pbge::BlitToFramebuffer);

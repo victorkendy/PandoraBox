@@ -1,12 +1,13 @@
 #ifndef PBGE_GFX_PROCESSORS_RENDERPASSPROCESSOR_H
 #define PBGE_GFX_PROCESSORS_RENDERPASSPROCESSOR_H
 
-#include "boost/smart_ptr/scoped_ptr.hpp"
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
+#include "pbge/core/core.h"
 #include "pbge/gfx/NodeVisitors.h"
 
 namespace pbge {
-    class RenderPassProcessor : public SceneProcessor {
+    class PBGE_EXPORT RenderPassProcessor : public SceneProcessor {
     public:
         RenderPassProcessor() : visitor(new ColorPassVisitor){
         }

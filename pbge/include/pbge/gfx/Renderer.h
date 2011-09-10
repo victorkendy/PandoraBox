@@ -44,6 +44,10 @@ namespace pbge {
             postProcessors.push_back(processor);
         }
 
+        void addSceneProcessor(SceneProcessor * processor) {
+            sceneProcessors.push_back(processor);
+        }
+
         std::map<std::string, Texture2D*> & getRenderables() {
             return renderables;
         }
@@ -59,12 +63,6 @@ namespace pbge {
         boost::shared_ptr<SceneGraph> scene;
 
         boost::scoped_ptr<UpdaterVisitor> updater;
-
-        boost::scoped_ptr<RenderVisitor> renderer;
-
-        boost::scoped_ptr<RenderVisitor> depthRenderer;
-
-        boost::scoped_ptr<LightPassVisitor> lightPassVisitor;
 
         boost::shared_ptr<GraphicAPI> ogl;
 

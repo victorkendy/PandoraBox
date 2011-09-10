@@ -32,13 +32,6 @@
 
 #include "pbge/gfx/processors/BlitToFramebuffer.h"
 #include "pbge/gfx/processors/FramebufferImageProcessor.h"
-
-
-
-
-
-
-
-
+#include "pbge/gfx/processors/RenderPassProcessor.h"
 
 #endif

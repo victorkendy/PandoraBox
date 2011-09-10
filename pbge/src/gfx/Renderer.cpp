@@ -21,14 +21,10 @@
 #include "pbge/core/Manager.h"
 #include "pbge/internal/OpenGLStates.h"
 
-#include "pbge/gfx/processors/RenderPassProcessor.h"
-
 using namespace pbge;
 
-Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisitor),
-                        renderer(new ColorPassVisitor),
-                        depthRenderer(new DepthPassVisitor),
-                        lightPassVisitor(new LightPassVisitor),
+Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl) : 
+                        updater(new UpdaterVisitor),
                         ogl(_ogl) {
     quad.reset(Geometrics::createSquare(2.0f, ogl.get()));
     Texture2D * colorOut = ogl->getFactory()->create2DTexture();
@@ -38,7 +34,6 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
     fbo.reset(ogl->getFactory()->createFramebuffer(1024,768));
     fbo->addRenderable(colorOut, "color");
     fbo->setDepthRenderable(depthOut);
-    sceneProcessors.push_back(new RenderPassProcessor);
 }
 
 void Renderer::initialize() {
