@@ -9,5 +9,5 @@ using namespace pbge;
 
 void RenderPassProcessor::process(GraphicAPI * gfx, Renderer * renderer) {
     Node * node = renderer->getScene()->getSceneGraphRoot();
-    visitor->visit(node, gfx);
+    visitor.visit(node, gfx);
 }

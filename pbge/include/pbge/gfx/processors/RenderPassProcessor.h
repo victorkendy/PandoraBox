@@ -9,9 +9,6 @@
 namespace pbge {
     class PBGE_EXPORT RenderPassProcessor : public SceneProcessor {
     public:
-        RenderPassProcessor() : visitor(new ColorPassVisitor){
-        }
-
         void initialize(GraphicAPI * gfx, Renderer * renderer) {}
         void process(GraphicAPI * gfx, Renderer * renderer);
         bool isInitialized(GraphicAPI * gfx) {
@@ -21,7 +18,7 @@ namespace pbge {
             return true;
         }
     private:
-        boost::scoped_ptr<ColorPassVisitor> visitor;
+        ColorPassVisitor visitor;
     };
 }
 

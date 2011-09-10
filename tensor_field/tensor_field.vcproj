@@ -207,6 +207,14 @@
 				RelativePath=".\Ellipsoids.h"
 				>
 			</File>
+			<File
+				RelativePath=".\EventHandlers.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneInitialization.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
