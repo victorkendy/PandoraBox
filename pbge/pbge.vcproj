@@ -299,6 +299,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\include\pbge\core\algorithm.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\processors\BlitToFramebuffer.h"
 				>
 			</File>
@@ -324,6 +328,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\core\definitions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\DepthBufferController.h"
 				>
 			</File>
 			<File

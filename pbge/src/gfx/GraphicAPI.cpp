@@ -34,18 +34,6 @@ void GraphicAPI::clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclamp
     glClearColor(red, green, blue, alpha);
 }
 
-void GraphicAPI::clientActiveTexture(GLenum textureUnit) {
-    glClientActiveTexture(textureUnit);
-}
-
-void GraphicAPI::depthFunc(GLenum func) {
-    glDepthFunc(func);
-}
-
-void GraphicAPI::depthMask(GLboolean flag) {
-    glDepthMask(flag);
-}
-
 void GraphicAPI::disable(GLenum mode) {
     glDisable(mode);
 }

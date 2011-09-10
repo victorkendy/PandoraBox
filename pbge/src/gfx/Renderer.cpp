@@ -1,7 +1,11 @@
 #include <GL/glew.h>
 #include <algorithm>
 #include <string>
+#include <functional>
+#include <boost/bind/bind.hpp>
 
+#include "pbge/core/algorithm.h"
+#include "pbge/gfx/DepthBufferController.h"
 #include "pbge/gfx/FramebufferObject.h"
 #include "pbge/gfx/GraphicObjectsFactory.h"
 #include "pbge/gfx/Texture.h"
@@ -22,33 +26,6 @@
 
 using namespace pbge;
 
-class PostProcessorExecutor {
-public:
-    inline PostProcessorExecutor(GraphicAPI * _gfx, Renderer * _renderer)
-        :gfx(_gfx), renderer(_renderer) {}
-    inline void operator () (ScenePostProcessor * processor) {
-        if(processor->isActive()) {
-            processor->process(gfx, renderer);
-        }
-    }
-private:
-    GraphicAPI * gfx;
-    Renderer * renderer;
-};
-class PostProcessorInitializer {
-public:
-    inline PostProcessorInitializer(GraphicAPI * _gfx, Renderer * _renderer)
-        :gfx(_gfx), renderer(_renderer) {}
-    inline void operator() (ScenePostProcessor * processor) {
-        if(!processor->isInitialized(gfx)) {
-            processor->initialize(gfx, renderer);
-        }
-    }
-private:
-    GraphicAPI * gfx;
-    Renderer * renderer;
-};
-
 Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisitor),
                         renderer(new ColorPassVisitor),
                         depthRenderer(new DepthPassVisitor),
@@ -65,11 +42,11 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
 }
 
 void Renderer::initialize() {
-    std::for_each(postProcessors.begin(), postProcessors.end(), PostProcessorInitializer(ogl.get(), this));
-}
-
-Texture2D * Renderer::getColorTexture() {
-    return renderables["color"];
+    pbge::cond_for_each(
+        postProcessors.begin(), 
+        postProcessors.end(),
+        boost::bind(&ScenePostProcessor::initialize, _1, ogl.get(), this),
+        std::not1(std::bind2nd(std::mem_fun(&ScenePostProcessor::isInitialized), ogl.get())));
 }
 
 void Renderer::setScene(boost::shared_ptr<SceneGraph> & scene_graph) {
@@ -84,7 +61,7 @@ void Renderer::updateScene(){
     updater->visit(scene->getSceneGraphRoot(), ogl.get());
 }
 
-void Renderer::renderWithCamera(Camera * camera, Node * root) {
+void Renderer::renderWithCamera(Node * root, Camera * camera) {
     camera->setCamera(ogl.get());
     //ogl->disableDrawBuffer();
     //depthRenderer->visit(root, ogl.get());
@@ -108,11 +85,13 @@ void Renderer::renderWithCamera(Camera * camera, Node * root) {
 }
 
 void Renderer::render(){
+    DepthBufferController * depth = ogl->depthBufferController();
     ogl->bindFramebufferObject(fbo.get());
     ogl->updateState();
-    ogl->depthMask(GL_TRUE);
-    ogl->depthFunc(GL_LEQUAL);
-    
+    depth->enableDepthTest();
+    depth->enableDepthWrite();
+    depth->useDepthFunc(DepthBufferController::DEPTH_LESS_EQUAL);
+
     ogl->clear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     Node * root = this->getScene()->getSceneGraphRoot();
     if(this->getScene() == NULL || root == NULL) return;
@@ -120,13 +99,17 @@ void Renderer::render(){
     
     std::vector<Camera*> & activeCameras = updater->getActiveCameras();
     std::vector<Camera*>::iterator camera;
-    for(camera = activeCameras.begin(); camera != activeCameras.end(); camera++) {
-        renderWithCamera(*camera, root);
-    }
-    glDepthMask(GL_FALSE);
-    glDisable(GL_DEPTH_TEST);
-    std::for_each(postProcessors.begin(), postProcessors.end(), PostProcessorExecutor(ogl.get(), this));
-    glEnable(GL_DEPTH_TEST);
+    std::for_each(
+        activeCameras.begin(),
+        activeCameras.end(),
+        boost::bind(&Renderer::renderWithCamera, boost::ref(this), boost::ref(root), _1));
+    depth->disableDepthTest();
+    depth->disableDepthWrite();
+    pbge::cond_for_each(
+        postProcessors.begin(),
+        postProcessors.end(),
+        boost::bind(&ScenePostProcessor::process, _1, ogl.get(), this),
+        std::mem_fun(&ScenePostProcessor::isActive));
 }
 
 void Renderer::renderScreenQuad(GPUProgram * program) {

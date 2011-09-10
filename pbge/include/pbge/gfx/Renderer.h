@@ -51,11 +51,9 @@ namespace pbge {
             return fbo.get();
         }
 
-        Texture2D * getColorTexture();
-
         void renderScreenQuad(GPUProgram * program);
     private:
-        void renderWithCamera(Camera * camera, Node * root);
+        void renderWithCamera(Node * root, Camera * camera);
 
         boost::shared_ptr<SceneGraph> scene;
 

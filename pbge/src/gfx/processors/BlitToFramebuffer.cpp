@@ -30,6 +30,6 @@ void BlitToFramebuffer::process(GraphicAPI *gfx, Renderer *renderer) {
     // the argh method
     gfx->bindFramebufferObject(NULL);
     UniformSampler2D* sampler = dynamic_cast<UniformSampler2D*>(gfx->getUniformValue(UniformInfo("color", pbge::SAMPLER_2D)));
-    sampler->setValue(renderer->getColorTexture());
+    sampler->setValue(renderer->getRenderables()["color"]);
     renderer->renderScreenQuad(blitter.get());
 }

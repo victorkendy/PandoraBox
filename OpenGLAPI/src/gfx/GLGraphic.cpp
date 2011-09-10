@@ -5,6 +5,7 @@
 #include "pbge/gfx/VBO.h"
 #include "OpenGLAPI/gfx/GLGraphic.h"
 #include "OpenGLAPI/gfx/GLDrawController.h"
+#include "OpenGLAPI/gfx/GLDepthBufferController.h"
 #include "pbge/gfx/ResourceStorage.h"
 #include "pbge/gfx/FramebufferObject.h"
 #include "OpenGLAPI/gfx/GLObjectsFactory.h"
@@ -65,6 +66,7 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         context->makeCurrent();
         glewInit();
         state.reset(new StateSet(this));
+        depthController.reset(new GLDepthBufferController);
         initContextVersion();
         drawController->initialize();
         extensions.reset(new GLExtensions(this));
@@ -187,4 +189,7 @@ void GLGraphic::bindFramebufferObject(FramebufferObject * fbo) {
 
 GPUProgram * GLGraphic::getCurrentProgram() {
     return this->state->currentProgram();
+}
+DepthBufferController * GLGraphic::depthBufferController() {
+    return depthController.get();
 }

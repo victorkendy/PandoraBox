@@ -11,6 +11,7 @@
 #include "pbge/gfx/GraphicAPI.h"
 
 #include "OpenGLAPI/gfx/GLExtensions.h"
+#include "OpenGLAPI/gfx/GLDepthBufferController.h"
 
 namespace pbge {
     class GLDrawController;
@@ -85,6 +86,8 @@ namespace pbge {
         void bindFramebufferObject(FramebufferObject * fbo);
 
         GPUProgram * getCurrentProgram();
+
+        DepthBufferController * depthBufferController();
     public:
         /** Calculates the major version of the OpenGL implementation
             
@@ -114,6 +117,8 @@ namespace pbge {
         boost::scoped_ptr<GLObjectsFactory> factory;
 
         boost::scoped_ptr<GLDrawController> drawController;
+
+        boost::scoped_ptr<GLDepthBufferController> depthController;
 
         FramebufferObject * currentFBO;
 

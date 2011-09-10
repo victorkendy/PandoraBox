@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\GLDepthBufferController.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\GLDrawController.cpp"
 				>
 			</File>
@@ -240,6 +244,10 @@
 			</File>
 			<File
 				RelativePath=".\include\OpenGLAPI\gfx\GLBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\OpenGLAPI\gfx\GLDepthBufferController.h"
 				>
 			</File>
 			<File

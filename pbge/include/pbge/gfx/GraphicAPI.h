@@ -25,6 +25,7 @@ namespace pbge {
     class VertexBuffer;
     class DrawController;
     class FramebufferObject;
+    class DepthBufferController;
 
     class GraphicContext {
     public:
@@ -122,6 +123,8 @@ namespace pbge {
         virtual void bindFramebufferObject(FramebufferObject * fbo) = 0;
 
         virtual GPUProgram * getCurrentProgram() = 0;
+
+        virtual DepthBufferController * depthBufferController() = 0;
         
         // raw OpenGL API calls
         // TODO: remove all this....
@@ -132,12 +135,6 @@ namespace pbge {
         virtual void clear(GLbitfield mask);
 
         virtual void clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
-
-        virtual void clientActiveTexture(GLenum textureUnit);
-
-        virtual void depthFunc(GLenum func);
-
-        virtual void depthMask(GLboolean flag);
 
         virtual void disable(GLenum mode);
 
