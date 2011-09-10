@@ -21,8 +21,7 @@
 #include "pbge/core/Manager.h"
 #include "pbge/internal/OpenGLStates.h"
 
-
-#include "pbge/gfx/processors/BlitToFramebuffer.h"
+#include "pbge/gfx/processors/RenderPassProcessor.h"
 
 using namespace pbge;
 
@@ -39,6 +38,7 @@ Renderer::Renderer(boost::shared_ptr<GraphicAPI> _ogl): updater(new UpdaterVisit
     fbo.reset(ogl->getFactory()->createFramebuffer(1024,768));
     fbo->addRenderable(colorOut, "color");
     fbo->setDepthRenderable(depthOut);
+    sceneProcessors.push_back(new RenderPassProcessor);
 }
 
 void Renderer::initialize() {
@@ -47,6 +47,11 @@ void Renderer::initialize() {
         postProcessors.end(),
         boost::bind(&ScenePostProcessor::initialize, _1, ogl.get(), this),
         std::not1(std::bind2nd(std::mem_fun(&ScenePostProcessor::isInitialized), ogl.get())));
+    pbge::cond_for_each(
+        sceneProcessors.begin(),
+        sceneProcessors.end(),
+        boost::bind(&SceneProcessor::initialize, _1, ogl.get(), this),
+        std::not1(std::bind2nd(std::mem_fun(&SceneProcessor::isInitialized), ogl.get())));
 }
 
 void Renderer::setScene(boost::shared_ptr<SceneGraph> & scene_graph) {
@@ -67,7 +72,7 @@ void Renderer::renderWithCamera(Node * root, Camera * camera) {
     //depthRenderer->visit(root, ogl.get());
     //ogl->enableDrawBuffer(GL_BACK);
     //ogl->depthMask(GL_FALSE);
-    ogl->enable(GL_BLEND);
+    /*ogl->enable(GL_BLEND);
     ogl->blendFunc(GL_ONE, GL_ONE);
     std::vector<Light*>::iterator it;
     lightPassVisitor->setCurrentCamera(camera);
@@ -80,7 +85,13 @@ void Renderer::renderWithCamera(Node * root, Camera * camera) {
     ogl->getState()->useProgram(NULL);
     renderer->visit(root, ogl.get());
     
-    ogl->disable(GL_BLEND);
+    ogl->disable(GL_BLEND);*/
+
+    pbge::cond_for_each(
+        sceneProcessors.begin(),
+        sceneProcessors.end(),
+        boost::bind(&SceneProcessor::process, _1, ogl.get(), this),
+        std::mem_fun(&SceneProcessor::isActive));
     camera->unsetCamera(ogl.get());
 }
 
@@ -93,12 +104,11 @@ void Renderer::render(){
     depth->useDepthFunc(DepthBufferController::DEPTH_LESS_EQUAL);
 
     ogl->clear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
+
     Node * root = this->getScene()->getSceneGraphRoot();
     if(this->getScene() == NULL || root == NULL) return;
     updateScene();
-    
     std::vector<Camera*> & activeCameras = updater->getActiveCameras();
-    std::vector<Camera*>::iterator camera;
     std::for_each(
         activeCameras.begin(),
         activeCameras.end(),

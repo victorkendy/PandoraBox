@@ -16,6 +16,7 @@
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/GPUProgram.h"
 #include "pbge/gfx/ScenePostProcessor.h"
+#include "pbge/gfx/SceneProcessor.h"
 
 
 namespace pbge {
@@ -72,6 +73,8 @@ namespace pbge {
         std::map<std::string, Texture2D*> renderables;
 
         std::vector<ScenePostProcessor*> postProcessors;
+
+        std::vector<SceneProcessor*> sceneProcessors;
 
         boost::scoped_ptr<VBOModel> quad;
     };

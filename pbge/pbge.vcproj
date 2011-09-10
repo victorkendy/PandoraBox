@@ -249,6 +249,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\processors\RenderPassProcessor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\RenderTarget.cpp"
 				>
 			</File>
@@ -435,6 +439,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\processors\RenderPassProcessor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\RenderTarget.h"
 				>
 			</File>
@@ -452,6 +460,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\ScenePostProcessor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\gfx\SceneProcessor.h"
 				>
 			</File>
 			<File
