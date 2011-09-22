@@ -6,6 +6,7 @@
 
 #include "pbge/pbge.h"
 #include "math3d/math3d.h"
+#include "BoundingBox.h"
 
 class CompiledFieldReader {
 public:
@@ -14,6 +15,8 @@ public:
 private:
     boost::scoped_array<math3d::matrix44> transforms;
     unsigned number_of_tensors;
+    int number_of_boxes;
+    boost::scoped_array<BoundingBox> boxes;
     unsigned step_size;
 };
 

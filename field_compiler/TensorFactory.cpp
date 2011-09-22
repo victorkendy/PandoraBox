@@ -1,10 +1,12 @@
 #include <cmath>
 #include <algorithm>
+#include <cfloat>
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
 #include "TensorFactory.h"
 
 #define TENSOR_FACTORY_PI 3.14159f
-#define STEP_SIZE 100000
+#define STEP_SIZE 5000
 
 Tensor3DProcessor::Tensor3DProcessor(float * _tensor) {
     this->tensor = _tensor;
@@ -182,17 +184,51 @@ private:
     math3d::vector4 pivot;
 };
 
+struct BoundingBox {
+    float max_x, max_y, max_z;
+    float min_x, min_y, min_z;
+};
+
+void add_block_bounding_box(math3d::matrix44 * block_first, math3d::matrix44 * block_last, boost::scoped_array<BoundingBox> & bounding_boxes, int * current_box) {
+    BoundingBox * box = new BoundingBox;
+
+    box->max_x = box->max_y = box->max_z = FLT_MIN;
+    box->min_x = box->min_y = box->min_z = FLT_MAX;
+
+    for(math3d::matrix44 * it = block_first; it < block_last; it++) {
+        float x = (*it)[0][3], y = (*it)[1][3], z = (*it)[2][3];
+        if(x > box->max_x) box->max_x = x;
+        if(y > box->max_y) box->max_y = y;
+        if(z > box->max_z) box->max_z = z;
+        if(x < box->min_x) box->min_x = x;
+        if(y < box->min_y) box->min_y = y;
+        if(z < box->min_z) box->min_z = z;
+    }
+
+    bounding_boxes[(*current_box)++] = *box;
+}
+
 void TensorFactory::write_sorted_transforms(FILE * outputfile) {
     Comparator comparator;
     math3d::matrix44 * first = transforms.get();
     math3d::matrix44 * last = first + last_position;
     unsigned current_pos = 0;
+    int current_box = 0;
+
+    int number_of_boxes = static_cast<int>(ceil(last_position / (double) STEP_SIZE));
+    boost::scoped_array<BoundingBox> boxes(new BoundingBox[number_of_boxes]);
 
     while(current_pos < last_position) {
+        math3d::matrix44 * block_first = first;
+        math3d::matrix44 * block_last = block_first + std::min((unsigned)STEP_SIZE, last_position - current_pos);
         comparator = Comparator(first[0]);
         std::sort(first, last, comparator);
-        fwrite(first, sizeof(math3d::matrix44), std::min((unsigned)STEP_SIZE,last_position-current_pos), outputfile);
+        add_block_bounding_box(block_first, block_last, boxes, &current_box);
         current_pos += STEP_SIZE;
         first += STEP_SIZE;
     }
+    
+    fwrite(&number_of_boxes, sizeof(int), 1, outputfile);
+    fwrite(boxes.get(), sizeof(BoundingBox), number_of_boxes, outputfile);
+    fwrite(transforms.get(), sizeof(math3d::matrix44), last_position, outputfile);
 }

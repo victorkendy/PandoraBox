@@ -15,7 +15,7 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx, int total_ellipsoids) {
     this->depth_pass_program = NULL;
 }
 
-pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms) {
+pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box) {
     void * texData = tex->getBuffer()->map(pbge::Buffer::WRITE_ONLY);
     memcpy((unsigned char *)texData + this->added_ellipsoids * sizeof(math3d::matrix44), transforms, number_of_ellipsoids * sizeof(math3d::matrix44));
     tex->getBuffer()->unmap();

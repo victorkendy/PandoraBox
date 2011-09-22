@@ -3,12 +3,13 @@
 
 #include "pbge/pbge.h"
 #include "math3d/math3d.h"
+#include "BoundingBox.h"
 
 class Ellipsoids {
 public:
     Ellipsoids(pbge::GraphicAPI * gfx, int total_ellipsoids);
 
-    pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms);
+    pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box);
 private:
     pbge::VBOModel * sphere;
     
