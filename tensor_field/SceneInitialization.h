@@ -2,6 +2,7 @@
 #define TENSOR_FIELD_SCENEINITIALIZATION_H
 
 #include "pbge/pbge.h"
+#include "ImageProcessors.h"
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
 
@@ -9,26 +10,13 @@ public:
     CustomSceneInitializer(std::string _filename) : filename(_filename) {}
     
     pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx, pbge::Window * window) {
-        pbge::FramebufferImageProcessor * inversor = new pbge::FramebufferImageProcessor(
-            "uniform sampler2D color;\n"
-            "varying vec2 position;\n"
-            "void main() {\n"
-            "   vec3 color = (texture2D(color, position.xy)).rgb;\n"
-            "   color = 1 - color;\n"
-            "   gl_FragColor = vec4(color, 1);\n"
-            "}\n"
-        );
-        pbge::FramebufferImageProcessor * redder = new pbge::FramebufferImageProcessor(
-        "uniform sampler2D color;\n"
-            "varying vec2 position;\n"
-            "void main() {\n"
-            "   float r = (texture2D(color, position.xy)).r;\n"
-            "   gl_FragColor = vec4(r, 0, 0, 1);\n"
-            "}\n"
-        );
+        pbge::FramebufferImageProcessor * inversor = colorInversor();
+        pbge::FramebufferImageProcessor * redder = chooseRed();
+        pbge::FramebufferImageProcessor * lens = senoidalLens();
         window->getRenderer()->addSceneProcessor(new pbge::RenderPassProcessor);
         window->getRenderer()->addPostProcessor(inversor);
         window->getRenderer()->addPostProcessor(redder);
+        window->getRenderer()->addPostProcessor(lens);
         window->getRenderer()->addPostProcessor(new pbge::BlitToFramebuffer);
         pbge::SceneGraph * scene;
         int cam_node_name;
@@ -42,7 +30,7 @@ public:
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(20.0f, 1.0f, 1.0f, 1000.0f);
-        window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder));
+        window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder, lens));
 		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
         return scene;

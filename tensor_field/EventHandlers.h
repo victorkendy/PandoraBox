@@ -32,9 +32,11 @@ private:
 class EffectToggler : public pbge::KeyboardEventHandler {
 public:
     EffectToggler(pbge::FramebufferImageProcessor * _inversor,
-        pbge::FramebufferImageProcessor * _redder) {
+                  pbge::FramebufferImageProcessor * _redder,
+                  pbge::FramebufferImageProcessor * _lens) {
         inversor = _inversor;
         redder = _redder;
+        lens = _lens;
     }
     bool keyDown(char key) {
         return false;
@@ -46,12 +48,16 @@ public:
         } else if (key == '2') {
             redder->toggle();
             return true;
+        } else if (key == '3') {
+            lens->toggle();
+            return true;
         }
         return false;
     }
 private:
     pbge::FramebufferImageProcessor * inversor;
     pbge::FramebufferImageProcessor * redder;
+    pbge::FramebufferImageProcessor * lens;
 };
 
 
