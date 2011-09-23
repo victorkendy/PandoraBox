@@ -2,6 +2,7 @@
 #define TENSOR_FIELD_EVENTHANDLERS_H
 
 #include "pbge/pbge.h"
+#include "DepthPeelingProcessor.h"
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
@@ -33,10 +34,12 @@ class EffectToggler : public pbge::KeyboardEventHandler {
 public:
     EffectToggler(pbge::FramebufferImageProcessor * _inversor,
                   pbge::FramebufferImageProcessor * _redder,
-                  pbge::FramebufferImageProcessor * _lens) {
+                  pbge::FramebufferImageProcessor * _lens,
+                  DepthPeelingProcessor * _depthPeeling) {
         inversor = _inversor;
         redder = _redder;
         lens = _lens;
+        depthPeeling = _depthPeeling;
     }
     bool keyDown(char key) {
         return false;
@@ -51,6 +54,9 @@ public:
         } else if (key == '3') {
             lens->toggle();
             return true;
+        } else if (key == '4') {
+            depthPeeling->toggle();
+            return true;
         }
         return false;
     }
@@ -58,6 +64,7 @@ private:
     pbge::FramebufferImageProcessor * inversor;
     pbge::FramebufferImageProcessor * redder;
     pbge::FramebufferImageProcessor * lens;
+    DepthPeelingProcessor * depthPeeling;
 };
 
 

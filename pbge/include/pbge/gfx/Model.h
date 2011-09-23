@@ -116,6 +116,10 @@ namespace pbge {
         void setNumberOfInstances(int instances) {
             this->numberOfInstances = instances;
         }
+
+        int getNumberOfInstances() {
+            return this->numberOfInstances;
+        }
     // Node interface methods
     public:
         void updatePass(UpdaterVisitor * visitor, GraphicAPI * ogl) {}

@@ -307,6 +307,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\pbge\gfx\BlendController.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\pbge\gfx\processors\BlitToFramebuffer.h"
 				>
 			</File>

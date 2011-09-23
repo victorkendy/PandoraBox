@@ -3,6 +3,7 @@
 
 #include "pbge/pbge.h"
 #include "ImageProcessors.h"
+#include "DepthPeelingProcessor.h"
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
 
@@ -13,7 +14,9 @@ public:
         pbge::FramebufferImageProcessor * inversor = colorInversor();
         pbge::FramebufferImageProcessor * redder = chooseRed();
         pbge::FramebufferImageProcessor * lens = senoidalLens();
+        DepthPeelingProcessor * depthPeeling = new DepthPeelingProcessor;
         window->getRenderer()->addSceneProcessor(new pbge::RenderPassProcessor);
+        window->getRenderer()->addSceneProcessor(depthPeeling);
         window->getRenderer()->addPostProcessor(inversor);
         window->getRenderer()->addPostProcessor(redder);
         window->getRenderer()->addPostProcessor(lens);
@@ -30,7 +33,7 @@ public:
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(20.0f, 1.0f, 1.0f, 1000.0f);
-        window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder, lens));
+        window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder, lens, depthPeeling));
 		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
         return scene;

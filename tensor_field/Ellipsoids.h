@@ -19,9 +19,13 @@ private:
 
     pbge::GPUProgram * depth_pass_program;
 
+    pbge::GPUProgram * peeling_program;
+
     pbge::GPUProgram * get_render_pass_program();
 
     pbge::GPUProgram * get_depth_pass_program();
+
+    pbge::GPUProgram * get_peeling_program();
 
     pbge::TextureBuffer * tex;
 

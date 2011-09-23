@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DepthPeelingProcessor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Ellipses.cpp"
 				>
 			</File>
@@ -204,6 +208,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DepthPeelingProcessor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DepthPeelingVisitor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Ellipses.h"
 				>
 			</File>
@@ -217,6 +229,10 @@
 			</File>
 			<File
 				RelativePath=".\ImageProcessors.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PeelingAwareNode.h"
 				>
 			</File>
 			<File

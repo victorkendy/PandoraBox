@@ -26,6 +26,7 @@ namespace pbge {
     class DrawController;
     class FramebufferObject;
     class DepthBufferController;
+    class BlendController;
 
     class GraphicContext {
     public:
@@ -125,6 +126,8 @@ namespace pbge {
         virtual GPUProgram * getCurrentProgram() = 0;
 
         virtual DepthBufferController * depthBufferController() = 0;
+
+        virtual BlendController * getBlendController() = 0;
         
         // raw OpenGL API calls
         // TODO: remove all this....

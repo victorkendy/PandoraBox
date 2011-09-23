@@ -67,6 +67,7 @@ void GLGraphic::setContext(GraphicContext * newContext) {
         glewInit();
         state.reset(new StateSet(this));
         depthController.reset(new GLDepthBufferController);
+        blendController.reset(new GLBlendController);
         initContextVersion();
         drawController->initialize();
         extensions.reset(new GLExtensions(this));
@@ -190,6 +191,11 @@ void GLGraphic::bindFramebufferObject(FramebufferObject * fbo) {
 GPUProgram * GLGraphic::getCurrentProgram() {
     return this->state->currentProgram();
 }
+
 DepthBufferController * GLGraphic::depthBufferController() {
     return depthController.get();
+}
+
+BlendController * GLGraphic::getBlendController() {
+    return blendController.get();
 }

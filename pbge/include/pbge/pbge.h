@@ -29,6 +29,9 @@
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/VBO.h"
 #include "pbge/gfx/UniformSet.h"
+#include "pbge/gfx/DrawController.h"
+#include "pbge/gfx/DepthBufferController.h"
+#include "pbge/gfx/BlendController.h"
 
 #include "pbge/gfx/processors/BlitToFramebuffer.h"
 #include "pbge/gfx/processors/FramebufferImageProcessor.h"
