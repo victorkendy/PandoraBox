@@ -149,7 +149,7 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
                                                            0, 0, 0, 1);
 		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
 		math3d::matrix44 transform = transformation * (*rotation) * scale;
-		transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], 1.0f));
+		transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], 0.01f));
         this->transforms[this->last_position++] = transform.transpose();
     }
 }

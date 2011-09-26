@@ -31,7 +31,10 @@ void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * ren
         depth->disableDepthTest();
         depth->disableDepthWrite();
         blend->enableBlending();
-        blend->useBlendFunc(pbge::BlendController::BLEND_FACTOR_ONE, pbge::BlendController::BLEND_FACTOR_ONE);
+        blend->useBlendFuncSeparate(pbge::BlendController::BLEND_FACTOR_DST_ALPHA, 
+                                    pbge::BlendController::BLEND_FACTOR_ONE,
+                                    pbge::BlendController::BLEND_FACTOR_ZERO,
+                                    pbge::BlendController::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA);
         renderer->renderScreenQuad(blitProgram.get());
         blend->disableBlending();
 

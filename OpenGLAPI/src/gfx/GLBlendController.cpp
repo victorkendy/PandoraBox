@@ -7,6 +7,9 @@ GLBlendController::GLBlendController() :
     blendEnabled(false),
     srcFunc(BlendController::BLEND_FACTOR_ONE),
     dstFunc(BlendController::BLEND_FACTOR_ZERO),
+    // What should be the default values here?
+    srcFuncAlpha(BlendController::BLEND_FACTOR_ONE),
+    dstFuncAlpha(BlendController::BLEND_FACTOR_ONE),
     equation(BlendController::BLEND_EQ_ADD) {}
 
 void GLBlendController::enableBlending() {
@@ -42,9 +45,16 @@ GLenum GLBlendController::translateBlendFunc(BlendController::BlendFunc func) {
 
 void GLBlendController::useBlendFunc(BlendFunc newSrcFunc, BlendFunc newDstFunc) {
     if(newSrcFunc != srcFunc || newDstFunc != dstFunc) {
-        srcFunc = newSrcFunc;
-        dstFunc = newDstFunc;
-        glBlendFunc(translateBlendFunc(srcFunc), translateBlendFunc(dstFunc));
+        glBlendFunc(translateBlendFunc(newSrcFunc), translateBlendFunc(newDstFunc));
+    }
+}
+
+void GLBlendController::useBlendFuncSeparate(BlendFunc newSrcFunc, BlendFunc newDstFunc, BlendFunc newSrcFuncAlpha, BlendFunc newDstFuncAlpha) {
+    if(newSrcFunc != srcFunc || newDstFunc != dstFunc || newSrcFuncAlpha != srcFuncAlpha || newDstFuncAlpha != dstFuncAlpha) {
+        glBlendFuncSeparate(translateBlendFunc(newSrcFunc), 
+                            translateBlendFunc(newDstFunc), 
+                            translateBlendFunc(newSrcFuncAlpha), 
+                            translateBlendFunc(newDstFuncAlpha));
     }
 }
 

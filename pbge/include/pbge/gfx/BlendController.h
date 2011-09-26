@@ -18,6 +18,7 @@ namespace pbge {
         virtual void enableBlending() = 0;
         virtual void disableBlending() = 0;
         virtual void useBlendFunc(BlendFunc srcFunc, BlendFunc dstFunc) = 0;
+        virtual void useBlendFuncSeparate(BlendFunc srcFunc, BlendFunc dstFunc, BlendFunc srcFuncAlpha, BlendFunc dstFuncAlpha) = 0;
         virtual void useBlendEquation(BlendEquation equation) = 0;
     };
 }
