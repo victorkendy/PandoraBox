@@ -131,10 +131,6 @@ namespace pbge {
         
         // raw OpenGL API calls
         // TODO: remove all this....
-        virtual void alphaFunc(GLenum func, GLclampf ref);
-
-        virtual void blendFunc(GLenum sfactor, GLenum dfactor);
-
         virtual void clear(GLbitfield mask);
 
         virtual void clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);

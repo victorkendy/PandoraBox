@@ -23,28 +23,28 @@ namespace pbge {
         void addRenderable(Texture2D * texture, const std::string & name) {
             renderables[name] = texture;
             unsync_added.insert(texture);
-            if(isBound()) {
+            /*if(isBound()) {
                 validateAndAttachRenderable(texture);
                 added.insert(texture);
-            }
+            }*/
         }
         void removeRenderable(const std::string & name) {
             std::map<std::string,Texture2D *>::iterator i = renderables.find(name);
             if(i != renderables.end()) {
                 unsync_added.erase(unsync_added.find(i->second));
-                if(isBound()) {
+                /*if(isBound()) {
                     added.erase(added.find(i->second));
                     dettachRenderable(i->second);
-                }
+                }*/
                 renderables.erase(name);
             }
         }
         void clearRenderables() {
             unsync_added.clear();
             renderables.clear();
-			if(isBound()) {
+			/*if(isBound()) {
 				synchronize();
-			}
+			}*/
         }
         void bind(GraphicAPI * api);
         void unbind();
@@ -59,7 +59,8 @@ namespace pbge {
 		void enableColorWrite() {}
 		void disableColorWrite() {}
         void update(GraphicAPI * gfx) {
-            bindRenderablesToOutput(gfx);
+            unbind();
+            bind(gfx);
         }
         size_t getWidth() {return width;}
         size_t getHeight() {return height;}

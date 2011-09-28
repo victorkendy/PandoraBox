@@ -1,16 +1,20 @@
 #include <map>
 
+#include <iostream>
 #include "DepthPeelingProcessor.h"
 #include "DepthPeelingVisitor.h"
 #include "pbge/pbge.h"
 
 void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * renderer) {
+    glGetError();
     std::map<std::string, pbge::Texture2D*> & renderables = renderer->getRenderables();
     pbge::FramebufferObject * fbo = renderer->getFramebufferObject();
     
-    pbge::UniformSampler2D* sampler = 
+    pbge::UniformSampler2D* depthSampler = 
             dynamic_cast<pbge::UniformSampler2D*>(gfx->getUniformValue(pbge::UniformInfo("depth", pbge::SAMPLER_2D)));
-    
+    pbge::UniformSampler2D* colorSampler = 
+            dynamic_cast<pbge::UniformSampler2D*>(gfx->getUniformValue(pbge::UniformInfo("color", pbge::SAMPLER_2D)));
+
     DepthPeelingVisitor visitor;
     pbge::Texture2D * colorAux = renderables["color_aux"];
     pbge::Texture2D * color = renderables["color"];
@@ -19,15 +23,21 @@ void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * ren
     pbge::DepthBufferController * depth = gfx->depthBufferController();
     pbge::BlendController * blend = gfx->getBlendController();
     for(int i = 0; i < 3; i++) {
+        std::cout << i << std::endl;
         fbo->setDepthRenderable(auxBuffer);
         fbo->removeRenderable("color");
         fbo->addRenderable(colorAux, "color");
-        sampler->setValue(depthBuffer);
+        depthSampler->setValue(depthBuffer);
+        
         fbo->update(gfx);
+        
         gfx->clear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         visitor.visit(renderer->getScene()->getSceneGraphRoot(), gfx);
         fbo->removeRenderable("color");
         fbo->addRenderable(color, "color");
+        fbo->update(gfx);
+        
+        colorSampler->setValue(colorAux);
         depth->disableDepthTest();
         depth->disableDepthWrite();
         blend->enableBlending();
@@ -37,11 +47,14 @@ void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * ren
                                     pbge::BlendController::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA);
         renderer->renderScreenQuad(blitProgram.get());
         blend->disableBlending();
+        depth->enableDepthTest();
+        depth->enableDepthWrite();
 
         pbge::Texture2D * aux = auxBuffer;
         auxBuffer = depthBuffer;
         depthBuffer = aux;
     }
+    glLoadIdentity();
 }
 
 void DepthPeelingProcessor::initialize(pbge::GraphicAPI *gfx, pbge::Renderer *renderer) {

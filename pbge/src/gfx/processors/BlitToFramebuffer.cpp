@@ -21,7 +21,7 @@ void BlitToFramebuffer::initialize(GraphicAPI *gfx, Renderer *renderer) {
         "varying vec2 position;\n"
         "uniform sampler2D color;\n"
         "void main(){\n"
-		"   gl_FragColor = texture2D(color, position.xy);\n"
+        "   gl_FragColor = vec4((texture2D(color, position.xy)).rgb, 1.0);\n"
         "}"));
 }
 

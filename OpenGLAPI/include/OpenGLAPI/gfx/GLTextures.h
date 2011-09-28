@@ -135,6 +135,8 @@ namespace pbge {
         GLenum minFilter;
 
         GLenum magFilter;
+
+        TextureUnit * boundUnit;
     };
 }
 

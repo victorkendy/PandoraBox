@@ -18,14 +18,6 @@ GraphicAPI * GraphicAPI::createInstance() {
     return api;
 }
 
-void GraphicAPI::alphaFunc(GLenum func, GLclampf ref) {
-    glAlphaFunc(func, ref);
-}
-
-void GraphicAPI::blendFunc(GLenum sfactor, GLenum dfactor) {
-    glBlendFunc(sfactor, dfactor);
-}
-
 void GraphicAPI::clear(GLbitfield mask) {
     glClear(mask);
 }

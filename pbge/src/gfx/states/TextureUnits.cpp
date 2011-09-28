@@ -17,7 +17,7 @@ bool TextureUnit::shouldChange(GraphicAPI * ogl) {
 
 void TextureUnit::makeChange(GraphicAPI * ogl) {
     if(nextTexture == NULL && boundTexture != NULL) {
-        // should unbind texture?
+        boundTexture->bindTextureOn(NULL);
     } else {
         nextTexture->bindTextureOn(this);
     }
