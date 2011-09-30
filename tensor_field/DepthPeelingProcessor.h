@@ -2,6 +2,8 @@
 #define TENSOR_FIELD_DEPTHPEELINGPROCESSOR_H_
 
 #include <boost/smart_ptr/scoped_ptr.hpp>
+#include <map>
+#include <string>
 
 #include "pbge/pbge.h"
 
@@ -24,6 +26,8 @@ private:
 
     bool initialized;
     bool active;
+
+    void create2DTextureIfNotExists(std::string texture_name, pbge::GraphicAPI * gfx, std::map<std::string, pbge::Texture2D*> & renderables);
 };
 
 #endif
