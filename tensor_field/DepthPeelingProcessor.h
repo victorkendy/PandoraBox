@@ -23,11 +23,12 @@ public:
     }
 private:
     boost::scoped_ptr<pbge::GPUProgram> blitProgram;
-
+    boost::scoped_ptr<pbge::FramebufferObject> fbos[2];
+    boost::scoped_ptr<pbge::Texture2D> colors[2];
+    boost::scoped_ptr<pbge::Texture2D> depths[2];
     bool initialized;
     bool active;
-
-    void create2DTextureIfNotExists(std::string texture_name, pbge::GraphicAPI * gfx, std::map<std::string, pbge::Texture2D*> & renderables);
+    void createFBO(pbge::GraphicAPI* gfx, pbge::Renderer * renderer, int i);
 };
 
 #endif
