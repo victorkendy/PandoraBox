@@ -133,7 +133,7 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
 		    "   vec4 col2 = texelFetch(transforms, index + 1);\n"
 		    "   vec4 col3 = texelFetch(transforms, index + 2);\n"
 		    "   vec4 col4 = texelFetch(transforms, index + 3);\n"
-		    "   vec4 color = vec4(col1.w,col2.w,col3.w,0.2);\n"
+		    "   vec4 color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
 		    "   col1 = vec4(col1.xyz, 0);\n"
 		    "   col2 = vec4(col2.xyz, 0);\n"
 		    "   col3 = vec4(col3.xyz, 0);\n"
@@ -164,7 +164,7 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
-		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, gl_Color.r);\n"
+		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, gl_Color.a);\n"
 		    "}"
             );
     }

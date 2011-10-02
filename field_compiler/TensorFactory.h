@@ -46,6 +46,7 @@ private:
     unsigned last_position;
 
     void write_sorted_transforms(FILE * outputfile);
+    float calculateAlpha(float * eigenvalues);
 };
 
 #endif
