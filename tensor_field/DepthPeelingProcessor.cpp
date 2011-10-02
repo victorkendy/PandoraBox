@@ -8,7 +8,6 @@ const int PEELING_STEPS = 7;
 void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * renderer) {
     std::map<std::string, pbge::Texture2D*> & renderables = renderer->getRenderables();
     pbge::DepthBufferController * depth = gfx->depthBufferController();
-    depth->enableDepthTest();
     pbge::UniformSampler2D* depthSampler = 
             dynamic_cast<pbge::UniformSampler2D*>(gfx->getUniformValue(pbge::UniformInfo("depth", pbge::SAMPLER_2D)));
     pbge::UniformSampler2D* colorSampler = 
