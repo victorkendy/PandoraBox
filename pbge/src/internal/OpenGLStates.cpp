@@ -40,10 +40,11 @@ bool BoundFBO::shouldChange(GraphicAPI * api) {
 }
 
 void BoundFBO::makeChange(GraphicAPI * api) {
+    if(current != NULL) {
+        current->unbind();
+    }
     if(next != NULL) {
         next->bind(api);
-    } else {
-        current->unbind();
     }
     current = next;
 }
