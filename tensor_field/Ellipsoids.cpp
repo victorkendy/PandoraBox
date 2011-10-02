@@ -154,14 +154,17 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             "in vec4 nposition;\n"
             "uniform sampler2D depth;\n"
 		    "void main() {\n"
-            //"   vec4 p = 0.5 * nposition + 0.5;\n"
-            "   if(gl_FragCoord.z <= (texture2D(depth,nposition.xy)).r) discard;\n"
-            //"   if(normal.z >= 0) discard;\n"
+            // nposition is in ndc so we need to do the perspective division to transform the position 
+            // to the range -1 to 1.
+            "   vec2 p = 0.5 * (nposition.xy / nposition.w) + 0.5;\n"
+            // depth + offset to avoid z-fighting
+            "   if(gl_FragCoord.z <= (texture2D(depth,p.xy)).r + 0.001) discard;\n"
+            "   if(normal.z >= 0) discard;\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
-		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, gl_Color.a);\n"
+		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, gl_Color.r);\n"
 		    "}"
             );
     }

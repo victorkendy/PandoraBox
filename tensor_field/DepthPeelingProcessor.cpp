@@ -3,7 +3,7 @@
 #include "DepthPeelingVisitor.h"
 #include "pbge/pbge.h"
 
-const int PEELING_STEPS = 7;
+const int PEELING_STEPS = 3;
 
 void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * renderer) {
     std::map<std::string, pbge::Texture2D*> & renderables = renderer->getRenderables();
@@ -19,7 +19,6 @@ void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * ren
     blend->disableBlending();
     depth->enableDepthTest();
     for(int i = 0; i < PEELING_STEPS; i++) {
-        std::cout << i << std::endl;
         int previousId = i % 2;
         int currentId = 1 - previousId;
 
