@@ -10,6 +10,8 @@ public:
     Ellipsoids(pbge::GraphicAPI * gfx, int total_ellipsoids);
 
     pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box);
+
+    pbge::GPUProgram * get_peeling_program();
 private:
     pbge::VBOModel * sphere;
     
@@ -24,8 +26,6 @@ private:
     pbge::GPUProgram * get_render_pass_program();
 
     pbge::GPUProgram * get_depth_pass_program();
-
-    pbge::GPUProgram * get_peeling_program();
 
     pbge::TextureBuffer * tex;
 

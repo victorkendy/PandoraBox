@@ -23,7 +23,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
     tex->getBuffer()->unmap();
     texData = NULL;
     tex->setInternalFormat(pbge::Texture::FLOAT, pbge::Texture::RGBA);
-    PeelingAwareNode * ellipsoids = new PeelingAwareNode(sphere, get_peeling_program());
+    PeelingAwareCollection * ellipsoids = new PeelingAwareCollection(sphere, get_peeling_program());
     ellipsoids->setNumberOfInstances(number_of_ellipsoids);
 
     pbge::UniformBufferSampler * uniform = ellipsoids->getUniformSet()->getBufferSampler("transforms");
@@ -153,18 +153,21 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
 		    "in vec4 lightPosition;\n"
             "in vec4 nposition;\n"
             "uniform sampler2D depth;\n"
+            "uniform float alpha_correction;\n"
 		    "void main() {\n"
             // nposition is in ndc so we need to do the perspective division to transform the position 
             // to the range -1 to 1.
             "   vec2 p = 0.5 * (nposition.xy / nposition.w) + 0.5;\n"
+            "   float alpha = (1 + alpha_correction) * gl_Color.a - alpha_correction;\n"
             // depth + offset to avoid z-fighting
             "   if(gl_FragCoord.z <= (texture2D(depth,p.xy)).r + 0.001) discard;\n"
             "   if(normal.z >= 0) discard;\n"
+            "   if(alpha < 0) discard;\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
-		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, gl_Color.a);\n"
+		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, alpha);\n"
 		    "}"
             );
     }

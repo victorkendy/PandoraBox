@@ -4,6 +4,7 @@
 #include "pbge/pbge.h"
 #include "ImageProcessors.h"
 #include "DepthPeelingProcessor.h"
+#include "PeelingAwareNode.h"
 
 class CustomSceneInitializer : public pbge::SceneInitializer {
 
@@ -34,16 +35,18 @@ public:
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(20.0f, 1.0f, 1.0f, 1000.0f);
         window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder, lens, depthPeeling));
-		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex()));
+		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex(), fieldParent));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
         return scene;
     }
 private:
     std::string filename;
+    FieldParent * fieldParent;
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
         CompiledFieldReader reader;
         reader.read(filename.c_str());
-        reader.generateFieldOn(light_parent, gfx);
+        this->fieldParent = reader.generateField(gfx);
+        light_parent->addChild(this->fieldParent);
     }
 
     void createSceneLights(pbge::SceneGraph * graph, int cam_node_name) {

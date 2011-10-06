@@ -7,11 +7,12 @@
 #include "pbge/pbge.h"
 #include "math3d/math3d.h"
 #include "BoundingBox.h"
+#include "PeelingAwareNode.h"
 
 class CompiledFieldReader {
 public:
     void read(const std::string & filename);
-    void generateFieldOn(pbge::Node * parent, pbge::GraphicAPI * gfx);
+    FieldParent * generateField(pbge::GraphicAPI * gfx);
 private:
     boost::scoped_array<math3d::matrix44> transforms;
     unsigned number_of_tensors;

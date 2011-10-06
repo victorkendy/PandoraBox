@@ -3,11 +3,13 @@
 
 #include "pbge/pbge.h"
 #include "DepthPeelingProcessor.h"
+#include "PeelingAwareNode.h"
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
-    CustomKeyboardEventHandler(pbge::SceneGraph * graph, int cam_name) {
+    CustomKeyboardEventHandler(pbge::SceneGraph * graph, int cam_name, FieldParent * fieldParent) {
         this->cam_node = dynamic_cast<pbge::TransformationNode*>(graph->getGraphNode(cam_name));
+        this->field_parent = fieldParent;
     }
 
     bool keyDown(char key) {
@@ -19,6 +21,8 @@ public:
             case 'D': cam_node->translate(1.0f, 0, 0); break;
             case 'Q': cam_node->translate(0, 0, 1.0f); break;
             case 'E': cam_node->translate(0, 0, -1.0f); break;
+            case 'Z': field_parent->setAlphaCorrection(field_parent->getAlphaCorrection() + 0.1f); break;
+            case 'X': field_parent->setAlphaCorrection(field_parent->getAlphaCorrection() - 0.1f); break;
         }
         return true;
     }
@@ -28,6 +32,7 @@ public:
     }
 private:
     pbge::TransformationNode * cam_node;
+    FieldParent * field_parent;
 };
 
 class EffectToggler : public pbge::KeyboardEventHandler {
