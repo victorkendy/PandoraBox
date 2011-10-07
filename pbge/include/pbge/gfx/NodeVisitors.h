@@ -12,56 +12,48 @@
 #include "pbge/gfx/Node.h"
 
 namespace pbge {
-
     class Light;
     class Camera;
     class GraphicAPI;
 
-    /** A trait that encapsulates the graph traversal logic
-        
-        This trait performs a depth first search on the scene graph
-        executing the defined action on every node.
-    */
     template<typename Visitor>
     class VisitorTrait {
     public:
-        VisitorTrait(boost::function3<void,Node*,Visitor*,GraphicAPI*> action1, boost::function3<void,Node*,Visitor*,GraphicAPI*> action2, boost::function2<void,Visitor*,GraphicAPI*> preAction) 
-            : action(action1), after(action2), visitAction(preAction){}
+        typedef boost::function3<void, Visitor*, Node*, GraphicAPI*> VisitorAction;
 
-        /** The depth first search logic
+        VisitorTrait(VisitorAction action, VisitorAction postAction) :
+          visitorAction(action), visitorPostAction(postAction){}
 
-            @param node the node to be visited
-            @param api  a instance of the graphic api
-            @param visitor the visitor that is traversing the graph
-        */
-        void visit(Node * node, GraphicAPI * api, Visitor * visitor) {
-            if(visitAction)
-                visitAction(visitor, api);
-            action(node, visitor, api);
+        void visit(Visitor * visitor, Node * root, GraphicAPI * gfx) {
+            visitorAction(visitor, root, gfx);
             std::vector<Node*>::iterator child;
-            for(child = node->getChildren().begin(); child != node->getChildren().end(); child++)
-                visit(*child, api, visitor);
-            after(node, visitor, api);
+            for(child = root->getChildren().begin(); child != root->getChildren().end(); child++)
+                visit(visitor, *child, gfx);
+            visitorPostAction(visitor, root, gfx);
         }
-
         void pushMatrix(const math3d::matrix44 & m) { stack.push(m); }
         void popMatrix() { stack.pop(); }
         void clearMatrixStack() { stack.clear(); }
         const math3d::matrix44 peekMatrix() { return stack.peek(); }
     private:
-        boost::function3<void,Node*,Visitor*,GraphicAPI*> action;
-        boost::function3<void,Node*,Visitor*,GraphicAPI*> after;
-        boost::function2<void,Visitor*,GraphicAPI*> visitAction;
         MatrixStack stack;
+        VisitorAction visitorAction;
+        VisitorAction visitorPostAction;
     };
 
     class PBGE_EXPORT UpdaterVisitor {
     public:
-        UpdaterVisitor():trait(&Node::updatePass, &Node::postUpdatePass, NULL) {}
-
-        ~UpdaterVisitor() {}
+        UpdaterVisitor():trait(&UpdaterVisitor::visitAction, &UpdaterVisitor::postVisitAction) {}
 
         void visit(Node * node, GraphicAPI * ogl);
+
+        void visitAction(Node * node, GraphicAPI * gfx) {
+            node->updatePass(this, gfx);
+        }
+
+        void postVisitAction(Node * node, GraphicAPI * gfx) {
+            node->postUpdatePass(this, gfx);
+        }
 
         void pushTransformation(const math3d::matrix44 & m) {trait.pushMatrix(m);}
         void popTransformation() {trait.popMatrix();}
@@ -94,9 +86,15 @@ namespace pbge {
     /* abstract class for a render pass visitor */
     class PBGE_EXPORT RenderVisitor {
     public:
-        RenderVisitor(boost::function3<void,Node*,RenderVisitor*,GraphicAPI*> action1, boost::function3<void,Node*,RenderVisitor*,GraphicAPI*> action2):trait(action1, action2, &RenderVisitor::preVisit){}
+        RenderVisitor():trait(&RenderVisitor::visitAction,&RenderVisitor::postVisitAction){}
 
-        void visit(Node * node, GraphicAPI * ogl){ trait.visit(node, ogl, this); }
+        void visit(Node * node, GraphicAPI * ogl){ 
+            trait.clearMatrixStack();
+            trait.visit(this, node, ogl); 
+        }
+
+        virtual void visitAction(Node * node, GraphicAPI * gfx) = 0;
+        virtual void postVisitAction(Node * node, GraphicAPI * gfx) = 0;
 
         void pushTransformation(const math3d::matrix44 & m) {
             trait.pushMatrix(m);
@@ -109,41 +107,18 @@ namespace pbge {
         const math3d::matrix44 getCurrentTransformation() {
             return trait.peekMatrix();
         }
-        virtual void preVisit(GraphicAPI* api){}
-
     protected:
         VisitorTrait<RenderVisitor> trait;
     };
 
     class PBGE_EXPORT ColorPassVisitor : public RenderVisitor {
     public:
-        ColorPassVisitor():RenderVisitor(&Node::renderPass, &Node::postRenderPass) {}
-    };
-
-    class PBGE_EXPORT DepthPassVisitor : public RenderVisitor{
-    public:
-        DepthPassVisitor():RenderVisitor(&Node::depthPass, &Node::postDepthPass) {}
-    };
-
-    class PBGE_EXPORT LightPassVisitor : public RenderVisitor {
-    public:
-        LightPassVisitor():RenderVisitor(&Node::renderPass, &Node::postRenderPass) {
-            currentLight = NULL;
+        void visitAction(Node * node, GraphicAPI * gfx) {
+            node->renderPass(this, gfx);
         }
-
-        void preVisit(GraphicAPI * api);
-
-        void setCurrentLight(Light * light) {
-            currentLight = light;
+        void postVisitAction(Node * node, GraphicAPI * gfx) {
+            node->postRenderPass(this, gfx);
         }
-
-        void setCurrentCamera(Camera * camera) {
-            currentCamera = camera;
-        }
-    private:
-        Camera * currentCamera;
-
-        Light * currentLight;
     };
 }
 

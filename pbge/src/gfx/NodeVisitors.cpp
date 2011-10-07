@@ -18,10 +18,5 @@ void UpdaterVisitor::visit(Node * node, GraphicAPI * ogl) {
     activeCameras.clear();
     activeLights.clear();
     trait.clearMatrixStack();
-    trait.visit(node, ogl, this);
-}
-
-void LightPassVisitor::preVisit(GraphicAPI* api) {
-    api->getState()->useProgram(currentLight->getLightPassProgram(api));
-    currentLight->setNecessaryUniforms(api, currentCamera->getViewTransform());
+    trait.visit(this, node, ogl);
 }
