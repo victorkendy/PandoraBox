@@ -22,8 +22,6 @@ namespace pbge {
     public:
         GLGraphic();
 
-        ~GLGraphic();
-        
         void setContext(GraphicContext * newContext);
 
         GraphicContext * getContext();
@@ -106,8 +104,6 @@ namespace pbge {
  
     private:
         void initContextVersion();
-
-        void createDefaultShaders();
 
         boost::scoped_array<math3d::matrix44> matrices;
 

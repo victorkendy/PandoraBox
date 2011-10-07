@@ -17,47 +17,6 @@ GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(n
     matrices[2] = math3d::identity44;
     factory.reset(new GLObjectsFactory(this));
     drawController.reset(new GLDrawController(this));
-    createDefaultShaders();
-}
-
-GLGraphic::~GLGraphic() {
-}
-
-void GLGraphic::createDefaultShaders() {
-    std::string defaultVertexShader = 
-        "void calculateVertex(out vec4 vertex, out vec3 normal, out vec4 color);\n"
-        "varying vec4 position;\n"
-        "varying vec3 normal;\n"
-        "void main() {\n"
-        "   vec4 vertex;\n"
-        "   vec3 _normal;\n"
-        "   vec4 color;\n"
-        "   calculateVertex(vertex, _normal, color);\n"
-        "   gl_Position = gl_ProjectionMatrix * vertex; gl_FrontColor = color;\n"
-        "   position = vertex;\n"
-        "   normal = _normal;"
-        "}";
-    std::string defaultRenderShader = 
-        "void calculateFragmentColor(out vec4 color);\n"
-        "void main() {\n"
-        "   vec4 color;\n"
-        "   calculateFragmentColor(color);\n"
-        "   gl_FragColor = color;\n"
-        "}";
-    std::string defaultDepthShader =
-        "varying vec4 position;\n"
-        "void calculateDepth(in vec4 normalizedPosition, out float depth);\n"
-        "void main(){\n"
-        "   float depth;\n"
-        "   gl_FragDepth = gl_FragCoord.z;\n"
-        "}";
-    Shader * vertexShader = getFactory()->createShaderFromString(defaultVertexShader, Shader::VERTEX_SHADER);
-    Shader * renderShader = getFactory()->createShaderFromString(defaultRenderShader, Shader::FRAGMENT_SHADER);
-    Shader * depthShader = getFactory()->createShaderFromString(defaultDepthShader, Shader::FRAGMENT_SHADER);
-    
-    getStorage()->storeNamedShader("pbge.defaultMainVertexShader", vertexShader);
-    getStorage()->storeNamedShader("pbge.defaultMainRenderPassShader", renderShader);
-    getStorage()->storeNamedShader("pbge.defaultMainDepthPassShader", depthShader);
 }
 
 void GLGraphic::setContext(GraphicContext * newContext) {

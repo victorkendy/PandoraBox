@@ -23,7 +23,6 @@
 #include "pbge/gfx/SceneInitializer.h"
 #include "pbge/gfx/ScenePostProcessor.h"
 #include "pbge/gfx/Shader.h"
-#include "pbge/gfx/ShaderHelper.h"
 #include "pbge/gfx/StateSet.h"
 #include "pbge/gfx/Texture.h"
 #include "pbge/gfx/VBO.h"
