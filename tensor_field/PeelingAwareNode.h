@@ -2,6 +2,9 @@
 #define TENSOR_FIELD_PEELINGAWARENODE_H_
 
 #include "pbge/pbge.h"
+#include "math3d/math3d.h"
+
+#include "BoundingBox.h"
 
 class PeelingAwareNode {
 public:
@@ -11,7 +14,8 @@ public:
 
 class PeelingAwareCollection : public pbge::ModelCollection, public PeelingAwareNode {
 public:
-    PeelingAwareCollection(pbge::Model * _model, pbge::GPUProgram * _peelingProgram) : pbge::ModelCollection(_model), peelingProgram(_peelingProgram) {}
+    PeelingAwareCollection(pbge::Model * _model, pbge::GPUProgram * _peelingProgram) : pbge::ModelCollection(_model), peelingProgram(_peelingProgram), boundingBox(NULL) {}
+    PeelingAwareCollection(pbge::Model * _models[], pbge::GPUProgram * _peelingProgram) : PeelingAwareCollection(_models[0], _peelingProgram), models(_models) {}
     void renderPeeling(pbge::GraphicAPI * gfx) {
         gfx->pushUniforms(getUniformSet());
         gfx->getState()->useProgram(this->peelingProgram);
@@ -20,11 +24,24 @@ public:
         pbge::VBOModel * vboModel = dynamic_cast<pbge::VBOModel *>(getModel());
         gfx->getDrawController()->drawVBOModel(vboModel, getNumberOfInstances());
     }
+    void updatePass(pbge::UpdaterVisitor * visitor, pbge::GraphicAPI * gfx) {
+        if(box == NULL || models == NULL) {
+            return;
+        }
+        math3d::matrix44 transposedInveresedViewMatrix = gfx->getViewMatrix().inverse().transpose();
+        math3d::vector4 cameraPosition(transposedInveresedViewMatrix[3]);
+        
+    }
     void postRenderPeeling(pbge::GraphicAPI * gfx) {
         gfx->popUniforms();
     }
+    void setBoundingBox(BoundingBox * box) {
+        boundingBox = box;
+    }
 private:
     pbge::GPUProgram * peelingProgram;
+    BoundingBox * boundingBox;
+    pbge::Model * models[];
 };
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
@@ -57,7 +74,7 @@ public:
     }
 
     void setAlphaCorrection(float new_alpha_correction) {
-        if(alpha_correction != new_alpha_correction && new_alpha_correction >= 0) {
+        if(alpha_correction != new_alpha_correction && new_alpha_correction >= 0 && new_alpha_correction <= 1) {
             alpha_correction = new_alpha_correction;
             alpha_changed = true;
         }

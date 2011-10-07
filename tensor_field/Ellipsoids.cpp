@@ -17,7 +17,7 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx, int total_ellipsoids) {
     this->peeling_program = NULL;
 }
 
-pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box) {
+pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox * box) {
     void * texData = tex->getBuffer()->map(pbge::Buffer::WRITE_ONLY);
     memcpy((unsigned char *)texData + this->added_ellipsoids * sizeof(math3d::matrix44), transforms, number_of_ellipsoids * sizeof(math3d::matrix44));
     tex->getBuffer()->unmap();
@@ -158,11 +158,11 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             // nposition is in ndc so we need to do the perspective division to transform the position 
             // to the range -1 to 1.
             "   vec2 p = 0.5 * (nposition.xy / nposition.w) + 0.5;\n"
-            "   float alpha = (1 + alpha_correction) * gl_Color.a - alpha_correction;\n"
             // depth + offset to avoid z-fighting
-            "   if(gl_FragCoord.z <= (texture2D(depth,p.xy)).r + 0.001) discard;\n"
+            "   if(gl_FragCoord.z <= (texture2D(depth,p.xy)).r + 0.0001) discard;\n"
             "   if(normal.z >= 0) discard;\n"
-            "   if(alpha < 0) discard;\n"
+            "   float alpha = gl_Color.a;\n"
+            "   if(alpha <= alpha_correction) discard;\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
