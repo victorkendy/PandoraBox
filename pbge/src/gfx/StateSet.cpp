@@ -12,13 +12,11 @@
 
 using namespace pbge;
 
-const unsigned NUMBER_OF_STATES = 17;
+const unsigned NUMBER_OF_STATES = 15;
 
 StateSet::StateSet(GraphicAPI * ogl) {
     states = std::vector<State*>(NUMBER_OF_STATES);
-    states[GraphicAPI::BLEND] = new StateEnabler(GL_BLEND);
     states[GraphicAPI::COLOR_LOGIC_OP] = new StateEnabler(GL_COLOR_LOGIC_OP);
-    states[GraphicAPI::DEPTH_TEST] = new StateEnabler(GL_DEPTH_TEST);
     states[GraphicAPI::STENCIL_TEST] = new StateEnabler(GL_STENCIL_TEST);
     states[GraphicAPI::SCISSOR_TEST] = new StateEnabler(GL_SCISSOR_TEST);
     states[GraphicAPI::CULL_FACE] = new StateEnabler(GL_CULL_FACE);

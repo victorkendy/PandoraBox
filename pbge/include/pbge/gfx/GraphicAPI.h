@@ -45,10 +45,8 @@ namespace pbge {
     public:
 
         typedef enum {
-            DEPTH_TEST = 0,
             STENCIL_TEST,
             SCISSOR_TEST,
-            BLEND,
             COLOR_LOGIC_OP,
             CULL_FACE,
             DEPTH_CLAMP,

@@ -25,7 +25,6 @@ public:
         pbge::SceneGraph * scene;
         int cam_node_name;
         // FIXME: remove the state change line
-        gfx->enableMode(pbge::GraphicAPI::DEPTH_TEST);
         scene = new pbge::SceneGraph(new pbge::TransformationNode);
         createSceneTransformations(scene);
         createSceneLights(scene, cam_node->getSceneGraphIndex());
@@ -33,7 +32,7 @@ public:
         cam_node_name = cam_node->getSceneGraphIndex();
         pbge::CameraNode * cam = dynamic_cast<pbge::CameraNode*>(scene->appendChildTo(cam_node_name, new pbge::CameraNode()));
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
-        cam->setPerspective(20.0f, 1.0f, 1.0f, 1000.0f);
+        cam->setPerspective(20.0f, 1.0f, 1.0f, 10000.0f);
         window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder, lens, depthPeeling));
 		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex(), fieldParent));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
