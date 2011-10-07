@@ -57,7 +57,7 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
 		    "   vec4 col2 = texelFetch(transforms, index + 1);\n"
 		    "   vec4 col3 = texelFetch(transforms, index + 2);\n"
 		    "   vec4 col4 = texelFetch(transforms, index + 3);\n"
-		    "   vec4 color = vec4(col1.w,col2.w,col3.w,0.2);\n"
+		    "   vec4 color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
 		    "   col1 = vec4(col1.xyz, 0);\n"
 		    "   col2 = vec4(col2.xyz, 0);\n"
 		    "   col3 = vec4(col3.xyz, 0);\n"
@@ -71,15 +71,18 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
 		    "   gl_Position = pbge_ProjectionMatrix * position;\n"
 		    "   gl_FrontColor = color;\n"
 		    "}",
+            "uniform float alpha_correction;\n"
             "in vec4 position;\n"
 		    "in vec3 normal;\n"
 		    "in vec4 lightPosition;\n"
 		    "void main() {\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
+            "   float alpha = gl_Color.a;\n"
+            "   if(alpha <= alpha_correction + 0.02) discard;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
-		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, gl_Color.a);\n"
+		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, alpha);\n"
 		    "}"
             );
     }
@@ -158,11 +161,11 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             // nposition is in ndc so we need to do the perspective division to transform the position 
             // to the range -1 to 1.
             "   vec2 p = 0.5 * (nposition.xy / nposition.w) + 0.5;\n"
-            "   float alpha = (1 + alpha_correction) * gl_Color.a - alpha_correction;\n"
+            "   float alpha = gl_Color.a;\n"
             // depth + offset to avoid z-fighting
             "   if(gl_FragCoord.z <= (texture2D(depth,p.xy)).r + 0.001) discard;\n"
             "   if(normal.z >= 0) discard;\n"
-            "   if(alpha < 0) discard;\n"
+            "   if(alpha <= alpha_correction + 0.02) discard;\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"

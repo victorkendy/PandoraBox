@@ -31,12 +31,32 @@ class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
 public:
     FieldParent(float _alpha_correction, pbge::GPUProgram * _renderProgram) {
         this->alpha_correction = _alpha_correction;
-        this->alpha_changed = true;
+        this->alpha_changed_render = true;
+        this->alpha_changed_peeling = true;
         uniform_alpha_correction = NULL;
         this->renderProgram = _renderProgram;
         this->uniforms = new pbge::UniformSet();
     }
     
+    void renderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
+        gfx->pushUniforms(getUniformSet());
+        gfx->getState()->useProgram(this->renderProgram);
+        gfx->updateState();
+
+        if(uniform_alpha_correction == NULL) {
+            uniform_alpha_correction = getUniformSet()->getFloat("alpha_correction");
+        }
+        
+        if(alpha_changed_render) {
+            alpha_changed_render = false;
+            uniform_alpha_correction->setValue(alpha_correction);
+        }
+    }
+
+    void postRenderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
+        gfx->popUniforms();
+    }
+
     void renderPeeling(pbge::GraphicAPI * gfx) {
         gfx->pushUniforms(getUniformSet());
         gfx->getState()->useProgram(this->renderProgram);
@@ -46,8 +66,8 @@ public:
             uniform_alpha_correction = getUniformSet()->getFloat("alpha_correction");
         }
         
-        if(alpha_changed) {
-            alpha_changed = false;
+        if(alpha_changed_peeling) {
+            alpha_changed_peeling = false;
             uniform_alpha_correction->setValue(alpha_correction);
         }
     }
@@ -57,9 +77,16 @@ public:
     }
 
     void setAlphaCorrection(float new_alpha_correction) {
-        if(alpha_correction != new_alpha_correction && new_alpha_correction >= 0) {
+        if(new_alpha_correction < 0.0f) {
+            new_alpha_correction = 0.0f;
+        }
+        else if(new_alpha_correction > 1.0f) {
+            new_alpha_correction = 1.0f;
+        }
+        if(alpha_correction != new_alpha_correction) {
             alpha_correction = new_alpha_correction;
-            alpha_changed = true;
+            alpha_changed_render = true;
+            alpha_changed_peeling = true;
         }
     }
 
@@ -68,7 +95,8 @@ public:
     }
 private:
     float alpha_correction;
-    bool alpha_changed;
+    bool alpha_changed_render;
+    bool alpha_changed_peeling;
     pbge::UniformFloat * uniform_alpha_correction;
     pbge::GPUProgram * renderProgram;
     pbge::UniformSet * uniforms;
