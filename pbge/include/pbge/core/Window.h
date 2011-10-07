@@ -5,14 +5,14 @@
 
 #include <boost/smart_ptr/shared_ptr.hpp>
 #include <boost/smart_ptr/scoped_ptr.hpp>
-
 #include <string>
+
 #include "pbge/core/EventHandler.h"
+#include "pbge/gfx/SceneGraph.h"
 
 namespace pbge {
     class GraphicAPI;
     class Renderer;
-    class SceneGraph;
     class SceneInitializer;
     class KeyboardEventHandler;
 	class MouseEventHandler;
@@ -20,7 +20,6 @@ namespace pbge {
     class Window {
     public:
         Window() {
-            showDebug = false;
             fullscreen = false;
             width = 500;
             height = 500;
@@ -83,14 +82,6 @@ namespace pbge {
             handler->addMouseHandler(newHandler);
         }
 
-        void setShowDebug(const bool & show) {
-            this->showDebug = show;
-        }
-
-        bool getShowDebug() {
-            return showDebug;
-        }
-
         void displayWindow();
 
         EventHandler * getEventHandler() {
@@ -109,8 +100,6 @@ namespace pbge {
         unsigned positionY;
 
         bool fullscreen;
-
-        bool showDebug;
 
         Renderer * renderer;
 

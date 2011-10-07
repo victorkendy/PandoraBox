@@ -53,7 +53,6 @@ int main(int argc, char ** argv) {
     manager->setFullscreen(false);
     manager->setWindowTitle("tensor_field");
     manager->setSceneInitializer(new CustomSceneInitializer(choose_field(argc, argv)));
-    manager->printDebugInformation(true);
     manager->displayGraphics();
     delete manager;
     return 0;

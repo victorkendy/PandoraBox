@@ -4,7 +4,6 @@
 
 #include "pbge/core/definitions.h"
 #include "pbge/core/core.h"
-#include "pbge/core/Log.h"
 #include "pbge/core/File.h"
 #include "pbge/core/Manager.h"
 #include "pbge/core/KeyboardEventHandler.h"

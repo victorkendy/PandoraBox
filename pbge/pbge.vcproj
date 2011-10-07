@@ -217,10 +217,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\core\Log.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\core\Manager.cpp"
 				>
 			</File>
@@ -396,10 +392,6 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\Light.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\pbge\core\Log.h"
 				>
 			</File>
 			<File
