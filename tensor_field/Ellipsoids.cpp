@@ -78,7 +78,7 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
 		    "void main() {\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
             "   float alpha = gl_Color.a;\n"
-            "   if(alpha <= alpha_correction + 0.02) discard;\n"
+            "   if(alpha <= alpha_correction - 0.005) discard;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
@@ -165,7 +165,7 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             // depth + offset to avoid z-fighting
             "   if(gl_FragCoord.z <= (texture2D(depth,p.xy)).r + 0.001) discard;\n"
             "   if(normal.z >= 0) discard;\n"
-            "   if(alpha <= alpha_correction + 0.02) discard;\n"
+            "   if(alpha <= alpha_correction - 0.005) discard;\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"

@@ -44,8 +44,11 @@ private:
 	float scale_factor;
 	float max_entry;
     unsigned last_position;
+    float min_alpha;
+    float max_alpha;
 
     void write_sorted_transforms(FILE * outputfile);
+    float calculateRoundedAlpha(float * eigenvalues);
     float calculateAlpha(float * eigenvalues);
 };
 

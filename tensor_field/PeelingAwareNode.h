@@ -2,6 +2,7 @@
 #define TENSOR_FIELD_PEELINGAWARENODE_H_
 
 #include "pbge/pbge.h"
+#include <cmath>
 
 class PeelingAwareNode {
 public:
@@ -29,8 +30,11 @@ private:
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
 public:
-    FieldParent(float _alpha_correction, pbge::GPUProgram * _renderProgram) {
-        this->alpha_correction = _alpha_correction;
+    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step) : alpha_step(_alpha_step) {
+        min_alpha = std::max(_min_alpha - _alpha_step, 0.0f);
+        max_alpha = std::min(_max_alpha + _alpha_step, 1.0f);
+        this->alpha_correction = 0;
+        resetAlphaCorrection();
         this->alpha_changed_render = true;
         this->alpha_changed_peeling = true;
         uniform_alpha_correction = NULL;
@@ -76,22 +80,24 @@ public:
         gfx->popUniforms();
     }
 
-    void setAlphaCorrection(float new_alpha_correction) {
-        if(new_alpha_correction < 0.0f) {
-            new_alpha_correction = 0.0f;
+    void stepForward() {
+        float new_alpha_correction = alpha_correction + alpha_step;
+        if(new_alpha_correction > max_alpha) {
+            new_alpha_correction = max_alpha;
         }
-        else if(new_alpha_correction > 1.0f) {
-            new_alpha_correction = 1.0f;
-        }
-        if(alpha_correction != new_alpha_correction) {
-            alpha_correction = new_alpha_correction;
-            alpha_changed_render = true;
-            alpha_changed_peeling = true;
-        }
+        setAlphaCorrection(new_alpha_correction);
     }
 
-    float getAlphaCorrection() {
-        return alpha_correction;
+    void stepBackward() {
+        float new_alpha_correction = alpha_correction - alpha_step;
+        if(new_alpha_correction < min_alpha) {
+            new_alpha_correction = min_alpha;
+        }
+        setAlphaCorrection(new_alpha_correction);
+    }
+
+    void resetAlphaCorrection() {
+        setAlphaCorrection(min_alpha);
     }
 private:
     float alpha_correction;
@@ -100,9 +106,20 @@ private:
     pbge::UniformFloat * uniform_alpha_correction;
     pbge::GPUProgram * renderProgram;
     pbge::UniformSet * uniforms;
+    float min_alpha;
+    float max_alpha;
+    float alpha_step;
 
     pbge::UniformSet * getUniformSet() {
         return uniforms;
+    }
+
+    void setAlphaCorrection(float new_alpha_correction) {
+        if(alpha_correction != new_alpha_correction) {
+            alpha_correction = new_alpha_correction;
+            alpha_changed_render = true;
+            alpha_changed_peeling = true;
+        }
     }
 };
 
