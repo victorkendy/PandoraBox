@@ -19,6 +19,9 @@ private:
     int number_of_boxes;
     boost::scoped_array<BoundingBox> boxes;
     unsigned step_size;
+    float min_alpha;
+    float max_alpha;
+    float alpha_step;
 };
 
 #endif

@@ -17,6 +17,9 @@
 pbge.dll
 pbge.lib
 
+DevIL.dll
+glew32.dll
+
 gmock*
 gtest*
 out/

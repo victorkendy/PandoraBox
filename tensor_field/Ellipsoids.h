@@ -4,16 +4,17 @@
 #include "pbge/pbge.h"
 #include "math3d/math3d.h"
 #include "BoundingBox.h"
+#include "LODModels.h"
 
 class Ellipsoids {
 public:
     Ellipsoids(pbge::GraphicAPI * gfx, int total_ellipsoids);
 
-    pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box);
+    pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox * box);
 
     pbge::GPUProgram * get_peeling_program();
 private:
-    pbge::VBOModel * sphere;
+    LODModels * models;
     
     pbge::GraphicAPI * gfx;
 

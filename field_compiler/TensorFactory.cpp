@@ -132,24 +132,24 @@ TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry) 
     transforms(new math3d::matrix44[n]),
     scale_factor(_scale_factor),
     max_entry(_max_entry),
-    last_position(0) {}
+    last_position(0),
+    min_alpha(FLT_MAX),
+    max_alpha(0.0f) {}
+
+float TensorFactory::calculateRoundedAlpha(float * eigenvalues) {
+    float alpha = floor(100.0f * calculateAlpha(eigenvalues))/100.0f;
+    if(alpha > max_alpha) max_alpha = alpha;
+    if(alpha < min_alpha) min_alpha = alpha;
+    return alpha;
+}
+
+bool dec(float a, float b) {return a > b;}
 
 float TensorFactory::calculateAlpha(float * eigenvalues) {
-    float e1 = eigenvalues[0];
-    float e2 = eigenvalues[1];
-    float e3 = eigenvalues[2];
-    // Linear case
-    if(e1 > e2 * 2) {
-        return (e1 - e2)/(e1 + e2 + e3);
-    }
-    // Planar case
-    else if(e2 > e3 * 2) {
-        return (2*(e2 - e3))/(e1 + e2 + e3);
-    }
-    // Spherical case
-    else {
-        return (3*e3)/(e1 + e2 + e3);
-    }
+    float e[3] = {abs(eigenvalues[0]),abs(eigenvalues[1]),abs(eigenvalues[2])};
+    std::sort(e, e + 3, dec);
+    
+    return 1.0f - (3*e[2])/(e[0] + e[1] + e[2]);
 }
 
 void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d::matrix44 & transformation) {
@@ -167,8 +167,7 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
                                                            0, 0, 0, 1);
 		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
 		math3d::matrix44 transform = transformation * (*rotation) * scale;
-        float alpha = calculateAlpha(eigenvalues);
-		transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], alpha));
+        transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], calculateRoundedAlpha(eigenvalues)));
         this->transforms[this->last_position++] = transform.transpose();
     }
 }
@@ -176,10 +175,15 @@ void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d
 void TensorFactory::done(const std::string & filename) {
     FILE * outputfile = fopen(filename.c_str(), "wb");
     unsigned step_size = STEP_SIZE;
+    float alpha_step = std::max(floor((max_alpha - min_alpha) * 10.0f) / 100.0f, 0.01f);
     fwrite(&last_position, sizeof(unsigned), 1, outputfile);
     fwrite(&step_size, sizeof(unsigned), 1, outputfile);
+    fwrite(&min_alpha, sizeof(float), 1, outputfile);
+    fwrite(&max_alpha, sizeof(float), 1, outputfile);
+    fwrite(&alpha_step, sizeof(float), 1, outputfile);
     write_sorted_transforms(outputfile);
     fclose(outputfile);
+    printf("min_alpha: %f max_alpha: %f alpha_step: %f\n", min_alpha, max_alpha, alpha_step);
 }
 
 class Comparator {

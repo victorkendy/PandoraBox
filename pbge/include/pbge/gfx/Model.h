@@ -147,6 +147,10 @@ namespace pbge {
             return model;
         }
 
+        void setModel(Model * new_model) {
+            model = new_model;
+        }
+
         void setDepthPassProgram(GPUProgram * depthPassProgram) {
             depthProgram = depthPassProgram;
         }

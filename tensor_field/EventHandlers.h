@@ -21,8 +21,8 @@ public:
             case 'D': cam_node->translate(1.0f, 0, 0); break;
             case 'Q': cam_node->translate(0, 0, 1.0f); break;
             case 'E': cam_node->translate(0, 0, -1.0f); break;
-            case 'Z': field_parent->setAlphaCorrection(field_parent->getAlphaCorrection() + 0.1f); break;
-            case 'X': field_parent->setAlphaCorrection(field_parent->getAlphaCorrection() - 0.1f); break;
+            case 'Z': field_parent->stepForward(); break;
+            case 'X': field_parent->stepBackward(); break;
         }
         return true;
     }
@@ -40,11 +40,13 @@ public:
     EffectToggler(pbge::FramebufferImageProcessor * _inversor,
                   pbge::FramebufferImageProcessor * _redder,
                   pbge::FramebufferImageProcessor * _lens,
-                  DepthPeelingProcessor * _depthPeeling) {
+                  DepthPeelingProcessor * _depthPeeling,
+                  FieldParent * _fieldParent) {
         inversor = _inversor;
         redder = _redder;
         lens = _lens;
         depthPeeling = _depthPeeling;
+        fieldParent = _fieldParent;
     }
     bool keyDown(char key) {
         return false;
@@ -61,6 +63,7 @@ public:
             return true;
         } else if (key == '4') {
             depthPeeling->toggle();
+            fieldParent->resetAlphaCorrection();
             return true;
         }
         return false;
@@ -70,6 +73,7 @@ private:
     pbge::FramebufferImageProcessor * redder;
     pbge::FramebufferImageProcessor * lens;
     DepthPeelingProcessor * depthPeeling;
+    FieldParent * fieldParent;
 };
 
 
