@@ -189,14 +189,14 @@ void TensorFactory::done(const std::string & filename) {
 class Comparator {
 public:
     Comparator(const math3d::matrix44 & _pivot) {
-        this->pivot = math3d::vector4(_pivot[0][3], _pivot[1][3], _pivot[2][3]);
+        this->pivot = math3d::vector4(_pivot[3][0], _pivot[3][1], _pivot[3][2]);
     }
 
     Comparator() {}
 
     bool operator()(const math3d::matrix44 & _first, const math3d::matrix44 & _second) {
-        math3d::vector4 first(_first[0][3], _first[1][3], _first[2][3]);
-        math3d::vector4 second(_second[0][3], _second[1][3], _second[2][3]);
+        math3d::vector4 first(_first[3][0], _first[3][1], _first[3][2]);
+        math3d::vector4 second(_second[3][0], _second[3][1], _second[3][2]);
         
         if((first - pivot).size() < (second - pivot).size()) {
             return true;
