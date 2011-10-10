@@ -8,8 +8,8 @@ struct BoundingBox {
     float min_x, min_y, min_z;
 };
 
-struct FullBoundingBox {
-    FullBoundingBox(BoundingBox box) {
+struct FullBoundingBox : public BoundingBox {
+    FullBoundingBox(BoundingBox box) : BoundingBox(box) {
         positions[0] = math3d::vector4(box.max_x, box.max_y, box.max_z);
         positions[1] = math3d::vector4(box.max_x, box.max_y, box.min_z);
         positions[2] = math3d::vector4(box.max_x, box.min_y, box.max_z);

@@ -7,7 +7,7 @@ class LODModels {
 public:
     LODModels(pbge::Model ** _models, float * _distances, int _size) : models(_models), distances(_distances), size(_size) {}
     pbge::Model * forDistance(float dist) {
-        //printf("%f\n", dist);
+        printf("%f\n", dist);
         if(size < 1) return NULL;
         if(dist < distances[0]) {
             return models[0];

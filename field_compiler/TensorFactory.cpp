@@ -219,7 +219,7 @@ void add_block_bounding_box(math3d::matrix44 * block_first, math3d::matrix44 * b
     box->min_x = box->min_y = box->min_z = FLT_MAX;
 
     for(math3d::matrix44 * it = block_first; it < block_last; it++) {
-        float x = (*it)[0][3], y = (*it)[1][3], z = (*it)[2][3];
+        float x = (*it)[3][0], y = (*it)[3][1], z = (*it)[3][2];
         if(x > box->max_x) box->max_x = x;
         if(y > box->max_y) box->max_y = y;
         if(z > box->max_z) box->max_z = z;

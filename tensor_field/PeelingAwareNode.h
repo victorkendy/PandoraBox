@@ -36,9 +36,14 @@ public:
         math3d::matrix44 inveresedViewMatrix = gfx->getViewMatrix().inverse();
         math3d::vector4 cameraPosition(inveresedViewMatrix[0][3], inveresedViewMatrix[1][3], inveresedViewMatrix[2][3]);
         float dist = FLT_MAX;
-        for(int i = 0; i < 8; i++) {
-            float dist_aux = (boundingBox->positions[i] - cameraPosition).size();
-            if(dist_aux < dist) dist = dist_aux;
+        if(cameraIsInBoundingBox(cameraPosition)) {
+            dist = 0.0f;
+        }
+        else {
+            for(int i = 0; i < 8; i++) {
+                float dist_aux = (boundingBox->positions[i] - cameraPosition).size();
+                if(dist_aux < dist) dist = dist_aux;
+            }
         }
         setModel(models->forDistance(dist));
     }
@@ -52,6 +57,15 @@ private:
     pbge::GPUProgram * peelingProgram;
     boost::scoped_ptr<FullBoundingBox> boundingBox;
     LODModels * models;
+
+    bool cameraIsInBoundingBox(const math3d::vector4 & camera_position) {
+        float x = camera_position[0];
+        float y = camera_position[1];
+        float z = camera_position[2];
+        return boundingBox->max_x > x && boundingBox->min_x < x &&
+               boundingBox->max_y > y && boundingBox->min_y < y &&
+               boundingBox->max_z > z && boundingBox->min_z < z;
+    }
 };
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
