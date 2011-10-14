@@ -31,6 +31,11 @@ private:
     void calculateEigenVectorsForNonDiagonalTensor();
 };
 
+struct BoundingBox {
+    float max_x, max_y, max_z;
+    float min_x, min_y, min_z;
+};
+
 class TensorFactory {
 public:
     TensorFactory(unsigned n, float _scale_factor, float _max_entry);
@@ -40,6 +45,7 @@ public:
     void done(const std::string & filename);
 private:
     boost::scoped_array<math3d::matrix44> transforms;
+    boost::scoped_array<BoundingBox> boxes;
 	bool numberOfTensorsIsSet;
 	float scale_factor;
 	float max_entry;

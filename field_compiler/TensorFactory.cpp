@@ -183,7 +183,6 @@ void TensorFactory::done(const std::string & filename) {
     fwrite(&alpha_step, sizeof(float), 1, outputfile);
     write_sorted_transforms(outputfile);
     fclose(outputfile);
-    printf("min_alpha: %f max_alpha: %f alpha_step: %f\n", min_alpha, max_alpha, alpha_step);
 }
 
 class Comparator {
@@ -207,15 +206,10 @@ private:
     math3d::vector4 pivot;
 };
 
-struct BoundingBox {
-    float max_x, max_y, max_z;
-    float min_x, min_y, min_z;
-};
-
 void add_block_bounding_box(math3d::matrix44 * block_first, math3d::matrix44 * block_last, boost::scoped_array<BoundingBox> & bounding_boxes, int * current_box) {
     BoundingBox * box = new BoundingBox;
 
-    box->max_x = box->max_y = box->max_z = FLT_MIN;
+    box->max_x = box->max_y = box->max_z = -FLT_MAX;
     box->min_x = box->min_y = box->min_z = FLT_MAX;
 
     for(math3d::matrix44 * it = block_first; it < block_last; it++) {
@@ -239,7 +233,7 @@ void TensorFactory::write_sorted_transforms(FILE * outputfile) {
     int current_box = 0;
 
     int number_of_boxes = static_cast<int>(ceil(last_position / (double) STEP_SIZE));
-    boost::scoped_array<BoundingBox> boxes(new BoundingBox[number_of_boxes]);
+    boxes.reset(new BoundingBox[number_of_boxes]);
 
     while(current_pos < last_position) {
         math3d::matrix44 * block_first = first;

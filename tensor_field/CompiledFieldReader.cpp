@@ -32,7 +32,7 @@ FieldParent * CompiledFieldReader::generateField(pbge::GraphicAPI * gfx) {
         else {
             size = number_of_tensors - i;
         }
-        pbge::ModelCollection * collection = ellipsoids.createEllipsoids(size, transforms.get() + i, &(boxes[box]));
+        pbge::ModelCollection * collection = ellipsoids.createEllipsoids(size, transforms.get() + i, boxes[box]);
         printf("BOX max x:%f y:%f z:%f min x:%f y:%f z:%f\n", boxes[box].max_x, boxes[box].max_y, boxes[box].max_z, boxes[box].min_x, boxes[box].min_y, boxes[box].min_z);
         parent->addChild(collection);
     }

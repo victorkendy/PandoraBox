@@ -10,7 +10,7 @@ class Ellipsoids {
 public:
     Ellipsoids(pbge::GraphicAPI * gfx, int total_ellipsoids);
 
-    pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox * box);
+    pbge::ModelCollection * createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box);
 
     pbge::GPUProgram * get_peeling_program();
 private:
