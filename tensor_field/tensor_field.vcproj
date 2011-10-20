@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Comparators.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CompiledFieldReader.h"
 				>
 			</File>
