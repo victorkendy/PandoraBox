@@ -4,6 +4,7 @@
 #include <boost/smart_ptr/scoped_ptr.hpp>
 
 #include "TensorFactory.h"
+#include "Comparators.h"
 
 #define TENSOR_FACTORY_PI 3.14159f
 #define STEP_SIZE 5000
@@ -185,27 +186,6 @@ void TensorFactory::done(const std::string & filename) {
     fclose(outputfile);
 }
 
-class Comparator {
-public:
-    Comparator(const math3d::matrix44 & _pivot) {
-        this->pivot = math3d::vector4(_pivot[3][0], _pivot[3][1], _pivot[3][2]);
-    }
-
-    Comparator() {}
-
-    bool operator()(const math3d::matrix44 & _first, const math3d::matrix44 & _second) {
-        math3d::vector4 first(_first[3][0], _first[3][1], _first[3][2]);
-        math3d::vector4 second(_second[3][0], _second[3][1], _second[3][2]);
-        
-        if((first - pivot).size() < (second - pivot).size()) {
-            return true;
-        }
-        return false;
-    }
-private:
-    math3d::vector4 pivot;
-};
-
 void add_block_bounding_box(math3d::matrix44 * block_first, math3d::matrix44 * block_last, boost::scoped_array<BoundingBox> & bounding_boxes, int * current_box) {
     BoundingBox * box = new BoundingBox;
 
@@ -226,7 +206,7 @@ void add_block_bounding_box(math3d::matrix44 * block_first, math3d::matrix44 * b
 }
 
 void TensorFactory::write_sorted_transforms(FILE * outputfile) {
-    Comparator comparator;
+    AlphaComparator alphaComparator;
     math3d::matrix44 * first = transforms.get();
     math3d::matrix44 * last = first + last_position;
     unsigned current_pos = 0;
@@ -238,8 +218,8 @@ void TensorFactory::write_sorted_transforms(FILE * outputfile) {
     while(current_pos < last_position) {
         math3d::matrix44 * block_first = first;
         math3d::matrix44 * block_last = block_first + std::min((unsigned)STEP_SIZE, last_position - current_pos);
-        comparator = Comparator(first[0]);
-        std::sort(first, last, comparator);
+        std::sort(first, last, DistanceComparator(first[0]));
+        std::sort(block_first, block_last, alphaComparator);
         add_block_bounding_box(block_first, block_last, boxes, &current_box);
         current_pos += STEP_SIZE;
         first += STEP_SIZE;

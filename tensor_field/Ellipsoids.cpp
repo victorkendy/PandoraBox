@@ -3,7 +3,6 @@
 #include "math3d/math3d.h"
 
 #include "pbge/pbge.h"
-#include "PeelingAwareNode.h"
 
 #include "Ellipsoids.h"
 
@@ -30,7 +29,7 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx, int total_ellipsoids) {
     this->peeling_program = NULL;
 }
 
-pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box) {
+PeelingAwareCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box) {
     void * texData = tex->getBuffer()->map(pbge::Buffer::WRITE_ONLY);
     memcpy((unsigned char *)texData + this->added_ellipsoids * sizeof(math3d::matrix44), transforms, number_of_ellipsoids * sizeof(math3d::matrix44));
     tex->getBuffer()->unmap();
@@ -41,6 +40,7 @@ pbge::ModelCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoi
 
     pbge::UniformBufferSampler * uniform = ellipsoids->getUniformSet()->getBufferSampler("transforms");
     uniform->setValue(tex);
+    ellipsoids->setTransforms(transforms);
 
     pbge::UniformFloat * base_instance = ellipsoids->getUniformSet()->getFloat("base_instance");
     base_instance->setValue((float)this->added_ellipsoids);

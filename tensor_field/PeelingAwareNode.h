@@ -4,12 +4,14 @@
 #include <cmath>
 #include <cfloat>
 #include <boost/smart_ptr/scoped_ptr.hpp>
+#include <boost/smart_ptr/scoped_array.hpp>
 
 #include "pbge/pbge.h"
 #include "math3d/math3d.h"
 
 #include "BoundingBox.h"
 #include "LODModels.h"
+#include "Comparators.h"
 
 class PeelingAwareNode {
 public:
@@ -17,17 +19,33 @@ public:
     virtual void postRenderPeeling(pbge::GraphicAPI * gfx) = 0;
 };
 
-class PeelingAwareCollection : public pbge::ModelCollection, public PeelingAwareNode {
+class PeelingAwareCollection : public pbge::Node, public PeelingAwareNode {
 public:
-    PeelingAwareCollection(pbge::Model * _model, pbge::GPUProgram * _peelingProgram) : pbge::ModelCollection(_model), peelingProgram(_peelingProgram), models(NULL) {}
-    PeelingAwareCollection(LODModels * _models, pbge::GPUProgram * _peelingProgram) : pbge::ModelCollection(_models->forDistance(0)), peelingProgram(_peelingProgram), models(_models) {}
+    PeelingAwareCollection(pbge::Model * _model, pbge::GPUProgram * _peelingProgram) : peelingProgram(_peelingProgram), models(NULL) {
+        collection.reset(new pbge::ModelCollection(_model));
+    }
+    PeelingAwareCollection(LODModels * _models, pbge::GPUProgram * _peelingProgram) : peelingProgram(_peelingProgram), models(_models) {
+        collection.reset(new pbge::ModelCollection(_models->forDistance(0)));
+    }
+    void setAlphaCorrection(float alpha_correction) {
+        math3d::matrix44 * end = transforms.get() + number_of_instances;
+        math3d::matrix44 * position = std::find_if(transforms.get(), end, LessThanOrEqualTo(alpha_correction - 0.01f));
+        collection->setNumberOfInstances(number_of_instances - (end - position));
+    }
+    void setTransforms(math3d::matrix44 * _transforms) {
+        transforms.reset(new math3d::matrix44[number_of_instances]);
+        memcpy(transforms.get(), _transforms, sizeof(math3d::matrix44) * number_of_instances);
+    }
     void renderPeeling(pbge::GraphicAPI * gfx) {
-        gfx->pushUniforms(getUniformSet());
+        gfx->pushUniforms(collection->getUniformSet());
         gfx->getState()->useProgram(this->peelingProgram);
         gfx->updateState();
 
-        pbge::VBOModel * vboModel = dynamic_cast<pbge::VBOModel *>(getModel());
-        gfx->getDrawController()->drawVBOModel(vboModel, getNumberOfInstances());
+        pbge::VBOModel * vboModel = dynamic_cast<pbge::VBOModel *>(collection->getModel());
+        gfx->getDrawController()->drawVBOModel(vboModel, collection->getNumberOfInstances());
+    }
+    void postRenderPeeling(pbge::GraphicAPI * gfx) {
+        gfx->popUniforms();
     }
     void updatePass(pbge::UpdaterVisitor * visitor, pbge::GraphicAPI * gfx) {
         if(boundingBox == NULL || models == NULL) {
@@ -45,18 +63,52 @@ public:
                 if(dist_aux < dist) dist = dist_aux;
             }
         }
-        setModel(models->forDistance(dist));
+        collection->setModel(models->forDistance(dist));
     }
-    void postRenderPeeling(pbge::GraphicAPI * gfx) {
-        gfx->popUniforms();
+    void postUpdatePass(pbge::UpdaterVisitor * visitor, pbge::GraphicAPI * gfx) {
+        collection->postUpdatePass(visitor, gfx);
+    }
+    void renderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
+        collection->renderPass(visitor, gfx);
+    }
+    void postRenderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
+        collection->postRenderPass(visitor, gfx);
+    }
+    void depthPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
+        collection->depthPass(visitor, gfx);
+    }
+    void postDepthPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
+        collection->postDepthPass(visitor, gfx);
+    }
+    void addChild(pbge::Node * node) {
+        collection->addChild(node);
+    }
+    pbge::Node::node_list & getChildren() {
+        return collection->getChildren();
     }
     void setBoundingBox(BoundingBox box) {
         boundingBox.reset(new FullBoundingBox(box));
+    }
+    void setNumberOfInstances(int instances) {
+        number_of_instances = instances;
+        collection->setNumberOfInstances(instances);
+    }
+    pbge::UniformSet * getUniformSet() {
+        return collection->getUniformSet();
+    }
+    void setRenderPassProgram(pbge::GPUProgram * renderPassProgram) {
+        collection->setRenderPassProgram(renderPassProgram);
+    }
+    void setDepthPassProgram(pbge::GPUProgram * depthPassProgram) {
+        collection->setDepthPassProgram(depthPassProgram);
     }
 private:
     pbge::GPUProgram * peelingProgram;
     boost::scoped_ptr<FullBoundingBox> boundingBox;
     LODModels * models;
+    boost::scoped_ptr<pbge::ModelCollection> collection;
+    boost::scoped_array<math3d::matrix44> transforms;
+    int number_of_instances;
 
     bool cameraIsInBoundingBox(const math3d::vector4 & camera_position) {
         float x = camera_position[0];
@@ -156,6 +208,9 @@ private:
 
     void setAlphaCorrection(float new_alpha_correction) {
         if(alpha_correction != new_alpha_correction) {
+            for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
+                dynamic_cast<PeelingAwareCollection *>(*it)->setAlphaCorrection(alpha_correction);
+            }
             alpha_correction = new_alpha_correction;
             alpha_changed_render = true;
             alpha_changed_peeling = true;
