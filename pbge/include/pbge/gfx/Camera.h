@@ -9,15 +9,18 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
+#include "pbge/collision/BoundingVolumes.h"
 #include "pbge/gfx/GraphicAPI.h"
 #include "pbge/gfx/RenderTarget.h"
 
 namespace pbge {
     class CameraNode;
 
+    /** The Frustum is responsible for calculating the projection matrix
+    */
     class PBGE_EXPORT Frustum {
     public:
-        Frustum():frustumPlanes(new math3d::vector4[6]),frustumPoints(new math3d::vector4[8]),projectionMatrix(new math3d::matrix44) {
+        Frustum():projectionMatrix(new math3d::matrix44) {
         }
 
         ~Frustum();
@@ -36,53 +39,88 @@ namespace pbge {
         // If you are really good send me a ready to use matrix
         void setProjectionMatrix (const math3d::matrix44 & newProjection);
         
-        // Send the projection matrix to the current active opengl matrix
-        void loadProjection (GraphicAPI * ogl) const;
+        const math3d::matrix44 getProjectionMatrix() const {
+            return *projectionMatrix;
+        }
     private:
-        void updateFrustumPlanes();
-        void updatePerspectivePoints();
-        void updateOrthoPoints();
-        void updateFrustumPoints();
-        boost::scoped_array<math3d::vector4> frustumPlanes;
-        boost::scoped_array<math3d::vector4> frustumPoints;
         boost::scoped_ptr<math3d::matrix44> projectionMatrix;
     };
 
 
+    /** The Pandora's Box default camera.
+
+        This camera class specifies a camera transformation in object space
+    */
     class PBGE_EXPORT Camera {
     public:
         Frustum frustum;
         
-        // The default camera points to (0,0,-1) and has the up vector (0,1,0) 
+        /** The default camera constructor.
+            
+            This constructor initializes the camera looking at (0,0,-1) and 
+            with an up vector pointing to (0,1,0)
+        */
         Camera ();
-        // Sets the camera with the required view transformation
+
+        /** Constructor with a specified camera transformation.
+        */
         Camera (const math3d::vector4 & up, const math3d::vector4 & front);
         
+        /** Releases all the camera resources.
+        */
         ~Camera();
 
-        // Changes the camera view transformation
+        /** Calculates a new view transformation.
+
+            This method calculates a view transformation that represents a camera
+            looking to the direction pointed by front and with up vector given by up
+
+            @param up the camera up direction
+            @param front the direction the camera is pointing
+        */
         void lookAt (const math3d::vector4 & up, const math3d::vector4 & front);
 
-        // Changes where de renderer will render the scene
+        /** Sets new viewport to be used by this camera
+
+            The viewport is currently not used
+        */
         void setViewport (Viewport * port) {
             viewport = port;
         }
         
-        // Load the view transformation to opengl and sets the render target
-        virtual void setCamera (GraphicAPI * ogl);
-        // unset the render target
-        virtual void unsetCamera (GraphicAPI * ogl);
+        /** Loads the view and projection transformation into the GraphicAPI.
+
+            @param gfx The api that should be used
+        */
+        virtual void setCamera (GraphicAPI * gfx);
+
+        /** Clear the viewport specific changes.
+        */
+        virtual void unsetCamera (GraphicAPI * gfx);
         
+        /** Appends the camera to the node.
+        */
         void setParent(CameraNode * node) { parent = node; }
 
+        /** Returns the camera parent on the scene graph.
+        */
         CameraNode * getParent() { return parent; }
 
+        /** Returns the current view transformation.
+        */
         const math3d::matrix44 & getViewTransform() {
             return *viewTransform;
+        }
+
+        /** Returns the bounding frustum that is used for the frustum culling.
+        */
+        BoundingFrustum * getBoundingFrustum() {
+            return &boundingFrustum;
         }
     protected:
         CameraNode * parent;
         Viewport * viewport;
+        BoundingFrustum boundingFrustum;
         boost::scoped_ptr<math3d::vector4> upVector;
         boost::scoped_ptr<math3d::vector4> frontVector;
         boost::scoped_ptr<math3d::vector4> sideVector;

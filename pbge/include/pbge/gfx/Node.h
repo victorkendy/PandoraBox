@@ -9,6 +9,7 @@
 #include "math3d/math3d.h"
 
 #include "pbge/core/core.h"
+#include "pbge/collision/BoundingVolumes.h"
 
 
 namespace pbge {
@@ -53,6 +54,10 @@ namespace pbge {
 
         void setSceneGraphIndex(int index) {
             sceneGraphIndex = index;
+        }
+
+        virtual AABB * getBoundingVolume() {
+            return NULL;
         }
     private:
         int sceneGraphIndex;

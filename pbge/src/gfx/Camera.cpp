@@ -36,12 +36,15 @@ void Camera::setCamera(GraphicAPI * ogl) {
     if(is_valid == 0) 
         setCameraTransformation();
     *viewTransform = *cameraTransformation;
+    math3d::matrix44 projection = frustum.getProjectionMatrix();
     if(this->parent != NULL) {
         *viewTransform *= this->parent->getViewTransformation().inverse();
     }
     ogl->loadViewMatrix(*viewTransform);
-    
-    this->frustum.loadProjection(ogl);
+    ogl->loadProjectionMatrix(projection);
+    // I know it seems backwards but that is the way the projection * view is usually called
+    math3d::matrix44 viewProjection = projection * (*viewTransform);
+    boundingFrustum.setViewProjection(viewProjection);
     if(this->viewport)
         this->viewport->setRenderTarget(ogl);
 }
@@ -73,14 +76,12 @@ void Frustum::setFrustum(const float &left, const float &right,
                          const float &bottom, const float &top,
                          const float &near, const float &far) {
     *projectionMatrix = math3d::frustumMatrix(left, right, bottom, top, near, far);
-    updateFrustumPlanes();
 }
 
 void Frustum::setOrtho(const float &left, const float &right, 
                        const float &bottom, const float &top, 
                        const float &near, const float &far) {
     *projectionMatrix = math3d::orthographicMatrix(left, right, bottom, top, near, far);
-    updateFrustumPlanes();
 }
 
 
@@ -93,42 +94,4 @@ void Frustum::setPerspective(const float &fovy, const float &aspect, const float
     (*projectionMatrix)[2][2] = (near + far) / near_far;
     (*projectionMatrix)[3][2] = -1.0f;
     (*projectionMatrix)[2][3] = 2 * near * far / near_far;
-    updateFrustumPlanes();
 }
-
-void Frustum::loadProjection(GraphicAPI * ogl) const {
-    ogl->loadProjectionMatrix(*projectionMatrix);
-}
-
-// TODO: Implement the methods below
-void Frustum::updatePerspectivePoints() {
-
-}
-
-void Frustum::updateOrthoPoints() {
-
-}
-
-void Frustum::updateFrustumPoints() {
-
-}
-
-// Extract the frustum planes from the projectionMatrix
-void Frustum::updateFrustumPlanes() {
-    /*
-    // Left plane
-    frustumPlanes[0] = normalizePlane(projectionMatrix[3] + projectionMatrix[0]);
-    // Right plane
-    frustumPlanes[1] = normalizePlane(projectionMatrix[3] - projectionMatrix[0]);
-    // Bottom plane
-    frustumPlanes[2] = normalizePlane(projectionMatrix[3] + projectionMatrix[1]);
-    // Top plane
-    frustumPlanes[3] = normalizePlane(projectionMatrix[3] - projectionMatrix[1]);
-    // Near plane
-    frustumPlanes[4] = normalizePlane(projectionMatrix[3] + projectionMatrix[2]);
-    // Far plane
-    frustumPlanes[5] = normalizePlane(projectionMatrix[3] - projectionMatrix[2]);
-    */
-}
-
-

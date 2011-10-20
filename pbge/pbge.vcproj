@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\gfx\collision\BoundingVolumes.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\gfx\states\BoundProgram.cpp"
 				>
 			</File>
@@ -304,6 +308,10 @@
 			</File>
 			<File
 				RelativePath=".\include\pbge\gfx\processors\BlitToFramebuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\pbge\collision\BoundingVolumes.h"
 				>
 			</File>
 			<File
