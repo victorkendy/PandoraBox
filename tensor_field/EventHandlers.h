@@ -23,6 +23,8 @@ public:
             case 'E': cam_node->translate(0, 0, -1.0f); break;
             case 'Z': field_parent->stepForward(); break;
             case 'X': field_parent->stepBackward(); break;
+            case 'O': field_parent->scaleDown(); break;
+            case 'P': field_parent->scaleUp(); break;
         }
         return true;
     }

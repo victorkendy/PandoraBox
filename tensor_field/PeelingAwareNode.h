@@ -5,6 +5,7 @@
 #include <cfloat>
 #include <boost/smart_ptr/scoped_ptr.hpp>
 #include <boost/smart_ptr/scoped_array.hpp>
+#include <algorithm>
 
 #include "pbge/pbge.h"
 #include "math3d/math3d.h"
@@ -130,31 +131,24 @@ private:
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
 public:
-    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step) : alpha_step(_alpha_step) {
+    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step) : alpha_step(_alpha_step), scale(1.0f) {
         min_alpha = std::max(_min_alpha - _alpha_step, 0.0f);
         max_alpha = std::min(_max_alpha + _alpha_step, 1.0f);
         this->alpha_correction = 0;
         resetAlphaCorrection();
-        this->alpha_changed_render = true;
-        this->alpha_changed_peeling = true;
-        uniform_alpha_correction = NULL;
         this->renderProgram = _renderProgram;
-        this->uniforms = new pbge::UniformSet();
+        uniform_alpha_correction = getUniformSet()->getFloat("alpha_correction");
+        uniform_scale = getUniformSet()->getFloat("scale");
+        uniform_scale->setValue(scale);
     }
     
     void renderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
         gfx->pushUniforms(getUniformSet());
         gfx->getState()->useProgram(this->renderProgram);
         gfx->updateState();
-
-        if(uniform_alpha_correction == NULL) {
-            uniform_alpha_correction = getUniformSet()->getFloat("alpha_correction");
-        }
         
-        if(alpha_changed_render) {
-            alpha_changed_render = false;
-            uniform_alpha_correction->setValue(alpha_correction);
-        }
+        uniform_alpha_correction->setValue(alpha_correction);
+        uniform_scale->setValue(scale);
     }
 
     void postRenderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
@@ -166,14 +160,8 @@ public:
         gfx->getState()->useProgram(this->renderProgram);
         gfx->updateState();
 
-        if(uniform_alpha_correction == NULL) {
-            uniform_alpha_correction = getUniformSet()->getFloat("alpha_correction");
-        }
-        
-        if(alpha_changed_peeling) {
-            alpha_changed_peeling = false;
-            uniform_alpha_correction->setValue(alpha_correction);
-        }
+        uniform_alpha_correction->setValue(alpha_correction);
+        uniform_scale->setValue(scale);
     }
 
     void postRenderPeeling(pbge::GraphicAPI * gfx) {
@@ -196,22 +184,30 @@ public:
         setAlphaCorrection(new_alpha_correction);
     }
 
+    void scaleUp() {
+        scale += 0.05f;
+    }
+
+    void scaleDown() {
+        scale = std::max(scale - 0.05f, 0.0f);
+    }
+
     void resetAlphaCorrection() {
         setAlphaCorrection(min_alpha);
     }
 private:
     float alpha_correction;
-    bool alpha_changed_render;
-    bool alpha_changed_peeling;
     pbge::UniformFloat * uniform_alpha_correction;
+    pbge::UniformFloat * uniform_scale;
     pbge::GPUProgram * renderProgram;
-    pbge::UniformSet * uniforms;
+    pbge::UniformSet uniforms;
     float min_alpha;
     float max_alpha;
     float alpha_step;
+    float scale;
 
     pbge::UniformSet * getUniformSet() {
-        return uniforms;
+        return &uniforms;
     }
 
     void setAlphaCorrection(float new_alpha_correction) {
@@ -220,8 +216,6 @@ private:
                 dynamic_cast<PeelingAwareCollection *>(*it)->setAlphaCorrection(alpha_correction);
             }
             alpha_correction = new_alpha_correction;
-            alpha_changed_render = true;
-            alpha_changed_peeling = true;
         }
     }
 };

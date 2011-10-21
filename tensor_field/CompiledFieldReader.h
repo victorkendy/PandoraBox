@@ -15,9 +15,10 @@ public:
     FieldParent * generateField(pbge::GraphicAPI * gfx);
 private:
     boost::scoped_array<math3d::matrix44> transforms;
-    unsigned number_of_tensors;
+    int number_of_tensors;
     int number_of_boxes;
     boost::scoped_array<BoundingBox> boxes;
+    boost::scoped_array<int> transforms_per_box;
     unsigned step_size;
     float min_alpha;
     float max_alpha;

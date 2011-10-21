@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TensorData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TensorFactory.h"
 				>
 			</File>

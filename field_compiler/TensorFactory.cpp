@@ -7,7 +7,7 @@
 #include "Comparators.h"
 
 #define TENSOR_FACTORY_PI 3.14159f
-#define STEP_SIZE 5000
+#define STEP_SIZE 100
 
 Tensor3DProcessor::Tensor3DProcessor(float * _tensor) {
     this->tensor = _tensor;
@@ -128,14 +128,18 @@ float * Tensor3DProcessor::getEigenvector(int index) {
     else return this->eigenvector3;
 }
 
-TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry) : 
+TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry, int row, int column, int slice) : 
     numberOfTensorsIsSet(true),
-    transforms(new math3d::matrix44[n]),
     scale_factor(_scale_factor),
     max_entry(_max_entry),
-    last_position(0),
+    number_of_transforms(0),
     min_alpha(FLT_MAX),
-    max_alpha(0.0f) {}
+    max_alpha(0.0f) {
+        rows = row/STEP_SIZE + 1;
+        columns = column/STEP_SIZE + 1;
+        slices = slice/STEP_SIZE + 1;
+        boxes = std::vector<BoundingBox>(rows*columns*slices);
+    }
 
 float TensorFactory::calculateRoundedAlpha(float * eigenvalues) {
     float alpha = floor(100.0f * calculateAlpha(eigenvalues))/100.0f;
@@ -153,79 +157,45 @@ float TensorFactory::calculateAlpha(float * eigenvalues) {
     return 1.0f - (3*e[2])/(e[0] + e[1] + e[2]);
 }
 
-void TensorFactory::addTensor(float *tensor, int order, int slices, const math3d::matrix44 & transformation) {
+void TensorFactory::addTensor(TensorData & tensor, int order, int slices) {
 	if(!this->numberOfTensorsIsSet) throw std::exception("Number of tensors to be created is not set. Call createTensors first");
 	if(order == 3) {
-        Tensor3DProcessor * processor = new Tensor3DProcessor(tensor);
-        float * eigenvalues = processor->getEigenValues();
+        Tensor3DProcessor processor(tensor.getValues());
+        float * eigenvalues = processor.getEigenValues();
         float * eigenvectors[3];
         for(int i = 0; i < 3; i++) {
-            eigenvectors[i] = processor->getEigenvector(i);
+            eigenvectors[i] = processor.getEigenvector(i);
         }
-        math3d::matrix44 * rotation = new math3d::matrix44(eigenvectors[0][0], eigenvectors[1][0], eigenvectors[2][0], 0,
-                                                           eigenvectors[0][1], eigenvectors[1][1], eigenvectors[2][1], 0,
-                                                           eigenvectors[0][2], eigenvectors[1][2], eigenvectors[2][2], 0,
-                                                           0, 0, 0, 1);
+        math3d::matrix44 rotation(eigenvectors[0][0], eigenvectors[1][0], eigenvectors[2][0], 0,
+                                  eigenvectors[0][1], eigenvectors[1][1], eigenvectors[2][1], 0,
+                                  eigenvectors[0][2], eigenvectors[1][2], eigenvectors[2][2], 0,
+                                  0, 0, 0, 1);
 		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
-		math3d::matrix44 transform = transformation * (*rotation) * scale;
+        math3d::matrix44 transform = tensor.getTranslationToPosition() * rotation * scale;
         transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], calculateRoundedAlpha(eigenvalues)));
-        this->transforms[this->last_position++] = transform.transpose();
+        int row_index = tensor.get_row()/STEP_SIZE;
+        int column_index = tensor.get_column()/STEP_SIZE;
+        int slice_index = tensor.get_slice()/STEP_SIZE;
+        this->boxes[column_index + row_index*columns + slice_index*columns*rows].insert(transform.transpose());
+        number_of_transforms++;
     }
 }
 
 void TensorFactory::done(const std::string & filename) {
     FILE * outputfile = fopen(filename.c_str(), "wb");
-    unsigned step_size = STEP_SIZE;
     float alpha_step = std::max(floor((max_alpha - min_alpha) * 10.0f) / 100.0f, 0.01f);
-    fwrite(&last_position, sizeof(unsigned), 1, outputfile);
-    fwrite(&step_size, sizeof(unsigned), 1, outputfile);
+    fwrite(&number_of_transforms, sizeof(int), 1, outputfile);
     fwrite(&min_alpha, sizeof(float), 1, outputfile);
     fwrite(&max_alpha, sizeof(float), 1, outputfile);
     fwrite(&alpha_step, sizeof(float), 1, outputfile);
-    write_sorted_transforms(outputfile);
+    write_transforms(outputfile);
     fclose(outputfile);
 }
 
-void add_block_bounding_box(math3d::matrix44 * block_first, math3d::matrix44 * block_last, boost::scoped_array<BoundingBox> & bounding_boxes, int * current_box) {
-    BoundingBox * box = new BoundingBox;
-
-    box->max_x = box->max_y = box->max_z = -FLT_MAX;
-    box->min_x = box->min_y = box->min_z = FLT_MAX;
-
-    for(math3d::matrix44 * it = block_first; it < block_last; it++) {
-        float x = (*it)[3][0], y = (*it)[3][1], z = (*it)[3][2];
-        if(x > box->max_x) box->max_x = x;
-        if(y > box->max_y) box->max_y = y;
-        if(z > box->max_z) box->max_z = z;
-        if(x < box->min_x) box->min_x = x;
-        if(y < box->min_y) box->min_y = y;
-        if(z < box->min_z) box->min_z = z;
-    }
-
-    bounding_boxes[(*current_box)++] = *box;
-}
-
-void TensorFactory::write_sorted_transforms(FILE * outputfile) {
-    AlphaComparator alphaComparator;
-    math3d::matrix44 * first = transforms.get();
-    math3d::matrix44 * last = first + last_position;
-    unsigned current_pos = 0;
-    int current_box = 0;
-
-    int number_of_boxes = static_cast<int>(ceil(last_position / (double) STEP_SIZE));
-    boxes.reset(new BoundingBox[number_of_boxes]);
-
-    while(current_pos < last_position) {
-        math3d::matrix44 * block_first = first;
-        math3d::matrix44 * block_last = block_first + std::min((unsigned)STEP_SIZE, last_position - current_pos);
-        std::sort(first, last, DistanceComparator(first[0]));
-        std::sort(block_first, block_last, alphaComparator);
-        add_block_bounding_box(block_first, block_last, boxes, &current_box);
-        current_pos += STEP_SIZE;
-        first += STEP_SIZE;
-    }
-    
+void TensorFactory::write_transforms(FILE * outputfile) {
+    int number_of_boxes = std::count_if(boxes.begin(),boxes.end(),std::mem_fun_ref(&BoundingBox::should_write));    
     fwrite(&number_of_boxes, sizeof(int), 1, outputfile);
-    fwrite(boxes.get(), sizeof(BoundingBox), number_of_boxes, outputfile);
-    fwrite(transforms.get(), sizeof(math3d::matrix44), last_position, outputfile);
+    std::for_each(boxes.begin(), boxes.end(), std::bind2nd(std::mem_fun_ref(&BoundingBox::write_transformation_count),outputfile));
+    std::for_each(boxes.begin(), boxes.end(), std::bind2nd(std::mem_fun_ref(&BoundingBox::write_bouding_box),outputfile));
+    std::for_each(boxes.begin(), boxes.end(), std::bind2nd(std::mem_fun_ref(&BoundingBox::write_transformations),outputfile));
 }

@@ -24,17 +24,19 @@ void AnalyzeReader::loadField(const std::string & _filename) {
 void AnalyzeReader::generateField(const std::string & outputfile) {
 	read_field_with_right_type();
     int count = 0;
-	int number_of_tensors = this->header.dime.dim[1]*this->header.dime.dim[2]*this->header.dime.dim[3];
-	float scale_factor = std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])/(2*this->max_entry);
-	scale_factor *= 2;
-    this->tensorFactory.reset(new TensorFactory(number_of_tensors, scale_factor, this->max_entry));
+    int cols = this->header.dime.dim[1];
+    int rows = this->header.dime.dim[2];
+    int slices = this->header.dime.dim[3];
+	int number_of_tensors = cols*rows*slices;
+	float scale_factor = std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])/(this->max_entry);
+    this->tensorFactory.reset(new TensorFactory(number_of_tensors, scale_factor, this->max_entry, rows, cols, slices));
 	std::for_each(this->tensors.begin(), this->tensors.end(), std::bind1st(std::mem_fun(&AnalyzeReader::add_tensor), this));
 	this->tensorFactory->done(outputfile);
 }
 
 void AnalyzeReader::add_tensor(TensorData tensor) {
 	if(!tensor.is_zero()){
-		this->tensorFactory->addTensor(tensor.getValues(), 3, 16, tensor.getTranslationToPosition());
+		this->tensorFactory->addTensor(tensor, 3, 16);
 	}
 }
 

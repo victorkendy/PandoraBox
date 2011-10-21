@@ -27,6 +27,7 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx, int total_ellipsoids) {
     this->render_pass_program = NULL;
     this->depth_pass_program = NULL;
     this->peeling_program = NULL;
+    this->transformation_shader = NULL;
 }
 
 PeelingAwareCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipsoids, math3d::matrix44 * transforms, BoundingBox box) {
@@ -52,39 +53,56 @@ PeelingAwareCollection * Ellipsoids::createEllipsoids(unsigned number_of_ellipso
     return ellipsoids;
 }
 
-pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
-    if(this->render_pass_program == NULL) {
-        this->render_pass_program = gfx->getFactory()->createProgramFromString(
+pbge::Shader * Ellipsoids::get_transformation_shader() {
+    if(this->transformation_shader == NULL) {
+        this->transformation_shader = gfx->getFactory()->createShaderFromString(
             "#version 150\n"
 		    "uniform samplerBuffer transforms;\n"
             "uniform float base_instance;\n"
+            "uniform float scale;\n"
             "uniform mat4 pbge_ModelViewMatrix;\n"
-            "uniform mat4 pbge_ProjectionMatrix;\n"
-		    "out vec4 position;\n"
-		    "out vec3 normal;\n"
-		    "out vec4 lightPosition;\n"
             "in  vec4 pbge_Vertex;\n"
-		    "void main() {\n"
-		    "   const vec4 light_position = vec4(16,16,16,1);\n"
+            "void calc_transformations(out vec4 view_position, out vec3 view_normal, out vec4 color, out mat4 view_transform) {\n"
             "   int index = (int(base_instance) + gl_InstanceID) * 4;\n"
+            "   vec4 vertex = vec4(pbge_Vertex.xyz * scale, 1.0);\n"
 		    "   vec4 col1 = texelFetch(transforms, index);\n"
 		    "   vec4 col2 = texelFetch(transforms, index + 1);\n"
 		    "   vec4 col3 = texelFetch(transforms, index + 2);\n"
 		    "   vec4 col4 = texelFetch(transforms, index + 3);\n"
-		    "   vec4 color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
-		    "   col1 = vec4(col1.xyz, 0);\n"
+		    "   color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
+            "   col1 = vec4(col1.xyz, 0);\n"
 		    "   col2 = vec4(col2.xyz, 0);\n"
 		    "   col3 = vec4(col3.xyz, 0);\n"
 		    "   col4 = vec4(col4.xyz, 1);\n"
 		    "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
-		    "   mat4 t = pbge_ModelViewMatrix * transformation;\n"
-		    "   vec4 _normal = inverse(transpose(t)) * pbge_Vertex;\n"
-		    "   normal = normalize(_normal.xyz);\n"
-		    "   position = t * pbge_Vertex;\n"
-		    "   lightPosition = t * light_position;\n"
+		    "   view_transform = pbge_ModelViewMatrix * transformation;\n"
+		    "   vec4 _normal = inverse(transpose(view_transform)) * pbge_Vertex;\n"
+		    "   view_normal = normalize(_normal.xyz);\n"
+		    "   view_position = view_transform * vertex;\n"
+            "}",
+            pbge::Shader::VERTEX_SHADER);
+    }
+    return this->transformation_shader;
+}
+
+pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
+    if(this->render_pass_program == NULL) {
+        pbge::Shader * vertex_shader = gfx->getFactory()->createShaderFromString(
+            "#version 150\n"
+            "uniform mat4 pbge_ProjectionMatrix;\n"
+            "out vec4 position;\n"
+		    "out vec3 normal;\n"
+		    "out vec4 lightPosition;\n"
+		    "void calc_transformations(out vec4 view_position, out vec3 view_normal, out vec4 color, out mat4 view_tranform);\n"
+            "void main() {\n"
+		    "   mat4 view_transform;\n"
+            "   const vec4 light_position = vec4(16,16,16,1);\n"
+            "   calc_transformations(position, normal, gl_FrontColor, view_transform);\n"
+            "   lightPosition = view_transform * light_position;\n"
 		    "   gl_Position = pbge_ProjectionMatrix * position;\n"
-		    "   gl_FrontColor = color;\n"
 		    "}",
+            pbge::Shader::VERTEX_SHADER);
+        pbge::Shader * frag_shader = gfx->getFactory()->createShaderFromString(
             "uniform float alpha_correction;\n"
             "in vec4 position;\n"
 		    "in vec3 normal;\n"
@@ -97,7 +115,17 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
 		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, alpha);\n"
-		    "}"
+		    "}",
+            pbge::Shader::FRAGMENT_SHADER);
+        std::vector<pbge::Shader *> vertex_shaders;
+        std::vector<pbge::Shader *> fragment_shaders;
+
+        vertex_shaders.push_back(vertex_shader);
+        vertex_shaders.push_back(get_transformation_shader());
+        fragment_shaders.push_back(frag_shader);
+        this->render_pass_program = gfx->getFactory()->createProgram(
+            vertex_shaders,
+            fragment_shaders
             );
     }
     return this->render_pass_program;
@@ -105,66 +133,56 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
 
 pbge::GPUProgram * Ellipsoids::get_depth_pass_program() {
     if(this->depth_pass_program == NULL) {
-        this->depth_pass_program = gfx->getFactory()->createProgramFromString(
-            "#version 140\n"
-		    "#extension GL_EXT_gpu_shader4: enable\n"
-            "#extension GL_ARB_draw_instanced: enable\n"
-            "uniform samplerBuffer transforms;\n"
-            "uniform float base_instance;\n"
-            "uniform mat4 pbge_ModelViewProjectionMatrix;\n"
-            "in  vec4 pbge_Vertex;\n"
+        pbge::Shader * vertex_shader = gfx->getFactory()->createShaderFromString(
+            "#version 150\n"
+            "uniform mat4 pbge_ProjectionMatrix;\n"
+            "out vec4 position;\n"
+		    "out vec3 normal;\n"
+		    "out vec4 lightPosition;\n"
+		    "void calc_transformations(out vec4 view_position, out vec3 view_normal, out vec4 color, out mat4 view_tranform);\n"
             "void main() {\n"
-            "   int index = (int(base_instance) + gl_InstanceIDARB) * 4;\n"
-            "   vec4 col1 = texelFetch(transforms, index);\n"
-            "   vec4 col2 = texelFetch(transforms, index + 1);\n"
-            "   vec4 col3 = texelFetch(transforms, index + 2);\n"
-            "   vec4 col4 = texelFetch(transforms, index + 3);\n"
-		    "   col1 = vec4(col1.xyz, 0);\n"
-		    "   col2 = vec4(col2.xyz, 0);\n"
-		    "   col3 = vec4(col3.xyz, 0);\n"
-		    "   col4 = vec4(col4.xyz, 1);\n"
-            "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
-            "   gl_Position = pbge_ModelViewProjectionMatrix * transformation * pbge_Vertex;\n"
-            "}", "");
+		    "   mat4 view_transform;\n"
+            "   calc_transformations(position, normal, gl_FrontColor, view_transform);\n"
+            "   gl_Position = pbge_ProjectionMatrix * position;\n"
+		    "}",
+            pbge::Shader::VERTEX_SHADER);
+        pbge::Shader * frag_shader = gfx->getFactory()->createShaderFromString(
+            "",
+            pbge::Shader::FRAGMENT_SHADER);
+        std::vector<pbge::Shader *> vertex_shaders;
+        std::vector<pbge::Shader *> fragment_shaders;
+
+        vertex_shaders.push_back(vertex_shader);
+        vertex_shaders.push_back(get_transformation_shader());
+        fragment_shaders.push_back(frag_shader);
+        this->depth_pass_program = gfx->getFactory()->createProgram(
+            vertex_shaders,
+            fragment_shaders
+            );
     }
     return this->depth_pass_program;
 }
 
 pbge::GPUProgram * Ellipsoids::get_peeling_program() {
     if(this->peeling_program == NULL) {
-        this->peeling_program = gfx->getFactory()->createProgramFromString(
+        pbge::Shader * vertex_shader = gfx->getFactory()->createShaderFromString(
             "#version 150\n"
-		    "uniform samplerBuffer transforms;\n"
-            "uniform float base_instance;\n"
-            "uniform mat4 pbge_ModelViewMatrix;\n"
-            "uniform mat4 pbge_ProjectionMatrix;\n"
+		    "uniform mat4 pbge_ProjectionMatrix;\n"
 		    "out vec4 position;\n"
             "out vec4 nposition;\n"
 		    "out vec3 normal;\n"
 		    "out vec4 lightPosition;\n"
-            "in  vec4 pbge_Vertex;\n"
-		    "void main() {\n"
+            "void calc_transformations(out vec4 view_position, out vec3 view_normal, out vec4 color, out mat4 view_tranform);\n"
+            "void main() {\n"
+            "   mat4 view_transform;\n"
+            "   calc_transformations(position, normal, gl_FrontColor, view_transform);\n"
 		    "   const vec4 light_position = vec4(16,16,16,1);\n"
-            "   int index = (int(base_instance) + gl_InstanceID) * 4;\n"
-		    "   vec4 col1 = texelFetch(transforms, index);\n"
-		    "   vec4 col2 = texelFetch(transforms, index + 1);\n"
-		    "   vec4 col3 = texelFetch(transforms, index + 2);\n"
-		    "   vec4 col4 = texelFetch(transforms, index + 3);\n"
-		    "   vec4 color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
-		    "   col1 = vec4(col1.xyz, 0);\n"
-		    "   col2 = vec4(col2.xyz, 0);\n"
-		    "   col3 = vec4(col3.xyz, 0);\n"
-		    "   col4 = vec4(col4.xyz, 1);\n"
-		    "   mat4 transformation = mat4(col1, col2, col3, col4);\n"
-		    "   mat4 t = pbge_ModelViewMatrix * transformation;\n"
-		    "   vec4 _normal = inverse(transpose(t)) * pbge_Vertex;\n"
-		    "   normal = normalize(_normal.xyz);\n"
-		    "   position = t * pbge_Vertex;\n"
-		    "   lightPosition = t * light_position;\n"
+            "   lightPosition = view_transform * light_position;\n"
             "   nposition = pbge_ProjectionMatrix * position;\n"
 		    "   gl_Position = nposition;\n"
-		    "   gl_FrontColor = color;\n"
 		    "}",
+            pbge::Shader::VERTEX_SHADER);
+        pbge::Shader * frag_shader = gfx->getFactory()->createShaderFromString(
             "in vec4 position;\n"
 		    "in vec3 normal;\n"
 		    "in vec4 lightPosition;\n"
@@ -185,7 +203,17 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
 		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, alpha);\n"
-		    "}"
+		    "}",
+            pbge::Shader::FRAGMENT_SHADER);
+        std::vector<pbge::Shader *> vertex_shaders;
+        std::vector<pbge::Shader *> fragment_shaders;
+
+        vertex_shaders.push_back(vertex_shader);
+        vertex_shaders.push_back(get_transformation_shader());
+        fragment_shaders.push_back(frag_shader);
+        this->peeling_program = gfx->getFactory()->createProgram(
+            vertex_shaders,
+            fragment_shaders
             );
     }
     return this->peeling_program;

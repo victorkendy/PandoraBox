@@ -6,35 +6,9 @@
 #include <boost/smart_ptr/scoped_ptr.hpp>
 
 #include "TensorFactory.h"
+#include "TensorData.h"
 
 #include "vtkmsqAnalyzeHeader.h"
-
-struct Field_Dimensions {
-    Field_Dimensions(float * _pixdim, float _fielddim1, float _fielddim2, float _fielddim3) {
-        pixdim[0] = _pixdim[1];
-        pixdim[1] = _pixdim[2];
-        pixdim[2] = _pixdim[3];
-        fielddim[0] = _fielddim1;
-        fielddim[1] = _fielddim2;
-        fielddim[2] = _fielddim3;
-    }
-    float pixdim[3];
-    float fielddim[3];
-};
-
-class TensorData {
-public:
-    TensorData(int _row, int _column, int _slice, Field_Dimensions _dim): 
-                row(_row), column(_column), slice(_slice), dim(_dim) {}
-	void setComponent(const int & component, const float & value) {this->values[component] = value;}
-	const math3d::matrix44 getTranslationToPosition();
-	float * getValues() {return values;}
-	bool is_zero();
-private:
-	int row,column,slice;
-    Field_Dimensions dim;
-	float values[6];
-};
 
 class AnalyzeReader {
 public:
