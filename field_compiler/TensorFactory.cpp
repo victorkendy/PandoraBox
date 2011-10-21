@@ -7,7 +7,7 @@
 #include "Comparators.h"
 
 #define TENSOR_FACTORY_PI 3.14159f
-#define STEP_SIZE 100
+#define STEP_SIZE 10
 
 Tensor3DProcessor::Tensor3DProcessor(float * _tensor) {
     this->tensor = _tensor;

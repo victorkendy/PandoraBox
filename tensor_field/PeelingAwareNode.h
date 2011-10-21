@@ -49,20 +49,17 @@ public:
         gfx->popUniforms();
     }
     void updatePass(pbge::UpdaterVisitor * visitor, pbge::GraphicAPI * gfx) {
-        if(boundingBox == NULL || models == NULL) {
+        if(models == NULL) {
             return;
         }
-        math3d::matrix44 inveresedViewMatrix = gfx->getViewMatrix().inverse();
-        math3d::vector4 cameraPosition(inveresedViewMatrix[0][3], inveresedViewMatrix[1][3], inveresedViewMatrix[2][3]);
+        math3d::matrix44 inveretedViewMatrix = gfx->getViewMatrix().inverse();
+        math3d::vector4 cameraPosition(inveretedViewMatrix[0][3], inveretedViewMatrix[1][3], inveretedViewMatrix[2][3], 1.0f);
         float dist = FLT_MAX;
-        if(cameraIsInBoundingBox(cameraPosition)) {
+        if(boundingAABB.contains(cameraPosition)) {
             dist = 0.0f;
         }
         else {
-            for(int i = 0; i < 8; i++) {
-                float dist_aux = (boundingBox->positions[i] - cameraPosition).size();
-                if(dist_aux < dist) dist = dist_aux;
-            }
+            dist = boundingAABB.distance(cameraPosition);
         }
         collection->setModel(models->forDistance(dist));
     }
@@ -88,10 +85,9 @@ public:
         return collection->getChildren();
     }
     void setBoundingBox(BoundingBox box) {
-        boundingBox.reset(new FullBoundingBox(box));
         boundingAABB.setDimensions(
-            boundingBox->min_x, boundingBox->min_y, boundingBox->min_z,
-            boundingBox->max_x, boundingBox->max_y, boundingBox->max_z, pbge::AABB::WORLD_SPACE);
+            box.min_x, box.min_y, box.min_z,
+            box.max_x, box.max_y, box.max_z, pbge::AABB::WORLD_SPACE);
     }
     void setNumberOfInstances(int instances) {
         number_of_instances = instances;
@@ -113,20 +109,10 @@ public:
 private:
     pbge::AABB boundingAABB;
     pbge::GPUProgram * peelingProgram;
-    boost::scoped_ptr<FullBoundingBox> boundingBox;
     LODModels * models;
     boost::scoped_ptr<pbge::ModelCollection> collection;
     boost::scoped_array<math3d::matrix44> transforms;
     int number_of_instances;
-
-    bool cameraIsInBoundingBox(const math3d::vector4 & camera_position) {
-        float x = camera_position[0];
-        float y = camera_position[1];
-        float z = camera_position[2];
-        return boundingBox->max_x > x && boundingBox->min_x < x &&
-               boundingBox->max_y > y && boundingBox->min_y < y &&
-               boundingBox->max_z > z && boundingBox->min_z < z;
-    }
 };
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {

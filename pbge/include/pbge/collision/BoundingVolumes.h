@@ -58,6 +58,13 @@ namespace pbge {
         */
         float distance(const math3d::vector4 & point);
 
+        /** Checks if point is in the AABB.
+
+            @param point a vector of the form vector4(x,y,z,1.0f)
+            @return true if point is in the ABB, false otherwise.
+        */
+        bool contains(const math3d::vector4 & point);
+
         /** calculates on result the AABB tha encloses this and other.
         **/
         void compose(AABB * other, AABB * result);

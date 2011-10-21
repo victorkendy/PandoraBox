@@ -70,6 +70,15 @@ float AABB::distance(const math3d::vector4 & point) {
     return (point - nearestPoint).size();
 }
 
+bool AABB::contains(const math3d::vector4 & point) {
+    for(int i = 0; i < 3; i++) {
+        if((*maxCoord)[i] < point[i] || (*minCoord)[i] > point[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // Frustum AABB collision procedure
 // Implementation based on the code present on http://www.flipcode.com/archives/Frustum_Culling.shtml
 bool AABB::frustumCullingTest(BoundingFrustum *bf) {
