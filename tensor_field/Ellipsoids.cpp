@@ -15,10 +15,10 @@ Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx, int total_ellipsoids) {
     _models[4] = pbge::Geometrics::createSphere(1.0f, 3, _gfx);
     _models[5] = pbge::Geometrics::createSphere(1.0f, 2, _gfx);
     float * distances = new float[4];
-    distances[0] = 20.0f;
-    distances[1] = 60.0f;
-    distances[2] = 80.0f;
-    distances[3] = 90.0f;
+    distances[0] = 10.0f;
+    distances[1] = 20.0f;
+    distances[2] = 35.0f;
+    distances[3] = 60.0f;
     distances[4] = 100.0f;
     this->models = new LODModels(_models, distances, 6);
     this->gfx = _gfx;
