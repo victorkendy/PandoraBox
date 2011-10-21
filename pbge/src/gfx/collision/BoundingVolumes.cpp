@@ -65,7 +65,7 @@ void AABB::update(const math3d::matrix44 &worldTransform) {
     // else it's already in world coordinate
 }
 
-void AABB::distance(const math3d::vector4 & point) {
+float AABB::distance(const math3d::vector4 & point) {
     math3d::vector4 nearestPoint = math3d::Max(*minCoord, math3d::Min(point, *maxCoord));
     return (point - nearestPoint).size();
 }
