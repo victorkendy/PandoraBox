@@ -51,6 +51,13 @@ namespace pbge {
         */
         void update(const math3d::matrix44 & worldTransform);
 
+        /** Calculates the distance between the AABB and the point.
+
+            @param point a vector of the form vector4(x,y,z,1.0f)
+            @return the distance
+        */
+        float distance(const math3d::vector4 & point);
+
         /** calculates on result the AABB tha encloses this and other.
         **/
         void compose(AABB * other, AABB * result);
