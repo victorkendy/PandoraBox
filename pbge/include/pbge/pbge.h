@@ -11,6 +11,8 @@
 #include "pbge/core/EventHandler.h"
 #include "pbge/core/Window.h"
 
+#include "pbge/collision/BoundingVolumes.h"
+
 #include "pbge/gfx/Buffer.h"
 #include "pbge/gfx/Light.h"
 #include "pbge/gfx/Model.h"

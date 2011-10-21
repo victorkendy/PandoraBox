@@ -12,7 +12,7 @@ namespace pbge {
 
     class PBGE_EXPORT BoundingFrustum {
     public:
-        BoundingFrustum() : planes(new math3d::vector4[6]) {}
+        BoundingFrustum();
 
         /** updates the frustum planes.
         **/
@@ -35,6 +35,8 @@ namespace pbge {
             OBJECT_SPACE = 100,
             WORLD_SPACE
         } CoordinateSpace;
+
+        AABB();
 
         AABB(float minx, float miny, float minz, float maxx, float maxy, float maxz, CoordinateSpace space);
         

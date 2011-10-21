@@ -85,7 +85,7 @@ void Renderer::renderWithCamera(Node * root, Camera * camera) {
     pbge::cond_for_each(
         sceneProcessors.begin(),
         sceneProcessors.end(),
-        boost::bind(&SceneProcessor::process, _1, ogl.get(), this),
+        boost::bind(&SceneProcessor::process, _1, ogl.get(), this, camera),
         std::mem_fun(&SceneProcessor::isActive));
     camera->unsetCamera(ogl.get());
 }

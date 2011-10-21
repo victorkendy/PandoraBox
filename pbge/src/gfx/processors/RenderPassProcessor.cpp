@@ -7,7 +7,8 @@
 
 using namespace pbge;
 
-void RenderPassProcessor::process(GraphicAPI * gfx, Renderer * renderer) {
+void RenderPassProcessor::process(GraphicAPI * gfx, Renderer * renderer, Camera* camera) {
     Node * node = renderer->getScene()->getSceneGraphRoot();
+    visitor.setCurrenCamera(camera);
     visitor.visit(node, gfx);
 }

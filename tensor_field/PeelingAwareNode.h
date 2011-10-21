@@ -88,6 +88,9 @@ public:
     }
     void setBoundingBox(BoundingBox box) {
         boundingBox.reset(new FullBoundingBox(box));
+        boundingAABB.setDimensions(
+            boundingBox->min_x, boundingBox->min_y, boundingBox->min_z,
+            boundingBox->max_x, boundingBox->max_y, boundingBox->max_z, pbge::AABB::WORLD_SPACE);
     }
     void setNumberOfInstances(int instances) {
         number_of_instances = instances;
@@ -102,7 +105,12 @@ public:
     void setDepthPassProgram(pbge::GPUProgram * depthPassProgram) {
         collection->setDepthPassProgram(depthPassProgram);
     }
+
+    pbge::AABB * getBoundingVolume() {
+        return &boundingAABB;
+    }
 private:
+    pbge::AABB boundingAABB;
     pbge::GPUProgram * peelingProgram;
     boost::scoped_ptr<FullBoundingBox> boundingBox;
     LODModels * models;

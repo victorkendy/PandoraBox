@@ -5,7 +5,7 @@
 
 const int PEELING_STEPS = 3;
 
-void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * renderer) {
+void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * renderer, pbge::Camera * camera) {
     std::map<std::string, pbge::Texture2D*> & renderables = renderer->getRenderables();
     pbge::DepthBufferController * depth = gfx->depthBufferController();
     pbge::UniformSampler2D* depthSampler = 
@@ -13,6 +13,7 @@ void DepthPeelingProcessor::process(pbge::GraphicAPI * gfx, pbge::Renderer * ren
     pbge::UniformSampler2D* colorSampler = 
             dynamic_cast<pbge::UniformSampler2D*>(gfx->getUniformValue(pbge::UniformInfo("color", pbge::SAMPLER_2D)));
     DepthPeelingVisitor peelingVisitor;
+    peelingVisitor.setCurrenCamera(camera);
     pbge::BlendController * blend = gfx->getBlendController();
     // set the first depth texture to the texture of the previous processor
     depthSampler->setValue(renderables["depth"]);

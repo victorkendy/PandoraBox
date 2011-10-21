@@ -4,6 +4,7 @@
 namespace pbge {
     class GraphicAPI;
     class Renderer;
+    class Camera;
 
     class SceneProcessor {
     public:
@@ -21,7 +22,7 @@ namespace pbge {
             renderer executes the update traversal on the scene graph.
             
         */
-        virtual void process(GraphicAPI * gfx, Renderer * renderer) = 0;
+        virtual void process(GraphicAPI * gfx, Renderer * renderer, Camera * camera) = 0;
 
         /** The initialization check method 
 

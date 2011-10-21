@@ -10,7 +10,7 @@ namespace pbge {
     class PBGE_EXPORT RenderPassProcessor : public SceneProcessor {
     public:
         void initialize(GraphicAPI * gfx, Renderer * renderer) {}
-        void process(GraphicAPI * gfx, Renderer * renderer);
+        void process(GraphicAPI * gfx, Renderer * renderer, Camera * camera);
         bool isInitialized(GraphicAPI * gfx) {
             return true;
         }
