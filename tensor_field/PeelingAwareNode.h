@@ -55,12 +55,7 @@ public:
         math3d::matrix44 inveretedViewMatrix = gfx->getViewMatrix().inverse();
         math3d::vector4 cameraPosition(inveretedViewMatrix[0][3], inveretedViewMatrix[1][3], inveretedViewMatrix[2][3], 1.0f);
         float dist = FLT_MAX;
-        if(boundingAABB.contains(cameraPosition)) {
-            dist = 0.0f;
-        }
-        else {
-            dist = boundingAABB.distance(cameraPosition);
-        }
+        dist = boundingAABB.distance(cameraPosition);
         collection->setModel(models->forDistance(dist));
     }
     void postUpdatePass(pbge::UpdaterVisitor * visitor, pbge::GraphicAPI * gfx) {

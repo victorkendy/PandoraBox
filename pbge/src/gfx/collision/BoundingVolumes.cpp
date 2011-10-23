@@ -70,19 +70,9 @@ float AABB::distance(const math3d::vector4 & point) {
     return (point - nearestPoint).size();
 }
 
-bool AABB::contains(const math3d::vector4 & point) {
-    for(int i = 0; i < 3; i++) {
-        if((*maxCoord)[i] < point[i] || (*minCoord)[i] > point[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
 // Frustum AABB collision procedure
 // Implementation based on the code present on http://www.flipcode.com/archives/Frustum_Culling.shtml
 bool AABB::frustumCullingTest(BoundingFrustum *bf) {
-    return true;
     math3d::vector4 vertices[8];
     bool result = true;
     vertices[0] = *minCoord;
@@ -93,7 +83,7 @@ bool AABB::frustumCullingTest(BoundingFrustum *bf) {
     vertices[5] = math3d::vector4((*maxCoord)[0], (*minCoord)[1], (*maxCoord)[2], 1.0f);
     vertices[6] = math3d::vector4((*minCoord)[0], (*maxCoord)[1], (*maxCoord)[2], 1.0f);
     vertices[7] = *maxCoord;
-    std::cout << "testing" << std::endl;
+    //std::cout << "testing" << std::endl;
     for(int i = 0; i < 6; i++) {
         int incount = 8;
         math3d::vector4 plane = bf->getPlane(i);
@@ -109,7 +99,7 @@ bool AABB::frustumCullingTest(BoundingFrustum *bf) {
             break;
         }
     }
-    std::cout << "resultado: " << result << std::endl;
+    //std::cout << "resultado: " << result << std::endl;
     return result;
 }
 
