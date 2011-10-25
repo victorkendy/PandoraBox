@@ -91,7 +91,7 @@ struct BoundingBox {
 
 class TensorFactory {
 public:
-    TensorFactory(unsigned n, float _scale_factor, float _max_entry, int row, int column, int slice);
+    TensorFactory(unsigned n, float _scale_factor, float _max_entry, int row, int column, int slice, float pix_dim[4]);
 
 	// slices is not being used yet!
     void addTensor(TensorData & tensor, int order, int slices);
@@ -105,6 +105,7 @@ private:
     float max_alpha;
     int number_of_transforms;
     int rows, columns, slices;
+    float dim[3];
 
     void write_transforms(FILE * outputfile);
     float calculateRoundedAlpha(float * eigenvalues);

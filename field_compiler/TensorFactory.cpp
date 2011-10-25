@@ -128,7 +128,7 @@ float * Tensor3DProcessor::getEigenvector(int index) {
     else return this->eigenvector3;
 }
 
-TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry, int row, int column, int slice) : 
+TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry, int row, int column, int slice, float pix_dim[4]) : 
     numberOfTensorsIsSet(true),
     scale_factor(_scale_factor),
     max_entry(_max_entry),
@@ -139,6 +139,9 @@ TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry, 
         columns = column/STEP_SIZE + 1;
         slices = slice/STEP_SIZE + 1;
         boxes = std::vector<BoundingBox>(rows*columns*slices);
+        dim[0] = pix_dim[1] * column;
+        dim[1] = pix_dim[2] * row;
+        dim[2] = pix_dim[3] * slice;
     }
 
 float TensorFactory::calculateRoundedAlpha(float * eigenvalues) {
@@ -184,7 +187,9 @@ void TensorFactory::addTensor(TensorData & tensor, int order, int slices) {
 void TensorFactory::done(const std::string & filename) {
     FILE * outputfile = fopen(filename.c_str(), "wb");
     float alpha_step = std::max(floor((max_alpha - min_alpha) * 10.0f) / 100.0f, 0.01f);
+    
     fwrite(&number_of_transforms, sizeof(int), 1, outputfile);
+    fwrite(dim, sizeof(float), 3, outputfile);
     fwrite(&min_alpha, sizeof(float), 1, outputfile);
     fwrite(&max_alpha, sizeof(float), 1, outputfile);
     fwrite(&alpha_step, sizeof(float), 1, outputfile);

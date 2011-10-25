@@ -112,7 +112,7 @@ private:
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
 public:
-    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step) : alpha_step(_alpha_step), scale(1.0f) {
+    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step, float dim[3]) : alpha_step(_alpha_step), scale(1.0f) {
         min_alpha = std::max(_min_alpha - _alpha_step, 0.0f);
         max_alpha = std::min(_max_alpha + _alpha_step, 1.0f);
         this->alpha_correction = 0;
@@ -121,6 +121,13 @@ public:
         uniform_alpha_correction = getUniformSet()->getFloat("alpha_correction");
         uniform_scale = getUniformSet()->getFloat("scale");
         uniform_scale->setValue(scale);
+        for(int i = 0; i < 3; i++) {
+            this->dimensions[i] = dim[i];
+        }
+    }
+
+    float * getDim() {
+        return dimensions;
     }
     
     void renderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
@@ -184,6 +191,7 @@ private:
     float max_alpha;
     float alpha_step;
     float scale;
+    float dimensions[3];
 
     pbge::UniformSet * getUniformSet() {
         return &uniforms;

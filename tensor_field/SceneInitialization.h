@@ -26,6 +26,7 @@ public:
         int cam_node_name;
         // FIXME: remove the state change line
         scene = new pbge::SceneGraph(new pbge::TransformationNode);
+        loadField(gfx);
         createSceneTransformations(scene);
         createSceneLights(scene, cam_node->getSceneGraphIndex());
         createSceneModels(scene, gfx);
@@ -39,12 +40,13 @@ public:
         return scene;
     }
 private:
-    std::string filename;
-    FieldParent * fieldParent;
-    void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
+    void loadField(pbge::GraphicAPI * gfx) {
         CompiledFieldReader reader;
         reader.read(filename.c_str());
         this->fieldParent = reader.generateField(gfx);
+    }
+
+    void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
         light_parent->addChild(this->fieldParent);
     }
 
@@ -71,10 +73,13 @@ private:
 
 		cam_trans_node = graph->appendChildTo(cam_rot_node, pbge::TransformationNode::translation(0.0f, 1.0f, 5.0f));
 
-		cam_node = graph->appendChildTo(cam_trans_node, pbge::TransformationNode::translation(0.0f, 0.0f, 0.0f));
+        cam_node = graph->appendChildTo(cam_trans_node, pbge::TransformationNode::translation(0.0f, 0.0f, fieldParent->getDim()[2]));
 
         sphereParent = graph->appendChildTo(child, pbge::TransformationNode::translation(-1.5f, 0.0f, 0.0f));
     }
+
+    std::string filename;
+    FieldParent * fieldParent;
     pbge::Node * light_parent;
     pbge::Node * child;
     pbge::Node * circle_parent;

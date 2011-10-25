@@ -17,6 +17,7 @@ private:
     boost::scoped_array<math3d::matrix44> transforms;
     int number_of_tensors;
     int number_of_boxes;
+    float dim[3];
     boost::scoped_array<BoundingBox> boxes;
     boost::scoped_array<int> transforms_per_box;
     unsigned step_size;

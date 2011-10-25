@@ -10,6 +10,7 @@ void CompiledFieldReader::read(const std::string & filename) {
 
     if(inputfile == NULL) throw 1;
     fread(&number_of_tensors, sizeof(int), 1, inputfile);
+    fread(dim, sizeof(float), 3, inputfile);
     fread(&min_alpha, sizeof(float), 1, inputfile);
     fread(&max_alpha, sizeof(float), 1, inputfile);
     fread(&alpha_step, sizeof(float), 1, inputfile);
@@ -24,7 +25,7 @@ void CompiledFieldReader::read(const std::string & filename) {
 
 FieldParent * CompiledFieldReader::generateField(pbge::GraphicAPI * gfx) {
     Ellipsoids ellipsoids(gfx, this->number_of_tensors);
-    FieldParent * parent = new FieldParent(ellipsoids.get_peeling_program(), min_alpha, max_alpha, alpha_step);
+    FieldParent * parent = new FieldParent(ellipsoids.get_peeling_program(), min_alpha, max_alpha, alpha_step, dim);
     for(int i = 0, box = 0; i < number_of_tensors && box < number_of_boxes; i += transforms_per_box[box], box++) {
         PeelingAwareCollection * collection = ellipsoids.createEllipsoids(transforms_per_box[box], transforms.get() + i, boxes[box]);
         printf("BOX max x:%f y:%f z:%f min x:%f y:%f z:%f\n", boxes[box].max_x, boxes[box].max_y, boxes[box].max_z, boxes[box].min_x, boxes[box].min_y, boxes[box].min_z);
