@@ -48,6 +48,21 @@ private:
 
     void createSceneModels(pbge::SceneGraph * graph, pbge::GraphicAPI * gfx) {
         light_parent->addChild(this->fieldParent);
+        
+        float * dim = fieldParent->getDim();
+        pbge::VertexBufferBuilder builder(6);
+        pbge::VertexAttribBuilder vertex = builder.addAttrib(4, pbge::VertexAttrib::VERTEX);
+        std::vector<unsigned short> v_indices;
+        for(int i = 0; i < 6; i++) {
+            v_indices.push_back(i);
+        }
+        builder.on(vertex).pushValue(-dim[0]/2, 0, 0, 1)
+                          .pushValue(dim[0]/2, 0, 0, 1)
+                          .pushValue(0, -dim[1]/2, 0, 1)
+                          .pushValue(0, dim[1]/2, 0, 1)
+                          .pushValue(0, 0, -dim[2]/2, 1)
+                          .pushValue(0, 0, dim[2]/2, 1);
+        light_parent->addChild(new pbge::ModelInstance(new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_LINES)));
     }
 
     void createSceneLights(pbge::SceneGraph * graph, int cam_node_name) {
