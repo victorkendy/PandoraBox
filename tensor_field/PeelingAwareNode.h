@@ -125,7 +125,6 @@ public:
     
     void renderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
         gfx->pushUniforms(getUniformSet());
-        gfx->getState()->useProgram(this->renderProgram);
         gfx->updateState();
         
         uniform_alpha_correction->setValue(alpha_correction);
@@ -138,7 +137,6 @@ public:
 
     void renderPeeling(pbge::GraphicAPI * gfx) {
         gfx->pushUniforms(getUniformSet());
-        gfx->getState()->useProgram(this->renderProgram);
         gfx->updateState();
 
         uniform_alpha_correction->setValue(alpha_correction);
