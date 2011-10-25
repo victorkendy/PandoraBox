@@ -1,5 +1,6 @@
 #include <string>
 #include <cstring>
+#include <vector>
 #include "math3d/math3d.h"
 
 #include "pbge/pbge.h"
@@ -7,20 +8,20 @@
 #include "Ellipsoids.h"
 
 Ellipsoids::Ellipsoids(pbge::GraphicAPI * _gfx, int total_ellipsoids) {
-    pbge::Model ** _models = new pbge::Model*[5];
-    _models[0] = pbge::Geometrics::createSphere(1.0f, 10, _gfx);
-    _models[1] = pbge::Geometrics::createSphere(1.0f, 7, _gfx);
-    _models[2] = pbge::Geometrics::createSphere(1.0f, 5, _gfx);
-    _models[3] = pbge::Geometrics::createSphere(1.0f, 4, _gfx);
-    _models[4] = pbge::Geometrics::createSphere(1.0f, 3, _gfx);
-    _models[5] = pbge::Geometrics::createSphere(1.0f, 2, _gfx);
-    float * distances = new float[4];
-    distances[0] = 10.0f;
-    distances[1] = 20.0f;
-    distances[2] = 35.0f;
-    distances[3] = 60.0f;
-    distances[4] = 100.0f;
-    this->models = new LODModels(_models, distances, 6);
+    std::vector<pbge::Model*> _models;
+    _models.push_back(pbge::Geometrics::createSphere(1.0f, 10, _gfx));
+    _models.push_back(pbge::Geometrics::createSphere(1.0f, 7, _gfx));
+    _models.push_back(pbge::Geometrics::createSphere(1.0f, 5, _gfx));
+    _models.push_back(pbge::Geometrics::createSphere(1.0f, 4, _gfx));
+    _models.push_back(pbge::Geometrics::createSphere(1.0f, 3, _gfx));
+    _models.push_back(pbge::Geometrics::createSphere(1.0f, 2, _gfx));
+    std::vector<float> distances;
+    distances.push_back(10.0f);
+    distances.push_back(20.0f);
+    distances.push_back(35.0f);
+    distances.push_back(60.0f);
+    distances.push_back(100.0f);
+    this->models = new LODModels(_models, distances);
     this->gfx = _gfx;
     this->tex = gfx->getFactory()->createTextureBuffer(total_ellipsoids * sizeof(math3d::matrix44));
     this->added_ellipsoids = 0;
