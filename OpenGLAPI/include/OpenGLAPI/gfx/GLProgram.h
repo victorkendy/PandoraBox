@@ -20,7 +20,7 @@ namespace pbge {
 
     class GLProgram : public GPUProgram{
     public:
-        GLProgram() : programID(0), linked(false) {
+        GLProgram() : programID(0), linked(false), currentVertexBuffer(NULL){
         }
 
         void bind(GraphicAPI * ogl);
@@ -80,6 +80,8 @@ namespace pbge {
         bool linked;
 
         GLuint programID;
+
+        VertexBuffer * currentVertexBuffer;
 
         std::vector<GLShader*> attachedShaders;
 

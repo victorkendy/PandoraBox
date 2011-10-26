@@ -62,6 +62,7 @@ void GLProgram::unbind(GraphicAPI * ogl){
     std::for_each(attrBinders.begin(),
                   attrBinders.end(), 
                   std::mem_fun(&AttrBinder::unbind));
+    currentVertexBuffer = NULL;
     glUseProgram(0);
 }
 
@@ -79,9 +80,12 @@ void GLProgram::updateUniforms(GraphicAPI * gfx) {
 }
 
 void GLProgram::setAttributes(VertexBuffer * attr) {
-    std::for_each(attrBinders.begin(), 
-                  attrBinders.end(), 
-                  std::bind2nd(std::mem_fun(&AttrBinder::bind), attr));
+    if(attr != currentVertexBuffer) {
+        currentVertexBuffer = attr;
+        std::for_each(attrBinders.begin(), 
+                      attrBinders.end(), 
+                      std::bind2nd(std::mem_fun(&AttrBinder::bind), attr));
+    }
 }
 
 bool GLProgram::link(GraphicAPI * gfx){
