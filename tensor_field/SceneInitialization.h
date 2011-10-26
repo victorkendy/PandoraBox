@@ -24,7 +24,6 @@ public:
         window->getRenderer()->addPostProcessor(new pbge::BlitToFramebuffer);
         pbge::SceneGraph * scene;
         int cam_node_name;
-        // FIXME: remove the state change line
         scene = new pbge::SceneGraph(new pbge::TransformationNode);
         loadField(gfx);
         createSceneTransformations(scene);
