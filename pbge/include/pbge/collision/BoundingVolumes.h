@@ -72,6 +72,7 @@ namespace pbge {
         boost::scoped_ptr<math3d::vector4> orMaxCoord;
         boost::scoped_ptr<math3d::vector4> minCoord;
         boost::scoped_ptr<math3d::vector4> maxCoord;
+        boost::scoped_array<math3d::vector4> vertices;
         CoordinateSpace coordSpace;
     };
 }

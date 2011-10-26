@@ -33,13 +33,15 @@ AABB::AABB():
 orMinCoord(new math3d::vector4),
 orMaxCoord(new math3d::vector4),
 minCoord(new math3d::vector4),
-maxCoord(new math3d::vector4){}
+maxCoord(new math3d::vector4),
+vertices(new math3d::vector4[8]){}
 
 AABB::AABB(float minx, float miny, float minz, float maxx, float maxy, float maxz, AABB::CoordinateSpace space):
 orMinCoord(new math3d::vector4),
 orMaxCoord(new math3d::vector4),
 minCoord(new math3d::vector4),
-maxCoord(new math3d::vector4) {
+maxCoord(new math3d::vector4),
+vertices(new math3d::vector4[8]){
     setDimensions(minx, miny, minz, maxx, maxy, maxz, space);
 }
 
@@ -50,6 +52,15 @@ void AABB::setDimensions(float minx, float miny, float minz, float maxx, float m
     if(coordSpace == AABB::WORLD_SPACE) {
         *minCoord = *orMinCoord;
         *maxCoord = *orMaxCoord;
+        // a AABB in world space does not need to be recalculated every frame
+        vertices[0] = *minCoord;
+        vertices[1] = math3d::vector4((*maxCoord)[0], (*minCoord)[1], (*minCoord)[2], 1.0f);
+        vertices[2] = math3d::vector4((*maxCoord)[0], (*maxCoord)[1], (*minCoord)[2], 1.0f);
+        vertices[3] = math3d::vector4((*minCoord)[0], (*maxCoord)[1], (*minCoord)[2], 1.0f);
+        vertices[4] = math3d::vector4((*minCoord)[0], (*minCoord)[1], (*maxCoord)[2], 1.0f);
+        vertices[5] = math3d::vector4((*maxCoord)[0], (*minCoord)[1], (*maxCoord)[2], 1.0f);
+        vertices[6] = math3d::vector4((*minCoord)[0], (*maxCoord)[1], (*maxCoord)[2], 1.0f);
+        vertices[7] = *maxCoord;
     }
 }
 
@@ -73,16 +84,7 @@ float AABB::distance(const math3d::vector4 & point) {
 // Frustum AABB collision procedure
 // Implementation based on the code present on http://www.flipcode.com/archives/Frustum_Culling.shtml
 bool AABB::frustumCullingTest(BoundingFrustum *bf) {
-    math3d::vector4 vertices[8];
     bool result = true;
-    vertices[0] = *minCoord;
-    vertices[1] = math3d::vector4((*maxCoord)[0], (*minCoord)[1], (*minCoord)[2], 1.0f);
-    vertices[2] = math3d::vector4((*maxCoord)[0], (*maxCoord)[1], (*minCoord)[2], 1.0f);
-    vertices[3] = math3d::vector4((*minCoord)[0], (*maxCoord)[1], (*minCoord)[2], 1.0f);
-    vertices[4] = math3d::vector4((*minCoord)[0], (*minCoord)[1], (*maxCoord)[2], 1.0f);
-    vertices[5] = math3d::vector4((*maxCoord)[0], (*minCoord)[1], (*maxCoord)[2], 1.0f);
-    vertices[6] = math3d::vector4((*minCoord)[0], (*maxCoord)[1], (*maxCoord)[2], 1.0f);
-    vertices[7] = *maxCoord;
     //std::cout << "testing" << std::endl;
     for(int i = 0; i < 6; i++) {
         int incount = 8;
