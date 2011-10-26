@@ -61,9 +61,10 @@ private:
                           .pushValue(0, dim[1]/2, 0, 1)
                           .pushValue(0, 0, -dim[2]/2, 1)
                           .pushValue(0, 0, dim[2]/2, 1);
-        pbge::ModelInstance * grid = new pbge::ModelInstance(new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_LINES));
+        pbge::ModelInstance * grid = new pbge::ModelInstance(
+            new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_LINES));
         pbge::GPUProgram * grid_program = gfx->getFactory()->createProgramFromString(
-            "uniform vec4 pbge_Vertex;\n"
+            "in vec4 pbge_Vertex;\n"
             "uniform mat4 pbge_ModelViewProjectionMatrix;\n"
             "void main() {\n"
             "   gl_Position = pbge_ModelViewProjectionMatrix * pbge_Vertex;\n"
