@@ -56,19 +56,21 @@ void GLDrawController::drawVBOModel(VBOModel *model) {
 
 // Instanced Rendering optimization if possible
 void GLDrawController::drawVBOModel(VBOModel *model, int times) {
-    bindVBO(model->getVBO());
-    if(coreSupported) {
-        glDrawArraysInstanced(model->getPrimitive(), 0, model->getVBO()->getNVertices(), times);
-    } else if(arbSupported) {
-        glDrawArraysInstancedARB(model->getPrimitive(), 0, model->getVBO()->getNVertices(), times);
-    } else if(extSupported) {
-        // ......
-    } else {
-        for(int i = 0; i < times; i++) {
-            glDrawArrays(model->getPrimitive(), 0, model->getVBO()->getNVertices());
+    if(times > 0) {
+        bindVBO(model->getVBO());
+        if(coreSupported) {
+            glDrawArraysInstanced(model->getPrimitive(), 0, model->getVBO()->getNVertices(), times);
+        } else if(arbSupported) {
+            glDrawArraysInstancedARB(model->getPrimitive(), 0, model->getVBO()->getNVertices(), times);
+        } else if(extSupported) {
+            // ......
+        } else {
+            for(int i = 0; i < times; i++) {
+                glDrawArrays(model->getPrimitive(), 0, model->getVBO()->getNVertices());
+            }
         }
+        unbindVBO(model->getVBO());
     }
-    unbindVBO(model->getVBO());
 }
 
 
