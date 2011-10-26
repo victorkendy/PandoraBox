@@ -63,15 +63,17 @@ void GLProgram::unbind(GraphicAPI * ogl){
                   attrBinders.end(), 
                   std::mem_fun(&AttrBinder::unbind));
     currentVertexBuffer = NULL;
+    std::for_each(uniforms.begin(), uniforms.end(), std::mem_fun_ref(&UniformBindAndInfo::reset));
     glUseProgram(0);
 }
 
 void GLProgram::updateUniforms(GraphicAPI * gfx) {
-    std::vector<UniformInfo>::iterator it;
+    std::vector<UniformBindAndInfo>::iterator it;
     for(it = uniforms.begin(); it != uniforms.end(); it++) {
-        UniformValue * value = gfx->searchUniform(*it);
-        if(value != NULL) {
-            value->bindValueOn(this, *it, gfx);
+        UniformValue * value = gfx->searchUniform(it->getInfo());
+        if(it->shouldUpdate(value)) {
+            it->update(value);
+            value->bindValueOn(this, it->getInfo(), gfx);
         }
     }
     std::for_each(builtInUniforms.begin(), 

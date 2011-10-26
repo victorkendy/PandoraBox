@@ -18,6 +18,33 @@ namespace pbge {
     class AttrBinder;
     class BuiltInUniformBinder;
 
+    class UniformBindAndInfo {
+    public:
+        UniformBindAndInfo(const UniformInfo & _info) {
+            info = _info;
+            value = NULL;
+            stamp = 0;
+        }
+        UniformInfo getInfo() {
+            return info;
+        }
+        bool shouldUpdate(UniformValue * newValue) {
+            return newValue != NULL && ( (newValue != value) || (stamp != newValue->getStamp()) );
+        }
+        void update(UniformValue * newValue) {
+            stamp = newValue->getStamp();
+            value = newValue;
+        }
+        void reset() {
+            stamp = 0;
+            value = NULL;
+        }
+    private:
+        UniformInfo info;
+        UniformValue * value;
+        unsigned long stamp;
+    };
+
     class GLProgram : public GPUProgram{
     public:
         GLProgram() : programID(0), linked(false), currentVertexBuffer(NULL){
@@ -89,7 +116,7 @@ namespace pbge {
 
         std::vector<std::string> output;
 
-        std::vector<UniformInfo> uniforms;
+        std::vector<UniformBindAndInfo> uniforms;
 
         std::vector<AttrBinder *> attrBinders;
 

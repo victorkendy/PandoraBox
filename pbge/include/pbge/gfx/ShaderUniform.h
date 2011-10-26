@@ -104,6 +104,7 @@ namespace pbge {
         UniformValue() {
             numberOfElements = 0;
             valueStorage = NULL;
+            stamp = 1;
         }
 
         ~UniformValue() {
@@ -111,6 +112,10 @@ namespace pbge {
                 free(valueStorage);
             }
             numberOfElements = 0;
+        }
+
+        unsigned long getStamp() {
+            return stamp;
         }
 
         virtual UniformType getType() = 0;
@@ -126,6 +131,12 @@ namespace pbge {
             }
             return ((unsigned char *)(valueStorage)) + (index * getTypeSize());
         }
+
+        void incrementStamp() {
+            stamp = ((stamp+1 > 0) ? stamp + 1 : 1);
+        }
+
+        unsigned long stamp;
 
         const unsigned getNumberOfElements() const {
             return numberOfElements;
@@ -178,6 +189,7 @@ namespace pbge {
             valueAtIndex[1] = y;
             valueAtIndex[2] = z;
             valueAtIndex[3] = w;
+            incrementStamp();
         }
         
         void setValue(const float & x, const float & y, const float & z, const float & w) {
@@ -214,6 +226,7 @@ namespace pbge {
             values[0] = x;
             values[1] = y;
             values[2] = z;
+            incrementStamp();
         }
         
         void setValue(const float & x, const float & y, const float & z) {
@@ -245,6 +258,7 @@ namespace pbge {
             float * values = static_cast<float *>(getValueAt(index));
             values[0] = x;
             values[1] = y;
+            incrementStamp();
         }
 
         void setValue(const float & x, const float & y) {
@@ -275,6 +289,7 @@ namespace pbge {
         void setValueAt(unsigned index, const float & x) {
             float * value = static_cast<float *>(getValueAt(0));
             *value = x;
+            incrementStamp();
         }
         
         void setValue(const float & v) {
@@ -291,6 +306,7 @@ namespace pbge {
         }
         void setValue(TextureBuffer * tex) {
             this->texture = tex;
+            incrementStamp();
         }
         UniformType getType() { return BUFFER_SAMPLER; }
 
@@ -309,6 +325,7 @@ namespace pbge {
         }
         void setValue(Texture1D * tex) {
             this->texture = tex;
+            incrementStamp();
         }
         UniformType getType() { return SAMPLER_1D; }
 
@@ -328,6 +345,7 @@ namespace pbge {
 
         void setValue(Texture2D * value) {
             this->texture = value;
+            incrementStamp();
         }
         
         UniformType getType() { return SAMPLER_2D; }
@@ -382,6 +400,7 @@ namespace pbge {
             values[13] = a13;
             values[14] = a23;
             values[15] = a33;
+            incrementStamp();
         }
 
         void setValue(const math3d::matrix44 & matrix) {
@@ -401,6 +420,7 @@ namespace pbge {
             values[13] = matrix[1][3];
             values[14] = matrix[2][3];
             values[15] = matrix[3][3];
+            incrementStamp();
         }
 
         UniformType getType() { return FLOAT_MAT4; }
