@@ -51,26 +51,34 @@ private:
         float * dim = fieldParent->getDim();
         pbge::VertexBufferBuilder builder(6);
         pbge::VertexAttribBuilder vertex = builder.addAttrib(4, pbge::VertexAttrib::VERTEX);
-        std::vector<unsigned short> v_indices;
-        for(int i = 0; i < 6; i++) {
-            v_indices.push_back(i);
-        }
-        builder.on(vertex).pushValue(-dim[0]/2, 0, 0, 1)
-                          .pushValue(dim[0]/2, 0, 0, 1)
-                          .pushValue(0, -dim[1]/2, 0, 1)
-                          .pushValue(0, dim[1]/2, 0, 1)
-                          .pushValue(0, 0, -dim[2]/2, 1)
-                          .pushValue(0, 0, dim[2]/2, 1);
+        builder.on(vertex).pushValue(-dim[0], 0, 0, 1)
+                          .pushValue(dim[0], 0, 0, 1)
+                          .pushValue(0, -dim[1], 0, 1)
+                          .pushValue(0, dim[1], 0, 1)
+                          .pushValue(0, 0, -dim[2], 1)
+                          .pushValue(0, 0, dim[2], 1);
+        pbge::VertexAttribBuilder color = builder.addAttrib(4, pbge::VertexAttrib::COLOR);
+        builder.on(color).pushValue(1, 0, 0, 1)
+                         .pushValue(1, 0, 0, 1)
+                         .pushValue(0, 1, 0, 1)
+                         .pushValue(0, 1, 0, 1)
+                         .pushValue(0, 0, 1, 1)
+                         .pushValue(0, 0, 1, 1);
         pbge::ModelInstance * grid = new pbge::ModelInstance(
             new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_LINES));
         pbge::GPUProgram * grid_program = gfx->getFactory()->createProgramFromString(
+            "#version 150\n"
             "in vec4 pbge_Vertex;\n"
+            "in vec4 pbge_Color;\n"
+            "out vec4 color;\n"
             "uniform mat4 pbge_ModelViewProjectionMatrix;\n"
             "void main() {\n"
+            "   color = pbge_Color;\n"
             "   gl_Position = pbge_ModelViewProjectionMatrix * pbge_Vertex;\n"
             "}",
+            "in vec4 color;\n"
             "void main() {\n"
-            "   gl_FragColor = vec4(1,0,0,1);\n"
+            "   gl_FragColor = color;\n"
             "}"
             );
         grid->setRenderPassProgram(grid_program);

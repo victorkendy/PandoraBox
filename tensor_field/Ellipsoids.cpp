@@ -104,14 +104,16 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
 		    "}",
             pbge::Shader::VERTEX_SHADER);
         pbge::Shader * frag_shader = gfx->getFactory()->createShaderFromString(
-            "uniform float alpha_correction;\n"
+            "uniform float min_alpha;\n"
+            "uniform float max_alpha;\n"
             "in vec4 position;\n"
 		    "in vec3 normal;\n"
 		    "in vec4 lightPosition;\n"
 		    "void main() {\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
             "   float alpha = gl_Color.a;\n"
-            "   if(alpha <= alpha_correction - 0.005) discard;\n"
+            "   if(alpha <= min_alpha - 0.005) discard;\n"
+            "   if(alpha >= max_alpha + 0.005) discard;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
@@ -189,7 +191,8 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
 		    "in vec4 lightPosition;\n"
             "in vec4 nposition;\n"
             "uniform sampler2D depth;\n"
-            "uniform float alpha_correction;\n"
+            "uniform float min_alpha;\n"
+            "uniform float max_alpha;\n"
 		    "void main() {\n"
             // nposition is in ndc so we need to do the perspective division to transform the position 
             // to the range -1 to 1.
@@ -198,7 +201,8 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             // depth + offset to avoid z-fighting
             "   if(gl_FragCoord.z <= (texture2D(depth,p.xy)).r + 0.0001) discard;\n"
             "   if(normal.z >= 0) discard;\n"
-            "   if(alpha <= alpha_correction - 0.005) discard;\n"
+            "   if(alpha <= min_alpha - 0.005) discard;\n"
+            "   if(alpha >= max_alpha + 0.005) discard;\n"
 		    "   vec4 diffuseColor = gl_Color;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"

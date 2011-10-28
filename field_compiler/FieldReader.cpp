@@ -28,7 +28,7 @@ void AnalyzeReader::generateField(const std::string & outputfile) {
     int rows = this->header.dime.dim[2];
     int slices = this->header.dime.dim[3];
 	int number_of_tensors = cols*rows*slices;
-	float scale_factor = std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])/(this->max_entry);
+	float scale_factor = std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])*5/(this->max_entry);
     this->tensorFactory.reset(new TensorFactory(number_of_tensors, scale_factor, this->max_entry, rows, cols, slices, this->header.dime.pixdim));
 	std::for_each(this->tensors.begin(), this->tensors.end(), std::bind1st(std::mem_fun(&AnalyzeReader::add_tensor), this));
 	this->tensorFactory->done(outputfile);
@@ -142,6 +142,7 @@ int AnalyzeReader::index_of(int column, int row, int slice) {
 const math3d::matrix44 TensorData::getTranslationToPosition() {
     float x, y, z;
     x = (column - dim.fielddim[0]/2) * dim.pixdim[0];
+    //TODO: Why is this wrong?
     y = (dim.fielddim[1]/2 - row) * dim.pixdim[1];
     z = (dim.fielddim[2]/2 - slice) * dim.pixdim[2];
 	return math3d::translationMatrix(x, y, z);

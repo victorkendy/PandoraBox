@@ -28,9 +28,9 @@ public:
     PeelingAwareCollection(LODModels * _models, pbge::GPUProgram * _peelingProgram) : peelingProgram(_peelingProgram), models(_models) {
         collection.reset(new pbge::ModelCollection(_models->forDistance(0)));
     }
-    void setAlphaCorrection(float alpha_correction) {
+    void setMinAlphaCorrection(float min_alpha_correction) {
         math3d::matrix44 * end = transforms.get() + number_of_instances;
-        math3d::matrix44 * position = std::find_if(transforms.get(), end, LessThanOrEqualTo(alpha_correction - 0.01f));
+        math3d::matrix44 * position = std::find_if(transforms.get(), end, LessThanOrEqualTo(min_alpha_correction - 0.01f));
         collection->setNumberOfInstances(number_of_instances - (end - position));
     }
     void setTransforms(math3d::matrix44 * _transforms) {
@@ -115,10 +115,12 @@ public:
     FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step, float dim[3]) : alpha_step(_alpha_step), scale(1.0f) {
         min_alpha = std::max(_min_alpha - _alpha_step, 0.0f);
         max_alpha = std::min(_max_alpha + _alpha_step, 1.0f);
-        this->alpha_correction = 0;
+        this->min_alpha_correction = 0;
+        this->max_alpha_correction = 1;
         resetAlphaCorrection();
         this->renderProgram = _renderProgram;
-        uniform_alpha_correction = getUniformSet()->getFloat("alpha_correction");
+        uniform_min_alpha_correction = getUniformSet()->getFloat("min_alpha");
+        uniform_max_alpha_correction = getUniformSet()->getFloat("max_alpha");
         uniform_scale = getUniformSet()->getFloat("scale");
         uniform_scale->setValue(scale);
         for(int i = 0; i < 3; i++) {
@@ -134,7 +136,8 @@ public:
         gfx->pushUniforms(getUniformSet());
         gfx->updateState();
         
-        uniform_alpha_correction->setValue(alpha_correction);
+        uniform_min_alpha_correction->setValue(min_alpha_correction);
+        uniform_max_alpha_correction->setValue(max_alpha_correction);
         uniform_scale->setValue(scale);
     }
 
@@ -146,7 +149,8 @@ public:
         gfx->pushUniforms(getUniformSet());
         gfx->updateState();
 
-        uniform_alpha_correction->setValue(alpha_correction);
+        uniform_min_alpha_correction->setValue(min_alpha_correction);
+        uniform_max_alpha_correction->setValue(max_alpha_correction);
         uniform_scale->setValue(scale);
     }
 
@@ -154,20 +158,36 @@ public:
         gfx->popUniforms();
     }
 
-    void stepForward() {
-        float new_alpha_correction = alpha_correction + alpha_step;
+    void stepMinForward() {
+        float new_alpha_correction = min_alpha_correction + alpha_step;
         if(new_alpha_correction > max_alpha) {
             new_alpha_correction = max_alpha;
         }
-        setAlphaCorrection(new_alpha_correction);
+        setMinAlphaCorrection(new_alpha_correction);
     }
 
-    void stepBackward() {
-        float new_alpha_correction = alpha_correction - alpha_step;
+    void stepMinBackward() {
+        float new_alpha_correction = min_alpha_correction - alpha_step;
         if(new_alpha_correction < min_alpha) {
             new_alpha_correction = min_alpha;
         }
-        setAlphaCorrection(new_alpha_correction);
+        setMinAlphaCorrection(new_alpha_correction);
+    }
+
+    void stepMaxForward() {
+        float new_alpha_correction = max_alpha_correction + alpha_step;
+        if(new_alpha_correction > max_alpha) {
+            new_alpha_correction = max_alpha;
+        }
+        setMaxAlphaCorrection(new_alpha_correction);
+    }
+
+    void stepMaxBackward() {
+        float new_alpha_correction = max_alpha_correction - alpha_step;
+        if(new_alpha_correction < min_alpha) {
+            new_alpha_correction = min_alpha;
+        }
+        setMaxAlphaCorrection(new_alpha_correction);
     }
 
     void scaleUp() {
@@ -179,11 +199,14 @@ public:
     }
 
     void resetAlphaCorrection() {
-        setAlphaCorrection(min_alpha);
+        setMinAlphaCorrection(min_alpha);
+        setMaxAlphaCorrection(max_alpha);
     }
 private:
-    float alpha_correction;
-    pbge::UniformFloat * uniform_alpha_correction;
+    float min_alpha_correction;
+    float max_alpha_correction;
+    pbge::UniformFloat * uniform_min_alpha_correction;
+    pbge::UniformFloat * uniform_max_alpha_correction;
     pbge::UniformFloat * uniform_scale;
     pbge::GPUProgram * renderProgram;
     pbge::UniformSet uniforms;
@@ -197,13 +220,17 @@ private:
         return &uniforms;
     }
 
-    void setAlphaCorrection(float new_alpha_correction) {
-        if(alpha_correction != new_alpha_correction) {
+    void setMinAlphaCorrection(float new_alpha_correction) {
+        if(min_alpha_correction != new_alpha_correction) {
             for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
-                dynamic_cast<PeelingAwareCollection *>(*it)->setAlphaCorrection(alpha_correction);
+                dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(new_alpha_correction);
             }
-            alpha_correction = new_alpha_correction;
+            min_alpha_correction = new_alpha_correction;
         }
+    }
+
+    void setMaxAlphaCorrection(float new_alpha_correction) {
+        max_alpha_correction = new_alpha_correction;
     }
 };
 
