@@ -86,14 +86,11 @@ private:
 
 class CustomMouseEventHandler : public pbge::MouseEventHandler {
 public:
-    CustomMouseEventHandler(pbge::SceneGraph * graph, int cam_name) {
+    CustomMouseEventHandler(pbge::SceneGraph * graph, int cam_name) : current_rotation(math3d::identity44), rotation(math3d::identity44) {
         this->cam_node = dynamic_cast<pbge::TransformationNode*>(graph->getGraphNode(cam_name));
 		leftButtonDown = false;
-        rightButtonDown = false;
         prev_x = 0;
         prev_y = 0;
-		vertical_rotation = 0;
-		horizontal_rotation = 0;
 		degreeScale = 0.03f;
     }
 
@@ -103,37 +100,31 @@ public:
             prev_x = x;
             prev_y = y;
         }
-        else if(button == pbge::R_MOUSE_BUTTON) rightButtonDown = true;
-		return true;
+        return true;
     }
     bool buttonUp(pbge::MouseButton button, int x, int y) {
         if(button == pbge::L_MOUSE_BUTTON) {
             leftButtonDown = false;
-            horizontal_rotation += (prev_x - x) * degreeScale;
-			vertical_rotation += (prev_y - y) * degreeScale;
-			prev_x = 0;
-            prev_y = 0;
+            current_rotation *= rotation;
         }
-        else if(button == pbge::R_MOUSE_BUTTON) rightButtonDown = false;
-		return true;
+        return true;
     }
     bool move(int x, int y) {
         if(leftButtonDown) {
-			math3d::matrix44 rotation = math3d::rotationMatrix(horizontal_rotation + (prev_x - x) * degreeScale, 0, 1.0f, 0);
-            rotation = math3d::rotationMatrix(vertical_rotation + (prev_y - y) * degreeScale, 1.0f, 0, 0) * rotation;
-            cam_node->setTransformationMatrix(rotation);
+			rotation = math3d::rotationMatrix((prev_x - x) * degreeScale, 0, 1.0f, 0);
+            rotation *= math3d::rotationMatrix((prev_y - y) * degreeScale, 1.0f, 0, 0);
+            cam_node->setTransformationMatrix(current_rotation * rotation);
         }
 		return true;
     }
 private:
     bool leftButtonDown;
-    bool rightButtonDown;
     int prev_x;
     int prev_y;
-	float vertical_rotation;
-	float horizontal_rotation;
 	float degreeScale;
     pbge::TransformationNode * cam_node;
+    math3d::matrix44 current_rotation;
+    math3d::matrix44 rotation;
 };
 
 
