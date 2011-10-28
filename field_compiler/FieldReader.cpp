@@ -28,7 +28,7 @@ void AnalyzeReader::generateField(const std::string & outputfile) {
     int rows = this->header.dime.dim[2];
     int slices = this->header.dime.dim[3];
 	int number_of_tensors = cols*rows*slices;
-	float scale_factor = std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])*5/(this->max_entry);
+	float scale_factor = std::max(std::max(this->header.dime.pixdim[0], this->header.dime.pixdim[1]), this->header.dime.pixdim[2])*1.5f/(this->max_entry);
     this->tensorFactory.reset(new TensorFactory(number_of_tensors, scale_factor, this->max_entry, rows, cols, slices, this->header.dime.pixdim));
 	std::for_each(this->tensors.begin(), this->tensors.end(), std::bind1st(std::mem_fun(&AnalyzeReader::add_tensor), this));
 	this->tensorFactory->done(outputfile);
