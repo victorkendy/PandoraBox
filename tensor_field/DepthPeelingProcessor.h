@@ -9,7 +9,7 @@
 
 class DepthPeelingProcessor : public pbge::SceneProcessor {
 public:
-    DepthPeelingProcessor() : initialized(false) {}
+    DepthPeelingProcessor() : initialized(false), active(false) {}
     void initialize(pbge::GraphicAPI * gfx, pbge::Renderer * renderer);
     void process(pbge::GraphicAPI * gfx, pbge::Renderer * renderer, pbge::Camera * camera);
     bool isInitialized(pbge::GraphicAPI * gfx) {
