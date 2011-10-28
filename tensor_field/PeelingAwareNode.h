@@ -222,6 +222,7 @@ private:
 
     void setMinAlphaCorrection(float new_alpha_correction) {
         if(min_alpha_correction != new_alpha_correction) {
+            printf("%f\n", new_alpha_correction);
             for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
                 dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(new_alpha_correction);
             }

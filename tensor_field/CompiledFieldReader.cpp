@@ -28,7 +28,7 @@ FieldParent * CompiledFieldReader::generateField(pbge::GraphicAPI * gfx) {
     FieldParent * parent = new FieldParent(ellipsoids.get_peeling_program(), min_alpha, max_alpha, alpha_step, dim);
     for(int i = 0, box = 0; i < number_of_tensors && box < number_of_boxes; i += transforms_per_box[box], box++) {
         PeelingAwareCollection * collection = ellipsoids.createEllipsoids(transforms_per_box[box], transforms.get() + i, boxes[box]);
-        printf("BOX max x:%f y:%f z:%f min x:%f y:%f z:%f\n", boxes[box].max_x, boxes[box].max_y, boxes[box].max_z, boxes[box].min_x, boxes[box].min_y, boxes[box].min_z);
+        //printf("BOX max x:%f y:%f z:%f min x:%f y:%f z:%f\n", boxes[box].max_x, boxes[box].max_y, boxes[box].max_z, boxes[box].min_x, boxes[box].min_y, boxes[box].min_z);
         parent->addChild(collection);
     }
     printf("\n");

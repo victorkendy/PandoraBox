@@ -157,7 +157,9 @@ float TensorFactory::calculateAlpha(float * eigenvalues) {
     float e[3] = {abs(eigenvalues[0]),abs(eigenvalues[1]),abs(eigenvalues[2])};
     std::sort(e, e + 3, dec);
     
-    return 1.0f - (3*e[2])/(e[0] + e[1] + e[2]);
+    //float den = sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);
+    //return sqrt(0.5)*sqrt((e[0] - e[1])*(e[0] - e[1]) + (e[1] - e[2])*(e[1] - e[2]) + (e[0] - e[2])*(e[0] - e[2]))/den;
+    return (e[0] - e[1])/(e[0] + e[1] + e[2]);
 }
 
 void TensorFactory::addTensor(TensorData & tensor, int order, int slices) {
