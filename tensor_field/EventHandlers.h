@@ -1,5 +1,6 @@
 #ifndef TENSOR_FIELD_EVENTHANDLERS_H
 #define TENSOR_FIELD_EVENTHANDLERS_H
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
 #include "pbge/pbge.h"
 #include "DepthPeelingProcessor.h"
@@ -86,7 +87,7 @@ private:
 
 class CustomMouseEventHandler : public pbge::MouseEventHandler {
 public:
-    CustomMouseEventHandler(pbge::SceneGraph * graph, int cam_name) : current_rotation(math3d::identity44), rotation(math3d::identity44) {
+    CustomMouseEventHandler(pbge::SceneGraph * graph, int cam_name): current_rotation(new math3d::matrix44(math3d::identity44)), rotation(new math3d::matrix44(math3d::identity44)) {
         this->cam_node = dynamic_cast<pbge::TransformationNode*>(graph->getGraphNode(cam_name));
 		leftButtonDown = false;
         prev_x = 0;
@@ -105,15 +106,15 @@ public:
     bool buttonUp(pbge::MouseButton button, int x, int y) {
         if(button == pbge::L_MOUSE_BUTTON) {
             leftButtonDown = false;
-            current_rotation *= rotation;
+            *current_rotation *= *rotation;
         }
         return true;
     }
     bool move(int x, int y) {
         if(leftButtonDown) {
-			rotation = math3d::rotationMatrix((prev_x - x) * degreeScale, 0, 1.0f, 0);
-            rotation *= math3d::rotationMatrix((prev_y - y) * degreeScale, 1.0f, 0, 0);
-            cam_node->setTransformationMatrix(current_rotation * rotation);
+			*rotation = math3d::rotationMatrix((prev_x - x) * degreeScale, 0, 1.0f, 0);
+            *rotation *= math3d::rotationMatrix((prev_y - y) * degreeScale, 1.0f, 0, 0);
+            cam_node->setTransformationMatrix((*current_rotation) * (*rotation));
         }
 		return true;
     }
@@ -123,8 +124,8 @@ private:
     int prev_y;
 	float degreeScale;
     pbge::TransformationNode * cam_node;
-    math3d::matrix44 current_rotation;
-    math3d::matrix44 rotation;
+    boost::scoped_ptr<math3d::matrix44> current_rotation;
+    boost::scoped_ptr<math3d::matrix44> rotation;
 };
 
 
