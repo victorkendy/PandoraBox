@@ -181,6 +181,12 @@ namespace pbge {
             return attrib;
         }
 
+        const VertexAttribBuilder addAttrib(unsigned _nElements, VertexAttrib::Type _type, const std::string & name) {
+            VertexAttribBuilder attrib(_nElements, _type, name);
+            attribs.push_back(attrib);
+            return attrib;
+        }
+
         VertexBufferBuilder & pushValue(const VertexAttribBuilder & attrib, const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f);
         
         VertexBufferBuilder & pushValue(const float &x=0.0f, const float & y=0.0f, const float & z=0.0f, const float & w=0.0f) {
