@@ -24,6 +24,17 @@ namespace pbge {
     class UniformStack;
     class VertexBuffer;
 
+    //class ModifiedState {
+    //public:
+    //    ModifiedState(State * state):stateToModify(state) {
+    //    }
+    //    bool operator < (const ModifiedState & other) {
+    //        return stateToModify->getOrder() < other.stateToModify->getOrder();
+    //    }
+    //private:
+    //    State * stateToModify;
+    //};
+
     class PBGE_EXPORT StateSet {
     public:
         StateSet(GraphicAPI * ogl);
@@ -40,10 +51,6 @@ namespace pbge {
 
         GPUProgram * currentProgram();
 
-        void enable(GraphicAPI::Mode mode);
-
-        void disable(GraphicAPI::Mode mode);
-        
         UniformValue * getUniformValue(const UniformInfo & info);
 
         UniformValue * searchUniform(const UniformInfo & info);
@@ -55,9 +62,6 @@ namespace pbge {
         void popUniformSet();
 
     private:
-
-        std::vector<State *> states;
-
         BoundProgram * boundProgram;
 
         BoundFBO * boundFBO;

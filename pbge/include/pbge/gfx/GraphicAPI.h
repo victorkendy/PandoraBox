@@ -21,6 +21,7 @@ namespace pbge {
     class UniformValue;
     class UniformSet;
     class GPUProgram;
+    class BuiltInUniformMatrix;
     class GraphicObjectsFactory;
     class VertexBuffer;
     class DrawController;
@@ -83,11 +84,11 @@ namespace pbge {
 
         virtual void loadModelMatrix(const math3d::matrix44 & m) = 0;
 
-        virtual const math3d::matrix44 getModelMatrix() = 0;
+        virtual BuiltInUniformMatrix * getModelMatrix() = 0;
 
-        virtual const math3d::matrix44 getViewMatrix() = 0;
+        virtual BuiltInUniformMatrix * getViewMatrix() = 0;
 
-        virtual const math3d::matrix44 getProjectionMatrix() = 0;
+        virtual BuiltInUniformMatrix * getProjectionMatrix() = 0;
 
         virtual void updateState() = 0;
 
@@ -96,8 +97,6 @@ namespace pbge {
         virtual UniformValue * getUniformValue(const UniformInfo & info) = 0;
 
         virtual UniformValue * searchUniform(const UniformInfo & info) = 0;
-
-        virtual void enableMode(Mode mode) = 0;
 
         virtual void disableDrawBuffer() = 0;
 
@@ -132,11 +131,6 @@ namespace pbge {
         virtual void clear(GLbitfield mask);
 
         virtual void clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
-
-        virtual void disable(GLenum mode);
-
-        virtual void enable(GLenum mode);
-        
     };
 }
 

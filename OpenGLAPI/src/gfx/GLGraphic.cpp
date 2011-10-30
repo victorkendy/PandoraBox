@@ -13,8 +13,7 @@
 
 using namespace pbge;
 
-GLGraphic::GLGraphic():matrices(new math3d::matrix44[3]), state(NULL), storage(new ResourceStorage), context(NULL), majorVersion(0){
-    matrices[2] = math3d::identity44;
+GLGraphic::GLGraphic(): state(NULL), storage(new ResourceStorage), context(NULL), majorVersion(0){
     factory.reset(new GLObjectsFactory(this));
     drawController.reset(new GLDrawController(this));
 }
@@ -68,15 +67,15 @@ void GLGraphic::swapBuffers() {
 }
 
 void GLGraphic::loadViewMatrix(const math3d::matrix44 & m) {
-    matrices[0] = m;
+    viewMatrix.set(m);
 }
 
 void GLGraphic::loadProjectionMatrix(const math3d::matrix44 & m) {
-    matrices[1] = m;
+    projectionMatrix.set(m);
 }
 
 void GLGraphic::loadModelMatrix(const math3d::matrix44 & m) {
-    matrices[2] = m;
+    modelMatrix.set(m);
 }
 
 void GLGraphic::updateState() {
@@ -93,10 +92,6 @@ UniformValue * GLGraphic::getUniformValue(const UniformInfo & info) {
 
 UniformValue * GLGraphic::searchUniform(const UniformInfo & info) {
     return this->state->searchUniform(info);
-}
-
-void GLGraphic::enableMode(Mode mode) {
-    this->state->enable(mode);
 }
 
 void GLGraphic::disableDrawBuffer() {

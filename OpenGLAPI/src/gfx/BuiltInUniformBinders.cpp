@@ -3,25 +3,27 @@
 #include "math3d/math3d.h"
 
 #include "pbge/gfx/GraphicAPI.h"
+#include "pbge/gfx/ShaderUniform.h"
 #include "OpenGLAPI/gfx/BuiltInUniformBinders.h"
+
 
 using namespace pbge;
 
 void DeprModelViewBinder::bind(pbge::GraphicAPI *gfx) {
-    math3d::matrix44 modelView = (gfx->getViewMatrix() * gfx->getModelMatrix()).transpose();
+    math3d::matrix44 modelView = (gfx->getViewMatrix()->get() * gfx->getModelMatrix()->get()).transpose();
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(modelView);
 }
 
 void DeprProjectionBinder::bind(pbge::GraphicAPI *gfx) {
-    math3d::matrix44 projection = gfx->getProjectionMatrix().transpose();
+    math3d::matrix44 projection = gfx->getProjectionMatrix()->get().transpose();
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(projection);
 }
 
 void DeprModelViewProjectionBinder::bind(pbge::GraphicAPI *gfx) {
-    math3d::matrix44 projection = gfx->getProjectionMatrix().transpose();
-    math3d::matrix44 modelView = (gfx->getViewMatrix() * gfx->getModelMatrix()).transpose();
+    math3d::matrix44 projection = gfx->getProjectionMatrix()->get().transpose();
+    math3d::matrix44 modelView = (gfx->getViewMatrix()->get() * gfx->getModelMatrix()->get()).transpose();
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(modelView);
     glMatrixMode(GL_PROJECTION);
@@ -30,33 +32,78 @@ void DeprModelViewProjectionBinder::bind(pbge::GraphicAPI *gfx) {
 
 class ModelMatrixGetter {
 public:
+    ModelMatrixGetter():stamp(0){}
     const math3d::matrix44 operator() (GraphicAPI* gfx) {
-        return gfx->getModelMatrix();
+        stamp = gfx->getModelMatrix()->getStamp();
+        return gfx->getModelMatrix()->get();
     }
+    bool shouldChange(GraphicAPI * gfx) {
+        return stamp != gfx->getModelMatrix()->getStamp();
+    }
+private:
+    unsigned long stamp;
 };
 class ViewMatrixGetter {
 public:
+    ViewMatrixGetter():stamp(0){}
     const math3d::matrix44 operator() (GraphicAPI* gfx) {
-        return gfx->getViewMatrix();
+        stamp = gfx->getViewMatrix()->getStamp();
+        return gfx->getViewMatrix()->get();
     }
+    bool shouldChange(GraphicAPI * gfx) {
+        return stamp != gfx->getViewMatrix()->getStamp();
+    }
+private:
+    unsigned long stamp;
 };
 class ProjectionMatrixGetter {
 public:
+    ProjectionMatrixGetter():stamp(0){}
     const math3d::matrix44 operator() (GraphicAPI* gfx) {
-        return gfx->getProjectionMatrix();
+        stamp = gfx->getProjectionMatrix()->getStamp();
+        return gfx->getProjectionMatrix()->get();
     }
+    bool shouldChange(GraphicAPI * gfx) {
+        return stamp != gfx->getProjectionMatrix()->getStamp();
+    }
+private:
+    unsigned long stamp;
 };
 class ModelViewMatrixGetter {
 public:
+    ModelViewMatrixGetter():modelStamp(0),viewStamp(0){}
     const math3d::matrix44 operator() (GraphicAPI* gfx) {
-        return gfx->getViewMatrix() * gfx->getModelMatrix();
+        viewStamp = gfx->getViewMatrix()->getStamp();
+        modelStamp = gfx->getModelMatrix()->getStamp();
+        math3d::matrix44 view = gfx->getViewMatrix()->get();
+        math3d::matrix44 model = gfx->getModelMatrix()->get();
+        return view * model;
     }
+    bool shouldChange(GraphicAPI * gfx) {
+        return viewStamp != gfx->getViewMatrix()->getStamp() ||
+               modelStamp != gfx->getModelMatrix()->getStamp();
+    }
+private:
+    unsigned long viewStamp, modelStamp;
 };
 class ModelViewProjectionMatrixGetter {
 public:
     const math3d::matrix44 operator() (GraphicAPI* gfx) {
-        return gfx->getProjectionMatrix() * gfx->getViewMatrix() * gfx->getModelMatrix();
+        viewStamp = gfx->getViewMatrix()->getStamp();
+        modelStamp = gfx->getModelMatrix()->getStamp();
+        projStamp = gfx->getProjectionMatrix()->getStamp();
+        math3d::matrix44 view = gfx->getViewMatrix()->get();
+        math3d::matrix44 model = gfx->getModelMatrix()->get();
+        math3d::matrix44 projection = gfx->getProjectionMatrix()->get();
+        return projection * view * model;
     }
+    bool shouldChange(GraphicAPI * gfx) {
+        return viewStamp != gfx->getViewMatrix()->getStamp() ||
+               modelStamp != gfx->getModelMatrix()->getStamp() ||
+               projStamp != gfx->getProjectionMatrix()->getStamp();
+    }
+private:
+    unsigned long viewStamp, modelStamp, projStamp;
 };
 
 

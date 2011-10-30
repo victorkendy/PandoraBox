@@ -8,32 +8,6 @@
 
 using namespace pbge;
 
-StateEnabler::StateEnabler(GLenum _mode) {
-    this->current = this->next = false;
-    this->mode = _mode;
-}
-
-bool StateEnabler::shouldChange(GraphicAPI * ogl) {
-    return current != next;
-}
-
-void StateEnabler::makeChange(GraphicAPI * ogl) {
-    if(next == true)
-        ogl->enable(mode);
-    else
-        ogl->disable(mode);
-    current = next;
-}
-
-void StateEnabler::enable() {
-    this->next = true;
-}
-
-void StateEnabler::disable() {
-    this->next = false;
-}
-
-
 
 bool BoundFBO::shouldChange(GraphicAPI * api) {
     return current != next;

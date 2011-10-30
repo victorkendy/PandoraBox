@@ -5,6 +5,7 @@
 #include <cstring>
 #include <string>
 #include <sstream>
+#include <boost/smart_ptr/scoped_ptr.hpp>
 
 #include "math3d/math3d.h"
 
@@ -432,6 +433,28 @@ namespace pbge {
         void bindValueOn(GPUProgram * program, const UniformInfo & info, GraphicAPI * ogl);
     private:
         float values[16];
+    };
+
+    class BuiltInUniformMatrix {
+    public:
+        BuiltInUniformMatrix() : matrix(new math3d::matrix44(math3d::identity44)), stamp(1){
+        };
+        void set(const math3d::matrix44 & m) {
+            incrementStamp();
+            *matrix = m;
+        }
+        const math3d::matrix44 get() {
+            return *matrix;
+        }
+        unsigned long getStamp() {
+            return stamp;
+        }
+    private:
+        void incrementStamp() {
+            stamp = ((stamp+1 > 0) ? stamp + 1 : 1);
+        }
+        boost::scoped_ptr<math3d::matrix44> matrix;
+        unsigned long stamp;
     };
 }
 #endif

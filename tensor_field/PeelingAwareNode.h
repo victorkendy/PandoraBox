@@ -52,7 +52,7 @@ public:
         if(models == NULL) {
             return;
         }
-        math3d::matrix44 inveretedViewMatrix = gfx->getViewMatrix().inverse();
+        math3d::matrix44 inveretedViewMatrix = gfx->getViewMatrix()->get().inverse();
         math3d::vector4 cameraPosition(inveretedViewMatrix[0][3], inveretedViewMatrix[1][3], inveretedViewMatrix[2][3], 1.0f);
         float dist = FLT_MAX;
         dist = boundingAABB.distance(cameraPosition);

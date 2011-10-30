@@ -9,24 +9,6 @@
 namespace pbge {
     class GraphicAPI;
 
-    class PBGE_EXPORT StateEnabler : public State {
-    public:
-        StateEnabler(GLenum _mode);
-
-        void makeChange(GraphicAPI * ogl);
-
-        bool shouldChange(GraphicAPI * ogl);
-
-        void enable();
-
-        void disable();
-    private:
-        bool current, next;
-        GLenum mode;
-    };
-
-    
-
     class BoundFBO : public State {
     public:
         BoundFBO() {

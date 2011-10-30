@@ -33,8 +33,10 @@ namespace pbge {
         MatrixBinder(GLint _location) : location(_location) {}
 
         void bind(GraphicAPI * gfx) {
-            math3d::matrix44 m = getter(gfx);
-            glUniformMatrix4fv(location, 1, GL_TRUE, m);
+            if(getter.shouldChange(gfx)) {
+                math3d::matrix44 m = getter(gfx);
+                glUniformMatrix4fv(location, 1, GL_TRUE, m);
+            }
         }
     private:
         MatrixGetter getter;

@@ -9,6 +9,7 @@
 
 #include "pbge/core/core.h"
 #include "pbge/gfx/GraphicAPI.h"
+#include "pbge/gfx/ShaderUniform.h"
 
 #include "OpenGLAPI/gfx/GLExtensions.h"
 #include "OpenGLAPI/gfx/GLDepthBufferController.h"
@@ -40,16 +41,16 @@ namespace pbge {
 
         void loadModelMatrix(const math3d::matrix44 & m);
 
-        const math3d::matrix44 getModelMatrix() {
-            return matrices[2];
+        BuiltInUniformMatrix * getModelMatrix() {
+            return &modelMatrix;
         }
 
-        const math3d::matrix44 getProjectionMatrix() {
-            return matrices[1];
+        BuiltInUniformMatrix * getProjectionMatrix() {
+            return &projectionMatrix;
         }
 
-        const math3d::matrix44 getViewMatrix() {
-            return matrices[0];
+        BuiltInUniformMatrix * getViewMatrix() {
+            return &viewMatrix;
         }
 
         void updateState();
@@ -59,8 +60,6 @@ namespace pbge {
         UniformValue * getUniformValue(const UniformInfo & info);
 
         UniformValue * searchUniform(const UniformInfo & info);
-
-        void enableMode(Mode mode);
 
         void disableDrawBuffer();
 
@@ -105,8 +104,6 @@ namespace pbge {
     private:
         void initContextVersion();
 
-        boost::scoped_array<math3d::matrix44> matrices;
-
         boost::scoped_ptr<StateSet> state;
 
         boost::scoped_ptr<ResourceStorage> storage;
@@ -120,6 +117,10 @@ namespace pbge {
         boost::scoped_ptr<GLDepthBufferController> depthController;
 
         boost::scoped_ptr<GLBlendController> blendController;
+
+        BuiltInUniformMatrix viewMatrix;
+        BuiltInUniformMatrix modelMatrix;
+        BuiltInUniformMatrix projectionMatrix;
 
         FramebufferObject * currentFBO;
 

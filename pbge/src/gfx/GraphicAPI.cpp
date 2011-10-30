@@ -26,11 +26,3 @@ void GraphicAPI::clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclamp
     glClearColor(red, green, blue, alpha);
 }
 
-void GraphicAPI::disable(GLenum mode) {
-    glDisable(mode);
-}
-
-void GraphicAPI::enable(GLenum mode) {
-    glEnable(mode);
-}
-
