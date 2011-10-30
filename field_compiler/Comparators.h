@@ -30,4 +30,6 @@ public:
     }
 };
 
+bool dec(float a, float b) {return a > b;}
+
 #endif

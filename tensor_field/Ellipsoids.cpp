@@ -62,6 +62,7 @@ pbge::Shader * Ellipsoids::get_transformation_shader() {
             "uniform float base_instance;\n"
             "uniform float scale;\n"
             "uniform mat4 pbge_ModelViewMatrix;\n"
+            "uniform float alpha_index;\n"
             "in  vec4 pbge_Vertex;\n"
             "void calc_transformations(out vec4 view_position, out vec3 view_normal, out vec4 color, out mat4 view_transform) {\n"
             "   int index = (int(base_instance) + gl_InstanceID) * 4;\n"
@@ -71,6 +72,7 @@ pbge::Shader * Ellipsoids::get_transformation_shader() {
 		    "   vec4 col3 = texelFetch(transforms, index + 2);\n"
 		    "   vec4 col4 = texelFetch(transforms, index + 3);\n"
 		    "   color = vec4(col1.w,col2.w,col3.w,col4.w);\n"
+            "   color = vec4(1,1,1,color[int(alpha_index)]);\n"
             "   col1 = vec4(col1.xyz, 0);\n"
 		    "   col2 = vec4(col2.xyz, 0);\n"
 		    "   col3 = vec4(col3.xyz, 0);\n"
@@ -106,19 +108,21 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
         pbge::Shader * frag_shader = gfx->getFactory()->createShaderFromString(
             "uniform float min_alpha;\n"
             "uniform float max_alpha;\n"
+            "uniform vec4 min_color;\n"
+            "uniform vec4 max_color;\n"
             "in vec4 position;\n"
 		    "in vec3 normal;\n"
 		    "in vec4 lightPosition;\n"
 		    "void main() {\n"
-		    "   vec4 diffuseColor = gl_Color;\n"
             "   float alpha = gl_Color.a;\n"
             "   if(alpha <= min_alpha - 0.005) discard;\n"
             "   if(alpha >= max_alpha + 0.005) discard;\n"
+            "   vec4 diffuseColor = alpha*max_color + (1-alpha)*min_color;\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
 		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, alpha);\n"
-		    "}",
+            "}",
             pbge::Shader::FRAGMENT_SHADER);
         std::vector<pbge::Shader *> vertex_shaders;
         std::vector<pbge::Shader *> fragment_shaders;
@@ -193,6 +197,8 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             "uniform sampler2D depth;\n"
             "uniform float min_alpha;\n"
             "uniform float max_alpha;\n"
+            "uniform vec4 min_color;\n"
+            "uniform vec4 max_color;\n"
 		    "void main() {\n"
             // nposition is in ndc so we need to do the perspective division to transform the position 
             // to the range -1 to 1.
@@ -203,12 +209,13 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             "   if(normal.z >= 0) discard;\n"
             "   if(alpha <= min_alpha - 0.005) discard;\n"
             "   if(alpha >= max_alpha + 0.005) discard;\n"
-		    "   vec4 diffuseColor = gl_Color;\n"
-		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
+		    //"   vec4 diffuseColor = gl_Color;\n"
+            "   vec4 diffuseColor = alpha*max_color + (1-alpha)*min_color;\n"
+            "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
 		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, alpha);\n"
-		    "}",
+            "}",
             pbge::Shader::FRAGMENT_SHADER);
         std::vector<pbge::Shader *> vertex_shaders;
         std::vector<pbge::Shader *> fragment_shaders;

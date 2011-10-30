@@ -5,13 +5,14 @@
 
 class LessThanOrEqualTo {
 public:
-    LessThanOrEqualTo(float comp) : pivot(comp) {} 
+    LessThanOrEqualTo(float comp, int alpha_index) : pivot(comp), index(alpha_index) {} 
 
     bool operator()(const math3d::matrix44 & value) {
-        return value[3][3] <= pivot;
+        return value[index][3] <= pivot;
     }
 private:
     float pivot;
+    int index;
 };
 
 #endif
