@@ -28,9 +28,9 @@ public:
     PeelingAwareCollection(LODModels * _models, pbge::GPUProgram * _peelingProgram) : peelingProgram(_peelingProgram), models(_models) {
         collection.reset(new pbge::ModelCollection(_models->forDistance(0)));
     }
-    void setMinAlphaCorrection(float min_alpha_correction) {
+    void setMinAlphaCorrection(float min_alpha_correction, int alpha_index) {
         math3d::matrix44 * end = transforms.get() + number_of_instances;
-        math3d::matrix44 * position = std::find_if(transforms.get(), end, LessThanOrEqualTo(min_alpha_correction - 0.01f));
+        math3d::matrix44 * position = std::find_if(transforms.get(), end, LessThanOrEqualTo(min_alpha_correction - 0.01f, alpha_index));
         collection->setNumberOfInstances(number_of_instances - (end - position));
     }
     void setTransforms(math3d::matrix44 * _transforms) {
@@ -121,11 +121,16 @@ public:
         this->renderProgram = _renderProgram;
         uniform_min_alpha_correction = getUniformSet()->getFloat("min_alpha");
         uniform_max_alpha_correction = getUniformSet()->getFloat("max_alpha");
+        uniform_min_color = getUniformSet()->getFloatVec4("min_color");
+        uniform_max_color = getUniformSet()->getFloatVec4("max_color");
         uniform_scale = getUniformSet()->getFloat("scale");
         uniform_scale->setValue(scale);
+        uniform_alpha_index = getUniformSet()->getFloat("alpha_index");
         for(int i = 0; i < 3; i++) {
             this->dimensions[i] = dim[i];
         }
+        alpha_index = 0;
+        alpha_index_changed = true;
     }
 
     float * getDim() {
@@ -138,7 +143,10 @@ public:
         
         uniform_min_alpha_correction->setValue(min_alpha_correction);
         uniform_max_alpha_correction->setValue(max_alpha_correction);
+        uniform_max_color->setValue(0,1,0,1);
+        uniform_min_color->setValue(1,1,0,1);
         uniform_scale->setValue(scale);
+        uniform_alpha_index->setValue((float)alpha_index);
     }
 
     void postRenderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
@@ -151,7 +159,10 @@ public:
 
         uniform_min_alpha_correction->setValue(min_alpha_correction);
         uniform_max_alpha_correction->setValue(max_alpha_correction);
+        uniform_max_color->setValue(0,1,0,1);
+        uniform_min_color->setValue(1,1,0,1);
         uniform_scale->setValue(scale);
+        uniform_alpha_index->setValue((float)alpha_index);
     }
 
     void postRenderPeeling(pbge::GraphicAPI * gfx) {
@@ -202,12 +213,22 @@ public:
         setMinAlphaCorrection(min_alpha);
         setMaxAlphaCorrection(max_alpha);
     }
+
+    void setAlphaIndex(int index) {
+        if(alpha_index != index) {
+            alpha_index = index;
+            alpha_index_changed = true;
+        }
+    }
 private:
     float min_alpha_correction;
     float max_alpha_correction;
     pbge::UniformFloat * uniform_min_alpha_correction;
     pbge::UniformFloat * uniform_max_alpha_correction;
+    pbge::UniformFloatVec4 * uniform_min_color;
+    pbge::UniformFloatVec4 * uniform_max_color;
     pbge::UniformFloat * uniform_scale;
+    pbge::UniformFloat * uniform_alpha_index;
     pbge::GPUProgram * renderProgram;
     pbge::UniformSet uniforms;
     float min_alpha;
@@ -215,16 +236,18 @@ private:
     float alpha_step;
     float scale;
     float dimensions[3];
+    int alpha_index;
+    bool alpha_index_changed;
 
     pbge::UniformSet * getUniformSet() {
         return &uniforms;
     }
 
     void setMinAlphaCorrection(float new_alpha_correction) {
-        if(min_alpha_correction != new_alpha_correction) {
-            printf("%f\n", new_alpha_correction);
+        if(min_alpha_correction != new_alpha_correction || alpha_index_changed) {
+            alpha_index_changed = false;
             for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
-                dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(new_alpha_correction);
+                dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(new_alpha_correction, alpha_index);
             }
             min_alpha_correction = new_alpha_correction;
         }

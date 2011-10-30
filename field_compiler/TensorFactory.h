@@ -108,8 +108,12 @@ private:
     float dim[3];
 
     void write_transforms(FILE * outputfile);
-    float calculateRoundedAlpha(float * eigenvalues);
-    float calculateAlpha(float * eigenvalues);
+    math3d::vector4 calculateRoundedAlphas(float * eigenvalues);
+    float roundAlpha(float alpha);
+    float calculateAlphaLinear(float * eigenvalues);
+    float calculateAlphaPlanar(float * eigenvalues);
+    float calculateAlphaSpherical(float * eigenvalues);
+    float calculateAlphaAnisotropy(float * eigenvalues);
 };
 
 #endif

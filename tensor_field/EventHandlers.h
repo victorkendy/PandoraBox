@@ -28,6 +28,10 @@ public:
             case 'C': field_parent->stepMaxBackward(); break;
             case 'O': field_parent->scaleDown(); break;
             case 'P': field_parent->scaleUp(); break;
+            case 'R': field_parent->setAlphaIndex(0); break;
+            case 'T': field_parent->setAlphaIndex(1); break;
+            case 'Y': field_parent->setAlphaIndex(2); break;
+            case 'U': field_parent->setAlphaIndex(3); break;
         }
         return true;
     }

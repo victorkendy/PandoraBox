@@ -144,22 +144,38 @@ TensorFactory::TensorFactory(unsigned n, float _scale_factor, float _max_entry, 
         dim[2] = pix_dim[3] * slice;
     }
 
-float TensorFactory::calculateRoundedAlpha(float * eigenvalues) {
-    float alpha = floor(100.0f * calculateAlpha(eigenvalues))/100.0f;
+math3d::vector4 TensorFactory::calculateRoundedAlphas(float * eigenvalues) {
+    float e[3] = {abs(eigenvalues[0]),abs(eigenvalues[1]),abs(eigenvalues[2])};
+    std::sort(e, e + 3, dec);
+    float linear = roundAlpha(calculateAlphaLinear(e));
+    float planar = roundAlpha(calculateAlphaPlanar(e));
+    float spherical = roundAlpha(calculateAlphaSpherical(e));
+    float anisotropy = roundAlpha(calculateAlphaAnisotropy(e));
+    return math3d::vector4(linear, planar, spherical, anisotropy);
+}
+
+float TensorFactory::roundAlpha(float alpha) {
+    alpha = floor(100.0f * alpha)/100.0f;
     if(alpha > max_alpha) max_alpha = alpha;
     if(alpha < min_alpha) min_alpha = alpha;
     return alpha;
 }
 
-bool dec(float a, float b) {return a > b;}
-
-float TensorFactory::calculateAlpha(float * eigenvalues) {
-    float e[3] = {abs(eigenvalues[0]),abs(eigenvalues[1]),abs(eigenvalues[2])};
-    std::sort(e, e + 3, dec);
-    
-    //float den = sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);
-    //return sqrt(0.5)*sqrt((e[0] - e[1])*(e[0] - e[1]) + (e[1] - e[2])*(e[1] - e[2]) + (e[0] - e[2])*(e[0] - e[2]))/den;
+float TensorFactory::calculateAlphaLinear(float * e) {
     return (e[0] - e[1])/(e[0] + e[1] + e[2]);
+}
+
+float TensorFactory::calculateAlphaPlanar(float * e) {
+    return (2*(e[1] - e[2]))/(e[0] + e[1] + e[2]);
+}
+
+float TensorFactory::calculateAlphaSpherical(float * e) {
+    return (3*e[2])/(e[0] + e[1] + e[2]);
+}
+
+float TensorFactory::calculateAlphaAnisotropy(float * e) {
+    float den = sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]);
+    return sqrt(0.5f)*sqrt((e[0] - e[1])*(e[0] - e[1]) + (e[1] - e[2])*(e[1] - e[2]) + (e[0] - e[2])*(e[0] - e[2]))/den;
 }
 
 void TensorFactory::addTensor(TensorData & tensor, int order, int slices) {
@@ -177,7 +193,7 @@ void TensorFactory::addTensor(TensorData & tensor, int order, int slices) {
                                   0, 0, 0, 1);
 		math3d::matrix44 scale = math3d::scaleMatrix(eigenvalues[1] * this->scale_factor, eigenvalues[2] * this->scale_factor, eigenvalues[0] * this->scale_factor);
         math3d::matrix44 transform = tensor.getTranslationToPosition() * rotation * scale;
-        transform.setRow(3, math3d::vector4(eigenvectors[0][0], eigenvectors[0][1], eigenvectors[0][2], calculateRoundedAlpha(eigenvalues)));
+        transform.setRow(3, calculateRoundedAlphas(eigenvalues));
         int row_index = tensor.get_row()/STEP_SIZE;
         int column_index = tensor.get_column()/STEP_SIZE;
         int slice_index = tensor.get_slice()/STEP_SIZE;
