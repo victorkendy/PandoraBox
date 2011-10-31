@@ -218,6 +218,7 @@ public:
         if(alpha_index != index) {
             alpha_index = index;
             alpha_index_changed = true;
+            notifyChildrenAlphaChanged();
         }
     }
 private:
@@ -246,10 +247,14 @@ private:
     void setMinAlphaCorrection(float new_alpha_correction) {
         if(min_alpha_correction != new_alpha_correction || alpha_index_changed) {
             alpha_index_changed = false;
-            for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
-                dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(new_alpha_correction, alpha_index);
-            }
             min_alpha_correction = new_alpha_correction;
+            notifyChildrenAlphaChanged();
+        }
+    }
+
+    void notifyChildrenAlphaChanged() {
+        for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
+            dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(min_alpha_correction, alpha_index);
         }
     }
 
