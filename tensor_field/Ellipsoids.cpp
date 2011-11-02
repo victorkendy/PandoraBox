@@ -117,12 +117,12 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
             "   float alpha = gl_Color.a;\n"
             "   if(alpha <= min_alpha - 0.005) discard;\n"
             "   if(alpha >= max_alpha + 0.005) discard;\n"
-            "   float rampIndex = (alpha - min_alpha) / (max_alpha - min_alpha);"
+            "   float rampIndex = (alpha - min_alpha) / max(max_alpha - min_alpha - 0.6,0.1);"
             "   vec4 diffuseColor = mix(min_color, max_color, rampIndex);\n"
 		    "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"
 		    "   float intensity = max(0.0, dot(lightDir, normal));\n"
-		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.2, alpha);\n"
+		    "   gl_FragData[0] = vec4(diffuseColor.rgb * lightDiffuseColor.rgb * intensity + 0.3, alpha);\n"
             "}",
             pbge::Shader::FRAGMENT_SHADER);
         std::vector<pbge::Shader *> vertex_shaders;
@@ -210,7 +210,7 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             "   if(normal.z >= 0) discard;\n"
             "   if(alpha <= min_alpha - 0.005) discard;\n"
             "   if(alpha >= max_alpha + 0.005) discard;\n"
-            "   float rampIndex = (alpha - min_alpha) / (max_alpha - min_alpha);"
+            "   float rampIndex = (alpha - min_alpha) / max(max_alpha - min_alpha - 0.6,0.1);"
             "   vec4 diffuseColor = mix(min_color, max_color, rampIndex);\n"
             "   vec4 lightDiffuseColor = vec4(1.0,1.0,1,1);\n"
 		    "   vec3 lightDir = normalize((lightPosition - position).xyz);\n"

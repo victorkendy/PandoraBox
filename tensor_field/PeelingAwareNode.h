@@ -263,6 +263,7 @@ private:
 
     void setMaxAlphaCorrection(float new_alpha_correction) {
         max_alpha_correction = new_alpha_correction;
+        printf("%f\n", new_alpha_correction);
     }
 };
 

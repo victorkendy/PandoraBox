@@ -5,12 +5,14 @@
 #include "pbge/pbge.h"
 #include "DepthPeelingProcessor.h"
 #include "PeelingAwareNode.h"
+#include "HideableNode.h"
 
 class CustomKeyboardEventHandler : public pbge::KeyboardEventHandler {
 public:
-    CustomKeyboardEventHandler(pbge::SceneGraph * graph, int cam_name, FieldParent * fieldParent) {
+    CustomKeyboardEventHandler(pbge::SceneGraph * graph, int cam_name, FieldParent * fieldParent, HideableModelInstanceDecorator * hideableNode) {
         this->cam_node = dynamic_cast<pbge::TransformationNode*>(graph->getGraphNode(cam_name));
         this->field_parent = fieldParent;
+        this->hideable_node = hideableNode;
     }
 
     bool keyDown(char key) {
@@ -32,6 +34,7 @@ public:
             case 'T': field_parent->setAlphaIndex(1); break;
             case 'Y': field_parent->setAlphaIndex(2); break;
             case 'U': field_parent->setAlphaIndex(3); break;
+            case 'G': hideable_node->toggle(); break;
         }
         return true;
     }
@@ -42,6 +45,7 @@ public:
 private:
     pbge::TransformationNode * cam_node;
     FieldParent * field_parent;
+    HideableModelInstanceDecorator * hideable_node;
 };
 
 class EffectToggler : public pbge::KeyboardEventHandler {
