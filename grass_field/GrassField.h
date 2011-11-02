@@ -93,10 +93,19 @@ private:
             "}\n",
             "uniform sampler2D grassTex;\n"
             "in vec2 coord;\n"
+            "vec4 calculateFog(in vec4 color) {\n"
+            "   const float LOG2 = 1.442695;\n"
+            "   const float density = 0.05;\n"
+            "   const vec4 fogColor = vec4(1.0,1.0,1.0,1.0);"
+            "   float z = gl_FragCoord.z / gl_FragCoord.w;\n"
+            "   float fogFactor = exp2(-density * density * z * z * LOG2);\n"
+            "   fogFactor = clamp(fogFactor, 0.0, 1.0);\n"
+            "   return mix(fogColor, color, fogFactor);\n"
+            "}\n"
             "void main(){\n"
             "   vec4 color = texture2D(grassTex, coord);\n"
             "   if(color.a < 0.7) discard;\n"
-            "   gl_FragColor = color;\n"
+            "   gl_FragColor = calculateFog(color);\n"
             "}"
             );
     }
@@ -117,7 +126,8 @@ private:
             ,
             "uniform sampler2D groundTex;"
             "void main() {\n"
-            "   gl_FragColor = texture2D(groundTex, gl_Color.xz);\n"
+            "   vec4 color = texture2D(groundTex, gl_Color.xz);\n"
+            "   gl_FragColor = color;\n"
             "}\n"
             );
     }
