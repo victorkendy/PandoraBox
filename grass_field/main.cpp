@@ -21,10 +21,10 @@ public:
 private:
     void configureCamera(pbge::Node * parent, pbge::GraphicAPI * gfx) {
         pbge::TransformationNode * cameraParent = 
-            pbge::TransformationNode::translation(0, 4, 8);
+            pbge::TransformationNode::translation(0, 4, 10);
         pbge::CameraNode * camera = new pbge::CameraNode;
         camera->lookAt(math3d::vector4(0,1,0), math3d::vector4(0, -1, -5));
-        camera->setPerspective(90, 1.0f, 2.0f, 10.0f);
+        camera->setPerspective(90, 1.0f, 2.0f, 30.0f);
         cameraParent->addChild(camera);
         parent->addChild(cameraParent);
     }
