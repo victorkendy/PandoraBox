@@ -31,6 +31,7 @@ private:
     void createGrassField(pbge::Node * parent, pbge::GraphicAPI * gfx) {
         GrassField grass(gfx);
         parent->addChild(grass.getField());
+        parent->addChild(grass.getGround());
     }
 };
 
