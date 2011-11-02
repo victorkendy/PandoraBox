@@ -112,7 +112,7 @@ private:
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
 public:
-    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step, float dim[3]) : alpha_step(_alpha_step), scale(1.0f) {
+    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step, float dim[3]) : alpha_step(_alpha_step), scale(1.0f), max_color(new math3d::vector4(0,1,0,1)), min_color(new math3d::vector4(1,0,0,1)) {
         min_alpha = std::max(_min_alpha - _alpha_step, 0.0f);
         max_alpha = std::min(_max_alpha + _alpha_step, 1.0f);
         this->min_alpha_correction = 0;
@@ -143,8 +143,8 @@ public:
         
         uniform_min_alpha_correction->setValue(min_alpha_correction);
         uniform_max_alpha_correction->setValue(max_alpha_correction);
-        uniform_max_color->setValue(0,1,0,1);
-        uniform_min_color->setValue(1,1,0,1);
+        uniform_max_color->setValue(*max_color);
+        uniform_min_color->setValue(*min_color);
         uniform_scale->setValue(scale);
         uniform_alpha_index->setValue((float)alpha_index);
     }
@@ -159,8 +159,9 @@ public:
 
         uniform_min_alpha_correction->setValue(min_alpha_correction);
         uniform_max_alpha_correction->setValue(max_alpha_correction);
-        uniform_max_color->setValue(0,1,0,1);
-        uniform_min_color->setValue(1,1,0,1);
+        uniform_max_color->setValue(*max_color);
+        uniform_min_color->setValue(*min_color);
+
         uniform_scale->setValue(scale);
         uniform_alpha_index->setValue((float)alpha_index);
     }
@@ -218,6 +219,7 @@ public:
         if(alpha_index != index) {
             alpha_index = index;
             alpha_index_changed = true;
+            notifyChildrenAlphaChanged();
         }
     }
 private:
@@ -238,6 +240,8 @@ private:
     float dimensions[3];
     int alpha_index;
     bool alpha_index_changed;
+    boost::scoped_ptr<math3d::vector4> max_color;
+    boost::scoped_ptr<math3d::vector4> min_color;
 
     pbge::UniformSet * getUniformSet() {
         return &uniforms;
@@ -246,10 +250,14 @@ private:
     void setMinAlphaCorrection(float new_alpha_correction) {
         if(min_alpha_correction != new_alpha_correction || alpha_index_changed) {
             alpha_index_changed = false;
-            for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
-                dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(new_alpha_correction, alpha_index);
-            }
             min_alpha_correction = new_alpha_correction;
+            notifyChildrenAlphaChanged();
+        }
+    }
+
+    void notifyChildrenAlphaChanged() {
+        for(pbge::Node::node_list::iterator it = getChildren().begin(); it != getChildren().end(); it++) {
+            dynamic_cast<PeelingAwareCollection *>(*it)->setMinAlphaCorrection(min_alpha_correction, alpha_index);
         }
     }
 

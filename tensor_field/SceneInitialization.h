@@ -34,7 +34,7 @@ public:
         cam->lookAt(math3d::vector4(0,1,0), math3d::vector4(0,0,-1));
         cam->setPerspective(90.0f, 1.0f, 1.0f, 200.0f);
         window->getEventHandler()->addKeyboardHandler(new EffectToggler(inversor, redder, lens, depthPeeling, fieldParent));
-		window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex(), fieldParent));
+        window->getEventHandler()->addKeyboardHandler(new CustomKeyboardEventHandler(scene, cam_trans_node->getSceneGraphIndex(), fieldParent));
 		window->getEventHandler()->addMouseHandler(new CustomMouseEventHandler(scene, cam_rot_node->getSceneGraphIndex()));
         return scene;
     }
@@ -64,8 +64,7 @@ private:
                          .pushValue(0, 1, 0, 1)
                          .pushValue(0, 0, 1, 1)
                          .pushValue(0, 0, 1, 1);
-        pbge::ModelInstance * grid = new pbge::ModelInstance(
-            new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_LINES));
+        this->grid = new pbge::ModelInstance(new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_LINES));
         pbge::GPUProgram * grid_program = gfx->getFactory()->createProgramFromString(
             "#version 150\n"
             "in vec4 pbge_Vertex;\n"
@@ -115,6 +114,7 @@ private:
 
     std::string filename;
     FieldParent * fieldParent;
+    pbge::ModelInstance * grid;
     pbge::Node * light_parent;
     pbge::Node * child;
     pbge::Node * circle_parent;
