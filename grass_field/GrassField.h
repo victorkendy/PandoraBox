@@ -12,10 +12,21 @@ public:
         return field;
     }
     pbge::ModelCollection * getGround() {
-        return NULL;
+        return ground;
     }
 private:
-    void createGround(pbge::GraphicAPI * gfx) {}
+    void createGround(pbge::GraphicAPI * gfx) {
+        pbge::VertexBufferBuilder builder(4);
+        pbge::VertexAttribBuilder vertex = builder.addAttrib(4, pbge::VertexAttrib::VERTEX);
+        builder.on(vertex);
+        builder.pushValue(-1.0f, 0.0f, -1.0f, 1.0f).pushValue(1.0f, 0.0f, -1.0f, 1.0f)
+               .pushValue(1.0f, 0.0f, 1.0f, 1.0f).pushValue(-1.0f, 0.0f, 1.0f, 1.0f);
+
+        pbge::VBOModel * model = new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_QUADS);
+        ground = new pbge::ModelCollection(model);
+        ground->setNumberOfInstances(1600);
+        ground->setRenderPassProgram(groundRenderPassProgram(gfx));
+    }
     void createGrassField(pbge::GraphicAPI * gfx) {
         pbge::VBOModel * model = grassModel(gfx);
         pbge::TextureBuffer * positions = calculatePositions(gfx);
@@ -72,7 +83,6 @@ private:
             "   gl_Position = pbge_ProjectionMatrix * pbge_ViewMatrix * m * (pbge_Vertex*scaling);\n"
             "   gl_FrontColor = vec4(texCoord, 0, 1);\n"
             "}\n",
-            "#version 150\n"
             "uniform sampler2D grassTex;\n"
             "in vec2 coord;\n"
             "void main(){\n"
@@ -80,6 +90,26 @@ private:
             "   if(color.a < 0.7) discard;\n"
             "   gl_FragColor = color;\n"
             "}"
+            );
+    }
+    pbge::GPUProgram * groundRenderPassProgram(pbge::GraphicAPI * gfx) {
+        return gfx->getFactory()->createProgramFromString(
+            "#version 150\n"
+            "in vec4 pbge_Vertex;\n"
+            "uniform mat4 pbge_ModelMatrix;\n"
+            "uniform mat4 pbge_ViewMatrix;\n"
+            "uniform mat4 pbge_ProjectionMatrix;\n"
+            "void main(){\n"
+            "   vec4 position = vec4(-20.0 + float(int(gl_InstanceID/40)), 0.0, -20.0 + float(int(gl_InstanceID % 40)), 0.0f);\n"
+            "   mat4 m = pbge_ModelMatrix;\n"
+            "   m[3] += position;\n"
+            "   gl_Position = pbge_ProjectionMatrix * pbge_ViewMatrix * m * pbge_Vertex;\n"
+            "   gl_FrontColor = vec4(1,1,1,1);\n"
+            "}\n"
+            ,
+            "void main() {\n"
+            "   gl_FragColor = gl_Color;\n"
+            "}\n"
             );
     }
     pbge::TextureBuffer * calculatePositions(pbge::GraphicAPI * gfx) {
@@ -98,5 +128,5 @@ private:
         positions->setInternalFormat(pbge::Texture::FLOAT, pbge::Texture::RGBA);
         return positions;
     }
-    pbge::ModelCollection * field;
+    pbge::ModelCollection * field, * ground;
 };
