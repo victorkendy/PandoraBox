@@ -113,7 +113,7 @@ private:
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
 public:
     FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step, float dim[3]) : 
-      alpha_step(_alpha_step), scale(1.0f), current_color(0), number_of_colors(2) {
+      alpha_step(_alpha_step), scale(1.0f), current_color(0), number_of_colors(8) {
         min_alpha = std::max(_min_alpha - _alpha_step, 0.0f);
         max_alpha = std::min(_max_alpha + _alpha_step, 1.0f);
         this->min_alpha_correction = 0;
@@ -138,6 +138,18 @@ public:
         max_colors[0] = new math3d::vector4(0,1,0,1);
         min_colors[1] = new math3d::vector4(1,1,0,1);
         max_colors[1] = new math3d::vector4(1,0,1,1);
+        min_colors[2] = new math3d::vector4(0,1,1,1);
+        max_colors[2] = new math3d::vector4(1,1,0,1);
+        min_colors[3] = new math3d::vector4(1,0,1,1);
+        max_colors[3] = new math3d::vector4(0,1,0,1);
+        min_colors[4] = new math3d::vector4(0,0,1,1);
+        max_colors[4] = new math3d::vector4(1,0,0,1);
+        min_colors[5] = new math3d::vector4(0,1,1,1);
+        max_colors[5] = new math3d::vector4(0,1,0,1);
+        min_colors[6] = new math3d::vector4(0,0,1,1);
+        max_colors[6] = new math3d::vector4(1,1,0,1);
+        min_colors[7] = new math3d::vector4(0,1,0,1);
+        max_colors[7] = new math3d::vector4(0,1,1,1);
     }
 
     float * getDim() {
