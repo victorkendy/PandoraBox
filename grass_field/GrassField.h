@@ -95,7 +95,7 @@ private:
             "in vec2 coord;\n"
             "vec4 calculateFog(in vec4 color) {\n"
             "   const float LOG2 = 1.442695;\n"
-            "   const float density = 0.05;\n"
+            "   const float density = 0.04;\n"
             "   const vec4 fogColor = vec4(1.0,1.0,1.0,1.0);"
             "   float z = gl_FragCoord.z / gl_FragCoord.w;\n"
             "   float fogFactor = exp2(-density * density * z * z * LOG2);\n"

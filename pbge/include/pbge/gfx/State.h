@@ -7,6 +7,8 @@
 namespace pbge {
     class GraphicAPI;
     
+    /** A lazy state object.
+    */
     class PBGE_EXPORT State {
     public: 
         void applyChanges(GraphicAPI * gfx) {

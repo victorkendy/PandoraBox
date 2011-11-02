@@ -25,7 +25,7 @@ public:
             "uniform sampler2D skyTex;\n"
             "void main() {\n"
             "   gl_FragDepth = 1.0;\n"
-            "   gl_FragColor = vec4((texture2D(skyTex, position)).rgb, 1.0);\n"
+            "   gl_FragColor = vec4((texture2D(skyTex, position)).rgb + 0.1, 1.0);\n"
             "}\n");
         skyTex = gfx->getFactory()->create2DTexture();
         DevilImage image("./Resources/sky.jpg");

@@ -10,19 +10,24 @@
 namespace pbge {
     class PBGE_EXPORT BlitToFramebuffer : public ScenePostProcessor {
     public:
+        /** see SceneProcessor::initialize */
         void initialize(GraphicAPI * gfx, Renderer * renderer);
 
+        /** Render a quad with the texture on the sampler named color. */
         void process(GraphicAPI * gfx, Renderer * renderer);
 
+        /** see SceneProcessor::initialize */
         bool isInitialized(GraphicAPI * gfx) {
             // It's initialized if it has a valid blitter
             return blitter.get() != NULL;
         }
 
+        /** see SceneProcessor::initialize */
         bool isActive() {
             return active;
         }
 
+        /** activate or deactivate the processor. */
         void toggle() {
             active = !active;
         }
