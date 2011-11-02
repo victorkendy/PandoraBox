@@ -5,23 +5,29 @@
 class GrassField {
 public:
     GrassField(pbge::GraphicAPI * gfx) {
+        createGrassField(gfx);
+        createGround(gfx);
+    }
+    pbge::ModelCollection * getField() {
+        return field;
+    }
+    pbge::ModelCollection * getGround() {
+        return NULL;
+    }
+private:
+    void createGround(pbge::GraphicAPI * gfx) {}
+    void createGrassField(pbge::GraphicAPI * gfx) {
         pbge::VBOModel * model = grassModel(gfx);
         pbge::TextureBuffer * positions = calculatePositions(gfx);
         DevilImage image("./Resources/grass.png");
         pbge::Texture2D * grassTex = gfx->getFactory()->create2DTexture();
         grassTex->setImage(&image, pbge::Texture::RGBA);
-
-
         field = new pbge::ModelCollection(model);
         field->setNumberOfInstances(500);
-        field->setRenderPassProgram(renderPassProgram(gfx));
+        field->setRenderPassProgram(grassRenderPassProgram(gfx));
         field->getUniformSet()->getBufferSampler("positions")->setValue(positions);
         field->getUniformSet()->getSampler2D("grassTex")->setValue(grassTex);
     }
-    pbge::ModelCollection * getField() {
-        return field;
-    }
-private:
     pbge::VBOModel * grassModel(pbge::GraphicAPI * gfx) {
         float sqrt3 = sqrt(3.0f);
         pbge::VertexBufferBuilder builder(12);
@@ -48,8 +54,9 @@ private:
         pbge::VertexBuffer * vertexBuffer = builder.done(pbge::Buffer::STATIC_DRAW, gfx);
         return new pbge::VBOModel(vertexBuffer, GL_QUADS);
     }
-    pbge::GPUProgram * renderPassProgram(pbge::GraphicAPI * gfx) {
+    pbge::GPUProgram * grassRenderPassProgram(pbge::GraphicAPI * gfx) {
         return gfx->getFactory()->createProgramFromString(
+            "#version 150\n"
             "in vec4 pbge_Vertex;\n"
             "in vec2 texCoord;\n"
             "out vec2 coord;\n"
@@ -65,6 +72,7 @@ private:
             "   gl_Position = pbge_ProjectionMatrix * pbge_ViewMatrix * m * (pbge_Vertex*scaling);\n"
             "   gl_FrontColor = vec4(texCoord, 0, 1);\n"
             "}\n",
+            "#version 150\n"
             "uniform sampler2D grassTex;\n"
             "in vec2 coord;\n"
             "void main(){\n"
@@ -81,9 +89,9 @@ private:
         float * mappedBuffer = (float*)buffer->map(pbge::Buffer::WRITE_ONLY);
         for(int i = 0; i < 500; i++) {
             int baseIndex = 4 * i;
-            mappedBuffer[baseIndex]  = 30.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+            mappedBuffer[baseIndex]  = 40.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
             mappedBuffer[baseIndex+1] = 0.0f;
-            mappedBuffer[baseIndex+2] = 30.0f * ((float)rand()/(float)RAND_MAX -0.5f);
+            mappedBuffer[baseIndex+2] = 40.0f * ((float)rand()/(float)RAND_MAX -0.5f);
             mappedBuffer[baseIndex+3] = 1.0f;
         }
         buffer->unmap();
