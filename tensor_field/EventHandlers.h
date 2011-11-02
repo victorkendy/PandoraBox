@@ -35,6 +35,7 @@ public:
             case 'Y': field_parent->setAlphaIndex(2); break;
             case 'U': field_parent->setAlphaIndex(3); break;
             case 'G': hideable_node->toggle(); break;
+            case 'F': field_parent->nextColorRamp(); break;
         }
         return true;
     }

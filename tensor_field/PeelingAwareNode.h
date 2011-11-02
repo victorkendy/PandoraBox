@@ -112,7 +112,8 @@ private:
 
 class FieldParent : public pbge::TransformationNode, public PeelingAwareNode {
 public:
-    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step, float dim[3]) : alpha_step(_alpha_step), scale(1.0f), max_color(new math3d::vector4(0,1,0,1)), min_color(new math3d::vector4(1,0,0,1)) {
+    FieldParent(pbge::GPUProgram * _renderProgram, float _min_alpha, float _max_alpha, float _alpha_step, float dim[3]) : 
+      alpha_step(_alpha_step), scale(1.0f), current_color(0), number_of_colors(2) {
         min_alpha = std::max(_min_alpha - _alpha_step, 0.0f);
         max_alpha = std::min(_max_alpha + _alpha_step, 1.0f);
         this->min_alpha_correction = 0;
@@ -131,6 +132,12 @@ public:
         }
         alpha_index = 0;
         alpha_index_changed = true;
+        max_colors.reset(new math3d::vector4*[number_of_colors]);
+        min_colors.reset(new math3d::vector4*[number_of_colors]);
+        min_colors[0] = new math3d::vector4(1,0,0,1);
+        max_colors[0] = new math3d::vector4(0,1,0,1);
+        min_colors[1] = new math3d::vector4(1,1,0,1);
+        max_colors[1] = new math3d::vector4(1,0,1,1);
     }
 
     float * getDim() {
@@ -143,8 +150,8 @@ public:
         
         uniform_min_alpha_correction->setValue(min_alpha_correction);
         uniform_max_alpha_correction->setValue(max_alpha_correction);
-        uniform_max_color->setValue(*max_color);
-        uniform_min_color->setValue(*min_color);
+        uniform_max_color->setValue(*(max_colors[current_color]));
+        uniform_min_color->setValue(*(min_colors[current_color]));
         uniform_scale->setValue(scale);
         uniform_alpha_index->setValue((float)alpha_index);
     }
@@ -159,8 +166,8 @@ public:
 
         uniform_min_alpha_correction->setValue(min_alpha_correction);
         uniform_max_alpha_correction->setValue(max_alpha_correction);
-        uniform_max_color->setValue(*max_color);
-        uniform_min_color->setValue(*min_color);
+        uniform_max_color->setValue(*(max_colors[current_color]));
+        uniform_min_color->setValue(*(min_colors[current_color]));
 
         uniform_scale->setValue(scale);
         uniform_alpha_index->setValue((float)alpha_index);
@@ -222,6 +229,10 @@ public:
             notifyChildrenAlphaChanged();
         }
     }
+
+    void nextColorRamp() {
+        current_color = (current_color + 1) % number_of_colors;
+    }
 private:
     float min_alpha_correction;
     float max_alpha_correction;
@@ -240,8 +251,10 @@ private:
     float dimensions[3];
     int alpha_index;
     bool alpha_index_changed;
-    boost::scoped_ptr<math3d::vector4> max_color;
-    boost::scoped_ptr<math3d::vector4> min_color;
+    boost::scoped_array<math3d::vector4*> min_colors;
+    boost::scoped_array<math3d::vector4*> max_colors;
+    int current_color;
+    int number_of_colors;
 
     pbge::UniformSet * getUniformSet() {
         return &uniforms;
