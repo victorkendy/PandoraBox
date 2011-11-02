@@ -4,6 +4,7 @@
 
 class GrassField {
 public:
+    static const int grassInstances = 400;
     GrassField(pbge::GraphicAPI * gfx) {
         createGrassField(gfx);
         createGround(gfx);
@@ -19,13 +20,18 @@ private:
         pbge::VertexBufferBuilder builder(4);
         pbge::VertexAttribBuilder vertex = builder.addAttrib(4, pbge::VertexAttrib::VERTEX);
         builder.on(vertex);
-        builder.pushValue(-1.0f, 0.0f, -1.0f, 1.0f).pushValue(1.0f, 0.0f, -1.0f, 1.0f)
-               .pushValue(1.0f, 0.0f, 1.0f, 1.0f).pushValue(-1.0f, 0.0f, 1.0f, 1.0f);
+        builder.pushValue(-0.5f, 0.0f, -0.5f, 1.0f).pushValue(0.5f, 0.0f, -0.5f, 1.0f)
+               .pushValue(0.5f, 0.0f, 0.5f, 1.0f).pushValue(-0.5f, 0.0f, 0.5f, 1.0f);
+
+        DevilImage image("./Resources/ground.png");
+        pbge::Texture2D * groundTex = gfx->getFactory()->create2DTexture();
+        groundTex->setImage(&image, pbge::Texture::RGBA);
 
         pbge::VBOModel * model = new pbge::VBOModel(builder.done(pbge::Buffer::STATIC_DRAW, gfx), GL_QUADS);
         ground = new pbge::ModelCollection(model);
-        ground->setNumberOfInstances(1600);
+        ground->setNumberOfInstances(484);
         ground->setRenderPassProgram(groundRenderPassProgram(gfx));
+        ground->getUniformSet()->getSampler2D("groundTex")->setValue(groundTex);
     }
     void createGrassField(pbge::GraphicAPI * gfx) {
         pbge::VBOModel * model = grassModel(gfx);
@@ -34,7 +40,7 @@ private:
         pbge::Texture2D * grassTex = gfx->getFactory()->create2DTexture();
         grassTex->setImage(&image, pbge::Texture::RGBA);
         field = new pbge::ModelCollection(model);
-        field->setNumberOfInstances(500);
+        field->setNumberOfInstances(grassInstances);
         field->setRenderPassProgram(grassRenderPassProgram(gfx));
         field->getUniformSet()->getBufferSampler("positions")->setValue(positions);
         field->getUniformSet()->getSampler2D("grassTex")->setValue(grassTex);
@@ -100,24 +106,25 @@ private:
             "uniform mat4 pbge_ViewMatrix;\n"
             "uniform mat4 pbge_ProjectionMatrix;\n"
             "void main(){\n"
-            "   vec4 position = vec4(-20.0 + float(int(gl_InstanceID/40)), 0.0, -20.0 + float(int(gl_InstanceID % 40)), 0.0f);\n"
+            "   vec4 position = vec4(-11.0 + float(int(gl_InstanceID/22)), 0.0, -11.0 + float(int(gl_InstanceID % 22)), 0.0f);\n"
             "   mat4 m = pbge_ModelMatrix;\n"
             "   m[3] += position;\n"
             "   gl_Position = pbge_ProjectionMatrix * pbge_ViewMatrix * m * pbge_Vertex;\n"
-            "   gl_FrontColor = vec4(1,1,1,1);\n"
+            "   gl_FrontColor = pbge_Vertex + 0.5;\n"
             "}\n"
             ,
+            "uniform sampler2D groundTex;"
             "void main() {\n"
-            "   gl_FragColor = gl_Color;\n"
+            "   gl_FragColor = texture2D(groundTex, gl_Color.xz);\n"
             "}\n"
             );
     }
     pbge::TextureBuffer * calculatePositions(pbge::GraphicAPI * gfx) {
-        pbge::TextureBuffer * positions = gfx->getFactory()->createTextureBuffer(500 * 4 * sizeof(float));
+        pbge::TextureBuffer * positions = gfx->getFactory()->createTextureBuffer(grassInstances * 4 * sizeof(float));
         pbge::Buffer * buffer = positions->getBuffer();
         
         float * mappedBuffer = (float*)buffer->map(pbge::Buffer::WRITE_ONLY);
-        for(int i = 0; i < 500; i++) {
+        for(int i = 0; i < grassInstances; i++) {
             int baseIndex = 4 * i;
             mappedBuffer[baseIndex]  = 40.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
             mappedBuffer[baseIndex+1] = 0.0f;
