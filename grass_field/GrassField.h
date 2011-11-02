@@ -4,7 +4,7 @@
 
 class GrassField {
 public:
-    static const int grassInstances = 400;
+    static const int grassInstances = 600;
     GrassField(pbge::GraphicAPI * gfx) {
         createGrassField(gfx);
         createGround(gfx);
@@ -23,7 +23,7 @@ private:
         builder.pushValue(-0.5f, 0.0f, -0.5f, 1.0f).pushValue(0.5f, 0.0f, -0.5f, 1.0f)
                .pushValue(0.5f, 0.0f, 0.5f, 1.0f).pushValue(-0.5f, 0.0f, 0.5f, 1.0f);
 
-        DevilImage image("./Resources/ground.png");
+        DevilImage image("./Resources/ground2.png");
         pbge::Texture2D * groundTex = gfx->getFactory()->create2DTexture();
         groundTex->setImage(&image, pbge::Texture::RGBA);
 
@@ -84,8 +84,10 @@ private:
             "void main() {\n"
             "   coord = texCoord;\n"
             "   mat4 m = pbge_ModelMatrix;\n"
-            "   vec4 scaling = vec4(2.0,3.0,2.0,1.0);"
-            "   m[3] += texelFetch(positions, gl_InstanceID);\n"
+            "   vec4 translation = texelFetch(positions, gl_InstanceID);\n"
+            "   m[3] += translation;\n"
+            "   m[3][3] = 1.0;\n"
+            "   vec4 scaling = vec4(vec3(2.0,3.0,2.0)*translation[3],1.0);\n"
             "   gl_Position = pbge_ProjectionMatrix * pbge_ViewMatrix * m * (pbge_Vertex*scaling);\n"
             "   gl_FrontColor = vec4(texCoord, 0, 1);\n"
             "}\n",
@@ -128,8 +130,8 @@ private:
             int baseIndex = 4 * i;
             mappedBuffer[baseIndex]  = 40.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
             mappedBuffer[baseIndex+1] = 0.0f;
-            mappedBuffer[baseIndex+2] = 40.0f * ((float)rand()/(float)RAND_MAX -0.5f);
-            mappedBuffer[baseIndex+3] = 1.0f;
+            mappedBuffer[baseIndex+2] = 40.0f * ((float)rand()/(float)RAND_MAX - 0.5f);
+            mappedBuffer[baseIndex+3] = ((float)rand()/(float)RAND_MAX) * 1.5f + 0.2f;
         }
         buffer->unmap();
         positions->setInternalFormat(pbge::Texture::FLOAT, pbge::Texture::RGBA);
