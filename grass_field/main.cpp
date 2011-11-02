@@ -1,6 +1,7 @@
 #include "math3d/math3d.h"
 #include "pbge/pbge.h"
 #include "GrassField.h"
+#include "SkyProcessor.h"
 
 
 class GrassFieldBuilder : public pbge::SceneInitializer {
@@ -8,6 +9,7 @@ public:
     pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx, pbge::Window * window) {
         pbge::Renderer * renderer = window->getRenderer();
         renderer->addSceneProcessor(new pbge::RenderPassProcessor);
+        renderer->addSceneProcessor(new SkyProcessor);
         renderer->addPostProcessor(new pbge::BlitToFramebuffer);
         pbge::Node * root = new pbge::TransformationNode;
         pbge::SceneGraph * graph = new pbge::SceneGraph(root);

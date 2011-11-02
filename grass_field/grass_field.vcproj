@@ -195,6 +195,10 @@
 				RelativePath=".\GrassField.h"
 				>
 			</File>
+			<File
+				RelativePath=".\SkyProcessor.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
