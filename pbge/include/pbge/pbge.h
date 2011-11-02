@@ -14,6 +14,7 @@
 #include "pbge/collision/BoundingVolumes.h"
 
 #include "pbge/gfx/Buffer.h"
+#include "pbge/gfx/Image.h"
 #include "pbge/gfx/Light.h"
 #include "pbge/gfx/Model.h"
 #include "pbge/gfx/Node.h"

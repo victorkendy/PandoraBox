@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="math3d.lib pbge.lib"
+				AdditionalDependencies="math3d.lib pbge.lib DevIl.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)libs\$(ConfigurationName)&quot;;&quot;$(SolutionDir)bin\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
@@ -173,6 +173,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\DevilImage.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\main.cpp"
 				>

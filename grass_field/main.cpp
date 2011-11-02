@@ -2,6 +2,7 @@
 #include "pbge/pbge.h"
 #include "GrassField.h"
 
+
 class GrassFieldBuilder : public pbge::SceneInitializer {
 public:
     pbge::SceneGraph * operator () (pbge::GraphicAPI * gfx, pbge::Window * window) {

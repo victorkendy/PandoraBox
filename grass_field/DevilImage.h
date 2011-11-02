@@ -4,14 +4,15 @@
 #include <cstdlib>
 #include "pbge/pbge.h"
 
-void initDevIL() {
-    if(ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
-        throw 1;
-    ilInit();
-}
+#ifndef GRASS_FIELD_DEVILIMAGE_H_
+#define GRASS_FIELD_DEVILIMAGE_H_
+
+void initDevIL();
+
 class DevilImage: public pbge::Image {
 public:
     explicit DevilImage(const std::string & filePath) {
+        initDevIL();
         ilGenImages(1, &imageid);
         ilBindImage(imageid);
         if(!ilLoadImage((const ILstring)filePath.c_str())) {
@@ -22,9 +23,9 @@ public:
         height = ilGetInteger(IL_IMAGE_HEIGHT);
         // width * height * number of color channels
         dataSize = width * height * 4;
-        data = malloc(dataSize);
+        data = (char*)malloc(dataSize);
         memcpy(data, ilGetData(), dataSize);
-        ilDeleteImage(imageid);
+        ilDeleteImages(1, &imageid);
     }
     unsigned getHeight() {
         return height;
@@ -52,6 +53,7 @@ private:
         if(!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE)) {
             throw 1;
         }
+        ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
     }
     ILuint imageid;
     unsigned width;
@@ -59,3 +61,5 @@ private:
     char * data;
     size_t dataSize;
 };
+
+#endif
