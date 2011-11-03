@@ -18,6 +18,11 @@ namespace pbge {
         };
     }
 
+    /** A condicional for each using the std::for_each algorithm.
+        
+        This algorithm should be used when it's necessary to call a method on every
+        element of a sequence that tests true on some predicate p.
+    */
     template <typename Iter, typename Fun, typename Pred>
     inline void cond_for_each(Iter begin, Iter end, Fun f, Pred p) {
         std::for_each(

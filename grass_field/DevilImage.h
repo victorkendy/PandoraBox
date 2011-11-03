@@ -2,6 +2,7 @@
 #include <cstring>
 #include <IL/il.h>
 #include <cstdlib>
+#include <stdexcept>
 #include "pbge/pbge.h"
 
 #ifndef GRASS_FIELD_DEVILIMAGE_H_
@@ -16,7 +17,7 @@ public:
         ilGenImages(1, &imageid);
         ilBindImage(imageid);
         if(!ilLoadImage((const ILstring)filePath.c_str())) {
-            throw 1;
+            throw std::invalid_argument("File not found");
         }
         convertImage();
         width = ilGetInteger(IL_IMAGE_WIDTH);
@@ -51,7 +52,7 @@ public:
 private:
     void convertImage() {
         if(!ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE)) {
-            throw 1;
+            throw std::runtime_error("Could not convert the image to unsigned byte");
         }
         ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
     }

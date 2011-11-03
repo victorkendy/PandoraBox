@@ -1,12 +1,12 @@
 #include <IL/il.h>
 #include <iostream>
+#include <stdexcept>
 #include "DevilImage.h"
 
 bool devilInitialized = false;
 void initDevIL() {
-    std::cout << ilGetInteger(IL_VERSION_NUM) << " " << IL_VERSION << std::endl;
     if(ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
-        throw 1;
+        throw std::runtime_error("Unsupported DevIL version");
     if(!devilInitialized) {
         ilInit();
         ilEnable(IL_ORIGIN_SET);

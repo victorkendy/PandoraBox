@@ -7,6 +7,8 @@
 #include "pbge/gfx/NodeVisitors.h"
 
 namespace pbge {
+    /** Executes the color pass visit.
+    */
     class PBGE_EXPORT RenderPassProcessor : public SceneProcessor {
     public:
         void initialize(GraphicAPI * gfx, Renderer * renderer) {}

@@ -14,6 +14,8 @@ namespace pbge {
 
         void initialize(GraphicAPI * gfx, Renderer * renderer);
 
+        /** Do a whole framebuffer post processing.
+        */
         void process(GraphicAPI * gfx, Renderer * renderer);
 
         bool isInitialized(GraphicAPI * gfx) {
