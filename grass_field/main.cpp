@@ -2,7 +2,7 @@
 #include "pbge/pbge.h"
 #include "GrassField.h"
 #include "SkyProcessor.h"
-
+#include "Timer.h"
 
 class GrassFieldBuilder : public pbge::SceneInitializer {
 public:
@@ -32,7 +32,9 @@ private:
     }
     void createGrassField(pbge::Node * parent, pbge::GraphicAPI * gfx) {
         GrassField grass(gfx);
-        parent->addChild(grass.getField());
+        Timer * timer = new Timer();
+        parent->addChild(timer);
+        timer->addChild(grass.getField());
         parent->addChild(grass.getGround());
     }
 };
