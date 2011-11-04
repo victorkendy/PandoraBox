@@ -4,7 +4,7 @@
 
 class GrassField {
 public:
-    static const int grassInstances = 600;
+    static const int grassInstances = 1000;
     GrassField(pbge::GraphicAPI * gfx) {
         createGrassField(gfx);
         createGround(gfx);

@@ -1,10 +1,12 @@
 #include "pbge/pbge.h"
 #include "DevilImage.h"
+#include "Timer.h"
 
 class SkyProcessor : public pbge::SceneProcessor {
 public:
     SkyProcessor():uniforms(new pbge::UniformSet), skyBlitter(NULL){
         sampler = uniforms->getSampler2D("skyTex");
+        time = uniforms->getFloat("time");
     }
     ~SkyProcessor() {
         delete uniforms;
@@ -16,9 +18,10 @@ public:
             "#version 150\n"
             "in vec4 pbge_Vertex;\n"
             "out vec2 position;\n"
+            "uniform float time;\n"
             "void main(){\n"
             "   gl_Position = pbge_Vertex;\n"
-            "   position = 0.5 * pbge_Vertex.xy + 0.5;\n"
+            "   position = 0.5 * pbge_Vertex.xy + 0.5 + 0.001 * time;\n"
             "}\n",
             "#version 150\n"
             "in vec2 position;\n"
@@ -31,8 +34,10 @@ public:
         DevilImage image("./Resources/sky.jpg");
         skyTex->setImage(&image, pbge::Texture::RGBA);
         sampler->setValue(skyTex);
+        time->setValue(timer.getElapsedTime());
     }
     void process(pbge::GraphicAPI * gfx, pbge::Renderer * renderer, pbge::Camera * camera) {
+        time->setValue(timer.getElapsedTime());
         gfx->pushUniforms(uniforms);
         renderer->renderScreenQuad(skyBlitter);
         gfx->popUniforms();
@@ -46,6 +51,8 @@ public:
 private:
     pbge::UniformSet * uniforms;
     pbge::UniformSampler2D * sampler;
+    pbge::UniformFloat * time;
     pbge::GPUProgram * skyBlitter;
     pbge::Texture2D * skyTex;
+    Timer timer;
 };

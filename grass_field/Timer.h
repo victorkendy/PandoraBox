@@ -17,8 +17,7 @@ public:
     virtual void postUpdatePass(pbge::UpdaterVisitor * visitor, pbge::GraphicAPI * gfx) {}
 
     virtual void renderPass(pbge::RenderVisitor * visitor, pbge::GraphicAPI * gfx) {
-        float time_elapsed = (float)(clock() - begin)/CLOCKS_PER_SEC;
-        timer->setValue(time_elapsed);
+        timer->setValue(getElapsedTime());
         gfx->pushUniforms(&uniforms);
     }
 
@@ -34,6 +33,10 @@ public:
     
     virtual node_list & getChildren() {
         return children;
+    }
+
+    float getElapsedTime() {
+        return (float)(clock() - begin)/CLOCKS_PER_SEC;
     }
 private:
     clock_t begin;
