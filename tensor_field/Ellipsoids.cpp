@@ -99,9 +99,9 @@ pbge::GPUProgram * Ellipsoids::get_render_pass_program() {
 		    "void calc_transformations(out vec4 view_position, out vec3 view_normal, out vec4 color, out mat4 view_tranform);\n"
             "void main() {\n"
 		    "   mat4 view_transform;\n"
-            "   const vec4 light_position = vec4(16,16,16,1);\n"
+            "   const vec4 light_position = vec4(0,16,16,1);\n"
             "   calc_transformations(position, normal, gl_FrontColor, view_transform);\n"
-            "   lightPosition = view_transform * light_position;\n"
+            "   lightPosition = pbge_ProjectionMatrix * view_transform * light_position;\n"
 		    "   gl_Position = pbge_ProjectionMatrix * position;\n"
 		    "}",
             pbge::Shader::VERTEX_SHADER);
@@ -184,8 +184,8 @@ pbge::GPUProgram * Ellipsoids::get_peeling_program() {
             "void main() {\n"
             "   mat4 view_transform;\n"
             "   calc_transformations(position, normal, gl_FrontColor, view_transform);\n"
-		    "   const vec4 light_position = vec4(16,16,16,1);\n"
-            "   lightPosition = view_transform * light_position;\n"
+		    "   const vec4 light_position = vec4(0,16,16,1);\n"
+            "   lightPosition = pbge_ProjectionMatrix * view_transform * light_position;\n"
             "   nposition = pbge_ProjectionMatrix * position;\n"
 		    "   gl_Position = nposition;\n"
 		    "}",
