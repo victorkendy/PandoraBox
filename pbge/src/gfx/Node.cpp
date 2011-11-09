@@ -92,3 +92,9 @@ void CameraNode::setPerspective(const float & fovy, const float & aspect,
                                 const float & near, const float & far) {
     this->camera->frustum.setPerspective(fovy, aspect, near, far);
 }
+
+void CameraNode::setOrtho (const float & left, const float & right,
+                           const float & bottom, const float & top,
+                           const float & near, const float & far) {
+    this->camera->frustum.setOrtho(left, right, bottom, top, near, far);
+}

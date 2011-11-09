@@ -164,6 +164,10 @@ namespace pbge {
         void setPerspective(const float & fovy, const float & aspect,
                              const float & near, const float & far);
 
+        void setOrtho (const float & left, const float & right,
+                       const float & bottom, const float & top,
+                       const float & near, const float & far);
+
         void addChild(Node * node){
             childs.push_back(node);
         }
