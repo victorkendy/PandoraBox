@@ -27,7 +27,8 @@ private:
         parent->addChild(cameraParent);
     }
     void createModel(pbge::Node * parent, pbge::GraphicAPI * gfx) {
-        pbge::ModelInstance * model = new pbge::ModelInstance(pbge::Geometrics::createSphere(2,100,gfx));
+        pbge::VBOModel * sphere = pbge::Geometrics::createSphere(2,100,gfx);
+        pbge::ModelInstance * model = new pbge::ModelInstance(sphere);
         pbge::GPUProgram * shader = gfx->getFactory()->createProgramFromString(
             "#version 150\n"
             "in vec4 pbge_Vertex;\n"
@@ -38,7 +39,7 @@ private:
             "                     0,2,0,0,\n"
             "                     0,0,1,0,\n"
             "                     0,0,0,1);\n"
-            "   gl_Position = pbge_ModelViewProjectionMatrix * scale * pbge_Vertex;\n"
+            "   gl_Position = pbge_ModelViewProjectionMatrix*scale*pbge_Vertex;\n"
             "   color = vec4(pbge_Vertex.xyz, 1);\n"
             "}",
             "in vec4 color;\n"
