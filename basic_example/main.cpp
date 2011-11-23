@@ -1,4 +1,3 @@
-#include "math3d/math3d.h"
 #include "pbge/pbge.h"
 
 class MySceneInitializer : public pbge::SceneInitializer {
